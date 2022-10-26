@@ -1,0 +1,19 @@
+site_name: 데이터클래스
+theme:
+  name: material
+  language: kr  
+copyright: Copyright &copy; 2022 (주)퀀트랩
+extra:
+  generator: false
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js  
+nav:
+  - 홈: index.md  
+  - Python: python.md
+  - 회귀분석: regression.md
