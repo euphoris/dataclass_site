@@ -1,4 +1,3 @@
-## Python 기초
 
 ### 사칙연산
 
@@ -67,18 +66,4 @@ x = x + 1
 
 ```python
 divmod(17,3)
-```
-
-### 엑셀 파일 열기
-
-모듈 임포트
-
-```python
-import pandas as pd
-```
-
-파일 열기
-
-```python
-df = pd.read_excel('car.xlsx')
 ```

@@ -5,6 +5,10 @@ theme:
 copyright: Copyright &copy; 2022 (주)퀀트랩
 extra:
   generator: false
+  analytics:
+    provider: google
+    property: G-L89YBQ3J9L
+
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
@@ -15,5 +19,14 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js  
 nav:
   - 홈: index.md  
-  - Python: python.md
-  - 회귀분석: regression.md
+  - Python:
+    - Python 소개: python/intro.md
+    - 구글 콜랩: python/colab.md
+    - 기초 문법: python/basic.md
+    - 엑셀 파일 열기: python/read_excel.md
+  - 회귀분석:
+    - 회귀분석 소개: regression/intro.md
+    - 단순회귀분석: regression/simple.md
+    #- 더미코딩: regression/dummy_coding.md
+    - 다중회귀분석: regression/multiple.md
+    - 독립변수의 표준화: regression/scale.md
