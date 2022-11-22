@@ -16,6 +16,11 @@ extra:
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 
 extra_javascript:
   - javascripts/mathjax.js
@@ -29,8 +34,11 @@ nav:
     # - 아나콘다: python/anaconda.md
     # - 기초 문법: python/basic.md
     # - 엑셀 파일 열기: python/read_excel.md  
-  - 2일차 데이터 분석:
+  - 2일차 텍스트 분석:
     - nano/day2/index.md
+    - 한국어 형태소 분석: text/kiwi.md
+    - 단어 구름: text/word_cloud.md
+    - 머신러닝 문서분류: text/binary_classification.md
   - 3일차:
     - nano/day3/index.md
   - 4일차:
