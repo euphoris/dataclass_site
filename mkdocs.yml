@@ -39,8 +39,11 @@ nav:
     - 한국어 형태소 분석: text/kiwi.md
     - 단어 구름: text/word_cloud.md
     - 머신러닝 문서분류: text/binary_classification.md
-  - 3일차:
+  - 3일차 한/글 파일 다루기:
     - nano/day3/index.md
+    - libhwp: python/libhwp.md
+    - 한/글 직접 제어: python/pywin32-hwp.md
+    - Python 파일 관리: python/file.md
   - 4일차:
     - nano/day4/index.md
 #   - Python:
