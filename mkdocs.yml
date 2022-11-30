@@ -34,7 +34,7 @@ nav:
     # - 아나콘다: python/anaconda.md
     # - 기초 문법: python/basic.md
     # - 엑셀 파일 열기: python/read_excel.md  
-  - 2일차 텍스트 분석:
+  - 2일차 텍스트 분석(1):
     - nano/day2/index.md
     - 한국어 형태소 분석: text/kiwi.md
     - 단어 구름: text/word_cloud.md
@@ -44,8 +44,9 @@ nav:
     - libhwp: python/libhwp.md
     - 한/글 직접 제어: python/pywin32-hwp.md
     - Python 파일 관리: python/file.md
-  - 4일차:
+  - 4일차 텍스트 분석(2):
     - nano/day4/index.md
+    - 나노기술 분류 실습: text/nano.md
 #   - Python:
 #   - 회귀분석:
 #     - 회귀분석 소개: regression/intro.md
