@@ -206,7 +206,10 @@ kiwi는 가장 최근에 나온 도구로, 파이썬에서 사용하기 좋다. 
 
 ```python
 pip install kiwipiepy
+```
+먼저 kiwipiepy를 설치한다. 
 
+```python
 from kiwipiepy import Kiwi
 kiwi = Kiwi()
 
@@ -215,7 +218,7 @@ result = kiwi.tokenize(text)
 result
 ```
 
-먼저 kiwipiepy를 설치한다. 설치가 완료되면, Kiwi를 import 한다. 여기서 'Kiwi'의 'K'는 대문자로 써야 한다.
+설치가 완료되면, Kiwi를 import 한다. 여기서 'Kiwi'의 'K'는 대문자로 써야 한다.
 
 그 다음, Kiwi() 를 호출하여 형태소 분석기를 초기화한다.
 
@@ -295,3 +298,29 @@ dtm = cv.fit_transform(df['본문'])
 ```
 
 이 과정은 형태소 분석 단계가 포함되어 있어 약간의 시간이 걸릴 수 있다. 실행 결과, 각 뉴스 기사에서 사용된 명사들의 빈도를 나타내는 행렬이 생성된다.
+
+```python
+word_count = pd.DataFrame({
+    '단어': cv.get_feature_names_out(),
+    '빈도': dtm.sum(axis=0).flat
+})
+count_dic = dict(zip(word_count.단어, word_count.빈도))
+```
+
+위에서 만들어진 문서 단어 행렬에서 단어별 빈도를 구한다.
+
+```python
+# 모양 잡기
+mask = Image.open('mask.png') # .convert('L') 없음
+mask = np.asarray(mask)
+wc = WordCloud(font_path='온글잎 누카.ttf', background_color='white', mask=mask)
+wc.fit_words(count_dic)
+ 
+# 색칠하기
+color_func = ImageColorGenerator(mask)
+cloud = wc.recolor(color_func=color_func)
+cloud.to_image()
+```
+
+한글 단어 구름은 글꼴이 필요하다: [온글잎 누카 글꼴 다운로드](https://www.ownglyph.com/trial/c87740c8-38da-4030-83cf-668892c685b0)
+
