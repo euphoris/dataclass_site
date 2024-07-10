@@ -5,20 +5,12 @@
     "word-cloud": "단어 구름",
     "tokenization": "토큰화",
     "encoding": "인코딩",
+    "day1-review": "★ 1일차 복습",
+    "cooccurence": "공기어 네트워크",
     "whisper": "음성 인식",
     "similarity": "거리와 유사도",
-    "embedding": {
-        "title": "워드 임베딩",
-        "display": "hidden"
-    },
-    "clustering": {
-        "title": "문서 클러스터링",
-        "display": "hidden"
-    },
-    "cooccurence": {
-        "title": "공기어 네트워크",
-        "display": "hidden"
-    },
+    "embedding": "임베딩",
+    "clustering": "문서 클러스터링",
     "keyword-search": {
         "title": "키워드 검색",
         "display": "hidden"
