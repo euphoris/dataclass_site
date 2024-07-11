@@ -1,0 +1,62 @@
+
+
+## 임베딩을 이용한 검색
+
+크로마 설치
+
+```python
+!pip install langchain-chroma sentence-transformers
+
+```
+문장 BERT: 모형 불러오기
+
+랭체인에 맞춰 별도의 라이브러리 이용
+
+```python
+from langchain_community.embeddings.sentence_transformer import     SentenceTransformerEmbeddings
+sbert = SentenceTransformerEmbeddings(model_name='jhgan/ko-sroberta-multitask')
+```
+
+인덱싱
+
+```python
+from langchain_chroma import Chroma
+vector_store = Chroma.from_texts(
+    texts=books['제목'].tolist(), 
+    embedding=sbert)
+```
+
+검색
+
+```python
+vector_store.similarity_search('살아남은 것이 다정하다', k=4)
+```
+
+## Rank Fusion
+Retriever들의 검색 결과를 RRF 방식으로 Rank Fusion
+
+```python
+from langchain.retrievers import EnsembleRetriever
+```
+
+크로마를 Retriever 형식으로 변환(검색결과 4개로 설정)
+
+```python
+vr = vector_store.as_retriever(search_kwargs={"k": 4})
+```
+
+두 개의 검색 엔진을 결합
+```python
+er = EnsembleRetriever(retrievers=[bm25, vr], weights=[0.4, 0.6])
+```
+
+검색
+```python
+er.invoke('살아남은 것이 다정하다')
+```
+
+공식에 들어가는 상수 확인(기본값 60)
+```python
+er.c
+```
+

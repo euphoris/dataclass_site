@@ -1,0 +1,185 @@
+# 문서 분류
+
+```python
+import pandas as pd
+df = pd.read_excel('yelp.xlsx')
+```
+
+문서 단어 행렬 만들기
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(max_features=1000, stop_words='english')
+dtm = cv.fit_transform(df.review)
+```
+
+x와 y를 지정
+```python
+x = dtm
+y = df.sentiment
+```
+
+데이터 분할
+
+```python
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(
+    x,
+    y,
+    test_size=0.2,   # 20%의 데이터를 테스트용으로 유보
+    random_state=42) # 유사난수의 씨앗값 seed을 42로 설정
+```
+
+## 나이브 베이즈 분류
+
+```python
+from sklearn.naive_bayes import BernoulliNB
+model = BernoulliNB() # 모델 만들기
+model.fit(x_train, y_train) # 학습
+model.score(x_train, y_train) # 훈련 데이터로 정확도(accuracy) 평가
+```
+
+테스트
+
+```python
+model.score(x_test, y_test) # 테스트 데이터로 정확도(accuracy) 평가
+```
+
+단어별 확률
+
+```python
+prob_df = pd.DataFrame({
+'단어': cv.get_feature_names_out(),
+'비율': model.feature_log_prob_[1] - model.feature_log_prob_[0]
+})
+```
+상대적으로 긍정 문장에서 많이 나오는 단어
+```python
+prob_df.sort_values('비율').tail(10)
+```
+
+상대적으로 부정 문장에서 많이 나오는 단어
+
+```python
+prob_df.sort_values('비율').head(10)
+```
+
+## 로지스틱 회귀분석
+
+```python
+from sklearn.linear_model import LogisticRegressionCV
+model = LogisticRegressionCV(
+    penalty='elasticnet', solver='saga', random_state=42,
+    Cs=[0.1, 1, 10], l1_ratios=[0, 0.5, 1], max_iter=4000)
+model.fit(x_train, y_train)
+```
+
+가장 좋은 C
+```python
+model.C_
+```
+
+가장 좋은 L1의 비율
+```python
+model.l1_ratio_
+```
+
+훈련 데이터에서 정확도
+```python
+model.score(x_train, y_train)
+```
+테스트 데이터에서 정확도
+
+```python
+model.score(x_test, y_test)
+```
+
+단어별 가중치
+
+```python
+word_coef = pd.DataFrame({
+    '단어': cv.get_feature_names_out(),
+    '가중치': model.coef_.flat
+})
+```
+
+긍정 단어 보기
+
+```python
+word_coef.sort_values('가중치').tail(10)
+```
+
+부정 단어 보기
+
+```python
+word_coef.sort_values('가중치').head(10)
+```
+
+예측
+
+```python
+y_pred = model.predict(x_test)
+```
+
+확률로 예측
+```python
+probs = model.predict_proba(x_test)
+```
+
+긍정 확률만
+```python
+prob = probs[:, 1]
+```
+
+
+문턱값에 따라 다르게 예측
+```python
+threshold = 0.5 # 문턱값
+y_pred = np.where(prob > threshold, 1, 0)
+```
+
+
+
+## 혼동 행렬
+
+```python
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_test, y_pred)
+```
+
+정확도	
+
+```python
+from sklearn.metrics import *
+accuracy_score(y_test, y_pred)
+```
+
+정밀도	
+
+```python
+precision_score(y_test, y_pred)
+```
+
+
+재현도	
+
+```python
+recall_score(y_test, y_pred)
+```
+
+## ROC 곡선
+
+```python
+from sklearn.metrics import roc_auc_score, roc_curve
+import matplotlib.pyplot as plt
+```
+
+시각화
+```python
+fpr, tpr, threshold = roc_curve(y_test, prob)
+plt.plot(fpr, tpr)
+```
+
+AUC
+```python
+roc_auc_score(y_test, prob)
+```

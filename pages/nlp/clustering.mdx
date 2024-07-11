@@ -127,7 +127,7 @@ silhouette = silhouette_samples(norm_doc_emb, cluster_labels)
 
 sil = pd.DataFrame({
     'cluster': cluster_labels,
-    'silhouette': sample_silhouette,
+    'silhouette': silhouette,
 })
 sil = sil.sort_values(by=['cluster', 'silhouette'], ascending=False)
 ```

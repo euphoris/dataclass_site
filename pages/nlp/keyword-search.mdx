@@ -109,7 +109,7 @@ results = list(index['natural'] & index['language'])
 패키지 설치
 
 ```python
-!pip install rank_bm25 kiwipiepy
+!pip install langchain rank_bm25 kiwipiepy
 ```
 
 파일 열기
@@ -134,27 +134,34 @@ def tokenize(sent):
 인덱싱
 
 ```python
-tokenized_corpus = []
-for title in books.제목:
-    tokenized_corpus.append(list(tokenize(title)))
+from langchain.retrievers import BM25Retriever
+bm25 = BM25Retriever.from_texts(
+    texts=books['제목'],
+    metadatas=None,
+    preprocess_func=tokenize
+)
 ```
 
-```python
-from rank_bm25 import BM25Okapi
-bm25 = BM25Okapi(tokenized_corpus)
-```
 
 IDF 보기
 
 ```python
 import pandas as pd
-idf_table = pd.DataFrame(bm25.idf.items(), columns=['token', 'idf'])
+idf_table = pd.DataFrame(
+    bm25.vectorizer.idf.items(), 
+    columns=['token', 'idf'])
 idf_table.sort_values('idf')
 ```
 
 검색
 
 ```python
-query = list(tokenize('다정한 것이 살아남는다'))
-bm25.get_top_n(query, books.제목, n=5)
+query = '살아남은 것이 다정하다'
+bm25.invoke(query)
+```
+
+검색 결과의 수 설정 (기본값 4)
+
+```python
+bm25.k
 ```
