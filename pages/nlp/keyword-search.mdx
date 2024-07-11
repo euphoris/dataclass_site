@@ -1,0 +1,160 @@
+
+## 순차 검색
+
+실습 데이터 열기
+
+```python
+import pandas as pd
+df = pd.read_csv('neurips.zip')
+df.head()
+```
+
+natural language 검색
+
+
+```python
+query = {'natural', 'language'}
+
+import re
+def tokenize(text):
+    text = text.lower() # 소문자로 변환
+    return re.findall(r'\w{2,}', text) # 2글자 이상 단어 추출
+```
+
+표의 각 행에서 순서대로 검색어가 있는지 확인
+
+
+```python
+%%time
+results = []
+for row in df.itertuples():
+    words = set(tokenize(row.abstract))
+    if query < words: # 검색어가 부분집합이면
+        results.append(row.Index)
+```
+
+
+조건에 맞는 행 번호
+
+```python
+len(results)
+```
+
+
+조건에 맞는 행 보기
+
+```python
+df.loc[results].head()
+```
+
+
+
+## 리스트와 사전
+
+```python
+a = list(range(1000000))
+```
+
+
+리스트에서 999999를 검색하는데 걸리는 시간 측정
+리스트의 뒤로 갈 수록 검색이 오래 걸림
+
+
+
+```python
+%%time
+a.index(999999)
+```
+
+```python
+b = dict(zip(a, a))
+```
+
+검색 시간이 0에 가까움
+
+```python
+%%time
+b[999999]
+```
+
+
+## 인덱싱
+
+```python
+from collections import defaultdict
+index = defaultdict(set)
+
+for row in df.itertuples():
+    words = tokenize(row.abstract)
+    for word in words:
+        index[word].add(row.Index)
+```
+
+단어 language를 포함하는 모든 행 번호
+
+```python
+len(index['language'])
+```
+
+natural과 language의 교집합(&)
+
+
+```python
+%%time
+results = list(index['natural'] & index['language'])
+```
+
+## BM25
+
+패키지 설치
+
+```python
+!pip install rank_bm25 kiwipiepy
+```
+
+파일 열기
+
+```python
+import pandas as pd
+books = pd.read_csv('science_books.csv')
+```
+
+토큰화 함수: 일반 명사, 고유명사, 영어, 동사, 형용사만 추출
+
+```python
+from kiwipiepy import Kiwi
+kiwi = Kiwi()
+
+def tokenize(sent):
+    for token in kiwi.tokenize(sent):
+        if token.tag in {'NNG', 'NNP', 'SL', 'VV', 'VA'}:
+            yield token.form, token.tag
+```
+
+인덱싱
+
+```python
+tokenized_corpus = []
+for title in books.제목:
+    tokenized_corpus.append(list(tokenize(title)))
+```
+
+```python
+from rank_bm25 import BM25Okapi
+bm25 = BM25Okapi(tokenized_corpus)
+```
+
+IDF 보기
+
+```python
+import pandas as pd
+idf_table = pd.DataFrame(bm25.idf.items(), columns=['token', 'idf'])
+idf_table.sort_values('idf')
+```
+
+검색
+
+```python
+query = list(tokenize('다정한 것이 살아남는다'))
+bm25.get_top_n(query, books.제목, n=5)
+```
