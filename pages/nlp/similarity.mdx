@@ -254,3 +254,12 @@ for k in np.argsort(word_similarity[j])[-2:-11:-1]:
 
 따라서 이 코드는 '추출'과 가장 유사한 9개의 단어를 유사도가 높은 순서대로 출력한다.
 
+
+## 유사 특허 찾기
+
+```python
+doc_similarity = cosine_similarity(dtm) # .T를 하지 않음
+for k in np.argsort(doc_similarity[i])[-2:-11:-1]:
+    print(k, df.ko_title[k])
+```
+    
