@@ -1,0 +1,76 @@
+# 단위근 검정
+
+## Augmented Dickey-Fuller Test
+
+```python
+from statsmodels.tsa.stattools import adfuller
+adfuller(beer.production)
+```
+
+## 구글 주가 데이터
+```python
+df = pd.read_excel('GOOG.xlsx')
+y = df.Price
+y.plot()
+```
+
+ACF가 완만하게 떨어지는 형태
+```python
+plot_acf(y)
+```
+
+## KPSS 검정
+```python
+from statsmodels.tsa.stattools import kpss
+kpss(y)
+```
+
+## 차분
+
+1차 차분
+```python
+yd = y.diff().dropna()
+plot_acf(yd)
+```
+
+2차 차분: 차분한 값을 다시 차분
+```python
+yd2 = yd.diff().dropna()
+plot_acf(yd2)
+```
+
+### 2차 차분한 결과의 KPSS 검정
+```python
+kpss(yd2)
+```
+
+## 미국 전기생산량 데이터
+```python
+el = pd.read_excel('usmelec.xlsx')
+y = el.elec
+y.plot()
+```
+
+```python
+plot_acf(y)
+```
+
+### 계절성 차분 seasonal differencing
+```python
+ys = y.diff(12).dropna()
+ys.plot()
+```
+
+```python
+plot_acf(ys)
+```
+
+### 1차 차분과 계절성 차분
+```python
+ysd = y.diff(12).diff().dropna()
+ysd.plot()
+```
+
+```python
+plot_acf(ysd)
+```

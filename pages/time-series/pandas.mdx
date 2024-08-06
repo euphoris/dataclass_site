@@ -1,0 +1,219 @@
+# 판다스에서 날짜/시간 다루기
+## 날짜/시간 기본
+### 하나의 날짜/시간
+
+```python
+import pandas as pd
+date = pd.to_datetime('2022-08-29')
+```
+
+월
+```python
+date.month
+```
+
+요일
+```python
+date.day_of_week
+```
+
+자료형
+```python
+type(date)
+```
+
+### 시간 간격
+
+```python
+delta = pd.to_timedelta([1, 2, 3], 'D')
+date + delta
+```
+
+### 날짜로 인덱싱
+데이터 만들기
+
+```python
+index = pd.DatetimeIndex(['2014-07-04', '2014-08-04', '2015-07-04', '2015-08-04'])
+data = pd.Series([100, 200, 300, 400], index=index)
+```
+
+일정 기간 데이터
+```python
+data['2014-07-04':'2015-07-04']
+```
+
+특정 시점의 데이터
+```python
+data['2015']
+```
+
+## 알파벳 주가 데이터
+```python
+df = pd.read_excel('GOOG.xlsx')
+df.head()
+```
+
+문자열을 날짜 시간 형식으로 변환
+
+```python
+df.Date = pd.to_datetime(df.Date)
+```
+
+Date 컬럼을 인덱스(행 이름)으로 변환
+inplace=True: 원본을 변환, 생략하면 Date가 index로 설정된 새로운 데이터를 만듦
+
+```python
+df.set_index('Date', inplace=True)
+```
+
+### 정렬 & 시각화
+
+인덱스를 순서대로(오름차순) 정렬
+```python
+df.sort_index(inplace=True)
+```
+
+인덱스를 역순(내림차순) 정렬
+```python
+df.sort_index(ascending=False)
+```
+시각화
+```python
+df.Price.plot()
+```
+### 변화량 구하기
+차분(differencing): 전일과 차이 구하기
+```python
+df.Price.diff()
+```
+전일과 차이의 비율 구하기
+```python
+df.Price.pct_change()
+```
+### 일정 간격으로 데이터 뽑기
+
+매월 말일 주가
+```python
+df.Price.asfreq('M')
+```
+### 그래프 겹쳐 그리기
+
+.plot을 같은 셀에서 실행하면 그래프가 겹쳐서 그려짐
+```python
+df.Price.plot(alpha=0.3)
+df.Price.asfreq('BA').plot(color='red', style='o-')
+```
+### 빈 데이터 채우기
+2016-12-31의 전후 날짜 데이터
+```python
+df.Price['2016-12-30':'2017-01-03']
+```
+2016년 12월 31일~2017년 1월 2일까지 비어있음
+
+해당 날짜의 데이터가 비어있을 경우 이전(forward)의 데이터로 채우기
+```python
+df.Price.asfreq('A', method='ffill')
+```
+해당 날짜의 데이터가 비어있을 경우 이후(back)의 데이터로 채우기
+```python
+df.Price.asfreq('A', method='bfill')
+```
+
+### 리샘플 resample
+
+특정 시점 간격으로 데이터를 종합
+아래는 가격을 매년 초(AS)를 기준으로 잘라, 연 평균 가격을 계산
+```python
+df.Price.resample('AS').mean()
+```
+
+### 이동 평균
+rolling을 이용해서 매 365일 간격의 데이터를 묶음
+```python
+rolling = df.Price.rolling(365, center=True)
+```
+각 묶음별로 평균
+```python
+rolling.mean().plot()
+```
+
+## 자전거 대여소 데이터
+
+미국 시애틀 페어몬트 브릿지 자전거 대여소 데이터
+```python
+data = pd.read_csv(
+    'bicycle.csv', 
+    index_col='Date',  # Date 컬럼을 인덱스로 지정
+    parse_dates=True)  # 자동으로 날짜 처리
+data.head()
+```
+
+### 시각화
+편의를 위해 컬럼 이름 변경
+```python
+data.columns = ['Total', 'East', 'West']
+```
+시각화
+```python
+data.plot()
+```
+주 단위 합계 시각화
+```python
+data.resample('W').sum().plot()
+```
+### 이동 평균
+일단위 합계의 30일 이동 평균
+```python
+daily = data.resample('D').sum()
+daily.rolling(30, center=True).mean().plot()
+```
+가까운 날짜에 더 많은 가중치를 주고, 먼 날짜에 적은 가중치를 주는 방식
+```python
+roll = daily.rolling(30, center=True, win_type='gaussian')
+roll.sum(std=10).plot()
+```
+
+
+### 시간대별 평균
+
+시간별(data.index.hour)로 데이터를 모아(groupby) 평균
+```python
+by_time = data.groupby(data.index.hour).mean()
+by_time.plot()
+```
+### 가로 눈금을 3시간 간격으로
+```python
+import numpy as np
+hourly_ticks = 3 * np.arange(8)
+by_time.plot(xticks=hourly_ticks, style=[':', '--', '-'])
+```
+### 요일별 평균
+```python
+by_weekday = data.groupby(data.index.dayofweek).mean()
+by_weekday.index = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+by_weekday.plot()
+```
+
+### 주중과 주말의 비교
+주중과 주말, 시간대별로 나누어 평균
+```python
+weekend = np.where(data.index.weekday < 5, 'Weekday', 'Weekend')
+by_time = data.groupby([weekend, data.index.hour]).mean()
+```
+비교 시각화
+```python
+by_time.loc['Weekday'].plot(xticks=hourly_ticks)
+by_time.loc['Weekend'].plot(xticks=hourly_ticks)
+```
+
+
+
+### 하나의 그래프에 합쳐 그리기
+
+하나의 셀에 실행
+```python
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+by_time.loc['Weekday'].plot(ax=ax[0], title='Weekdays', xticks=hourly_ticks)
+by_time.loc['Weekend'].plot(ax=ax[1], title='Weekends', xticks=hourly_ticks)
+```

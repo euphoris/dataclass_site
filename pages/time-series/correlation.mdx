@@ -1,0 +1,72 @@
+# 상관
+
+## 상관분석
+
+```python
+import pingouin as pg
+df = pd.read_excel('car.xlsx')
+pg.corr(df.price, df.mileage)
+```
+
+## 자기상관
+
+### 기온 데이터
+
+기온 데이터 불러오기
+```python
+temp = pd.read_excel('washington_temp.xlsx')
+```
+컬럼으로 나눠진 연, 월, 일을 하나의 날짜로 합침
+```python
+temp['date'] = pd.to_datetime(temp[['Year', 'Month', 'Day']])
+```
+날짜를 인덱스로
+```python
+temp.set_index('date', inplace=True)
+```
+#### 월평균 기온
+```python
+monthly = temp.resample('M').AvgTemperature.mean()
+monthly.plot()
+```
+#### ACF 구하기
+```python
+from statsmodels.tsa.stattools import acf
+acf(monthly)
+```
+#### ACF 그리기
+```python
+from statsmodels.graphics.tsaplots import plot_acf
+plot_acf(monthly)
+```
+### 분기별 맥주 생산량 데이터
+```python
+beer = pd.read_excel('beer.xlsx', parse_dates=True, index_col='quarter')
+beer.production.plot()
+```
+
+```python
+plot_acf(beer.production)
+```
+#### 차분 Differencing 
+- 시계열 데이터를 일정 시점 간의 차이를 구하는 것
+- 시계열에서 선형적 추세를 제거
+- 비정상(non-stationary) 시계열을 정상 시계열로 돌릴 수 있음
+```python
+beer.production.diff().plot()
+```
+차분한 값의 ACF는 계절성이 뚜렷해짐
+```python
+plot_acf(beer.production.diff().dropna())
+```
+#### 차분할 간격의 수정
+
+4개 분기(=1년) 간격으로 차분
+```python
+beer.production.diff(4).plot()
+```
+
+ACF를 시각화하면, 계절성과 추세가 모두 없어짐
+```python
+plot_acf(beer.production.diff(4).dropna())
+```
