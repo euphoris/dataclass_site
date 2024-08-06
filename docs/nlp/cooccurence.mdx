@@ -1,0 +1,180 @@
+# 공기어 네트워크 분석
+
+공기어 네트워크는 함께 일어나는 단어들의 관계를 나타내는 개념이다. '공기'라는 말은 한자어로, '공'은 '함께'라는 뜻이고, '기'는 '일어난다'는 뜻이다. 영어로는 'co-occurrence'라고 한다.
+
+두 단어가 같이 나타나면 공기어라고 한다. 예를 들어, '조용한 장소'는 자연스럽지만 '조용한 음식'은 약간 어색하다. 또한 '맛있는 음식'은 자연스럽지만 '맛있는 서비스'는 이상하게 들린다. 이처럼 어떤 단어들은 함께 쓰일 수 있고, 어떤 단어들은 잘 쓰이지 않는데, 이런 관계를 공기 관계라고 한다.
+
+네트워크는 이러한 단어들의 관계를 시각적으로 표현한 것이다. 단어는 점으로, 단어 간의 공기 관계는 선으로 표현된다. 여러 단어들이 서로 연결되어 복잡한 구조를 이루는 것을 네트워크라고 한다.
+
+이러한 공기어 네트워크를 분석하는 것을 공기어 네트워크 분석이라고 한다. 이를 통해 단어들 간의 관계와 텍스트의 구조를 이해할 수 있다.
+
+## 실습 데이터 전처리
+
+데이터 열기
+
+```python
+import numpy as np
+import pandas as pd
+
+df = pd.read_excel('yelp.xlsx')
+```
+
+문서 단어 행렬 만들기
+
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(stop_words='english', min_df=0.01, binary=True)
+dtm = cv.fit_transform(df.review)
+```
+
+min_df=0.01: 최소 1% 이상의 문서에서 출현한 단어만 포함. 함께 나타난 단어를 찾기 위해 출현 빈도가 낮은 단어는 제외.
+
+`binary=True`: 문서에 나타난 단어는 빈도 무관하게 1이 됨. 같은 문서에 나왔는지만 확인할 것이므로 구분만 하면 됨
+
+
+## 인접 행렬
+
+인접 행렬(adjacency matrix): 네트워크에서 인접한 점(단어)들의 관계를 행렬로 나타낸 것
+
+먼저, 문서-단어 행렬을 만든다. 예를 들어, 문서 1에 단어 B와 C가 나타나고, 문서 2에 A와 B가 나타났다면 다음과 같이 표현할 수 있다:
+
+```
+   A  B  C
+1  0  1  1
+2  1  1  0
+```
+
+이 행렬을 전치시키면(T는 전치를 의미) 다음과 같이 된다:
+
+```
+   1  2
+A  0  1
+B  1  1
+C  1  0
+```
+
+이제 이 두 행렬을 곱하면 인접 행렬이 만들어진다. 행렬의 곱셈은 한 행렬의 행과 다른 행렬의 열을 곱하고 더하는 방식으로 이루어진다.
+
+문서 단어 행렬을 곱하면 함께 나타난 단어는 1이 되고, 그렇지 않은 단어는 0이 된다.
+
+```python
+cooccur = dtm.T @ dtm
+adj = cooccur.A
+```
+
+이 코드에서 `dtm.T @ dtm`는 전치된 문서-단어 행렬과 원래의 문서-단어 행렬을 곱하는 것이다. 결과로 나온 `cooccur`가 공기어 행렬이 되며, `.A`를 통해 이를 일반 배열로 변환한다.
+
+```python
+cooccur = dtm.T @ dtm
+adj = cooccur.A
+```
+
+
+## 카이제곱 독립성 검정
+
+```python
+from scipy.stats import chi2_contingency
+n_all = np.sum(adj)
+sig = np.zeros_like(adj)
+significance_level = 0.05
+for i in range(adj.shape[0]):
+    for j in range(adj.shape[1]):
+        if i < j:            
+            n = adj[i,j]
+            n_i = np.sum(adj[i,:])
+            n_j = np.sum(adj[:,j])
+            m = np.array([[n, n_i - n], [n_j - n, n_all - n_i - n_j + n]])
+            chi2, p, dof, ex = chi2_contingency(m)
+            sig[i,j] = sig[j, i] = p < significance_level
+
+```
+
+자주 나오는 단어들은 서로 관련이 없어도 함께 나올 가능성이 높다.
+
+독립적인 두 단어 A, B가 함께 나올 확률 = A의 확률 &times; B의 확률
+
+만약 두 단어가 독립이 아니라면, 실제로 나온 확률은 위의 경우보다 높을 것이다.
+
+이것을 검증하는 방법이 카이제곱 독립성 검정이다.
+
+카이제곱 독립성 검정의 귀무가설은 "두 단어가 독립적이다(=관계가 없다)"이다.
+
+p-value를 계산하여 유의수준(예: 0.05) 미만이면 귀무가설을 기각 → 관계가 있는 것으로 봄
+
+데이터가 적으면 p-value가 부정확할 수 있다. 모든 기대빈도가 5 혹은 그 이상이어야 한다.
+
+## NetworkX
+
+```python
+import networkx as nx
+net = nx.from_numpy_array(sig)
+```
+
+유의수준 0.05에서 통계적으로 유의한 연결만 네트워크로 바꾸기
+
+```python
+words = cv.get_feature_names_out()
+net = nx.relabel_nodes(net, dict(enumerate(words)))
+```
+
+노드 이름을 단어로 바꾸기
+
+
+```python
+list(nx.neighbors(net, 'steak'))
+```
+
+steak와 연결된 단어 보기
+
+## 중심성
+
+네트워크에서 노드의 중요도를 나타내는 지표
+
+연결 중심성(degree centrality): 연결된 단어 수 / (전체 단어 수 - 1)
+```python
+dc = nx.degree_centrality(net)
+```
+
+매개 중심성(between centrality): 단어-단어 간의 최단 경로에 포함된 비율
+
+```python
+bc = nx.betweenness_centrality(net)
+```
+근접 중심성(closeness centrality): 다른 단어와 거리가 평균적으로 짧은 단어
+
+```python
+cc = nx.closeness_centrality(net)
+```
+
+고유벡터 중심성(eigenvector centrality): 중요한 단어와 연결된 단어가 중요한 단어
+
+```python
+ec = nx.eigenvector_centrality(net)
+```
+
+중심성을 데이터 프레임으로 변환하고 중심성 순으로 정렬
+
+```python
+ecf = pd.DataFrame(ec.items(), columns=['word', 'centrality'])
+ecf.sort_values('centrality')
+```
+
+## 시각화
+
+설치
+
+```python
+pip install pyvis
+```
+
+임포트
+
+```python
+from pyvis.network import Network
+vis = Network(height='800px', width='1000px')
+vis.from_nx(net) # networkx 네트워크를 pyvis 네트워크로 변환
+vis.show_buttons(filter_=True) # 설정 버튼 추가
+vis.save_graph('nx.html')  # 저장
+```
+
+

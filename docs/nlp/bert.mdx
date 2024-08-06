@@ -1,0 +1,142 @@
+# BERT를 이용한 키워드 추출
+
+## sentence_transformers
+
+설치
+
+```python
+!pip install sentence_transformers
+```
+
+임포트
+
+```python
+from sentence_transformers import SentenceTransformer
+```
+
+모델 로딩
+
+```python
+model = SentenceTransformer('jhgan/ko-sroberta-multitask')
+```
+
+## 비슷한 문서 보기
+
+파일열기
+```python
+import pandas as pd
+df = pd.read_excel('patents.xlsx')
+```
+
+문장 임베딩
+
+```python
+doc_emb = model.encode(df['abstract'])
+```
+
+0번 문서와 비슷한 문서 보기
+
+```python
+from sklearn.metrics.pairwise import cosine_distances
+import numpy as np
+
+doc_idx = 0
+dists = cosine_distances(doc_emb[[doc_idx]], doc_emb).flatten()
+df.iloc[np.argsort(dists)[:10]]
+```
+
+## 키워드 추출
+
+```python
+import kiwipiepy
+kiwi = kiwipiepy.Kiwi()
+def extract_nouns(text):
+    for token in kiwi.tokenize(text):
+        if token.tag in {'NNG', 'NNP'}:
+            yield token.form
+
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(tokenizer=extract_nouns, min_df=10)
+dtm = cv.fit_transform(df.abstract)
+```
+
+```python
+words = cv.get_feature_names_out()
+word_emb = model.encode(words)
+dists = cosine_distances(doc_emb[[doc_idx]], word_emb).flatten()
+for i in np.argsort(dists)[:5]:
+    print(words[i])
+```
+
+## Max Sum Similarity
+
+```python
+from scipy.special import factorial
+n = 10
+k = 5
+factorial(n)/factorial(n-k)/factorial(k)
+```
+
+```python
+from itertools import combinations
+
+max_dist = 0
+max_combi = None
+candidates = np.argsort(dists)[:n]
+for combi in combinations(candidates, k):
+    word_dists = cosine_distances(word_emb[list(combi)])
+    sum_dist = word_dists.sum()
+    if sum_dist > max_dist:
+        max_dist = sum_dist
+        max_combi = combi
+```
+
+```python
+max_dist
+```
+
+```python
+for i in max_combi:
+    print(words[i])
+```
+
+
+## Maximal Marginal Relevance
+
+초기화
+
+첫번째 키워드는 문서와 가장 비슷한 것으로 선택
+
+```python
+from sklearn.metrics.pairwise import cosine_similarity
+diversity = 0.5
+keyword, *candidates = np.argsort(dists)[:n].tolist()
+keywords = [keyword]
+```
+
+나머지 키워드를 하나씩 추가
+
+```python
+for _ in range(k - 1):
+    # 문서와 유사도 계산
+    doc_sims = cosine_similarity(doc_emb[[doc_idx]], word_emb[candidates])[0]
+    # 키워드와 유사도 계산
+    keyword_sims = cosine_similarity(word_emb[keywords], word_emb[candidates])
+    # 가장 높은 키워드 유사도를 선택
+    keyword_sims = np.max(keyword_sims, axis=0)
+    # MMR: 문서와는 비슷하고, 기존 키워드와는 달라야함
+    mmr = (1 - diversity) *  doc_sims - diversity * keyword_sims
+    # MMR이 가장 높은 키워드 위치
+    most_similar_idx = np.argmax(mmr)
+    # 후보에서 해당 키워드를 선택
+    keyword = candidates[most_similar_idx]
+    # 새 키워드 추가
+    keywords.append(keyword)
+    # 추가된 키워드는 후보에서 제거
+    candidates.remove(keyword)
+```
+
+```python
+for i in keywords:
+    print(words[i])
+```

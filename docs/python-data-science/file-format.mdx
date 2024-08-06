@@ -1,0 +1,281 @@
+
+
+# Python 데이터 포맷
+
+## npy
+
+넘파이(numpy) 라이브러리의 `npy` 포맷은 넘파이 배열을 효율적으로 저장하고 불러오는 데 사용되는 바이너리 파일 형식입니다. 이는 배열의 메타데이터(예: 데이터 타입, 배열 형태 등)와 데이터 자체를 함께 저장하므로, 데이터 로딩 시 별도의 변환 작업 없이 그대로 사용할 수 있습니다.
+
+장점:
+1. **속도**: 바이너리 형식이므로 데이터 읽기/쓰기가 매우 빠릅니다.
+2. **정확성**: 저장 시 배열의 메타데이터를 함께 저장하므로, 데이터 타입과 형상을 보존합니다.
+3. **간편성**: 넘파이 배열을 쉽게 저장하고 불러올 수 있는 함수가 제공됩니다.
+
+단점:
+1. **호환성**: npy 파일은 넘파이 환경에 종속적이므로, 다른 언어나 시스템에서 사용하기 어렵습니다.
+2. **공간 효율성**: 텍스트 기반의 포맷에 비해 크기가 더 클 수 있습니다.
+
+
+먼저, 넘파이 배열을 `npy` 파일로 저장하는 예제입니다.
+
+
+```python copy
+import numpy as np
+
+# 예제 배열 생성
+a = np.array([1, 2, 3, 4, 5])
+
+# npy 파일로 저장
+np.save('example.npy', a)
+
+# npy 파일로부터 배열 불러오기
+b = np.load('example.npy')
+
+# 두 배열이 같은지 확인
+np.array_equal(a, b)
+```
+
+```text filename="결과"
+True
+```
+
+
+## npz
+
+`npz` 포맷은 여러 개의 넘파이 배열을 하나의 압축 파일에 저장하는 데 사용되는 파일 형식입니다.
+
+
+```python copy
+a1 = np.array([1, 2, 3, 4, 5])
+a2 = np.array([[1, 2, 3], [4, 5, 6]])
+
+# npz 파일로 저장
+np.savez('example.npz', a1=a1, a2=a2)
+
+# 불러오기
+loaded = np.load('example.npz')
+
+# 불러온 배열 접근
+b1 = loaded['a1']
+b2 = loaded['a2']
+```
+
+
+## pickle
+
+`pickle`은 Python 객체 구조를 직렬화하고 역직렬화하는 데 사용되는 내장 모듈입니다. 이를 통해 Python 객체를 바이너리 형태로 저장하고 나중에 다시 불러올 수 있습니다.
+
+장점:
+1. Python의 거의 모든 객체 타입을 저장할 수 있습니다.
+2. 사용하기 쉽고 Python에 내장되어 있습니다.
+3. 객체의 구조와 데이터를 그대로 유지합니다.
+
+단점:
+1. Python 전용이라 다른 언어와의 호환성이 떨어집니다.
+2. 보안 취약점이 있을 수 있어 신뢰할 수 없는 소스의 pickle 파일을 로드하면 위험할 수 있습니다.
+3. 버전 간 호환성 문제가 있을 수 있습니다.
+
+
+```python copy
+import pickle
+
+# 저장할 데이터
+data = {
+    'name': '홍길동',
+    'age': 30,
+    'scores': [85, 90, 78]
+}
+
+# pickle로 데이터 저장하기
+with open('data.pkl', 'wb') as file:
+    pickle.dump(data, file)
+
+# pickle로 데이터 불러오기
+with open('data.pkl', 'rb') as file:
+    loaded_data = pickle.load(file)
+
+# 비교
+data == loaded_data
+```
+
+```text filename="결과"
+True
+```
+
+
+npy/npz는 넘파이 배열만을 저장할 수 있지만, pickle은 모든 종류의 Python 객체를 저장할 수 있습니다.
+대규모 숫자 데이터만 저장할 때는 npy/npz가 더 빠르고 효율적이며, 다양한 종류의 객체를 저장할 때는 pickle이 더 편합니다.
+
+## joblib
+
+`joblib`은 과학 계산 데이터에 맞게 `pickle`을 확장한 것으로, `pickle`과 사용법이 같지만 대용량 넘파이 배열을 더 빠르게 읽고 쓸 수 있습니다.
+
+먼저, 비교를 위해 100만 x 100 크기의 배열을 만듭니다.
+
+
+```python copy
+import joblib
+array = np.random.rand(1000000, 100)
+```
+
+
+넘파이에서 저장 속도를 측정합니다. 셀의 처음에 `%%time` 매직 명령어를 쓰면 실행 시간을 측정할 수 있습니다.
+
+
+```python copy
+%%time
+np.save('array.npy', array)
+```
+
+```text filename="결과"
+CPU times: total: 203 ms
+Wall time: 690 ms
+```
+
+
+`pickle`에서 저장 속도를 측정합니다.
+
+
+```python copy
+%%time
+pickle.dump(array, open('array.pkl', 'wb'))
+```
+
+```text filename="결과"
+CPU times: total: 531 ms
+Wall time: 988 ms
+```
+
+
+`joblib`에서 저장 속도를 측정합니다. `joblib`은 `pickle`과 달리 파일을 직접 열지 않고 파일 이름만 쓰면 됩니다.
+
+
+```python copy
+%%time
+joblib.dump(array, 'array.jb')
+```
+
+```text filename="결과"
+CPU times: total: 344 ms
+Wall time: 463 ms
+```
+
+```text filename="결과"
+['array.jb']
+```
+
+
+## HDF5
+
+HDF5(Hierarchical Data Format version 5)는 대용량의 복잡한 데이터를 저장하고 관리하기 위한 파일 형식 및 라이브러리입니다. 과학 계산, 빅데이터 분석, 머신러닝 등 다양한 분야에서 사용됩니다.
+
+장점:
+1. 대용량 데이터 처리: 테라바이트 이상의 데이터도 효율적으로 처리할 수 있습니다.
+2. 계층적 구조: 파일 시스템과 유사한 구조로 데이터를 체계적으로 저장할 수 있습니다.
+3. 부분 I/O: 전체 데이터를 로드하지 않고도 특정 부분만 읽거나 쓸 수 있습니다.
+4. 압축 지원: 데이터를 압축하여 저장 공간을 절약할 수 있습니다.
+5. 다양한 데이터 타입 지원: 숫자, 문자열, 배열 등 다양한 타입의 데이터를 저장할 수 있습니다.
+6. 크로스 플랫폼 지원: 다양한 운영 체제와 프로그래밍 언어에서 사용 가능합니다.
+
+단점:
+1. 복잡성: 단순한 데이터의 경우 CSV나 JSON에 비해 사용이 복잡할 수 있습니다.
+2. 전문성 요구: 효율적인 사용을 위해서는 HDF5의 구조와 특성을 이해해야 합니다.
+3. 동시 접근 제한: 여러 프로세스가 동시에 쓰기 작업을 할 때 제한이 있습니다.
+4. 파일 손상 위험: 파일이 손상되면 모든 데이터에 접근이 불가능할 수 있습니다.
+
+pandas로 HDF5를 다루려면 먼저 `pytables`를 설치해줍니다. 
+
+```sh copy
+!pip install tables
+```
+
+다음은 pandas를 사용하여 HDF5 파일을 다루는 예제 코드입니다.
+
+
+```python copy
+import pandas as pd
+import os
+
+# 샘플 데이터
+size = 1000
+df = pd.DataFrame({
+    'date': pd.date_range('2021-01-01', periods=size),
+    'value1': np.random.randn(size),
+    'value2': np.random.randn(size),
+    'category': np.random.choice(['A', 'B', 'C'], size)
+})
+
+# HDF5 파일에 데이터 저장
+df.to_hdf('sample_data.h5', key='data1', mode='w', format='table')
+
+# HDF5 파일에 데이터 추가 저장
+df.to_hdf('sample_data.h5', key='data2', mode='a', format='table')
+
+```
+
+
+HDF5는 파일 전체를 불러오지 않고도, 저장된 데이터를 볼 수 있습니다.
+
+
+```python copy
+import h5py
+with h5py.File('sample_data.h5', 'r') as f:
+    print(f.keys())
+```
+
+```text filename="결과"
+<KeysViewHDF5 ['data1', 'data2']>
+```
+
+
+특정 데이터만 불러올 수도 있습니다.
+
+
+```python copy
+df2 = pd.read_hdf('sample_data.h5', key='data2')
+df2.head()
+```
+
+```text filename="결과"
+        date    value1    value2 category
+0 2021-01-01  0.882555 -0.215710        B
+1 2021-01-02  1.320530 -0.384690        C
+2 2021-01-03  0.224667  0.808681        A
+3 2021-01-04 -1.949675 -1.229093        B
+4 2021-01-05  1.339483  0.424467        B
+```
+
+
+데이터에서 특정 범위의 내용만 부분만 불러올 수도 있습니다. 다음은 500번 이후 행만 가져오는 예제입니다.
+
+
+```python copy
+df3 = pd.read_hdf('sample_data.h5', key='data2', where="index > 500")
+df3.head()
+```
+
+```text filename="결과"
+          date    value1    value2 category
+501 2022-05-17  0.560731  0.351499        B
+502 2022-05-18  1.142418 -0.024860        B
+503 2022-05-19 -0.348870 -1.296591        A
+504 2022-05-20  1.444491  0.881786        A
+505 2022-05-21 -0.053263 -0.323642        A
+```
+
+
+앞에서 저장 속도 비교에 사용했던 배열을 저장해서 속도를 측정합니다.
+
+
+```python copy
+%%time
+with h5py.File('array.h5', 'w') as f:
+    f.create_dataset('data', data=array)
+```
+
+```text filename="결과"
+CPU times: total: 250 ms
+Wall time: 803 ms
+```
+
+

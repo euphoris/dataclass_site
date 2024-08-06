@@ -1,0 +1,287 @@
+# 잠재 의미 분석
+
+잠재의미분석(Latent Semantic Analysis, LSA)은 텍스트에 숨겨진 의미를 찾아내는 기법이다. 이는 직접 관찰할 수 없는 잠재적인 요소가 있다고 가정하고, 이 요소가 우리가 관찰할 수 있는 데이터에 영향을 미친다고 보는 분석 방법이다.
+
+이는 비지도 학습의 한 형태로 볼 수 있다. 지도학습이 관찰된 X로 알려진 Y를 예측하는 것이라면, 잠재의미분석은 관찰된 X를 설명할 수 있는 관찰되지 않은 Z를 찾아내는 과정이다.
+
+텍스트 분석에서는 이러한 잠재변수를 특별히 '토픽'이라고 부른다. 이는 단순히 잠재변수를 지칭하는 용어일 뿐, 특별한 의미는 없다. 
+
+이 방법은 문서-단어 행렬과 같이 우리가 직접 관찰할 수 있는 데이터 뒤에 숨겨진 구조나 패턴을 찾아내려는 시도이다. 즉, 어떤 보이지 않는 요소들이 우리가 관찰할 수 있는 텍스트 데이터에 영향을 미치고 있다고 가정하고, 그 요소들을 파악하려는 것이다.
+
+LSA(잠재 의미 분석)는 텍스트 분석 방법 중 가장 오래된 방법 중 하나다. 하지만 오래되었다고 해서 나쁜 것은 아니다. 통계학에서는 오래된 방법들이 여전히 유용한 경우가 많다.
+
+이 방법이 좋은 이유는 과거에 데이터와 컴퓨터 성능이 제한적이었던 시절에 개발되었기 때문이다. 따라서 적은 데이터와 낮은 컴퓨터 성능에서도 잘 작동하도록 설계되었다. 
+
+반면에 최신 방법들은 빅데이터와 고성능 컴퓨터를 전제로 개발되었다. 그러나 실제로 우리가 다루는 데이터가 항상 빅데이터 수준인 것은 아니다. 예를 들어, 특정 주제의 특허 데이터는 수백 개 정도밖에 없을 수 있다. 이런 경우에는 최신 방법보다 오히려 고전적인 방법이 더 적합할 수 있다.
+
+따라서 LSA와 같은 고전적인 방법들은 적은 데이터에 맞춰 개발되었기 때문에, 여전히 많은 상황에서 유용하게 사용되고 있다.
+
+## 심리학에서 잠재변수
+잠재변수의 개념은 원래 심리학에서 시작되었다. 심리학자들은 직접 관찰할 수 없는 마음을 연구하기 위해 이 개념을 도입했다.
+
+잠재변수와 관찰변수를 구별하는 것이 중요하다. 예를 들어, 지능의 경우:
+- 지능 검사 점수: 관찰변수
+- 지능 자체: 잠재변수
+
+이 두 가지는 별개의 개념이다. 지능 검사 점수는 우리가 직접 관찰할 수 있지만, 실제 지능은 관찰할 수 없다. 심리학자들은 관찰할 수 없는 지능이 검사 점수에 영향을 미친다고 가정한다.
+
+이와 같은 개념은 다른 분야에도 적용된다:
+- 성격 검사 결과와 실제 성격
+- 고객 만족도 조사 결과와 실제 고객 만족도
+
+이 모든 경우에서 우리가 직접 관찰할 수 있는 것(검사 결과, 조사 결과)과 관찰할 수 없는 잠재변수(실제 성격, 실제 만족도)를 구별해야 한다. 잠재변수가 관찰변수에 영향을 미치지만, 둘 사이에는 약간의 오차가 있을 수 있다.
+
+이러한 구별은 데이터 분석과 기계학습에서 중요한 개념이 된다.
+
+## SVD
+
+SVD는 문서-단어 행렬을 세 개의 행렬로 분해하는 방법이다. 이 중 가장 중요한 것은 왼쪽의 U 행렬과 오른쪽의 V 행렬이다. U는 문서-토픽 행렬이 되고, V는 토픽-단어 행렬이 된다.
+
+이 과정에서 토픽의 수를 크게 줄이게 된다. 그래서 U 행렬은 가로 폭이 넓지만 실제로 사용되는 부분(회색으로 표시된 부분)은 좁아진다. 이는 많은 수의 문서를 소수의 토픽으로 표현하겠다는 의미다. 마찬가지로 V 행렬에서도 많은 수의 단어를 소수의 토픽으로 설명하게 된다.
+
+이렇게 행렬을 분해하는 수학적 기법을 SVD(특이값 분해)라고 한다. 여기서는 행렬의 많은 부분을 잘라내기 때문에 'Truncated SVD'라고 부른다. 실제로 LSA 분석을 할 때는 이 Truncated SVD를 수행하면 된다. 
+
+문서 단어 행렬에 SVD 적용, 100차원으로 축소
+
+```python
+from sklearn.decomposition import TruncatedSVD
+svd = TruncatedSVD(n_components=100, random_state=1234)
+doc_emb = svd.fit_transform(dtm)
+```
+
+## 스크리 플롯
+
+LSA에서 중요한 것은 트렁케이티드 SVD를 할 때 컴포넌트의 개수, 즉 차원을 얼마나 줄일 것인가 하는 점이다. 이를 결정하기 위해 스크리 플롯을 사용한다. 스크리 플롯이란 이름은 절벽 아래 쌓인 돌무더기를 의미하는 'scree'에서 유래했다.
+
+스크리 플롯은 SVD의 Explained Variance를 보여주는데, 이는 데이터의 변화를 설명하는 각 차원의 중요도를 나타낸다. 대부분의 데이터는 특정 방향으로 크게 변하고 다른 방향으로는 덜 변한다. 차원 축소의 논리는 작게 변하는 방향은 중요하지 않으므로 제거할 수 있다는 것이다.
+
+플롯을 보면 초반에는 값이 크게 떨어지다가 어느 지점부터 완만해진다. 이 지점을 '팔꿈치'라고 부르며, 보통 이 지점에서 차원을 자른다. 예를 들어, 100개의 차원이 있다면 앞쪽의 중요한 차원들만 남기고 나머지는 제거한다. 이 방법은 데이터의 본질적인 구조를 유지하면서도 차원을 효과적으로 줄일 수 있게 해준다. 
+
+```python
+import matplotlib.pyplot as plt
+plt.plot(svd.explained_variance_)
+```
+
+14차원 정도에서 꺾이므로 14차원으로 다시 축소
+
+```python
+svd = TruncatedSVD(n_components=14, random_state=1234)
+doc_emb = svd.fit_transform(dtm)
+```
+
+## 단어 임베딩
+
+SVD 결과를 전치(transpose)해서 단어 임베딩을 만듦(단어 수 &times; 토픽 수)
+
+```python
+word_emb = svd.components_.T
+```
+
+단어 text의 번호
+
+```python
+words = cv.get_feature_names_out().tolist()
+i = words.index('모발')
+```
+
+단어와 각 토픽의 관련도를 시각화
+
+
+```python
+plt.plot(word_emb[i])
+```
+
+코사인 유사도 구하기
+
+```python
+from sklearn.metrics.pairwise import cosine_similarity
+sim = cosine_similarity(word_emb)
+```
+
+유사도 높은 단어 10개 보기
+
+```python
+import numpy as np
+s = np.argsort(sim[i])    # i번째 단어와 유사도 순으로 정렬
+related = s[-2:-12:-1]    # 가장 유사도가 높은 10개
+for j in related:
+    print(words[j])
+```
+
+## MDS를 이용한 단어 유사도 시각화
+
+여러 단어의 번호 찾기
+
+```python
+indices = []
+target = ['모발', '손상', '두피', '모공', '용기', '내용물']
+for w in target:
+    i = words.index(w)
+    indices.append(i)
+    print(w, i)
+```
+유사도를 거리로 바꿈
+
+```python
+dist = 1 - sim[indices, ][:, indices] 
+```
+
+좌표 계산
+
+```python
+from sklearn.manifold import MDS
+mds = MDS(dissimilarity='precomputed', random_state=1234)
+pos = mds.fit_transform(dist)
+```
+plot에서 글자가 겹치지 않도록 조정해주는 adjustText를 설치
+```python
+!pip install adjusttext
+```
+
+임포트
+
+```python
+from adjustText import adjust_text
+```
+
+한글 글꼴 설정
+
+```python
+from matplotlib import font_manager
+for font in font_manager.fontManager.ttflist:
+    if 'Malgun' in font.name:
+        print(font.name, font.fname)
+```
+글꼴 설정
+
+```python
+import matplotlib.pyplot as plt
+plt.rc('font', family='Malgun Gothic')
+plt.rc('axes', unicode_minus=False)
+```
+
+단어 임베딩 시각화
+
+```python
+plt.plot(pos[:, 0], pos[:, 1], '.')
+texts = [plt.text(pos[i, 0], pos[i, 1], w) for i, w in enumerate(target)]
+adjust_text(texts)
+```
+
+## 회전
+
+설치
+```python
+pip install factor_analyzer
+```
+회전
+```python
+from factor_analyzer.rotator import Rotator
+rotator = Rotator()
+rot = rotator.fit_transform(word_emb)
+```
+단어와 각 토픽의 관련도를 시각화
+
+```python
+plt.plot(rot[i])
+```
+i번 단어와 가장 관련도가 큰 토픽 번호
+```python
+t = np.argmax(rot[i])
+```
+t번 토픽과 관련도가 큰 단어들
+```python
+topic_words_idx = np.argsort(rot[:, t])
+```
+관련도 순으로 출력
+
+```python
+for j in topic_words_idx[-1:-11:-1]:
+    print(words[j])
+```
+
+## NMF
+
+전처리는 SVD와 동일
+차원(=토픽의 수)를 결정하기 위해 SVD로 스크리 플롯을 그려본다
+
+
+```python
+from sklearn.decomposition import NMF
+NUM_TOPICS = 14
+nmf = NMF(n_components=NUM_TOPICS)
+doc_emb = nmf.fit_transform(dtm)
+word_emb = nmf.components_.T
+```
+
+NMF는 SVD와 달리 회전을 하지 않아도 단어는 소수의 토픽과 관련을 가짐
+
+```python
+words = cv.get_feature_names_out().tolist()
+i = words.index('모발')
+plt.plot(word_emb[i])
+```
+
+유사도 높은 단어 패턴은 SVD와 비슷
+
+```python
+from sklearn.metrics.pairwise import cosine_similarity
+sim = cosine_similarity(word_emb)
+
+import numpy as np
+s = np.argsort(sim[i])
+related = s[-2:-12:-1]
+for j in related:
+    print(words[j])
+```
+
+토픽별 관련 단어는 SVD의 회전 시킨 결과와 비슷
+```python
+for t in range(NUM_TOPICS):
+    print(t)
+    topic_words_idx = np.argsort(word_emb[:, t])
+
+    for j in topic_words_idx[-1:-11:-1]:
+        print(words[j])
+```
+0번 문서
+```python
+doc_id = 0
+df.iloc[0]
+```
+0번 문서 토픽 보기
+```python
+plt.plot(doc_emb[doc_id])
+```
+0번 문서에서 가장 강한 토픽
+
+```python
+topic_id = np.argmax(doc_emb[doc_id])
+topic_id
+```
+
+해당 토픽의 문서 보기
+
+```python
+topic_docs_idx = np.argsort(doc_emb[:,topic_id])[-1:-11:-1]
+df.iloc[topic_docs_idx]
+```
+
+토픽 패턴이 가장 비슷한 문서 찾기
+
+```python
+sims = cosine_similarity(doc_emb[[doc_id]], doc_emb).flatten()
+sim_idx = np.argsort(sims)[-1:-11:-1]
+```
+
+문서 보기
+
+```python
+df.iloc[sim_idx]
+```
+
+유사도 보기
+
+```python
+sims[sim_idx]
+```

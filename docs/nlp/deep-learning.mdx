@@ -1,0 +1,88 @@
+# 딥러닝
+
+pytorch 설치
+
+```python
+!pip install torch
+```
+
+```python
+import torch
+from torch import nn, optim
+```
+
+데이터셋 변환
+
+```python
+train_dataset = torch.utils.data.TensorDataset(
+    torch.Tensor(x_train.A),
+    torch.Tensor(y_train.values)
+)
+```
+
+데이터 로더
+
+```python
+train_loader = torch.utils.data.DataLoader(
+    train_dataset, batch_size=32, shuffle=True)
+```
+
+모델 정의
+
+```python
+input_size = cv.max_features
+num_classes = 1
+model = nn.Sequential(
+    nn.Linear(input_size, num_classes),
+    nn.Sigmoid()
+)
+```
+
+훈련 설정
+
+```python
+criterion = nn.BCELoss()
+optimizer = optim.SGD(model.parameters(), lr=1.0)
+```
+훈련
+
+```python
+losses = []
+epochs = 10
+for epoch in range(epochs):
+    for i, data in enumerate(train_loader):  # 배치의 데이터와 레이블에 대해 반복
+        inputs, labels = data
+        optimizer.zero_grad()    # 경사를 0으로 초기화
+        outputs = model(inputs)  # 모델에 데이터를 입력으로 전달하고, 출력을 계산
+        outputs = torch.squeeze(outputs)
+        loss = criterion(outputs, labels)  # 출력값과 레이블 값을 사용하여 손실 계산
+        loss.backward()   # 손실값을 미분하여 모델의 파라미터의 기울기 계산
+        optimizer.step()  # 옵티마이저를 사용하여 모델의 가중치와 편향 값을 업데이트
+        losses.append(loss.item())  # 손실값 누적
+```
+
+예측
+```python
+x_test_pt = torch.Tensor(x_test.A)
+prob_pt = model(x_test_pt)
+prob_pt = torch.squeeze(prob_pt)
+prob = prob_pt.detach().numpy()
+```
+
+문턱값에 따라 다르게 예측
+
+```python
+threshold = 0.5 # 문턱값
+y_pred = np.where(prob > threshold, 1, 0)
+```
+
+가중치
+
+```python
+weight, bias = list(model.parameters())
+word_weight = pd.DataFrame({
+    '단어': cv.get_feature_names_out(),
+    '가중치': weight.detach().numpy().flat
+})
+```
+

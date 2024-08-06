@@ -1,0 +1,70 @@
+<iframe src="https://tally.so/embed/n0PLMP?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1600" frameborder="0" marginheight="0" marginwidth="0" title="자연어 (03) 1일차 복습"></iframe>
+
+## 실습 코드
+
+```python
+import pandas as pd
+df = pd.read_excel('patents.xlsx')
+```
+
+```python
+!pip install kiwipiepy
+```
+
+```python
+from kiwipiepy import Kiwi
+kiwi = Kiwi()
+```
+
+```python
+def extract_nouns(text):
+    result = kiwi.tokenize(text)
+    for token in result:
+        if token.tag in ['NNG', 'NNP']:
+            yield token.form
+```
+
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(
+    max_features=100,       # 최대 단어 수(빈도 순)
+    tokenizer=extract_nouns) # 토큰화 방법
+```
+
+```python
+dtm = cv.fit_transform(df['abstract'])
+```
+
+```python
+word_count = pd.DataFrame({
+    '단어': cv.get_feature_names_out(),
+    '빈도': dtm.sum(axis=0).flat
+})
+count_dic = dict(zip(word_count.단어, word_count.빈도))
+```
+
+```python
+word_count.sort_values('빈도', ascending=False) # 정답: 발명
+```
+
+```python
+!pip install wordcloud
+```
+
+```python
+from wordcloud import WordCloud
+from PIL import Image
+import numpy as np
+from wordcloud import ImageColorGenerator
+
+# 모양 잡기
+mask = Image.open('mask.png') # .convert('L') 없음
+mask = np.asarray(mask)
+wc = WordCloud(font_path='온글잎 누카.ttf', background_color='white', mask=mask)
+wc.fit_words(count_dic)
+ 
+# 색칠하기
+color_func = ImageColorGenerator(mask)
+cloud = wc.recolor(color_func=color_func)
+cloud.to_image()
+```
