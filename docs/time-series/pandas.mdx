@@ -53,49 +53,77 @@ df = pd.read_excel('GOOG.xlsx')
 df.head()
 ```
 
-문자열을 날짜 시간 형식으로 변환
+`Date` 컬럼은 날짜, `Price` 컬럼은 주가(종가)
+
+`df.head()`는 데이터의 앞부분을 보여줌. `df.tail()`은 뒷부분을 보여줌.
+
 
 ```python
 df.Date = pd.to_datetime(df.Date)
 ```
 
-Date 컬럼을 인덱스(행 이름)으로 변환
-inplace=True: 원본을 변환, 생략하면 Date가 index로 설정된 새로운 데이터를 만듦
+문자열을 날짜 시간 형식으로 변환
 
 ```python
 df.set_index('Date', inplace=True)
 ```
 
+Date 컬럼을 인덱스(행 이름)으로 변환
+
+`inplace=True`: 원본을 변환, 생략하면 Date가 index로 설정된 새로운 데이터를 만듦
+
+```python
+df.loc['2015-01-02':'2015-01-07']
+```
+
+인덱스를 이용해 특정 기간의 데이터를 뽑아냄
+
 ### 정렬 & 시각화
 
-인덱스를 순서대로(오름차순) 정렬
 ```python
 df.sort_index(inplace=True)
 ```
 
-인덱스를 역순(내림차순) 정렬
+인덱스를 순서대로(오름차순) 정렬
+
 ```python
 df.sort_index(ascending=False)
 ```
-시각화
+인덱스를 역순(내림차순) 정렬
+
 ```python
 df.Price.plot()
 ```
+
+시각화
 ### 변화량 구하기
-차분(differencing): 전일과 차이 구하기
 ```python
 df.Price.diff()
 ```
-전일과 차이의 비율 구하기
+차분(differencing): 전일과 차이 구하기
+
+점점 더 폭이 커지는 이유는 주가가 올라서 같은 비율의 변동도 가격 차이가 더 커지기 때문
+
 ```python
 df.Price.pct_change()
 ```
+
+전일과 차이의 비율 구하기
+
+대부분의 경우 일정 비율 내에서 변동하는 것을 볼 수 있음
+
+2020년 초 주가의 변동성이 커진 것을 볼 수 있음
+
 ### 일정 간격으로 데이터 뽑기
 
-매월 말일 주가
 ```python
 df.Price.asfreq('M')
 ```
+
+`asfreq`는 일정한 간격(frequency)으로 데이터를 뽑아냄
+
+`.asfreq('M')`은 매월 말일 주가
+
 ### 그래프 겹쳐 그리기
 
 .plot을 같은 셀에서 실행하면 그래프가 겹쳐서 그려짐
@@ -128,14 +156,22 @@ df.Price.resample('AS').mean()
 ```
 
 ### 이동 평균
-rolling을 이용해서 매 365일 간격의 데이터를 묶음
+
 ```python
 rolling = df.Price.rolling(365, center=True)
 ```
-각 묶음별로 평균
+
+rolling을 이용해서 매 365일 간격의 데이터를 묶음
+
+이동 평균은 평균을 마지막 날짜에 표시하므로, 그래프를 그리면 뒤로 밀려서 보임.
+
+`center=True`를 하면 중심에 맞춰 그림
+
 ```python
 rolling.mean().plot()
 ```
+
+각 묶음별로 평균
 
 ## 자전거 대여소 데이터
 
@@ -176,7 +212,7 @@ roll.sum(std=10).plot()
 
 ### 시간대별 평균
 
-시간별(data.index.hour)로 데이터를 모아(groupby) 평균
+시간별(`data.index.hour`)로 데이터를 모아(`groupby`) 평균
 ```python
 by_time = data.groupby(data.index.hour).mean()
 by_time.plot()
@@ -197,6 +233,7 @@ by_weekday.plot()
 ### 주중과 주말의 비교
 주중과 주말, 시간대별로 나누어 평균
 ```python
+import numpy as np
 weekend = np.where(data.index.weekday < 5, 'Weekday', 'Weekend')
 by_time = data.groupby([weekend, data.index.hour]).mean()
 ```
@@ -205,8 +242,6 @@ by_time = data.groupby([weekend, data.index.hour]).mean()
 by_time.loc['Weekday'].plot(xticks=hourly_ticks)
 by_time.loc['Weekend'].plot(xticks=hourly_ticks)
 ```
-
-
 
 ### 하나의 그래프에 합쳐 그리기
 

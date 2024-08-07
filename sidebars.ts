@@ -16,7 +16,7 @@ const sidebars: SidebarsConfig = {
   timeSeriesSidebar: [
     { type: 'doc',
       id: 'time-series/intro',
-      label: 'Q&A'
+      label: '실습 및 Q&A'
     },
     { type: 'doc',
       id: 'time-series/pandas',
