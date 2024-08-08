@@ -48,6 +48,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'doc',
+      id: 'time-series/review2-solution',
+      label: '2일차 복습 풀이'
+    },    
+    {
+      type: 'doc',
       id: 'time-series/regression',
       label: '회귀분석'
     },
