@@ -50,17 +50,47 @@ const sidebars: SidebarsConfig = {
       type: 'doc',
       id: 'time-series/review2-solution',
       label: '2일차 복습 풀이'
-    },    
+    },
     {
       type: 'doc',
       id: 'time-series/regression',
       label: '회귀분석'
     },
+    {
+      type: 'doc',
+      id: 'time-series/time-series-regression',
+      label: '시계열 회귀'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/decomposition',
+      label: '시계열 분해'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/review3',
+      label: '3일차 복습 ★'
+    },
     // {
     //   type: 'doc',
-    //   id: 'time-series/clustering',
-    //   label: '클러스터링'
-    // }
+    //   id: 'time-series/review3-solution',
+    //   label: '3일차 복습 풀이'
+    // },
+    {
+      type: 'doc',
+      id: 'time-series/ETS',
+      label: '지수 평활'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/clustering',
+      label: '클러스터링'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/temporal-fusion-transformers',
+      label: 'Temporal Fusion Transformers'
+    }
   ],
   nlpSidebar: [
     { type: 'doc',

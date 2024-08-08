@@ -18,6 +18,12 @@ m.summary()
 ```
 
 :::note[output]
+```"
+c:\Users\eupho\anaconda3\lib\site-packages\pandas\core\arrays\masked.py:60: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+
+```
+
 ```
 <class 'statsmodels.iolib.summary.Summary'>
 """
@@ -26,8 +32,8 @@ m.summary()
 Dep. Variable:                  price   R-squared:                       0.457
 Model:                            OLS   Adj. R-squared:                  0.455
 Method:                 Least Squares   F-statistic:                     229.1
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.81e-38
-Time:                        22:47:57   Log-Likelihood:                -1895.7
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):           5.81e-38
+Time:                        16:58:38   Log-Likelihood:                -1895.7
 No. Observations:                 274   AIC:                             3795.
 Df Residuals:                     272   BIC:                             3803.
 Df Model:                           1                                         
@@ -91,8 +97,8 @@ ols("price ~ mileage + year", data = df).fit().summary()
 Dep. Variable:                  price   R-squared:                       0.749
 Model:                            OLS   Adj. R-squared:                  0.747
 Method:                 Least Squares   F-statistic:                     403.5
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.62e-82
-Time:                        22:50:38   Log-Likelihood:                -1790.2
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):           5.62e-82
+Time:                        16:58:39   Log-Likelihood:                -1790.2
 No. Observations:                 274   AIC:                             3586.
 Df Residuals:                     271   BIC:                             3597.
 Df Model:                           2                                         
@@ -136,8 +142,8 @@ ols("price ~ scale(mileage) + scale(year)", data = df).fit().summary()
 Dep. Variable:                  price   R-squared:                       0.749
 Model:                            OLS   Adj. R-squared:                  0.747
 Method:                 Least Squares   F-statistic:                     403.5
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.62e-82
-Time:                        22:50:54   Log-Likelihood:                -1790.2
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):           5.62e-82
+Time:                        16:58:39   Log-Likelihood:                -1790.2
 No. Observations:                 274   AIC:                             3586.
 Df Residuals:                     271   BIC:                             3597.
 Df Model:                           2                                         
@@ -179,8 +185,8 @@ ols("price ~ model", data = df).fit().summary()
 Dep. Variable:                  price   R-squared:                       0.011
 Model:                            OLS   Adj. R-squared:                  0.007
 Method:                 Least Squares   F-statistic:                     3.039
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0824
-Time:                        22:51:16   Log-Likelihood:                -1977.9
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):             0.0824
+Time:                        16:58:39   Log-Likelihood:                -1977.9
 No. Observations:                 274   AIC:                             3960.
 Df Residuals:                     272   BIC:                             3967.
 Df Model:                           1                                         
@@ -222,8 +228,8 @@ ols('y ~ TRT', dep).fit().summary()
 Dep. Variable:                      y   R-squared:                       0.172
 Model:                            OLS   Adj. R-squared:                  0.122
 Method:                 Least Squares   F-statistic:                     3.424
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0445
-Time:                        22:51:49   Log-Likelihood:                -137.86
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):             0.0445
+Time:                        16:58:39   Log-Likelihood:                -137.86
 No. Observations:                  36   AIC:                             281.7
 Df Residuals:                      33   BIC:                             286.5
 Df Model:                           2                                         
@@ -263,6 +269,13 @@ pg.anova(dep, dv='y', between='TRT')
 0    TRT      2     33  3.424087  0.044539  0.171857
 ```
 
+```"
+c:\Users\eupho\anaconda3\lib\site-packages\outdated\utils.py:14: OutdatedPackageWarning: The package pingouin is out of date. Your version is 0.5.3, the latest is 0.5.4.
+Set the environment variable OUTDATED_IGNORE=1 to disable these warnings.
+  return warn(
+
+```
+
 :::
 
 
@@ -282,8 +295,8 @@ ols('price ~ C(model, Treatment("K3"))', df).fit().summary()
 Dep. Variable:                  price   R-squared:                       0.011
 Model:                            OLS   Adj. R-squared:                  0.007
 Method:                 Least Squares   F-statistic:                     3.039
-Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0824
-Time:                        22:53:10   Log-Likelihood:                -1977.9
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):             0.0824
+Time:                        16:58:40   Log-Likelihood:                -1977.9
 No. Observations:                 274   AIC:                             3960.
 Df Residuals:                     272   BIC:                             3967.
 Df Model:                           1                                         
@@ -298,6 +311,61 @@ Omnibus:                       13.893   Durbin-Watson:                   0.528
 Prob(Omnibus):                  0.001   Jarque-Bera (JB):               15.007
 Skew:                           0.573   Prob(JB):                     0.000551
 Kurtosis:                       3.002   Cond. No.                         3.76
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+```
+
+:::
+
+
+## 무작위 데이터의 예시
+
+무작위로 만든 데이터도 독립변수가 많으면 R제곱이 높게 나옴
+
+
+```python copy
+import numpy as np
+d = np.random.random(size=(10, 21))
+d = pd.DataFrame(d, columns=['y'] + [f'x{i}' for i in range(20)])
+ols('y ~ x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8', d).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       1.000
+Model:                            OLS   Adj. R-squared:                    nan
+Method:                 Least Squares   F-statistic:                       nan
+Date:                Thu, 08 Aug 2024   Prob (F-statistic):                nan
+Time:                        16:59:03   Log-Likelihood:                 318.98
+No. Observations:                  10   AIC:                            -618.0
+Df Residuals:                       0   BIC:                            -614.9
+Df Model:                           9                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.9427        inf          0        nan         nan         nan
+x0            -0.4604        inf         -0        nan         nan         nan
+x1             1.2115        inf          0        nan         nan         nan
+x2            -0.2894        inf         -0        nan         nan         nan
+x3            -0.5839        inf         -0        nan         nan         nan
+x4            -1.0369        inf         -0        nan         nan         nan
+x5            -1.5566        inf         -0        nan         nan         nan
+x6             1.7873        inf          0        nan         nan         nan
+x7            -1.2252        inf         -0        nan         nan         nan
+x8             0.4618        inf          0        nan         nan         nan
+==============================================================================
+Omnibus:                        1.046   Durbin-Watson:                   0.071
+Prob(Omnibus):                  0.593   Jarque-Bera (JB):                0.826
+Skew:                           0.543   Prob(JB):                        0.662
+Kurtosis:                       2.104   Cond. No.                         69.6
 ==============================================================================
 
 Notes:
