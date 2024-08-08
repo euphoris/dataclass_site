@@ -1,0 +1,341 @@
+
+
+# 회귀분석
+
+
+```python copy
+import pandas as pd
+from statsmodels.formula.api import ols
+
+# 가져오기
+df = pd.read_excel('car.xlsx')
+
+# 분석
+m = ols("price ~ mileage", data = df).fit()
+
+# 결과
+m.summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.457
+Model:                            OLS   Adj. R-squared:                  0.455
+Method:                 Least Squares   F-statistic:                     229.1
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.81e-38
+Time:                        22:47:57   Log-Likelihood:                -1895.7
+No. Observations:                 274   AIC:                             3795.
+Df Residuals:                     272   BIC:                             3803.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept   1258.7668     30.599     41.137      0.000    1198.526    1319.008
+mileage       -0.0052      0.000    -15.136      0.000      -0.006      -0.005
+==============================================================================
+Omnibus:                        0.258   Durbin-Watson:                   1.101
+Prob(Omnibus):                  0.879   Jarque-Bera (JB):                0.108
+Skew:                           0.032   Prob(JB):                        0.947
+Kurtosis:                       3.074   Cond. No.                     1.83e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.83e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+"""
+```
+
+:::
+
+
+## 예측
+
+
+```python copy
+# 새로운 데이터 만들기
+new_df = pd.DataFrame({'mileage': [10000, 20000]})
+
+# 모형에 입력하여 예측
+m.predict(new_df)
+```
+
+:::note[output]
+```
+0    1206.483684
+1    1154.200600
+dtype: float64
+```
+
+:::
+
+
+## 다중회귀분석
+
+
+```python copy
+ols("price ~ mileage + year", data = df).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.749
+Model:                            OLS   Adj. R-squared:                  0.747
+Method:                 Least Squares   F-statistic:                     403.5
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.62e-82
+Time:                        22:50:38   Log-Likelihood:                -1790.2
+No. Observations:                 274   AIC:                             3586.
+Df Residuals:                     271   BIC:                             3597.
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept  -1.688e+05   9597.865    -17.592      0.000   -1.88e+05    -1.5e+05
+mileage       -0.0023      0.000     -8.143      0.000      -0.003      -0.002
+year          84.3822      4.761     17.724      0.000      75.009      93.755
+==============================================================================
+Omnibus:                       11.272   Durbin-Watson:                   1.598
+Prob(Omnibus):                  0.004   Jarque-Bera (JB):               11.786
+Skew:                           0.435   Prob(JB):                      0.00276
+Kurtosis:                       3.523   Cond. No.                     8.41e+07
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 8.41e+07. This might indicate that there are
+strong multicollinearity or other numerical problems.
+"""
+```
+
+:::
+
+
+## 표준화
+
+
+```python copy
+ols("price ~ scale(mileage) + scale(year)", data = df).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.749
+Model:                            OLS   Adj. R-squared:                  0.747
+Method:                 Least Squares   F-statistic:                     403.5
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):           5.62e-82
+Time:                        22:50:54   Log-Likelihood:                -1790.2
+No. Observations:                 274   AIC:                             3586.
+Df Residuals:                     271   BIC:                             3597.
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==================================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+Intercept        853.6606     10.112     84.419      0.000     833.752     873.569
+scale(mileage)  -100.2044     12.306     -8.143      0.000    -124.431     -75.978
+scale(year)      218.1006     12.306     17.724      0.000     193.874     242.327
+==============================================================================
+Omnibus:                       11.272   Durbin-Watson:                   1.598
+Prob(Omnibus):                  0.004   Jarque-Bera (JB):               11.786
+Skew:                           0.435   Prob(JB):                      0.00276
+Kurtosis:                       3.523   Cond. No.                         1.91
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+```
+
+:::
+
+
+## 더미코딩
+
+
+```python copy
+ols("price ~ model", data = df).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.011
+Model:                            OLS   Adj. R-squared:                  0.007
+Method:                 Least Squares   F-statistic:                     3.039
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0824
+Time:                        22:51:16   Log-Likelihood:                -1977.9
+No. Observations:                 274   AIC:                             3960.
+Df Residuals:                     272   BIC:                             3967.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept     833.4146     23.144     36.009      0.000     787.850     878.980
+model[T.K3]    80.3970     46.121      1.743      0.082     -10.402     171.196
+==============================================================================
+Omnibus:                       13.893   Durbin-Watson:                   0.528
+Prob(Omnibus):                  0.001   Jarque-Bera (JB):               15.007
+Skew:                           0.573   Prob(JB):                     0.000551
+Kurtosis:                       3.002   Cond. No.                         2.48
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+```
+
+:::
+
+
+범주가 3개일 경우
+
+
+```python copy
+dep = pd.read_excel('depression.xlsx')
+ols('y ~ TRT', dep).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.172
+Model:                            OLS   Adj. R-squared:                  0.122
+Method:                 Least Squares   F-statistic:                     3.424
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0445
+Time:                        22:51:49   Log-Likelihood:                -137.86
+No. Observations:                  36   AIC:                             281.7
+Df Residuals:                      33   BIC:                             286.5
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     62.3333      3.359     18.557      0.000      55.500      69.167
+TRT[T.B]     -10.4167      4.750     -2.193      0.035     -20.081      -0.752
+TRT[T.C]     -11.0833      4.750     -2.333      0.026     -20.748      -1.419
+==============================================================================
+Omnibus:                        0.553   Durbin-Watson:                   1.488
+Prob(Omnibus):                  0.758   Jarque-Bera (JB):                0.544
+Skew:                          -0.267   Prob(JB):                        0.762
+Kurtosis:                       2.721   Cond. No.                         3.73
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+```
+
+:::
+
+
+## 선형 회귀분석과 분산 분석
+
+
+```python copy
+import pingouin as pg
+pg.anova(dep, dv='y', between='TRT')
+```
+
+:::note[output]
+```
+  Source  ddof1  ddof2         F     p-unc       np2
+0    TRT      2     33  3.424087  0.044539  0.171857
+```
+
+:::
+
+
+## 기준 범주 바꾸기
+
+
+```python copy
+ols('price ~ C(model, Treatment("K3"))', df).fit().summary()
+```
+
+:::note[output]
+```
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.011
+Model:                            OLS   Adj. R-squared:                  0.007
+Method:                 Least Squares   F-statistic:                     3.039
+Date:                Wed, 07 Aug 2024   Prob (F-statistic):             0.0824
+Time:                        22:53:10   Log-Likelihood:                -1977.9
+No. Observations:                 274   AIC:                             3960.
+Df Residuals:                     272   BIC:                             3967.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+=======================================================================================================
+                                          coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------
+Intercept                             913.8116     39.893     22.906      0.000     835.273     992.350
+C(model, Treatment("K3"))[T.Avante]   -80.3970     46.121     -1.743      0.082    -171.196      10.402
+==============================================================================
+Omnibus:                       13.893   Durbin-Watson:                   0.528
+Prob(Omnibus):                  0.001   Jarque-Bera (JB):               15.007
+Skew:                           0.573   Prob(JB):                     0.000551
+Kurtosis:                       3.002   Cond. No.                         3.76
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+```
+
+:::
+
+
+## 교차 검증
+
+
+```python copy
+from sklearn.model_selection import train_test_split
+
+# 분할
+train_df, test_df = train_test_split(
+df,               # 원자료    
+test_size=0.2,    # 테스트 데이터의 비율(0.2 = 20%) 
+random_state=42)  # 난수 생성의 seed를을 고정(동일한 분할을 위해) 
+
+# 분석
+m = ols('price ~ year', train_df).fit()
+
+# 예측
+y_pred = m.predict(test_df)
+
+# 잔차 분산
+from sklearn.metrics import mean_squared_error
+mean_squared_error(test_df.price, y_pred)
+```
+
+:::note[output]
+```
+34805.44825035994
+```
+
+:::
+
+

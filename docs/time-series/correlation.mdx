@@ -2,10 +2,36 @@
 
 ## 상관분석
 
+실습 데이터
+
+```python
+df = pd.read_excel('car.xlsx')
+```
+
+`pingouin` 설치
+
+```sh
+!pip install pingouin
+```
+
+상관계수 구하기
+
 ```python
 import pingouin as pg
-df = pd.read_excel('car.xlsx')
 pg.corr(df.price, df.mileage)
+```
+
+- `n`: 표본 크기
+- `r`: 상관계수
+- `CI95`: 95% 신뢰구간
+- `p-val`: p-value (0.05보다 작으면 "둘 사이에 상관관계가 없다"라는 귀무가설을 기각하고 "상관관계가 있다"라는 결론)
+- `BF10`: 베이즈 팩터 관계가 있을 가능성(1)과 없을 가능성(0)의 비율. 클수록 있을 가능성이 큼
+- `power`: 검정력. 비슷한 다른 실험에서도 상관관계를 찾을 수 있을 가능성
+
+산점도
+
+```python
+plt.scatter(df.mileage, df.price)
 ```
 
 ## 자기상관
@@ -39,6 +65,13 @@ acf(monthly)
 from statsmodels.graphics.tsaplots import plot_acf
 plot_acf(monthly)
 ```
+
+12개월 차분(전년 동기 대비와 비슷한 개념)하고 `NaN` 삭제후 ACF
+
+```python
+plot_acf(monthly.diff(12).dropna()) 
+```
+
 ### 분기별 맥주 생산량 데이터
 ```python
 beer = pd.read_excel('beer.xlsx', parse_dates=True, index_col='quarter')

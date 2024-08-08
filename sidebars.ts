@@ -35,8 +35,27 @@ const sidebars: SidebarsConfig = {
       type: 'doc',
       id: 'time-series/unit-root-test',
       label: '단위근 검정'
-    }
-    
+    },
+    {
+      type: 'doc',
+      id: 'time-series/simple-forecasting',
+      label: '시계열의 패턴과 예측'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/review2',
+      label: '2일차 복습 ★'
+    },
+    {
+      type: 'doc',
+      id: 'time-series/regression',
+      label: '회귀분석'
+    },
+    // {
+    //   type: 'doc',
+    //   id: 'time-series/clustering',
+    //   label: '클러스터링'
+    // }
   ],
   nlpSidebar: [
     { type: 'doc',
