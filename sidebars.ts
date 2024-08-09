@@ -71,11 +71,11 @@ const sidebars: SidebarsConfig = {
       id: 'time-series/review3',
       label: '3일차 복습 ★'
     },
-    // {
-    //   type: 'doc',
-    //   id: 'time-series/review3-solution',
-    //   label: '3일차 복습 풀이'
-    // },
+    {
+      type: 'doc',
+      id: 'time-series/review3-solution',
+      label: '3일차 복습 풀이'
+    },
     {
       type: 'doc',
       id: 'time-series/ETS',
