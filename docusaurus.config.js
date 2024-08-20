@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'timeSeriesSidebar',
+          sidebarId: 'computerVisionSidebar',
           position: 'left',
-          label: '시계열 데이터 분석',
+          label: '이미지 데이터 분석',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -95,9 +95,13 @@ const config = {
           title: 'Docs',
           items: [
             {
+              label: '이미지 데이터 분석',
+              to: '/docs/computer-vision/intro',
+            },
+            {
               label: '시계열 데이터 분석',
               to: '/docs/time-series/intro',
-            },
+            }
           ],
         }
       ],
