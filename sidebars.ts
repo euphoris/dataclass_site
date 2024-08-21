@@ -31,11 +31,11 @@ const sidebars: SidebarsConfig = {
     //   id: 'computer-vision/deep-learning',
     //   label: '컴퓨터 비전과 딥러닝'
     // },
-    // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/binary-classification',
-    //     label: '이미지 이항 분류'
-    // },
+    { 
+        type: 'doc',
+        id: 'computer-vision/binary-classification',
+        label: '이미지 이항 분류'
+    },
     // { 
     //     type: 'doc',
     //     id: 'computer-vision/gradient-descent',
