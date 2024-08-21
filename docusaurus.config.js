@@ -96,7 +96,7 @@ const config = {
           items: [
             {
               label: '이미지 데이터 분석',
-              to: '/docs/computer-vision/intro',
+              to: '/docs/computer-vision/lab',
             },
             {
               label: '시계열 데이터 분석',
