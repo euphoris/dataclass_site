@@ -46,22 +46,11 @@ const sidebars: SidebarsConfig = {
         id: 'computer-vision/confusion-matrix',
         label: '혼동 행렬'
     },
-    // day 2
-    // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/multi-layer-perceptron',
-    //     label: '다층 신경망'
-    // },
-    // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/activation-regularization',
-    //     label: '활성화함수와 정칙화'
-    // },
-    // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/hyperparameter-tuning',
-    //     label: '하이퍼파라미터 튜닝'
-    // },
+    { 
+        type: 'doc',
+        id: 'computer-vision/MLP',
+        label: '다층 신경망'
+    },
     // { 
     //     type: 'doc',
     //     id: 'computer-vision/multi-class',

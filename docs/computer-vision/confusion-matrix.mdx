@@ -40,6 +40,7 @@ x_test2, y_test2 = filter_dataset(x_test, y_test, i, j)
 
 
 ```python copy
+from tensorflow.keras.layers import *
 model = tf.keras.Sequential([
     Flatten(), # 28x28 이미지를 평평하게 만들어 784 차원 벡터로 
     Dense(1, activation='sigmoid',
