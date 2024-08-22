@@ -1,3 +1,233 @@
+
+
 # 다층 신경망
+
+
+
+## 하이퍼파라미터 튜닝
+
+### KFold
+
+
+```python copy
+from sklearn.model_selection import KFold
+from tensorflow.keras.layers import *
+
+kf = KFold(n_splits=5)
+for train, val in kf.split(x_train2):
+    model = tf.keras.Sequential([
+        Flatten(),
+        Dense(1, activation='sigmoid'),
+    ])
+    model.compile(loss='binary_crossentropy', metrics=['accuracy'])
+    model.fit(x_train2[train], y_train2[train], verbose=0)
+    print(model.evaluate(x_train2[val], y_train2[val], verbose=0))
+```
+
+:::info[output]
+```
+[0.20619988441467285, 0.9940781593322754]
+[0.3002406656742096, 0.996052086353302]
+[0.15784668922424316, 0.9964469075202942]
+[0.17611920833587646, 0.996052086353302]
+[0.14786003530025482, 0.9976312518119812]
+
+```
+
+:::
+
+
+
+```python copy
+import scipy
+p = scipy.stats.randint(1, 10) # 1에서 9까지 정수
+p.rvs(1)
+```
+
+:::info[output]
+```
+array([7], dtype=int64)
+```
+
+:::
+
+
+
+```python copy
+p = scipy.stats.uniform(1, 10) # 1에서 9까지 실수
+p.rvs(10)
+```
+
+:::info[output]
+```
+array([8.96542987, 2.8343479 , 8.79691   , 6.96850158, 5.45832753,
+       1.99974916, 5.59248892, 4.33708611, 2.42866818, 7.50888473])
+```
+
+:::
+
+
+
+```python copy
+p = scipy.stats.loguniform(1e-4, 1e-1) # 1에서 9까지 실수
+p.rvs(10)
+```
+
+:::info[output]
+```
+array([0.00014765, 0.01465535, 0.06541211, 0.00010054, 0.0947621 ,
+       0.00711942, 0.00683848, 0.000105  , 0.00011727, 0.00375253])
+```
+
+:::
+
+
+
+```python copy
+p = scipy.stats.uniform(1, 4) # 1에서 9까지 실수
+10 ** -p.rvs(10)
+```
+
+:::info[output]
+```
+array([2.51510496e-03, 6.50634888e-02, 1.27343835e-05, 1.17196499e-02,
+       4.34084483e-02, 3.36090288e-04, 2.95224255e-03, 1.16701505e-05,
+       1.35815215e-03, 3.63277394e-05])
+```
+
+:::
+
+
+## 무작위 탐색
+
+
+```python copy
+import scipy
+import numpy as np
+from sklearn.model_selection import KFold, train_test_split
+
+x_train2_t, x_train2_v, y_train2_t, y_train2_v = train_test_split(\
+    x_train2, y_train2, test_size=0.1)
+min_loss = np.inf
+best_hyperparam = None
+for _ in range(5):
+    learning_rate = scipy.stats.loguniform(1e-3, 1e3).rvs()
+    hidden_size = 2 ** scipy.stats.randint(3, 8).rvs()
+    model = tf.keras.Sequential([
+        Flatten(),
+        Dense(hidden_size, activation='relu'),
+        Dense(1, activation='sigmoid'),
+    ])
+    opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+    model.compile(loss='binary_crossentropy', metrics=['accuracy'],
+        optimizer=opt)
+    model.fit(x_train2_t, y_train2_t, verbose=0)
+    loss, acc = model.evaluate(x_train2_v, y_train2_v, verbose=0)
+    print(f'{learning_rate=}, {hidden_size=}, {loss=}, {acc=}')
+    if loss < min_loss:
+        min_loss = loss
+        best_hyperparam = {'learning_rate': learning_rate, 'hidden_size': hidden_size}
+best_hyperparam
+```
+
+:::info[output]
+```
+learning_rate=5.841743225187504, hidden_size=32, loss=8507.474609375, acc=0.9968429207801819
+learning_rate=483.1360202867375, hidden_size=128, loss=139677952.0, acc=0.9968429207801819
+learning_rate=0.008599666138418723, hidden_size=128, loss=0.26800888776779175, acc=0.9984214901924133
+learning_rate=0.7752976929110398, hidden_size=128, loss=5951.1552734375, acc=0.9936859011650085
+learning_rate=0.9390963415171655, hidden_size=8, loss=0.7487903237342834, acc=0.5122336149215698
+
+```
+
+```
+{'learning_rate': 0.008599666138418723, 'hidden_size': 128}
+```
+
+:::
+
+
+## 무작위 탐색 + KFold
+
+
+```python copy
+kf = KFold(n_splits=5)
+min_loss = np.inf
+best_hyperparam = None
+
+hyperparams = []
+for _ in range(5):
+    learning_rate = scipy.stats.loguniform(1e-3, 1e3).rvs()
+    hidden_size = 2 ** scipy.stats.randint(3, 8).rvs()
+    hyperparams.append({
+        'learning_rate': learning_rate,
+        'hidden_size': hidden_size
+    })
+    
+for train, val in kf.split(x_train2):
+    x_train2_t = x_train2[train]
+    x_train2_v = x_train2[val]
+    y_train2_t = y_train2[train]
+    y_train2_v = y_train2[val]
+
+    for hyperparam in hyperparams:
+        learning_rate = hyperparam['learning_rate']
+        hiden_size = hyperparam['hidden_size']
+
+        model = tf.keras.Sequential([
+            Flatten(),
+            Dense(hidden_size, activation='relu'),
+            Dense(1, activation='sigmoid'),
+        ])
+        opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        model.compile(loss='binary_crossentropy', metrics=['accuracy'],
+            optimizer=opt)
+        model.fit(x_train2_t, y_train2_t, verbose=0)
+        loss, acc = model.evaluate(x_train2_v, y_train2_v, verbose=0)
+        print(f'{learning_rate=}, {hidden_size=}, {loss=}, {acc=}')
+        if loss < min_loss:
+            min_loss = loss
+            best_hyperparam = {'learning_rate': learning_rate, 'hidden_size': hidden_size}
+best_hyperparam
+```
+
+:::info[output]
+```
+learning_rate=0.0042769060399390916, hidden_size=16, loss=0.1274031549692154, acc=0.998815655708313
+learning_rate=0.010319640035406875, hidden_size=16, loss=0.253795862197876, acc=0.9972364902496338
+learning_rate=0.08318199164594436, hidden_size=16, loss=0.1673513650894165, acc=0.9403868913650513
+learning_rate=0.008336466531691648, hidden_size=16, loss=0.007034010253846645, acc=0.9928938150405884
+learning_rate=18.24020203491578, hidden_size=16, loss=0.34022974967956543, acc=0.8855112791061401
+learning_rate=0.0042769060399390916, hidden_size=16, loss=0.035108782351017, acc=0.9976312518119812
+learning_rate=0.010319640035406875, hidden_size=16, loss=0.2921801805496216, acc=0.9972364902496338
+learning_rate=0.08318199164594436, hidden_size=16, loss=0.1938542127609253, acc=0.9964469075202942
+learning_rate=0.008336466531691648, hidden_size=16, loss=0.3855329155921936, acc=0.9913146495819092
+learning_rate=18.24020203491578, hidden_size=16, loss=28363.025390625, acc=0.9976312518119812
+learning_rate=0.0042769060399390916, hidden_size=16, loss=0.059768952429294586, acc=0.9972364902496338
+learning_rate=0.010319640035406875, hidden_size=16, loss=0.014166454784572124, acc=0.9968416690826416
+learning_rate=0.08318199164594436, hidden_size=16, loss=0.1377105861902237, acc=0.9553888440132141
+learning_rate=0.008336466531691648, hidden_size=16, loss=0.014755024574697018, acc=0.9968416690826416
+learning_rate=18.24020203491578, hidden_size=16, loss=53.853389739990234, acc=0.9838136434555054
+learning_rate=0.0042769060399390916, hidden_size=16, loss=0.13070707023143768, acc=0.9984208345413208
+learning_rate=0.010319640035406875, hidden_size=16, loss=0.04945237934589386, acc=0.998815655708313
+learning_rate=0.08318199164594436, hidden_size=16, loss=1.0367889404296875, acc=0.9952625632286072
+learning_rate=0.008336466531691648, hidden_size=16, loss=0.018497658893465996, acc=0.9940781593322754
+learning_rate=18.24020203491578, hidden_size=16, loss=0.10675318539142609, acc=0.9964469075202942
+learning_rate=0.0042769060399390916, hidden_size=16, loss=0.16117654740810394, acc=0.9968416690826416
+learning_rate=0.010319640035406875, hidden_size=16, loss=0.013880793005228043, acc=0.9996052384376526
+learning_rate=0.08318199164594436, hidden_size=16, loss=0.0316062793135643, acc=0.9877615571022034
+learning_rate=0.008336466531691648, hidden_size=16, loss=0.07004819810390472, acc=0.9984208345413208
+learning_rate=18.24020203491578, hidden_size=16, loss=0.02828255109488964, acc=0.9976312518119812
+
+```
+
+```
+{'learning_rate': 0.008336466531691648, 'hidden_size': 16}
+```
+
+:::
+
+
+## 퀴즈
 
 <iframe src="https://tally.so/embed/wAxaX0?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2200" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 활성화 함수와 정칙화, 하이퍼파라미터 튜닝"></iframe>

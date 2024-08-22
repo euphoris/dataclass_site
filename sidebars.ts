@@ -78,10 +78,15 @@ const sidebars: SidebarsConfig = {
     //     label: '합성곱 신경망(CNN)'
     // },
     // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/vision-transformer',
-    //     label: '비전 트랜스포머(ViT)'
-    // },
+      //     type: 'doc',
+      //     id: 'computer-vision/vision-transformer',
+      //     label: '비전 트랜스포머(ViT)'
+      // },
+      // { 
+      //   type: 'doc',
+      //   id: 'computer-vision/classification-exercise',
+      //   label: '이미지 분류 종합 실습'
+      // },
     // { 
     //     type: 'doc',
     //     id: 'computer-vision/transfer-learning',
@@ -107,11 +112,11 @@ const sidebars: SidebarsConfig = {
     //     id: 'computer-vision/generation',
     //     label: '이미지 생성'
     // },
-    // { 
-    //     type: 'doc',
-    //     id: 'computer-vision/application-ideas',
-    //     label: '실무 적용 방안'
-    // }
+    { 
+        type: 'doc',
+        id: 'computer-vision/application-ideas',
+        label: '실무 적용 방안'
+    }
   ],
   timeSeriesSidebar: [
     { type: 'doc',
