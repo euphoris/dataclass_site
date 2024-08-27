@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'computerVisionSidebar',
+          sidebarId: 'machineLearningSidebar',
           position: 'left',
-          label: '이미지 데이터 분석',
+          label: '머신 러닝',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -94,6 +94,10 @@ const config = {
         {
           title: 'Docs',
           items: [
+            {
+              label: '머신 러닝',
+              to: '/docs/machine-learning/lab',
+            },
             {
               label: '이미지 데이터 분석',
               to: '/docs/computer-vision/lab',
