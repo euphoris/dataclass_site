@@ -22,10 +22,10 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/intro',
       label: '시작하기'
     },
-    // { type: 'doc',
-    //   id: 'machine-learning/preprocessing',
-    //   label: '데이터 클리닝 및 전처리 기법'
-    // },
+    { type: 'doc',
+      id: 'machine-learning/preprocessing',
+      label: '데이터 클리닝 및 전처리 기법'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/recent-trends',
     //   label: '머신러닝 기법의 최근 동향'
