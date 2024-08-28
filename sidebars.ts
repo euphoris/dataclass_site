@@ -34,10 +34,10 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/eda',
       label: '탐색적 데이터 분석'
     },
-    // { type: 'doc',
-    //   id: 'machine-learning/imbalanced',
-    //   label: '불균형한 데이터의 처리'
-    // },    
+    { type: 'doc',
+      id: 'machine-learning/imbalanced',
+      label: '불균형한 데이터의 처리'
+    },    
     // { type: 'doc',
     //   id: 'machine-learning/augmentation',
     //   label: '데이터 증강'
