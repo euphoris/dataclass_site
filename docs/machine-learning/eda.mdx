@@ -1,4 +1,31 @@
 # 탐색적 데이터 분석
 
+주피터 노트북 종료하고
+
+시작 -> Anaconda 3 -> Anaconda Prompt 연 후에 아래 명령 입력
+
+```bash
+pip install ydata-profiling
+```
+
+데이터 열기
+
+```Python
+import pandas as pd
+df = pd.read_excel('car.xlsx')
+```
+
+보고서 생성
+
+```Python
+from ydata_profiling import ProfileReport
+report = ProfileReport(df, title='My Data')
+report.to_file("my_report.html")
+```
+
+바탕화면 -> 머신러닝을 활용한 빅데이터 분석실무 -> 실습 데이터 폴더에 가서 my_report.html 파일을 더블클릭하면 열림
+
+## 퀴즈
+
 <iframe src="https://tally.so/embed/wMLZd8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1093" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 탐색적 데이터 분석
 "></iframe>

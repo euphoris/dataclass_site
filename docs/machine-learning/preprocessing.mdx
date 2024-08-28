@@ -485,6 +485,8 @@ array([[-0.32315135],
 :::
 
 
+## 비대칭 데이터 변환
+
 
 ```python copy
 log_transformed = np.log(df['mileage'])
@@ -539,6 +541,10 @@ lambda_value
 :::
 
 
+## 범주형 데이터
+
+### 원핫인코딩
+
 
 ```python copy
 from sklearn.preprocessing import OneHotEncoder
@@ -585,6 +591,8 @@ df['model'].str.get_dummies()
 :::
 
 
+### 더미 코딩
+
 다중공선성: 여러 개의 변수로 함께 선형적인 성질을 띈다(다른 변수로 조합해서 만들 수 있다)
 
 x1 x2 y
@@ -612,6 +620,8 @@ array([[1.],
 
 :::
 
+
+### 타겟 인코딩
 
 
 ```python copy
@@ -648,5 +658,7 @@ array([[889.81206363],
 
 :::
 
+
+## 퀴즈
 
 <iframe src="https://tally.so/embed/3x2bPE?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1100" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 데이터 클리닝 및 전처리 기법"></iframe>
