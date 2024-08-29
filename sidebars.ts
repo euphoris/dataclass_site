@@ -46,10 +46,10 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/time-series',
       label: '시계열 분석 프로젝트 사례 연구'
     },
-    // { type: 'doc',
-    //   id: 'machine-learning/tabular',
-    //   label: '표(tabular) 데이터의 머신러닝'
-    // },
+    { type: 'doc',
+      id: 'machine-learning/tabpfn',
+      label: '표(tabular) 데이터의 머신러닝'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/unstructured',
     //   label: '비정형 데이터의 머신 러닝'
