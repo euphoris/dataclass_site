@@ -58,17 +58,37 @@ const sidebars: SidebarsConfig = {
     //   id: 'machine-learning/weak-supervision',
     //   label: '불완전한 데이터의 약한 지도'
     // },
-    // { type: 'doc',
-    //   id: 'machine-learning/hyperparameter-tuning',
-    //   label: '하이퍼파라미터 튜닝'
-    // },
-    // { type: 'doc',
-    //   id: 'machine-learning/confusion-matrix',
-    //   label: '모델 성능 비교 및 선택 전략'
-    // },
+    { type: 'doc',
+      id: 'machine-learning/hyperparameter-tuning',
+      label: '하이퍼파라미터 튜닝'
+    },
+    { type: 'doc',
+      id: 'machine-learning/confusion-matrix',
+      label: '모델 성능 비교 및 선택 전략'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/computer-vision',
     //   label: '컴퓨터 비전 사례 연구'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/ensemble',
+    //   label: '앙상블'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/xAI',
+    //   label: '설명가능한 AI'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/generative-ai',
+    //   label: '생성형 AI'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/nlp',
+    //   label: '자연어 처리 프로젝트 사례 연구'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/nlg',
+    //   label: '자연어 생성'
     // },
   ],
   computerVisionSidebar: [

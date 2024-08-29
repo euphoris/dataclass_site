@@ -1,3 +1,233 @@
-# 하이퍼파라미터 튜닝
+
+
+
+```python copy
+import pandas as pd
+df = pd.read_excel('cancer.xlsx')
+
+# 전처리
+target = 'diagnosis'
+y = df[target].map({'B': 0, 'M': 1})
+x = df.drop(columns=target)
+
+# 데이터 분할
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.2, random_state=42)
+```
+
+
+
+```python copy
+# Support Vector Machine
+from sklearn.svm import SVC
+model = SVC(kernel='linear')
+# 하이퍼 파라미터
+model.get_params()
+```
+
+:::info[output]
+```
+{'C': 1.0,
+ 'break_ties': False,
+ 'cache_size': 200,
+ 'class_weight': None,
+ 'coef0': 0.0,
+ 'decision_function_shape': 'ovr',
+ 'degree': 3,
+ 'gamma': 'scale',
+ 'kernel': 'linear',
+ 'max_iter': -1,
+ 'probability': False,
+ 'random_state': None,
+ 'shrinking': True,
+ 'tol': 0.001,
+ 'verbose': False}
+```
+
+:::
+
+
+
+```python copy
+# 학습
+model.fit(x_train, y_train)
+# 파라미터
+model.coef_ # 계수(coefficient)
+```
+
+:::info[output]
+```
+array([[0.13394802, 0.7031127 , 1.15047261, 1.02227898, 0.33443023,
+        0.30568719, 0.44130614, 0.08846798, 0.00658455, 1.48314137,
+        3.11137723, 1.08210364]])
+```
+
+:::
+
+
+
+```python copy
+model.score(x_test, y_test)
+```
+
+:::info[output]
+```
+0.9736842105263158
+```
+
+:::
+
+
+
+```python copy
+# 간단하게
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(model, x_train, y_train, cv=5)
+scores
+```
+
+:::info[output]
+```
+array([0.97802198, 0.92307692, 0.96703297, 0.93406593, 0.9010989 ])
+```
+
+:::
+
+
+
+```python copy
+# 229
+param_grid = [
+{'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+{'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+]
+
+# 230
+from sklearn.model_selection import RandomizedSearchCV
+random_cv = RandomizedSearchCV(model, param_grid, n_iter=10, cv=5, verbose=2)
+random_cv.fit(x_train, y_train)
+```
+
+
+
+```python copy
+# 가장 성능이 높은 하이퍼파라미터
+random_cv.best_params_
+```
+
+
+
+```python copy
+best_model = random_cv.best_estimator_
+best_model.score(x_test, y_test)
+```
+
+:::info[output]
+```
+0.956140350877193
+```
+
+:::
+
+
+
+```python copy
+import scipy
+p = scipy.stats.randint(1, 10)
+p.rvs(10) # 난수 10개
+```
+
+:::info[output]
+```
+array([2, 9, 2, 5, 7, 1, 5, 1, 6, 7], dtype=int64)
+```
+
+:::
+
+
+
+```python copy
+p = scipy.stats.uniform(1, -1) # randint -> uniform
+10 ** p.rvs(10) # 난수 10개
+```
+
+:::info[output]
+```
+array([2.01295604e-03, 1.04887187e-04, 4.12424409e-04, 3.99452887e-04,
+       9.12718717e-05, 5.47252328e-03, 6.73801288e-04, 1.66499546e-03,
+       2.78770827e-05, 1.49368040e-04])
+```
+
+:::
+
+
+
+```python copy
+p = scipy.stats.loguniform(1e-4, 1e-1) # 0.0001 ~ 0.1
+p.rvs(10) # 난수 10개
+```
+
+:::info[output]
+```
+array([0.00372758, 0.00096534, 0.00013629, 0.00090773, 0.05639246,
+       0.03542506, 0.00018209, 0.00418193, 0.08801932, 0.01706827])
+```
+
+:::
+
+
+
+```python copy
+param_grid = [
+{'C': scipy.stats.loguniform(1, 1000), 'kernel': ['linear']},
+{'C': scipy.stats.loguniform(1, 1000), 'gamma': scipy.stats.loguniform(1e-4, 1e-3),
+'kernel': ['rbf']},
+]
+# 튜닝
+random_cv = RandomizedSearchCV(model, param_grid, n_iter=10, cv=2, verbose=2)
+random_cv.fit(x_train, y_train)
+```
+
+:::info[output]
+```
+Fitting 2 folds for each of 10 candidates, totalling 20 fits
+[CV] END C=182.75740211688858, gamma=0.0004501479076085557, kernel=rbf; total time=   0.0s
+[CV] END C=182.75740211688858, gamma=0.0004501479076085557, kernel=rbf; total time=   0.0s
+[CV] END C=428.830454770395, gamma=0.000676596264077591, kernel=rbf; total time=   0.0s
+[CV] END C=428.830454770395, gamma=0.000676596264077591, kernel=rbf; total time=   0.0s
+[CV] END C=2.1091684248556524, gamma=0.0009966409328125913, kernel=rbf; total time=   0.0s
+[CV] END C=2.1091684248556524, gamma=0.0009966409328125913, kernel=rbf; total time=   0.0s
+[CV] END ................C=12.372385356504877, kernel=linear; total time=   4.9s
+[CV] END ................C=12.372385356504877, kernel=linear; total time=   0.7s
+[CV] END .................C=18.06890033548341, kernel=linear; total time=   2.4s
+[CV] END .................C=18.06890033548341, kernel=linear; total time=   3.4s
+[CV] END ................C=230.52753222097869, kernel=linear; total time=  10.2s
+[CV] END ................C=230.52753222097869, kernel=linear; total time=   2.7s
+[CV] END ................C=1.7636566309281456, kernel=linear; total time=   0.6s
+[CV] END ................C=1.7636566309281456, kernel=linear; total time=   1.2s
+[CV] END .................C=76.85992166504752, kernel=linear; total time=   5.6s
+[CV] END .................C=76.85992166504752, kernel=linear; total time=   2.1s
+[CV] END C=45.61013158825893, gamma=0.00012061126531531652, kernel=rbf; total time=   0.0s
+[CV] END C=45.61013158825893, gamma=0.00012061126531531652, kernel=rbf; total time=   0.0s
+[CV] END ................C=16.132445179832295, kernel=linear; total time=   5.6s
+[CV] END ................C=16.132445179832295, kernel=linear; total time=   1.8s
+
+```
+
+```
+RandomizedSearchCV(cv=2, estimator=SVC(kernel='linear'),
+                   param_distributions=[{'C': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B8C10>,
+                                         'kernel': ['linear']},
+                                        {'C': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B81F0>,
+                                         'gamma': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B8AF0>,
+                                         'kernel': ['rbf']}],
+                   verbose=2)
+```
+
+:::
+
+
+## 퀴즈
 
 <iframe src="https://tally.so/embed/wAxe0o?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 하이퍼파라미터"></iframe>
