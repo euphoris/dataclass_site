@@ -42,9 +42,33 @@ const sidebars: SidebarsConfig = {
     //   id: 'machine-learning/augmentation',
     //   label: '데이터 증강'
     // },
+    { type: 'doc',
+      id: 'machine-learning/time-series',
+      label: '시계열 분석 프로젝트 사례 연구'
+    },
     // { type: 'doc',
-    //   id: 'machine-learning/time-series',
-    //   label: '시계열 분석 프로젝트 사례 연구'
+    //   id: 'machine-learning/tabular',
+    //   label: '표(tabular) 데이터의 머신러닝'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/unstructured',
+    //   label: '비정형 데이터의 머신 러닝'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/weak-supervision',
+    //   label: '불완전한 데이터의 약한 지도'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/hyperparameter-tuning',
+    //   label: '하이퍼파라미터 튜닝'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/confusion-matrix',
+    //   label: '모델 성능 비교 및 선택 전략'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/computer-vision',
+    //   label: '컴퓨터 비전 사례 연구'
     // },
   ],
   computerVisionSidebar: [
