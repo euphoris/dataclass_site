@@ -74,10 +74,10 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/ensemble',
       label: '앙상블'
     },
-    // { type: 'doc',
-    //   id: 'machine-learning/xAI',
-    //   label: '설명가능한 AI'
-    // },
+    { type: 'doc',
+      id: 'machine-learning/xAI',
+      label: '설명가능한 AI'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/generative-ai',
     //   label: '생성형 AI'
