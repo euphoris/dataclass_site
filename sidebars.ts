@@ -70,10 +70,10 @@ const sidebars: SidebarsConfig = {
     //   id: 'machine-learning/computer-vision',
     //   label: '컴퓨터 비전 사례 연구'
     // },
-    // { type: 'doc',
-    //   id: 'machine-learning/ensemble',
-    //   label: '앙상블'
-    // },
+    { type: 'doc',
+      id: 'machine-learning/ensemble',
+      label: '앙상블'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/xAI',
     //   label: '설명가능한 AI'
