@@ -82,13 +82,13 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/generative-ai',
       label: '생성형 AI'
     },
+    { type: 'doc',
+      id: 'machine-learning/nlg',
+      label: '자연어 생성'
+    },
     // { type: 'doc',
     //   id: 'machine-learning/nlp',
     //   label: '자연어 처리 프로젝트 사례 연구'
-    // },
-    // { type: 'doc',
-    //   id: 'machine-learning/nlg',
-    //   label: '자연어 생성'
     // },
   ],
   computerVisionSidebar: [
