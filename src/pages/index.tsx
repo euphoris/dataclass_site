@@ -19,8 +19,8 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/machine-learning/lab">
-            머신 러닝
+            to="/docs/reinforcement-learning/lab">
+            강화학습
           </Link>
         </div>
       </div>

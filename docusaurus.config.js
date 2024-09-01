@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'machineLearningSidebar',
+          sidebarId: 'reinforcementLearningSidebar',
           position: 'left',
-          label: '머신 러닝',
+          label: '강화 학습',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -94,6 +94,10 @@ const config = {
         {
           title: 'Docs',
           items: [
+            {
+              label: '강화 학습',
+              to: '/docs/reinforcement-learning/lab',
+            },
             {
               label: '머신 러닝',
               to: '/docs/machine-learning/lab',
