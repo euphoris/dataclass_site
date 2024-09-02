@@ -40,41 +40,47 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'reinforcement-learning/day1',
-          label: '1일차 코드'
+          id: 'reinforcement-learning/gym',
+          label: 'gymnasium'
         },
         // {
         //   type: 'doc',
         //   id: 'reinforcement-learning/discount',
         //   label: '할인'
         // },
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/value',
+          label: '가치'
+        },
       ],
     },
     {
-      type: 'doc',
-      id: 'reinforcement-learning/value',
-      label: '가치'
+      type: 'category',
+      label: '2일차 - 추정과 탐색',
+      items: [
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/dynamic-programming',
+          label: '동적 계획법'
+        },  
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/bootstrap',
+          label: '부트스트랩'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/multi-armed-bandit',
+          label: 'MAB'
+        },     
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/monte-carlo',
+          label: '몬테카를로'
+        }, 
+      ]
     },
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/dynamic-programming',
-      label: '동적 계획법'
-    },  
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/bootstrap',
-      label: '부트스트랩'
-    }, 
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/multi-armed-bandit',
-      label: 'MAB'
-    },     
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/monte-carlo',
-      label: '몬테카를로'
-    }, 
   ],
   machineLearningSidebar: [
     { type: 'doc',
