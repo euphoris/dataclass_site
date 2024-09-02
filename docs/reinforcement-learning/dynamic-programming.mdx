@@ -1,0 +1,154 @@
+
+
+# 동적계획법
+
+## 피보나치 수열
+
+### 재귀호출
+
+
+```python copy
+def fib(n):
+    if n <= 1:
+        return n
+    else:
+        return fib(n-1) + fib(n-2)
+
+```
+
+
+
+```python copy
+%%time
+fib(35)
+```
+
+:::info[output]
+```
+CPU times: total: 1.97 s
+Wall time: 2.24 s
+
+```
+
+```
+9227465
+```
+
+:::
+
+
+### 하향식 동적계획법
+
+재귀호출을 이용한 하향식(top-down), memoization 사용
+
+
+
+```python copy
+def fib(n, memo=None):
+    if memo is None:
+        memo = {}
+
+    if n not in memo:
+        if n <= 1 :
+            memo[n] = n
+        else:
+            memo[n] = fib(n-1, memo) + fib(n-2, memo)
+    return memo[n]
+```
+
+
+
+```python copy
+%%time
+fib(35)
+```
+
+:::info[output]
+```
+CPU times: total: 0 ns
+Wall time: 0 ns
+
+```
+
+```
+9227465
+```
+
+:::
+
+
+functools의 cache를 사용하면 더 쉽게 구현
+
+
+```python copy
+from functools import cache
+
+@cache
+def fib(n):
+    if n <= 1:
+        return n
+    else:
+        return fib(n-1) + fib(n-2)
+
+```
+
+
+
+```python copy
+%%time
+fib(35)
+```
+
+:::info[output]
+```
+CPU times: total: 0 ns
+Wall time: 0 ns
+
+```
+
+```
+9227465
+```
+
+:::
+
+
+### 상향식 동적계획법
+
+상향식(bottom-down), tabulation 사용
+
+
+```python copy
+def fib(n):
+    table = [0] * (n+1)
+    table[1] = 1
+    for i in range(2, n+1):
+        table[i] = table[i-1] + table[i-2]
+    return table[n]
+
+```
+
+
+
+```python copy
+%%time
+fib(35)
+```
+
+:::info[output]
+```
+CPU times: total: 0 ns
+Wall time: 0 ns
+
+```
+
+```
+9227465
+```
+
+:::
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/npGjEJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0" title="[RL] 동적계획법"></iframe>

@@ -20,30 +20,61 @@ const sidebars: SidebarsConfig = {
       label: '실습 및 Q&A'
     },
     {
-      type: 'doc',
-      id: 'reinforcement-learning/intro',
-      label: '시작하기'
-    },
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/what-is',
-      label: '강화학습이란 무엇인가'
-    },
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/terms',
-      label: '기본 용어'
-    },
-    {
-      type: 'doc',
-      id: 'reinforcement-learning/discount',
-      label: '할인'
+      type: 'category',
+      label: '1일차 - 기본 개념',
+      items: [
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/intro',
+          label: '시작하기'
+        },
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/what-is',
+          label: '강화학습이란 무엇인가'
+        },
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/terms',
+          label: '기본 용어'
+        },
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/day1',
+          label: '1일차 코드'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/discount',
+        //   label: '할인'
+        // },
+      ],
     },
     {
       type: 'doc',
       id: 'reinforcement-learning/value',
       label: '가치'
     },
+    {
+      type: 'doc',
+      id: 'reinforcement-learning/dynamic-programming',
+      label: '동적 계획법'
+    },  
+    {
+      type: 'doc',
+      id: 'reinforcement-learning/bootstrap',
+      label: '부트스트랩'
+    }, 
+    {
+      type: 'doc',
+      id: 'reinforcement-learning/multi-armed-bandit',
+      label: 'MAB'
+    },     
+    {
+      type: 'doc',
+      id: 'reinforcement-learning/monte-carlo',
+      label: '몬테카를로'
+    }, 
   ],
   machineLearningSidebar: [
     { type: 'doc',
