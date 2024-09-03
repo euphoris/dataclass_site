@@ -81,6 +81,27 @@ const sidebars: SidebarsConfig = {
         }, 
       ]
     },
+    {
+      type: 'category',
+      label: '3일차 - 제어와 딥러닝',
+      items: [
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/temporal-difference',
+          label: '시간차 학습'
+        },  
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/control-problem',
+          label: '제어 문제'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/deep-learning',
+          label: '딥러닝'
+        }, 
+      ]
+    },
   ],
   machineLearningSidebar: [
     { type: 'doc',

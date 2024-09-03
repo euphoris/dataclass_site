@@ -1,0 +1,214 @@
+
+
+# 딥러닝
+
+## PyTorch 설치
+
+```
+pip install torch torchvision
+```
+
+## 임포트
+
+
+```python copy
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+```
+
+
+## MNIST 데이터
+
+
+```python copy
+transform = transforms.ToTensor()
+
+train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+```
+
+
+
+```python copy
+from PIL import Image
+i = 0
+img, label = train_dataset[i]
+img = img.squeeze().numpy() * 255
+img = img.astype('uint8')
+print(label)
+Image.fromarray(img)
+```
+
+:::info[output]
+```
+5
+
+```
+
+```
+<PIL.Image.Image image mode=L size=28x28>
+```
+
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAABAElEQVR4nGNgGMyAWUhIqK5jvdSy/9/rGRgYGFhgEnJsVjYCwQwMDAxPJgV+vniQgYGBgREqZ7iXH8r6l/SV4dn7m8gmCt3++/fv37/Htn3/iMW+gDnZf/+e5WbQnoXNNXyMs/5GoQoxwVmf/n9kSGFiwAW49/11wynJoPzx4YIcRlyygR/+/i2XxCWru+vv32nSuGQFYv/83Y3b4p9/fzpAmSyoMnohpiwM1w5h06Q+5enfv39/bcMiJVF09+/fv39P+mFKiTtd/fv3799jgZiBJLT69t+/f/8eDuDEkDJf8+jv379/v7Ryo4qzMDAwMAQGMjBc3/y35wM2V1IfAABFF16Aa0wAOwAAAABJRU5ErkJggg==)
+
+:::
+
+
+## 모형 정의
+
+
+```python copy
+class SimpleNN(nn.Module):
+    def __init__(self):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(28*28, 128) # 은닉층 1
+        self.fc2 = nn.Linear(128, 64) # 은닉층 2
+        self.fc3 = nn.Linear(64, 10) # 출력층
+
+    def forward(self, x):
+        x = x.view(-1, 28*28) # 모양을 평평하게
+        x = torch.relu(self.fc1(x)) # ReLU 활성화 함수로 비선형성을 추가
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
+
+
+## 모형 학습
+
+
+```python copy
+model = SimpleNN()
+criterion = nn.CrossEntropyLoss()  # 손실 함수
+optimizer = optim.Adam(model.parameters(), lr=0.001)  # 최적화 알고리즘
+
+num_epochs = 5
+for epoch in range(num_epochs):
+    for images, labels in train_loader:
+        optimizer.zero_grad() # 경사 초기화
+        outputs = model(images) # 모형에 이미지 입력
+        loss = criterion(outputs, labels) # 손실 계산
+        loss.backward() # 역전파 알고리즘으로 경사 계산
+        optimizer.step() # 파라미터 최적화
+
+    print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}')
+
+```
+
+:::info[output]
+```
+Epoch 1/5, Loss: 0.1040
+Epoch 2/5, Loss: 0.1420
+Epoch 3/5, Loss: 0.0576
+Epoch 4/5, Loss: 0.1996
+Epoch 5/5, Loss: 0.0789
+
+```
+
+:::
+
+
+## 모형 평가
+
+
+```python copy
+correct = 0
+total = 0
+with torch.no_grad():  # 경사 계산 안함(학습에 사용하지 않으므로 필요 X)
+    for images, labels in test_loader:
+        outputs = model(images)  # 각 클래스의 확률 예측
+        _, predicted = torch.max(outputs, 1)  # 확률이 가장 높은 클래스
+        total += labels.size(0)  # 레이블 개수를 총 개수에 추가 
+        correct += (predicted == labels).sum().item()  # 예측된 클래스와 레이블이 일치하는 개수
+
+print(f'Test Accuracy: {100 * correct / total:.2f}%')
+
+```
+
+:::info[output]
+```
+Test Accuracy: 97.61%
+
+```
+
+:::
+
+
+## PyTorch Lightning
+
+
+```python copy
+!pip install lightning
+```
+
+
+모형 재정의
+
+
+```python copy
+import torch.nn.functional as F
+import pytorch_lightning as pl
+from torchmetrics.classification import MulticlassAccuracy
+
+class SimpleNN(pl.LightningModule):
+    def __init__(self):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(28*28, 128) # 은닉층 1
+        self.fc2 = nn.Linear(128, 64) # 은닉층 2
+        self.fc3 = nn.Linear(64, 10) # 출력층
+        self.accuracy = MulticlassAccuracy(10)
+
+    def forward(self, x):
+        x = x.view(-1, 28*28) # 모양을 평평하게
+        x = torch.relu(self.fc1(x)) # ReLU 활성화 함수로 비선형성을 추가
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+    def process_batch(self, batch):
+        images, labels = batch
+        outputs = self(images)
+        loss = F.cross_entropy(outputs, labels)
+        return outputs, loss
+
+    def training_step(self, batch, batch_idx):
+        outputs, loss = self.process_batch(batch)
+        self.log('train_loss', loss)
+        return loss
+
+    def test_step(self, batch, batch_idx):
+        outputs, loss = self.process_batch(batch)
+        accuracy = self.accuracy(outputs, batch[1])
+        self.log('test_accuracy', accuracy)
+        return loss
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
+        return optimizer
+```
+
+
+학습
+
+
+```python copy
+from pytorch_lightning import Trainer
+model = SimpleNN()
+trainer = Trainer(max_epochs=5)
+trainer.fit(model, train_loader)
+
+```
+
+
+테스트
+
+
+```python copy
+trainer.test(model, test_loader)
+```
