@@ -1,0 +1,55 @@
+
+
+# 가치 기반 강화 학습
+
+## Stable Baselines
+
+
+```python copy
+!pip install stable-baselines3[extra]
+```
+
+
+## DQN
+
+
+
+
+```python copy
+import gymnasium as gym
+from stable_baselines3 import DQN
+
+# 환경
+env = gym.make("CartPole-v1", render_mode="rgb_array")
+
+# 모델
+model = DQN("MlpPolicy", env, verbose=1)
+
+# 총 1000회에 걸쳐  학습
+model.learn(total_timesteps=1000, log_interval=4, progress_bar=True)
+```
+
+
+
+```python copy
+# 애니메이션
+render_episode(env, model)
+```
+
+
+
+```python copy
+# 저장
+model.save("dqn_cartpole")
+
+# 삭제
+del model
+
+# 불러오기
+model = DQN.load("dqn_cartpole")
+```
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wMYXP8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1800" frameborder="0" marginheight="0" marginwidth="0" title="[RL] 가치기반 강화학습"></iframe>

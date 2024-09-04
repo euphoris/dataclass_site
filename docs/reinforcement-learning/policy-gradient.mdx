@@ -1,0 +1,175 @@
+
+
+# 정책경사
+
+## 정책망
+
+
+```python copy
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import tqdm
+
+class PolicyNetwork(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(PolicyNetwork, self).__init__()
+        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc2 = nn.Linear(64, 64)
+        self.fc3 = nn.Linear(64, output_dim)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return torch.softmax(self.fc3(x), dim=-1)
+```
+
+
+## REINFORCE
+
+
+```python copy
+class ReinforceAgent:
+    def __init__(self, env, gamma=0.99, learning_rate=0.001, update_timestep=2000):
+        self.env = env
+        self.gamma = gamma
+        self.update_timestep = update_timestep
+        self.policy_network = PolicyNetwork(env.observation_space.shape[0], env.action_space.n)
+        self.optimizer_policy = optim.Adam(self.policy_network.parameters(), lr=learning_rate)
+        self.policy_old = PolicyNetwork(env.observation_space.shape[0], env.action_space.n)
+        self.policy_old.load_state_dict(self.policy_network.state_dict())
+        self.eps_clip = 0.2
+        self.K_epochs = 4
+
+    def select_action(self, state):
+        state = torch.FloatTensor(state).unsqueeze(0)
+        probabilities = self.policy_network(state)
+        action = torch.multinomial(probabilities, 1).item()
+        return action, probabilities[:, action].item()
+
+    def compute_returns(self, rewards, dones):
+        returns = []
+        R = 0
+        for reward, done in zip(reversed(rewards), reversed(dones)):
+            if done:
+                R = 0
+            R = reward + self.gamma * R
+            returns.insert(0, R)
+        return returns
+
+    def update_policy(self, trajectories):
+        for states, actions, rewards, dones in trajectories:
+            returns = self.compute_returns(rewards, dones)
+            returns = torch.FloatTensor(returns)
+            states = torch.FloatTensor(states)
+            actions = torch.LongTensor(actions)
+
+            log_probs = torch.log(torch.stack([self.policy_network(state)[action] 
+                                for state, action in zip(states, actions)]))
+            loss = -log_probs * returns
+            loss = loss.mean()
+
+            self.optimizer_policy.zero_grad()
+            loss.backward()
+            self.optimizer_policy.step()
+
+    def train(self, num_episodes):
+        timestep = 0
+        trajectories = []
+        for episode in tqdm.trange(num_episodes):
+            state, _ = self.env.reset()
+            done = False
+            states, actions, rewards, dones = [], [], [], []
+            while not done:
+                action, _ = self.select_action(state)
+                next_state, reward, done, _, _ = self.env.step(action)
+                states.append(state)
+                actions.append(action)
+                rewards.append(reward)
+                dones.append(done)
+                state = next_state
+                timestep += 1
+                if timestep % self.update_timestep == 0:
+                    trajectories.append((states, actions, rewards, dones))
+                    self.update_policy(trajectories)
+                    trajectories = []
+                    
+    def evaluate_policy(env, agent, num_episodes=10):
+        total_reward = 0
+        for _ in range(num_episodes):
+            state, _ = env.reset()
+            done = False
+            steps = 0
+            while not done and steps < 1000:
+                steps += 1
+                action, _ = agent.select_action(state)
+                next_state, reward, done, _, _ = env.step(action)
+                total_reward += reward
+                state = next_state
+        return total_reward / num_episodes
+```
+
+
+## 실험
+
+
+```python copy
+def evaluate_policy(env, agent, num_episodes=10):
+    total_reward = 0
+    for _ in range(num_episodes):
+        state, _ = env.reset()
+        done = False
+        steps = 0
+        while not done and steps < 1000:
+            steps += 1
+            action, _ = agent.select_action(state)
+            next_state, reward, done, _, _ = env.step(action)
+            total_reward += reward
+            state = next_state
+    return total_reward / num_episodes
+```
+
+
+초기화된 상태로 평가
+
+
+```python copy
+import gymnasium as gym
+env = gym.make("CartPole-v1", render_mode="rgb_array")
+
+reinforce_agent = ReinforceAgent(env)
+evaluate_policy(env, reinforce_agent)
+```
+
+:::info[output]
+```
+25.9
+```
+
+:::
+
+
+50개 에피소드 후 평가
+
+
+```python copy
+reinforce_agent.train(num_episodes=50)
+evaluate_policy(env, reinforce_agent)
+```
+
+:::info[output]
+```
+100%|██████████████████████████████████████████████████████████████████████████████████| 50/50 [00:00<00:00, 96.03it/s]
+
+```
+
+```
+27.0
+```
+
+:::
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wodEQb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1300" frameborder="0" marginheight="0" marginwidth="0" title="[RL] 정책 경사"></iframe>

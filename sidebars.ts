@@ -102,6 +102,32 @@ const sidebars: SidebarsConfig = {
         }, 
       ]
     },
+    {
+      type: 'category',
+      label: '4일차 - 심층 강화학습',
+      items: [
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/dqn',
+          label: '가치 기반 강화 학습'
+        },  
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/replay',
+          label: '경험 리플레이'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/policy-gradient',
+          label: '정책 경사'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/actor-critic',
+          label: 'Actor-Critic'
+        }, 
+      ]
+    },
   ],
   machineLearningSidebar: [
     { type: 'doc',

@@ -1,0 +1,91 @@
+
+
+# 경험 리플레이
+
+## 비트 플리핑 환경
+
+5개의 동전을 최대 5번까지 뒤집어서 목표 상태에 도달해야 하는 환경
+
+
+```python copy
+from stable_baselines3.common.envs import BitFlippingEnv
+
+N_BITS = 5
+env = BitFlippingEnv(n_bits=N_BITS, continuous=False, max_steps=N_BITS)
+```
+
+
+### 바닐라 ER
+
+
+```python copy
+from stable_baselines3 import DQN
+from stable_baselines3.common.logger import configure
+
+# 모델
+model = DQN("MultiInputPolicy", env, verbose=1)
+
+# 학습 과정을 CSV로 저장
+log_dir = "./vanilla"
+new_logger = configure(log_dir, ["csv"])
+model.set_logger(new_logger)
+
+# 학습
+model.learn(5000, progress_bar=True)
+```
+
+
+학습 과정 시각화
+
+
+```python copy
+import pandas as pd
+import matplotlib.pyplot as plt
+
+log_df = pd.read_csv(log_dir + "/progress.csv")
+plt.plot(log_df['time/total_timesteps'], log_df['rollout/success_rate'])
+```
+
+
+### DQN+HER
+
+
+```python copy
+from stable_baselines3 import DQN
+from stable_baselines3.common.logger import configure
+from stable_baselines3 import HerReplayBuffer
+from stable_baselines3.her.goal_selection_strategy import GoalSelectionStrategy
+
+model = DQN(
+    "MultiInputPolicy",
+    env,
+    replay_buffer_class=HerReplayBuffer,
+    replay_buffer_kwargs=dict(
+        n_sampled_goal=1,  # 행동마다 선택하는 가상 목표의 개수
+        goal_selection_strategy=GoalSelectionStrategy.FUTURE, # 가상 목표 선택 전략
+    ),
+    verbose=1
+)
+
+# 학습 과정을 CSV로 저장
+log_dir = "./her"
+new_logger = configure(log_dir, ["csv"])
+model.set_logger(new_logger)
+
+# 학습
+model.learn(5000, progress_bar=True)
+```
+
+
+학습 과정 시각화
+
+
+```python copy
+log_df = pd.read_csv(log_dir + "/progress.csv")
+plt.plot(log_df['time/total_timesteps'], log_df['rollout/success_rate'])
+```
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wMYXg8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1200" frameborder="0" marginheight="0" marginwidth="0" title="[RL] 경험 리플레이"></iframe>

@@ -1,0 +1,33 @@
+
+
+# Actor-Critic
+
+
+```python copy
+# 병렬 환경
+from stable_baselines3.common.env_util import make_vec_env
+vec_env = make_vec_env("CartPole-v1", n_envs=4)
+
+# 학습
+from stable_baselines3 import A2C
+model = A2C("MlpPolicy", vec_env, verbose=1)
+model.learn(total_timesteps=25000, progress_bar=True)
+```
+
+
+시각화
+
+
+
+
+```python copy
+import tqdm
+import gymnasium as gym
+env = gym.make("CartPole-v1", render_mode="rgb_array")
+render_episode(env, model)
+```
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wgZarP?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1450" frameborder="0" marginheight="0" marginwidth="0" title="[RL] Actor-Critic"></iframe>
