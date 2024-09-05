@@ -133,6 +133,47 @@ const sidebars: SidebarsConfig = {
         }, 
       ]
     },
+    {
+      type: 'category',
+      label: '5일차 - 최근 동향',
+      items: [
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/ship-control',
+          label: '[사례] 선박 제어'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/ppo',
+          label: 'PPO'
+        },  
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/off-policy-policy-gradient',
+        //   label: 'off-policy 정책 경사'
+        // }, 
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/mcts',
+        //   label: '알파고'
+        // }, 
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/other-methods',
+        //   label: '다른 방법들'
+        // }, 
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/chatgpt',
+        //   label: '챗GPT'
+        // }, 
+        // {
+        //   type: 'doc',
+        //   id: 'reinforcement-learning/challenges',
+        //   label: '문제점'
+        // },
+      ]
+    },
   ],
   machineLearningSidebar: [
     { type: 'doc',
