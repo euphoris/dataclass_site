@@ -126,6 +126,11 @@ const sidebars: SidebarsConfig = {
           id: 'reinforcement-learning/actor-critic',
           label: 'Actor-Critic'
         }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/application',
+          label: '실무 적용 방안'
+        }, 
       ]
     },
   ],
