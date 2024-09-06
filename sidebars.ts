@@ -157,21 +157,21 @@ const sidebars: SidebarsConfig = {
           id: 'reinforcement-learning/mcts',
           label: '알파고'
         }, 
-        // {
-        //   type: 'doc',
-        //   id: 'reinforcement-learning/other-methods',
-        //   label: '다른 방법들'
-        // }, 
-        // {
-        //   type: 'doc',
-        //   id: 'reinforcement-learning/chatgpt',
-        //   label: '챗GPT'
-        // }, 
-        // {
-        //   type: 'doc',
-        //   id: 'reinforcement-learning/challenges',
-        //   label: '문제점'
-        // },
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/other-methods',
+          label: '다른 방법들'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/chatbot',
+          label: '챗봇'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/challenges',
+          label: '문제점'
+        },
       ]
     },
   ],
