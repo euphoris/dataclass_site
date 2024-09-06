@@ -147,16 +147,16 @@ const sidebars: SidebarsConfig = {
           id: 'reinforcement-learning/ppo',
           label: 'PPO'
         },  
-        // {
-        //   type: 'doc',
-        //   id: 'reinforcement-learning/off-policy-policy-gradient',
-        //   label: 'off-policy 정책 경사'
-        // }, 
-        // {
-        //   type: 'doc',
-        //   id: 'reinforcement-learning/mcts',
-        //   label: '알파고'
-        // }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/off-policy-policy-gradient',
+          label: 'off-policy 정책 경사'
+        }, 
+        {
+          type: 'doc',
+          id: 'reinforcement-learning/mcts',
+          label: '알파고'
+        }, 
         // {
         //   type: 'doc',
         //   id: 'reinforcement-learning/other-methods',

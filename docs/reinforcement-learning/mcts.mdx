@@ -1,0 +1,204 @@
+
+
+# MCTS
+
+## Tic-Tac-Toe
+
+
+```python copy
+from collections import Counter, namedtuple
+import numpy as np
+
+PLAYER1 = 'X'
+PLAYER2 = 'O'
+EMPTY = ' '
+
+# tup: 배치, turn: 턴, winner: 승자, terminal: 종료 여부
+_TTTB = namedtuple("TicTacToeBoard", "tup turn winner terminal")
+class TicTacToeBoard(_TTTB):
+    @classmethod
+    def new(cls):
+        return cls(tup=(EMPTY,) * 9, turn=PLAYER1, winner=None, terminal=False)
+    
+    def available_moves(self):  # 가능한 수
+        return [i for i, value in enumerate(self.tup) if value == EMPTY]
+
+    def find_children(self):  # 자식(후속 수) 찾기
+        if self.terminal:
+            return set()
+        return {self.make_move(i) for i in self.available_moves()}
+
+    def random_move(self):  # 무작위로 두기
+        return self.make_move(np.random.choice(self.available_moves()))
+    
+    def reward(self, player):
+        if self.winner is None:
+            return 0.5 # 무
+        elif player == self.winner:
+            return 1 # 승
+        else:
+            return 0 # 패
+
+    def make_move(self, index):  # index에 수 두기
+        tup = self.tup[:index] + (self.turn,) + self.tup[index + 1 :]
+        turn = PLAYER2 if self.turn == PLAYER1 else PLAYER1  # 다음 턴
+        winner = self.find_winner(tup)  # 승자
+        terminal = winner is not None or EMPTY not in tup  # 종료 여부
+        return TicTacToeBoard(tup, turn, winner, terminal)
+
+    def find_winner(self, tup):
+        winning_comobos = [   # 일렬이 되는 경우
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+        for i, j, k in winning_comobos:  # 일렬을 만들면 이김
+            if tup[i] != EMPTY and tup[i] == tup[j] == tup[k]:
+                return tup[i]
+        return None
+
+    def to_pretty_string(self):  # 예쁘게 출력
+        lines = ['  1 2 3']
+        for i in range(0, 9, 3):
+            row = self.tup[i:i+3]
+            lines.append(f'{i+1} {" ".join(row)}')
+        return '\n'.join(lines) + '\n'
+```
+
+
+## MCTS
+
+
+```python copy
+class MCTS:
+    def __init__(self, exploration_weight=2):
+        self.Q = Counter()  # 보상 합계
+        self.N = Counter()  # 방문 횟수
+        self.children = dict()  # 자식 노드
+        self.exploration_weight = exploration_weight # 탐색 가중치
+
+    def search(self, node, budget=50):
+            for _ in range(budget):  # 예산 내에서 롤아웃
+                self.do_rollout(node)
+
+            def score(n):
+                if self.N[n] == 0:
+                    return -np.inf  # 방문하지 않은 경우는 -무한대
+                return self.Q[n] / self.N[n]  # 평균 보상
+
+            return max(self.children[node], key=score) # 평균 보상이 큰 자식 선택
+    
+    def do_rollout(self, node):
+        path = self._select(node)
+        leaf = path[-1]
+        self._expand(leaf)
+        reward = self._simulate(leaf, node.turn)
+        self._backpropagate(path, reward)
+
+    def _select(self, node):
+        path = []
+        while True:
+            path.append(node)
+            if node not in self.children or node.terminal: # 방문한 적이 없거나, 종료 노드이면 끝
+                return path
+            unexplored = self.children[node] - self.children.keys()
+            if unexplored: # 방문한 적이 있으면, 자식 노드 중에 탐색 안한 노드 추가
+                n = unexplored.pop()
+                path.append(n)
+                return path        
+            node = self._uct_select(node) # 모든 자식 노드를 방문했으면 UCT로 선택
+
+    def _expand(self, node):
+        # 자식 노드를 확장
+        if node not in self.children:
+            self.children[node] = node.find_children()
+
+    def _simulate(self, node, player):
+        while not node.terminal:  # 끝날 때까지 기본 정책으로 진행
+            node = node.random_move()  # 기본 정책은 무작위로 두기
+        return node.reward(player) # 보상 계산
+
+    def _backpropagate(self, path, reward):
+        for node in reversed(path):
+            self.N[node] += 1
+            self.Q[node] += reward
+            reward = 1 - reward  # 상대방의 보상
+
+    def _uct_select(self, node):
+        Ns = np.log(self.N[node])
+        def uct(n):
+            return self.Q[n] / self.N[n] + self.exploration_weight * np.sqrt(Ns / self.N[n])
+        return max(self.children[node], key=uct)
+```
+
+
+승률 측정
+
+
+```python copy
+mcts = MCTS()
+board = TicTacToeBoard.new()
+while not board.terminal:
+    if board.turn == PLAYER1:
+        board = board.random_move()  # 플레이어 1은 무작위로
+    else:
+        board = mcts.search(board)  #플레이어 2는 MCTS로
+        win_rate = int(100*mcts.Q[board]/mcts.N[board])
+        print(f'Q={mcts.Q[board]}, N={mcts.N[board]}, Q/N={win_rate}%')
+    print(board.to_pretty_string())
+print(f'Winner: {board.winner}')
+```
+
+:::info[output]
+```
+  1 2 3
+1      
+4     X
+7      
+
+Q=5.5, N=7, Q/N=78%
+  1 2 3
+1   O  
+4     X
+7      
+
+  1 2 3
+1   O  
+4     X
+7   X  
+
+Q=8.0, N=11, Q/N=72%
+  1 2 3
+1   O  
+4     X
+7 O X  
+
+  1 2 3
+1   O X
+4     X
+7 O X  
+
+Q=14, N=17, Q/N=82%
+  1 2 3
+1 O O X
+4     X
+7 O X  
+
+  1 2 3
+1 O O X
+4   X X
+7 O X  
+
+Q=30, N=30, Q/N=100%
+  1 2 3
+1 O O X
+4 O X X
+7 O X  
+
+Winner: O
+
+```
+
+:::
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mYYRq6?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1100" frameborder="0" marginheight="0" marginwidth="0" title="[RL] MCTS"></iframe>
