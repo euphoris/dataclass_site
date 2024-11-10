@@ -262,6 +262,11 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/questionaire',
       label: '설문'
     },
+    {
+      type: 'doc',
+      id: 'computer-vision/tasks',
+      label: '컴퓨터 비전 과업'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/opencv3',
     //   label: 'OpenCV 응용'
