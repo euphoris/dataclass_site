@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'reinforcementLearningSidebar',
+          sidebarId: 'computerVisionSidebar',
           position: 'left',
-          label: '강화 학습',
+          label: '컴퓨터 비전',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -103,7 +103,7 @@ const config = {
               to: '/docs/machine-learning/lab',
             },
             {
-              label: '이미지 데이터 분석',
+              label: '컴퓨터 비전',
               to: '/docs/computer-vision/lab',
             },
             {

@@ -259,43 +259,51 @@ const sidebars: SidebarsConfig = {
       label: '실습 및 Q&A'
     },
     { type: 'doc',
-      id: 'computer-vision/intro',
-      label: '시작하기'
+      id: 'computer-vision/questionaire',
+      label: '설문'
     },
-    { type: 'doc',
-      id: 'computer-vision/PIL',
-      label: 'Python 이미지 처리'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/deep-learning',
-      label: '컴퓨터 비전과 딥러닝'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/binary-classification',
-        label: '이미지 이항 분류'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/gradient-descent',
-        label: '손실 함수와 경사하강법'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/confusion-matrix',
-        label: '혼동 행렬'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/MLP',
-        label: '다층 신경망'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/application-ideas',
-        label: '실무 적용 방안'
-    }
+    // { type: 'doc',
+    //   id: 'computer-vision/opencv3',
+    //   label: 'OpenCV 응용'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/opencv4',
+    //   label: 'OpenCV 실무'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/PIL',
+    //   label: 'Python 이미지 처리'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/deep-learning',
+    //   label: '컴퓨터 비전과 딥러닝'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/binary-classification',
+    //     label: '이미지 이항 분류'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/gradient-descent',
+    //     label: '손실 함수와 경사하강법'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/confusion-matrix',
+    //     label: '혼동 행렬'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/MLP',
+    //     label: '다층 신경망'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/application-ideas',
+    //     label: '실무 적용 방안'
+    // }
   ],
   timeSeriesSidebar: [
     { type: 'doc',
