@@ -275,6 +275,11 @@ const sidebars: SidebarsConfig = {
     //   id: 'computer-vision/opencv4',
     //   label: 'OpenCV 실무'
     // },
+    {
+      type: 'doc',
+      id: 'computer-vision/day1-review',
+      label: '1일차 복습'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'
