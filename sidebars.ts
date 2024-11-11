@@ -267,14 +267,23 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/tasks',
       label: '컴퓨터 비전 과업'
     },
-    // { type: 'doc',
-    //   id: 'computer-vision/opencv3',
-    //   label: 'OpenCV 응용'
-    // },
-    // { type: 'doc',
-    //   id: 'computer-vision/opencv4',
-    //   label: 'OpenCV 실무'
-    // },
+    {
+      type: 'doc',
+      id: 'computer-vision/PIL-note',
+      label: 'PIL'
+    },
+    { type: 'doc',
+      id: 'computer-vision/opencv',
+      label: 'OpenCV 기초'
+    },    
+    { type: 'doc',
+      id: 'computer-vision/image-operation',
+      label: '이미지 연산'
+    },
+    { type: 'doc',
+      id: 'computer-vision/color',
+      label: '색 보정'
+    },
     {
       type: 'doc',
       id: 'computer-vision/day1-review',
