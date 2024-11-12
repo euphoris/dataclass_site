@@ -289,6 +289,35 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/day1-review',
       label: '1일차 복습'
     },
+    { type: 'doc',
+      id: 'computer-vision/lut',
+      label: '룩업 테이블'
+    },
+    { type: 'doc',
+      id: 'computer-vision/image-transform',
+      label: '이미지 변형'
+    },
+    { type: 'doc',
+      id: 'computer-vision/camera-calibration',
+      label: '카메라 교정'
+    },
+    { type: 'doc',
+      id: 'computer-vision/filter',
+      label: '필터링'
+    },
+    { type: 'doc',
+      id: 'computer-vision/shape',
+      label: '모양 감지'
+    },
+    { type: 'doc',
+      id: 'computer-vision/match',
+      label: '이미지 매칭'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/day2-review',
+      label: '2일차 복습'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'
