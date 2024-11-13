@@ -318,29 +318,44 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/day2-review',
       label: '2일차 복습'
     },
+    {
+      type: 'doc',
+      id: 'computer-vision/feature-detector',
+      label: '특징 검출'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/deep-learning',
+      label: '컴퓨터 비전과 딥러닝'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/frameworks',
+      label: '딥러닝 프레임워크'
+    },
+    {
+        type: 'doc',
+        id: 'computer-vision/binary-classification',
+        label: '이미지 이항 분류'
+    },
+    {
+        type: 'doc',
+        id: 'computer-vision/confusion-matrix',
+        label: '혼동 행렬'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/day3-review',
+      label: '3일차 복습'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'
     // },
     // {
-    //   type: 'doc',
-    //   id: 'computer-vision/deep-learning',
-    //   label: '컴퓨터 비전과 딥러닝'
-    // },
-    // {
-    //     type: 'doc',
-    //     id: 'computer-vision/binary-classification',
-    //     label: '이미지 이항 분류'
-    // },
-    // {
     //     type: 'doc',
     //     id: 'computer-vision/gradient-descent',
     //     label: '손실 함수와 경사하강법'
-    // },
-    // {
-    //     type: 'doc',
-    //     id: 'computer-vision/confusion-matrix',
-    //     label: '혼동 행렬'
     // },
     // {
     //     type: 'doc',
