@@ -348,6 +348,46 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/day3-review',
       label: '3일차 복습'
     },
+    {
+      type: 'doc',
+      id: 'computer-vision/MLP',
+      label: '다층 신경망'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/lightning',
+      label: 'PyTorch Lightning'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/hyperparameter-tuning',
+      label: '하이퍼파라미터 튜닝'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/multiclass',
+      label: '다항 분류'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/cnn',
+      label: '합성곱 신경망'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/augmentation',
+      label: '데이터 증강'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/vit',
+      label: '비전 트랜스포머'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/day4-review',
+      label: '4일차 복습'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'
@@ -356,11 +396,6 @@ const sidebars: SidebarsConfig = {
     //     type: 'doc',
     //     id: 'computer-vision/gradient-descent',
     //     label: '손실 함수와 경사하강법'
-    // },
-    // {
-    //     type: 'doc',
-    //     id: 'computer-vision/MLP',
-    //     label: '다층 신경망'
     // },
     // {
     //     type: 'doc',
