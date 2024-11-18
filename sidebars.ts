@@ -388,6 +388,41 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/day4-review',
       label: '4일차 복습'
     },
+    {
+      type: 'doc',
+      id: 'computer-vision/transfer-learning',
+      label: '전이 학습'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/object-detection',
+      label: '물체 탐지'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/annotation',
+      label: '데이터 만들기'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/autoencoder',
+      label: '오토인코더'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/embedding',
+      label: '임베딩'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/multi-modal',
+      label: '멀티 모달'
+    },
+    {
+      type: 'doc',
+      id: 'computer-vision/generation',
+      label: '생성'
+    },
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'
