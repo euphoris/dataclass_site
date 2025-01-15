@@ -258,171 +258,173 @@ const sidebars: SidebarsConfig = {
       id: 'computer-vision/lab',
       label: '실습 및 Q&A'
     },
-    { type: 'doc',
-      id: 'computer-vision/questionaire',
-      label: '설문'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/tasks',
-      label: '컴퓨터 비전 과업'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/PIL-note',
-      label: 'PIL'
-    },
-    { type: 'doc',
-      id: 'computer-vision/opencv',
-      label: 'OpenCV 기초'
-    },    
-    { type: 'doc',
-      id: 'computer-vision/image-operation',
-      label: '이미지 연산'
-    },
-    { type: 'doc',
-      id: 'computer-vision/color',
-      label: '색 보정'
-    },
+    // 이하는 아직 수업 안해서 가려놓은 부분
+    // { type: 'doc',
+    //   id: 'computer-vision/questionaire',
+    //   label: '설문'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/tasks',
+    //   label: '컴퓨터 비전 과업'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/PIL-note',
+    //   label: 'PIL'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/opencv',
+    //   label: 'OpenCV 기초'
+    // },    
+    // { type: 'doc',
+    //   id: 'computer-vision/image-operation',
+    //   label: '이미지 연산'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/color',
+    //   label: '색 보정'
+    // },
     {
       type: 'doc',
       id: 'computer-vision/day1-review',
       label: '1일차 복습'
     },
-    { type: 'doc',
-      id: 'computer-vision/lut',
-      label: '룩업 테이블'
-    },
-    { type: 'doc',
-      id: 'computer-vision/image-transform',
-      label: '이미지 변형'
-    },
-    { type: 'doc',
-      id: 'computer-vision/camera-calibration',
-      label: '카메라 교정'
-    },
-    { type: 'doc',
-      id: 'computer-vision/filter',
-      label: '필터링'
-    },
-    { type: 'doc',
-      id: 'computer-vision/shape',
-      label: '모양 감지'
-    },
-    { type: 'doc',
-      id: 'computer-vision/match',
-      label: '이미지 매칭'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/day2-review',
-      label: '2일차 복습'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/feature-detector',
-      label: '특징 검출'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/deep-learning',
-      label: '컴퓨터 비전과 딥러닝'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/frameworks',
-      label: '딥러닝 프레임워크'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/binary-classification',
-        label: '이미지 이항 분류'
-    },
-    {
-        type: 'doc',
-        id: 'computer-vision/confusion-matrix',
-        label: '혼동 행렬'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/day3-review',
-      label: '3일차 복습'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/MLP',
-      label: '다층 신경망'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/lightning',
-      label: 'PyTorch Lightning'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/hyperparameter-tuning',
-      label: '하이퍼파라미터 튜닝'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/multiclass',
-      label: '다항 분류'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/cnn',
-      label: '합성곱 신경망'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/augmentation',
-      label: '데이터 증강'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/vit',
-      label: '비전 트랜스포머'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/day4-review',
-      label: '4일차 복습'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/transfer-learning',
-      label: '전이 학습'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/object-detection',
-      label: '물체 탐지'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/annotation',
-      label: '데이터 만들기'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/autoencoder',
-      label: '오토인코더'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/embedding',
-      label: '임베딩'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/multi-modal',
-      label: '멀티 모달'
-    },
-    {
-      type: 'doc',
-      id: 'computer-vision/generation',
-      label: '생성'
-    },
+    // { type: 'doc',
+    //   id: 'computer-vision/lut',
+    //   label: '룩업 테이블'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/image-transform',
+    //   label: '이미지 변형'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/camera-calibration',
+    //   label: '카메라 교정'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/filter',
+    //   label: '필터링'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/shape',
+    //   label: '모양 감지'
+    // },
+    // { type: 'doc',
+    //   id: 'computer-vision/match',
+    //   label: '이미지 매칭'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/day2-review',
+    //   label: '2일차 복습'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/feature-detector',
+    //   label: '특징 검출'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/deep-learning',
+    //   label: '컴퓨터 비전과 딥러닝'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/frameworks',
+    //   label: '딥러닝 프레임워크'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/binary-classification',
+    //     label: '이미지 이항 분류'
+    // },
+    // {
+    //     type: 'doc',
+    //     id: 'computer-vision/confusion-matrix',
+    //     label: '혼동 행렬'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/day3-review',
+    //   label: '3일차 복습'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/MLP',
+    //   label: '다층 신경망'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/lightning',
+    //   label: 'PyTorch Lightning'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/hyperparameter-tuning',
+    //   label: '하이퍼파라미터 튜닝'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/multiclass',
+    //   label: '다항 분류'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/cnn',
+    //   label: '합성곱 신경망'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/augmentation',
+    //   label: '데이터 증강'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/vit',
+    //   label: '비전 트랜스포머'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/day4-review',
+    //   label: '4일차 복습'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/transfer-learning',
+    //   label: '전이 학습'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/object-detection',
+    //   label: '물체 탐지'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/annotation',
+    //   label: '데이터 만들기'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/autoencoder',
+    //   label: '오토인코더'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/embedding',
+    //   label: '임베딩'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/multi-modal',
+    //   label: '멀티 모달'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'computer-vision/generation',
+    //   label: '생성'
+    // },
+    // 이하는 DEPRECATED
     // { type: 'doc',
     //   id: 'computer-vision/PIL',
     //   label: 'Python 이미지 처리'

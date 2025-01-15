@@ -3,8 +3,8 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 const config = {
-  title: '데이터 분석 강의',
-  tagline: '2024',
+  title: '데이터 과학 강의',
+  tagline: '2025',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -94,22 +94,22 @@ const config = {
         {
           title: 'Docs',
           items: [
-            {
-              label: '강화 학습',
-              to: '/docs/reinforcement-learning/lab',
-            },
-            {
-              label: '머신 러닝',
-              to: '/docs/machine-learning/lab',
-            },
-            {
-              label: '컴퓨터 비전',
-              to: '/docs/computer-vision/lab',
-            },
-            {
-              label: '시계열 데이터 분석',
-              to: '/docs/time-series/intro',
-            }
+            // {
+            //   label: '강화 학습',
+            //   to: '/docs/reinforcement-learning/lab',
+            // },
+            // {
+            //   label: '머신 러닝',
+            //   to: '/docs/machine-learning/lab',
+            // },
+            // {
+            //   label: '컴퓨터 비전',
+            //   to: '/docs/computer-vision/lab',
+            // },
+            // {
+            //   label: '시계열 데이터 분석',
+            //   to: '/docs/time-series/intro',
+            // }
           ],
         }
       ],
