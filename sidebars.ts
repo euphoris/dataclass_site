@@ -314,11 +314,11 @@ const sidebars: SidebarsConfig = {
     //   id: 'computer-vision/match',
     //   label: '이미지 매칭'
     // },
-    // {
-    //   type: 'doc',
-    //   id: 'computer-vision/day2-review',
-    //   label: '2일차 복습'
-    // },
+    {
+      type: 'doc',
+      id: 'computer-vision/day2-review',
+      label: '2일차 복습'
+    },
     // {
     //   type: 'doc',
     //   id: 'computer-vision/feature-detector',
