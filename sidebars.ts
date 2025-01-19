@@ -344,11 +344,11 @@ const sidebars: SidebarsConfig = {
     //     id: 'computer-vision/confusion-matrix',
     //     label: '혼동 행렬'
     // },
-    // {
-    //   type: 'doc',
-    //   id: 'computer-vision/day3-review',
-    //   label: '3일차 복습'
-    // },
+    {
+      type: 'doc',
+      id: 'computer-vision/day3-review',
+      label: '3일차 복습'
+    },
     // {
     //   type: 'doc',
     //   id: 'computer-vision/MLP',
