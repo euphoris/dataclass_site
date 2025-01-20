@@ -384,11 +384,11 @@ const sidebars: SidebarsConfig = {
     //   id: 'computer-vision/vit',
     //   label: '비전 트랜스포머'
     // },
-    // {
-    //   type: 'doc',
-    //   id: 'computer-vision/day4-review',
-    //   label: '4일차 복습'
-    // },
+    {
+      type: 'doc',
+      id: 'computer-vision/day4-review',
+      label: '4일차 복습'
+    },
     // {
     //   type: 'doc',
     //   id: 'computer-vision/transfer-learning',
