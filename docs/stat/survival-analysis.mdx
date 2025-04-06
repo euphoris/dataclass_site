@@ -1,0 +1,186 @@
+# 생존 분석을 활용한 고장 확률의 예측
+
+## 생존 분석 (Survival Analysis)
+
+*   **정의:** 특정 **사건(event)** 발생(예: 사망, 회복, 고장, 가입, 이탈 등)까지 걸리는 **시간(time-to-event)** 분석 기법.
+*   **유래:** 보험(사망률), 의학(생존율) 분야 발전. '생존' 이름 붙음.
+
+## 센서링 (Censoring)
+
+*   **정의:** 조사 기간 **종료 시점**까지 사건 발생 안 하거나, 기간 중 **추적 실패** 등으로 **정확한 사건 발생 시점 모르는** 경우.
+*   **유형:**
+    *   **우측 센서링 (Right censoring):** 조사 종료 시점까지 사건 미발생 (가장 흔함).
+    *   **좌측 센서링 (Left censoring):** 조사 시작 이전에 이미 사건 발생.
+    *   **구간 센서링 (Interval censoring):** 두 관찰 시점 사이 사건 발생.
+
+## 절단 (Truncation)
+
+*   **정의:** 관찰 대상 **선정 기준** 때문에 특정 기간 데이터 **원천적으로 관찰 불가**한 경우.
+*   **좌측 절단 (Left truncation):** 조사 시작 이전 시점 데이터 제외 (예: 특정 나이 이후부터 관찰 시작).
+    *   **예시 (동물 수명 조사):** 이미 태어난 동물 관찰 시, (태어난 시점 ~ 관찰 시작 시점) 기간은 수명 데이터에서 절단됨.
+
+## 생존 함수 (Survival Function), $S(t)$
+
+*   **정의:** 특정 시점 $t$ 까지 **사건 발생 없이 생존**할 확률.
+    $$ S(t) = P(T > t) $$
+    *   $T$: 사건 발생 시점 (확률 변수).
+
+## 실습 준비 (lifelines 패키지)
+
+*   **설치:** `pip install lifelines`
+*   **데이터 로드 (암 생존 데이터):**
+    ```python
+    import pandas as pd
+    cancer = pd.read_excel('cancer_survive.xlsx')
+    # time: 사건(사망) 발생 또는 관찰 중단(센서링) 시점
+    # delta: 사건 발생 여부 (1: 사망, 0: 관찰 중단/생존)
+    ```
+
+## 카플란-마이어 추정치 (Kaplan-Meier Estimate, KM Estimate)
+
+*   센서링 데이터 있을 때 **생존 함수 추정**하는 비모수적 방법.
+*   **추정식 (단계적):**
+    $$ \hat{S}(t) = \prod_{t_i \le t} \frac{n_i - d_i}{n_i} $$
+    *   $t_i$: 사건 발생 $i$번째 시점.
+    *   $n_i$: 시점 $t_i$ 직전까지 생존(위험에 노출된) 수.
+    *   $d_i$: 시점 $t_i$에 사건 발생(사망) 수.
+*   **Python 실습:**
+    ```python
+    from lifelines import KaplanMeierFitter
+    import matplotlib.pyplot as plt
+
+    kmf = KaplanMeierFitter()
+    # fit(기간, 사건발생여부)
+    kmf.fit(cancer['time'], event_observed=cancer['delta'])
+
+    # 생존 함수 값 확인
+    print(kmf.survival_function_)
+
+    # 생존 곡선 시각화 (신뢰구간 함께 표시됨)
+    kmf.plot_survival_function()
+    plt.xlabel("Timeline")
+    plt.ylabel("Survival Probability")
+    plt.title("Kaplan-Meier Survival Curve")
+    plt.show()
+    ```
+*   **그룹 간 생존 곡선 비교:**
+    ```python
+    # 예: 암 type 1 vs type 2
+    cancer1 = cancer.query('type == 1')
+    cancer2 = cancer.query('type == 2')
+
+    kmf1 = KaplanMeierFitter()
+    kmf2 = KaplanMeierFitter()
+
+    kmf1.fit(cancer1['time'], cancer1['delta'], label='type 1')
+    kmf2.fit(cancer2['time'], cancer2['delta'], label='type 2')
+
+    # 비교 시각화 (한 그래프에 그리기)
+    ax = kmf1.plot_survival_function()
+    kmf2.plot_survival_function(ax=ax)
+    plt.show()
+    ```
+*   **로그 순위 검정 (Log-Rank Test):** 두 그룹 생존 함수 **차이** 통계적 검정.
+    ```python
+    from lifelines.statistics import logrank_test
+
+    res = logrank_test(cancer1['time'], cancer2['time'],
+                       cancer1['delta'], cancer2['delta'])
+    res.print_summary() # p-value 확인 (작으면 유의미한 차이)
+    ```
+
+## 위험 함수 (Hazard Function), $h(t)$
+
+*   **정의:** 시점 $t$까지 생존한 개체가 **바로 그 시점 $t$에 사건 발생**할 순간적 위험률/확률.
+*   **생존 함수와 차이:**
+    *   $S(t)$: $t$ 시점 **까지** 생존 확률 (누적 개념).
+    *   $h(t)$: $t$ 시점 **에** 사건 발생 확률 (순간 개념).
+*   **예시:**
+    *   $S(t)=0.5$: 시점 t까지 50% 생존.
+    *   $h(t)=0.5$: 시점 t에, 그때까지 생존자 중 50%가 사건 발생(사망).
+
+## 누적 위험 함수 (Cumulative Hazard Function), $H(t)$
+
+*   **정의:** 시점 0부터 $t$까지 **위험 함수($h(\tau)$) 적분**(합계). 시점 t까지 누적된 총 위험량.
+    $$ H(t) = \int_0^t h(\tau) d\tau $$
+*   **위험 함수와의 관계:** $h(t) = \frac{d}{dt} H(t)$ (누적 위험 함수의 순간 변화율).
+*   **생존 함수와의 관계:**
+    $$ S(t) = \exp(-H(t)) $$
+*   **특징:** $h(t)$는 순간 변화율이라 추정 어렵지만, $H(t)$는 누적량이므로 상대적 추정 용이.
+
+## 넬슨-알렌 추정치 (Nelson-Aalen Estimate)
+
+*   **누적 위험 함수 $H(t)$** 추정하는 비모수적 방법.
+*   **추정식:**
+    $$ \hat{H}(t) = \sum_{t_i \le t} \frac{d_i}{n_i} $$
+    *   $t_i, n_i, d_i$는 KM 추정치와 동일.
+*   **Python 실습:**
+    ```python
+    from lifelines import NelsonAalenFitter
+
+    naf1 = NelsonAalenFitter()
+    naf1.fit(cancer1['time'], event_observed=cancer1['delta'], label='type 1')
+    naf1.plot_cumulative_hazard() # 누적 위험 함수 시각화
+    plt.show()
+    ```
+
+## 모수적 생존 모형 (Parametric Survival Models)
+
+*   위험 함수/생존 함수 특정 **확률 분포 가정**하여 모수 추정.
+*   **지수 모형 (Exponential Model):**
+    *   위험 함수 **일정**하다고 가정 ($h(t) = \lambda$). 가장 단순.
+    *   누적 위험 함수: $H(t) = \lambda t = t / (1/\lambda)$. (보통 $\lambda$ 대신 평균 생존 시간 $\theta = 1/\lambda$ 사용)
+    *   Python: `lifelines.ExponentialFitter`
+*   **베이불 모형 (Weibull Model):**
+    *   지수 모형 확장. 위험 함수 시간 따라 **증가/감소 가능** ($\rho$ 파라미터 추가).
+    *   누적 위험 함수: $H(t) = (t / \lambda)^\rho$. ($\rho=1$이면 지수 모형)
+    *   Python: `lifelines.WeibullFitter`
+*   **모형 시각화 및 비교:**
+    ```python
+    from lifelines import ExponentialFitter, WeibullFitter
+
+    ef1 = ExponentialFitter().fit(cancer1['time'], cancer1['delta'], label='Exponential')
+    wf1 = WeibullFitter().fit(cancer1['time'], cancer1['delta'], label='Weibull')
+
+    # KM 추정치와 함께 시각화하여 비교
+    ax = kmf1.plot_survival_function() # KM 곡선 먼저 그리기
+    ef1.plot_survival_function(ax=ax) # 지수 모형 겹치기
+    wf1.plot_survival_function(ax=ax) # 베이불 모형 겹치기
+    plt.show()
+    ```
+
+## 콕스 비례 위험 모형 (Cox Proportional Hazards Model)
+
+*   **위험(hazard)** 자체를 **종속변수**로 하는 **회귀 분석** 모형.
+*   **목적:** 여러 **독립변수(공변량, covariates)**가 **사건 발생 위험**에 미치는 영향 분석.
+*   **모형식:**
+    $$ h(t | x) = h_0(t) \exp(\sum_{i} b_i (x_i - \bar{x}_i)) $$
+    *   $h(t | x)$: 공변량 $x$ 주어졌을 때 시점 $t$의 위험 함수.
+    *   $h_0(t)$: **기저 위험 함수 (Baseline Hazard)**. 모든 공변량 평균일 때($x_i = \bar{x}_i$)의 시간에 따른 기본 위험. 분포 가정 안 함 (준모수적).
+    *   $\exp(\sum b_i (x_i - \bar{x}_i))$: 공변량 효과 부분. 위험 **비율** 나타냄.
+*   **위험비 (Hazard Ratio, HR):**
+    *   특정 공변량 $x_i$가 **1단위 증가**할 때, 위험이 **몇 배 증가/감소**하는지 나타내는 비율 = $\exp(b_i)$.
+    *   $HR = \exp(b_i) = 1.10$ → $x_i$ 1단위 증가 시 위험 1.10배 (+10%) 증가.
+    *   $HR = 0.80$ → $x_i$ 1단위 증가 시 위험 0.80배 (-20%) 감소.
+*   **주요 가정 (비례 위험 가정):** 공변량 효과(위험비 $\exp(b_i)$)는 **시간에 따라 일정**하다. (기저 위험 $h_0(t)$는 변해도 비율은 일정).
+*   **Python 실습 (Rossi 데이터):**
+    ```python
+    from lifelines import CoxPHFitter
+    from lifelines.datasets import load_rossi
+
+    rossi = load_rossi() # 데이터 로드
+
+    cph = CoxPHFitter()
+    # fit(데이터, 기간컬럼, 사건컬럼)
+    cph.fit(rossi, duration_col='week', event_col='arrest', show_progress=True)
+    cph.print_summary() # 결과 표 확인 (coef, exp(coef)=HR, p-value 등)
+
+    # 공변량 그룹별 생존 함수 비교 시각화
+    cph.plot_covariate_groups('mar', [0, 1]) # 결혼 여부(mar) 그룹 비교
+    plt.show()
+    cph.plot_covariate_groups('age', [20, 30, 40, 50, 60]) # 나이 그룹 비교
+    plt.show()
+    # 여러 공변량 조합 비교
+    cph.plot_covariate_groups(['mar', 'fin'], [(0, 0), (0, 1), (1, 0), (1, 1)])
+    plt.show()
+    ```

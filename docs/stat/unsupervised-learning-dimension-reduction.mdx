@@ -1,0 +1,109 @@
+# 비지도 학습: 차원 축소
+
+## 차원 축소 (Dimensionality Reduction)
+
+*   **정의:** 고차원(많은 특성/변수) 데이터를 **중요 정보는 최대한 유지**하면서 **더 낮은 차원**의 데이터로 변환하는 기법.
+*   **목표 및 장점:**
+    *   **과적합 방지:** 모델 복잡도 줄여 일반화 성능 향상.
+    *   **계산 효율성 증대:** 학습 속도 향상, 메모리/저장 공간 절약.
+    *   **시각화 용이:** 2D/3D 변환하여 데이터 구조/패턴 파악 도움.
+    *   **'차원의 저주(Curse of Dimensionality)' 완화:** 고차원 공간 데이터 희소성, 거리 계산 문제 등 완화.
+    *   **(경우에 따라) 성능 향상:** 불필요/노이즈 특성 제거 효과.
+*   **고려 사항:**
+    *   차원 축소 과정에서 **일부 정보 손실** 발생 가능.
+    *   **특성 추출(Feature Extraction)** 방식 경우(PCA 등), 생성된 **새로운 특성(차원)** 의미 직관적 해석 어려울 수 있음.
+*   **일상 예시:** 사람 다양한 성격 특성을 외향성/내향성 등 몇 가지 주요 차원으로 표현.
+
+*(슬라이드 234: 차원 축소 개념 시각화 - 흩어진 점들을 가장 잘 설명하는 축(선) 찾기)*
+
+## 여러 가지 차원 축소 기법
+
+*   **주성분 분석 (Principal Component Analysis, PCA):**
+    *   데이터 **분산(variance)** 가장 큰 방향(축)을 **첫 번째 주성분(PC1)**으로 찾고, 이와 직교하면서 다음으로 분산 큰 방향을 PC2로 찾는 방식.
+    *   고차원 데이터 저차원으로 **선형 변환**하여 분산 최대한 보존. 가장 널리 사용.
+*   **독립성분 분석 (Independent Component Analysis, ICA):**
+    *   관측된 신호(데이터)가 여러 **통계적으로 독립적인** 원천 신호(성분) 혼합물이라 가정, 원천 신호 분리. (예: 칵테일 파티 문제 - 여러 목소리 분리)
+*   **비음행렬 분해 (Non-Negative Matrix Factorization, NMF):**
+    *   원본 행렬(모든 원소 ≥ 0)을 두 개 **비음수 행렬** 곱으로 분해. 데이터가 음수 값 가질 수 없을 때 유용 (예: 이미지 픽셀값, 문서 단어 빈도).
+
+## t-SNE (t-Distributed Stochastic Neighbor Embedding)
+
+*   **목적:** 고차원 데이터 구조적 특징 **시각화** 위한 **비선형** 차원 축소 기법 (주로 2D/3D 변환).
+*   **방법:**
+    1.  고차원 공간에서 점들 간 유사성(이웃 관계) 확률 분포 계산 (가우시안 분포 기반).
+    2.  저차원 공간에서도 점들 간 유사성 확률 분포 계산 (t-분포 기반 - 더 두꺼운 꼬리 가짐).
+    3.  두 확률 분포 간 차이 (**KL 발산**) 최소화 하도록 저차원 좌표 최적화.
+*   **단점 및 해석상 주의점:**
+    *   **계산 비용 높음.** (데이터 크면 오래 걸림)
+    *   **확률적 알고리즘:** 실행할 때마다 결과 조금씩 다름 (random_state 고정 필요).
+    *   **거리 보존 안 됨:** 저차원 공간 **점들 간 거리**가 고차원 공간 실제 거리와 반드시 비례하지 않음. **군집 간 상대적 위치**는 유지 경향 있으나, **군집 크기/점 간 거리** 해석 주의.
+
+## PCA 실습
+
+*   데이터 준비 (종양 데이터 특성 X 사용).
+    ```python
+    cc = pd.read_excel('cancer.xlsx')
+    X = cc.iloc[:, 1:] # 독립변수(특성)들만 사용
+    y_labels = cc.iloc[:, 0].map({'M': 1, 'B': 0}) # 라벨은 시각화에만 사용
+    ```
+*   **PCA 수행:** (n_components=2 : 2차원으로 축소)
+    ```python
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
+
+    # PCA는 분산 기반이므로, 변수 스케일링 필수
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X_scaled) # 학습 및 변환 동시 수행
+    ```
+
+## 시각화 (PCA 결과)
+
+*   PCA로 변환된 2차원 데이터(X_pca)를 산점도로 시각화. 점 색깔은 원래 라벨(y_labels)로 구분.
+    ```python
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(8, 6))
+    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_labels, cmap='viridis', edgecolor='k', alpha=0.7)
+    plt.xlabel('Principal Component 1')
+    plt.ylabel('Principal Component 2')
+    plt.title('PCA of Cancer Dataset (2 Components)')
+    plt.legend(handles=scatter.legend_elements()[0], labels=['Benign (B)', 'Malignant (M)']) # 범례 추가
+    plt.grid(True)
+    plt.show()
+    ```
+
+## 결정 경계(Decision Boundary) 시각화
+
+분류 모델이 **어떤 기준**으로 데이터를 나누는지 2차원 공간에 시각화.
+
+```python
+# 랜덤 포레스트
+from sklearn.ensemble import RandomForestClassifier
+y = cc.iloc[:, 0].map({'M': 1, 'B': 0})
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X, y)
+y_pred = rf.predict(X)
+
+# 가로 세로 축 범위
+pc0_min, pc0_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1  # 가로축 범위
+pc1_min, pc1_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1  # 세로축 범위
+
+# 2차원 공간 전체에 대해 격자(grid) 생성.
+pc0, pc1 = np.meshgrid(np.linspace(pc0_min, pc0_max, 200), np.linspace(pc1_min, pc1_max, 200)) 
+
+# 격자 각 점을 **역변환(inverse_transform)**하여 원본 차원으로 복원.
+X_range = pca.inverse_transform(np.c_[pc0.ravel(), pc1.ravel()]) # 역변환
+
+# 복원된 고차원 점들에 대해 학습된 모델로 예측 확률 계산.
+y_pred = rf.predict_proba(X_range)[:, 1]
+y_pred = y_pred.reshape(pc0.shape)
+
+# 시각화
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, edgecolor='k')
+
+# 예측 확률 바탕으로 2차원 공간에 **등고선(contour) 형태**로 결정 경계 그림.
+plt.contourf(pc0, pc1, y_pred, alpha=0.3, levels=np.linspace(y_pred.min(), y_pred.max(), 3))
+```

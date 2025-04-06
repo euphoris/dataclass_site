@@ -1,0 +1,228 @@
+
+# 지도학습: 분류
+
+## 지도학습: 분류 (Supervised Learning: Classification)
+
+## 머신러닝의 주요 접근
+
+*   지도 학습 (Supervised Learning)
+*   비지도 학습 (Unsupervised Learning)
+*   강화 학습 (Reinforcement Learning)
+
+## 지도학습 (Supervised Learning)
+
+*   **라벨(정답)**이 있는 데이터로부터 학습.
+*   입력(x)과 출력(y) 간의 관계 모형화.
+*   머신 러닝의 90% 이상 차지하는 학습 형태.
+*   **종류:**
+    *   **회귀(Regression):** 연속적인 y 예측.
+    *   **분류(Classification):** 여러 종류(범주) 값 구분 (범주형 y 예측).
+
+## 지도학습 예시
+
+*   스팸 메일 필터링: 이메일 내용 분석하여 스팸 여부 판단 (분류).
+*   이미지 분류: 이미지 특정 카테고리 자동 분류 (분류).
+*   질병 예측: 환자 데이터 기반 질병 발병 확률 예측 (분류/회귀).
+*   주가 예측: 과거 데이터 이용 미래 주가 예측 (회귀).
+
+## 분류 알고리즘
+
+*   Linear Discriminant Analysis (LDA)
+*   Support Vector Machine (SVM)
+*   Nearest Neighbors (k-NN)
+*   Decision Tree
+*   Naive Bayes
+*   Artificial Neural Network (ANN)
+
+## Linear Discriminant Analysis (LDA)
+
+*   분류 알고리즘.
+*   **원리:** 집단 간 분산 최대화, 집단 내 분산 최소화하는 낮은 차원(축) 찾음.
+*   해당 차원 상에서 집단 구분 경계 찾음.
+
+## Support Vector Machine (SVM)
+
+*   회귀 및 분류 모두 사용 가능.
+*   **분류:** 두 집단 간 **거리(마진) 최대화**하는 결정 경계(초평면) 학습.
+*   **커널 트릭(Kernel Trick):** 저차원에서 비선형 분리 어려운 데이터, 고차원 공간으로 매핑하면 선형 분리 가능해지는 원리 이용. 실제로 고차원 매핑 없이 **커널 함수(거리 계산 방식 변경)** 통해 동일 효과 얻는 계산 트릭. SVM은 커널 트릭 활용 가능.
+
+## Nearest Neighbors (k-NN)
+
+*   회귀 및 분류 모두 사용 가능.
+*   **원리:** 새로운 데이터 예측 시, 가장 가까운 **K개 이웃** 데이터 참조.
+*   **예측:** 분류는 이웃들 다수결, 회귀는 이웃들 값 평균 등 사용.
+*   **K값 영향:** K 작으면 노이즈 민감, K 크면 계산 비용 증가 및 경계 모호해짐.
+*   **게으른 학습(Lazy Learning):** 별도 훈련 단계 없고, 예측 요청 시 모든 계산 수행.
+
+## Decision Tree
+
+*   회귀 및 분류 모두 사용 가능. 트리 구조 기반.
+*   **구조:**
+    *   **내부 노드(Internal Node):** 특정 특징(변수) 값 기준으로 데이터 분기.
+    *   **잎 노드(Leaf Node):** 최종 예측 결과(클래스 또는 값) 제공.
+*   **장점:** 결과 이해 쉽고 시각화 가능.
+*   **단점:** 데이터 작은 변화에도 트리 구조 크게 변동 가능. **과적합(overfitting)** 발생 쉬움.
+*   **개선:** 여러 트리 결합하는 **앙상블(Ensemble)** 기법 (Random Forest, Boosting Tree 등) 사용.
+
+## 종양 분류 데이터 (예제)
+
+*   데이터 로드 및 확인.
+    ```python
+    import pandas as pd
+    cc = pd.read_excel('cancer.xlsx')
+    cc.head()
+    ```
+*   X (독립변수), y (종속변수 'diagnosis') 분리.
+    ```python
+    # y_orig는 원본 라벨('M', 'B'), X는 특성들
+    y_orig, X = cc.iloc[:, 0], cc.iloc[:, 1:]
+    ```
+*   y 변수 숫자 변환 (악성 M: 1, 양성 B: 0).
+    ```python
+    y = y_orig.map({'M': 1, 'B': 0})
+    ```
+
+## 랜덤 포레스트 (Random Forest - 분류 예제)
+
+*   Decision Tree 앙상블 기법 중 하나.
+*   **데이터 분할 (훈련/테스트 셋):**
+    ```python
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                        random_state=42) # 재현성 위한 시드 고정
+    ```
+*   **모델 훈련:**
+    ```python
+    from sklearn.ensemble import RandomForestClassifier
+    # n_estimators: 생성할 트리 개수
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+    ```
+*   **테스트 데이터 예측:**
+    ```python
+    y_pred = model.predict(X_test)
+    ```
+
+## 평가 (Classification Metrics)
+
+*   분류 모델 성능 평가 지표들.
+*   **Python (sklearn.metrics):**
+    ```python
+    from sklearn.metrics import * # confusion_matrix, accuracy_score 등 포함
+
+    # 혼동 행렬
+    cm = confusion_matrix(y_test, y_pred)
+    print("Confusion Matrix:\n", cm)
+
+    # 정확도
+    acc = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: {acc:.4f}")
+
+    # 정밀도 (양성 클래스=1 기준)
+    prec = precision_score(y_test, y_pred)
+    print(f"Precision: {prec:.4f}")
+
+    # 재현도 (양성 클래스=1 기준)
+    rec = recall_score(y_test, y_pred)
+    print(f"Recall: {rec:.4f}")
+    ```
+
+## 혼동 행렬 (Confusion Matrix)
+
+*   실제 클래스와 예측 클래스 간의 개수 요약 표.
+
+|             | 예측: 음성 (0) | 예측: 양성 (1) |
+| :---------- | :------------- | :------------- |
+| **실제: 음성 (0)** | **TN** (True Negative)<br/>진음성  | **FP** (False Positive)<br/>위양성 (1종 오류) |
+| **실제: 양성 (1)** | **FN** (False Negative)<br/>위음성 (2종 오류) | **TP** (True Positive)<br/>진양성  |
+
+## 진/위 양성/음성 (True/False Positive/Negative)
+
+*   혼동행렬 용어. **양성/음성**은 **예측** 기준.
+*   현실에서는 실제 값 모르는 경우 많음.
+*   **진(True):** 예측 맞음 (실제=예측).
+*   **위(False):** 예측 틀림 (실제≠예측).
+
+## 정확도 (Accuracy)
+
+*   전체 예측 중 올바르게 예측한 비율.
+    $$ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} $$
+*   특별히 음성/양성 구분 중요하지 않으면 사용.
+*   **주의:** 데이터 불균형(imbalanced data) 시 문제될 수 있음 (예: 99%가 음성일 때 모두 음성 예측해도 정확도 99%).
+
+## 정밀도 (Precision)
+
+*   **양성(Positive)으로 예측**한 것들 중 **실제로 양성**인 비율.
+    $$ \text{Precision} = \frac{TP}{TP + FP} $$
+*   **FP(위양성)** 줄이는 것이 중요할 때 사용 (예: 스팸 필터 - 정상 메일을 스팸 처리하면 안 됨, 채용 - 부적격자 잘못 뽑으면 안 됨).
+*   보통 문턱값(threshold) 높이면(보수적 예측) 정밀도 높아짐.
+
+## 문턱값 (Threshold)
+
+*   분류 모델이 예측 확률(또는 점수)을 바탕으로 최종 클래스(0 또는 1) 결정하는 기준 값.
+*   **문턱값 조절 영향:**
+    *   **높이면:** 양성 예측 감소 (TP↓, FP↓). **정밀도↑, 재현도↓**.
+    *   **낮추면:** 양성 예측 증가 (TP↑, FP↑). **정밀도↓, 재현도↑**.
+
+## 재현도 (Recall / Sensitivity / Hit Rate)
+
+*   **실제 양성**인 것들 중 **양성으로 예측**한 비율.
+    $$ \text{Recall} = \frac{TP}{TP + FN} $$
+*   **FN(위음성)** 줄이는 것이 중요할 때 사용 (예: 암 진단, 전염병 검사 - 실제 환자 놓치면 안 됨).
+*   보통 문턱값 낮추면(적극적 예측) 재현도 높아짐.
+
+## 특이도 (Specificity)
+
+*   **실제 음성**인 것들 중 **음성으로 예측**한 비율.
+    $$ \text{Specificity} = \frac{TN}{TN + FP} $$
+*   `1 - FPR` (False Positive Rate).
+*   실제 음성 정확히 찾는 것 중요할 때 사용.
+
+## 코로나 검사 예시
+
+*   검사 종류(PCR, 항원 등) 따라 민감도(재현도)/특이도 다름. 목적에 따라 적합한 검사 선택.
+
+## F1 점수 (F1 Score)
+
+*   정밀도(p)와 재현도(r)의 **조화 평균**. 둘 사이 균형 나타내는 지표.
+    $$ F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2TP}{2TP + FP + FN} $$
+*   정밀도/재현도 모두 중요할 때 사용. 0 ~ 1 범위, 1에 가까울수록 좋음.
+
+## ROC 곡선 (Receiver Operating Characteristic Curve)
+
+*   분류 모델 성능 시각화 도구.
+*   **가로축:** FPR (1 - 특이도).
+*   **세로축:** TPR (재현도, 민감도).
+*   **작성:** 문턱값 변화시키며 FPR, TPR 계산하여 곡선 그림.
+*   **해석:** 좌상단(0, 1)에 가까울수록(볼록할수록) 좋은 모델. 대각선은 무작위 예측 수준.
+
+## AUC (Area Under the ROC Curve)
+
+*   ROC 곡선 아래 면적. 0 ~ 1 범위.
+*   모델 성능 정량적 지표. 1에 가까울수록 좋음. 무작위 예측 시 0.5.
+
+## Python ROC 곡선 및 AUC 계산
+
+```python
+from sklearn.metrics import roc_auc_score, roc_curve
+import matplotlib.pyplot as plt
+
+# 모델에서 클래스 1(양성)에 대한 예측 확률 얻기
+prob = model.predict_proba(X_test)[:, 1]
+
+# FPR, TPR, 문턱값 계산
+fpr, tpr, thresholds = roc_curve(y_test, prob)
+
+# ROC 곡선 그리기
+plt.plot(fpr, tpr, marker='.')
+plt.xlabel('False Positive Rate (1 - Specificity)')
+plt.ylabel('True Positive Rate (Recall)')
+plt.title('ROC Curve')
+plt.grid(True)
+plt.show()
+
+# AUC 계산
+auc = roc_auc_score(y_test, prob)
+print(f"AUC: {auc:.4f}")
+```
+

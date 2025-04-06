@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'computerVisionSidebar',
+          sidebarId: 'statSidebar',
           position: 'left',
-          label: '컴퓨터 비전',
+          label: '빅데이터 스쿨 패스트트랙',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
