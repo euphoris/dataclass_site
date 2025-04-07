@@ -50,57 +50,57 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'stat/hypothesis-testing',
-          label: '통계적 가설 검정'
-        },
-        {
-          type: 'doc',
           id: 'stat/day1-exercise',
           label: '1일차 종합 실습'
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '2일차 - 예측',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/correlation',
-    //       label: '상관 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/regression',
-    //       label: '회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/multiple-regression',
-    //       label: '다중 회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/model-selection',
-    //       label: '모형 선택'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/variable-transformation',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/interaction',
-    //       label: '상호작용'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day2-exercise',
-    //       label: '2일차 종합 실습'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '2일차 - 예측',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/hypothesis-testing',
+          label: '통계적 가설 검정'
+        },
+        {
+          type: 'doc',
+          id: 'stat/correlation',
+          label: '상관 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/regression',
+          label: '회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/multiple-regression',
+          label: '다중 회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/model-selection',
+          label: '모형 선택'
+        },
+        {
+          type: 'doc',
+          id: 'stat/variable-transformation',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'stat/interaction',
+          label: '상호작용'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/day2-exercise',
+        //   label: '2일차 종합 실습'
+        // },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '3일차 - 머신러닝',
