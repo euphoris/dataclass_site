@@ -81,67 +81,67 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'stat/model-selection',
-          label: '모형 선택'
+          id: 'stat/variable-transformation',
+          label: '변수의 변형'
         },
         {
           type: 'doc',
-          id: 'stat/variable-transformation',
-          label: '변수의 변형'
+          id: 'stat/day2-exercise',
+          label: '2일차 종합 실습'
+        },
+        {
+          type: 'doc',
+          id: 'stat/model-selection',
+          label: '모형 선택'
         },
         {
           type: 'doc',
           id: 'stat/interaction',
           label: '상호작용'
         },
+      ]
+    },
+    {
+      type: 'category',
+      label: '3일차 - 머신러닝',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/supervised-learning-classification',
+          label: '지도학습 - 분류'
+        },
+        {
+          type: 'doc',
+          id: 'stat/supervised-learning-regression',
+          label: '지도학습 - 회귀'
+        },
+        {
+          type: 'doc',
+          id: 'stat/unsupervised-learning-clustering',
+          label: '비지도학습 - 클러스터링'
+        },
+        {
+          type: 'doc',
+          id: 'stat/unsupervised-learning-dimension-reduction',
+          label: '비지도학습 - 차원 축소'
+        },
+        {
+          type: 'doc',
+          id: 'stat/reinforcement-learning',
+          label: '강화학습'
+        },
+        {
+          type: 'doc',
+          id: 'stat/deep-learning',
+          label: '딥러닝'
+        },
         // {
         //   type: 'doc',
-        //   id: 'stat/day2-exercise',
-        //   label: '2일차 종합 실습'
+        //   id: 'stat/day3-exercise',
+        //   label: '3일차 종합 실습'
         // },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 머신러닝',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/supervised-learning-classification',
-    //       label: '지도학습 - 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/supervised-learning-regression',
-    //       label: '지도학습 - 회귀'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/unsupervised-learning-clustering',
-    //       label: '비지도학습 - 클러스터링'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/unsupervised-learning-dimension-reduction',
-    //       label: '비지도학습 - 차원 축소'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/reinforcement-learning',
-    //       label: '강화학습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/deep-learning',
-    //       label: '딥러닝'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day3-exercise',
-    //       label: '3일차 종합 실습'
-    //     },
-    //   ]
-    // },
     // {
     //   type: 'category',
     //   label: '4일차 - 시계열 분석',

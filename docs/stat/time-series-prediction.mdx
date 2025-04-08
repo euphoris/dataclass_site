@@ -11,51 +11,51 @@
     ```
 *   **평균 기법 (Average Method):** 과거 전체 데이터 **평균**으로 미래 값 예측.
     ```python
-    pred_avg = pd.DataFrame({'production': beer.production.mean()}, index=future)
+    pred_avg = pd.DataFrame({
+        'production': beer.production.mean()}, 
+        index=future)
     beer.production.plot()
-    pred_avg.production.plot(label='Average Forecast')
-    plt.legend()
-    plt.show()
+    pred_avg.production.plot()
     ```
 *   **단순 기법 (Naïve Method):** 마지막 관측 값으로 미래 값 예측. (랜덤 워크 시 최적)
     ```python
-    pred_naive = pd.DataFrame({'production': beer.production.iloc[-1]}, index=future)
+    pred_naive = pd.DataFrame({
+        'production': beer.production.iloc[-1]}, 
+        index=future)
     beer.production.plot()
-    pred_naive.production.plot(label='Naive Forecast')
-    plt.legend()
-    plt.show()
+    pred_naive.production.plot()
     ```
 *   **계절성 단순 기법 (Seasonal Naïve Method):** 마지막 **동일 계절** 값으로 예측.
     ```python
     import numpy as np
     # 마지막 1년(4분기) 값 반복 사용 (np.tile: 배열 반복)
     last_season = beer.production.iloc[-4:]
-    pred_seasonal_naive = pd.DataFrame({'production': np.tile(last_season, 5)}, index=future) # 20분기=5년
+    pred_seasonal_naive = pd.DataFrame({
+        'production': np.tile(last_season, 5)}, 
+        index=future) # 20분기=5년
     beer.production.plot()
-    pred_seasonal_naive.production.plot(label='Seasonal Naive Forecast')
-    plt.legend()
-    plt.show()
+    pred_seasonal_naive.production.plot()
     ```
 *   **표류 기법 (Drift Method):** 마지막 관측 값 + 과거 평균 변화량(추세) 적용 예측.
     ```python
     num = len(beer.production) - 1
     drift = (beer.production.iloc[-1] - beer.production.iloc[0]) / num # 전체 기간 평균 변화량
     last = beer.production.iloc[-1]
-    pred_drift = pd.DataFrame({'production': last + np.arange(1, 21) * drift}, index=future) # 1~20 시점 예측
+    pred_drift = pd.DataFrame({
+        'production': last + np.arange(1, 21) * drift}, 
+        index=future) # 1~20 시점 예측
     beer.production.plot()
-    pred_drift.production.plot(label='Drift Forecast')
-    plt.legend()
-    plt.show()
+    pred_drift.production.plot()
     ```
 *   **표류 + 계절성 단순 기법 결합:** 계절성 예측값 + 표류 예측값.
     ```python
-    pred_drift_seasonal = pd.DataFrame({'production': pred_seasonal_naive['production'] + np.arange(1, 21) * drift}, index=future)
+    pred_drift_seasonal = pd.DataFrame(
+        {'production': pred_seasonal_naive['production'] + np.arange(1, 21) * drift}, 
+        index=future)
     beer.production.plot()
-    pred_drift_seasonal.production.plot(label='Drift+Seasonal Forecast')
-    plt.legend()
-    plt.show()
+    pred_drift_seasonal.production.plot()
     ```
-
+<!--
 ## Prophet
 
 *   Facebook 개발 시계열 예측 라이브러리.
@@ -167,3 +167,7 @@
         # m.plot(forecast)
         ```
 
+-->
+## 퀴즈
+
+<iframe src="https://tally.so/embed/nrqyGL?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="757" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 시계열 예측"></iframe>
