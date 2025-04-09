@@ -127,6 +127,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'stat/day3-exercise',
+          label: '3일차 종합 실습'
+        },
+        {
+          type: 'doc',
           id: 'stat/reinforcement-learning',
           label: '강화학습'
         },
@@ -135,54 +140,49 @@ const sidebars: SidebarsConfig = {
           id: 'stat/deep-learning',
           label: '딥러닝'
         },
+      ]
+    },
+    {
+      type: 'category',
+      label: '4일차 - 시계열 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/time-series',
+          label: '시계열 데이터 분석의 소개'
+        },
+        {
+          type: 'doc',
+          id: 'stat/python-time-series',
+          label: 'Python으로 시계열 데이터 다루기'
+        },
+        {
+          type: 'doc',
+          id: 'stat/autocorrelation',
+          label: '자기 상관'
+        },
+        {
+          type: 'doc',
+          id: 'stat/time-series-prediction',
+          label: '시계열 예측'
+        },
+        {
+          type: 'doc',
+          id: 'stat/time-series-clustering',
+          label: '시계열 클러스터링'
+        },
+        {
+          type: 'doc',
+          id: 'stat/survival-analysis',
+          label: '생존 분석'
+        },
         // {
         //   type: 'doc',
-        //   id: 'stat/day3-exercise',
-        //   label: '3일차 종합 실습'
+        //   id: 'stat/day4-exercise',
+        //   label: '4일차 종합 실습'
         // },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '4일차 - 시계열 분석',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/time-series',
-    //       label: '시계열 데이터 분석의 소개'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/python-time-series',
-    //       label: 'Python으로 시계열 데이터 다루기'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/autocorrelation',
-    //       label: '자기 상관'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/time-series-prediction',
-    //       label: '시계열 예측'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/time-series-clustering',
-    //       label: '시계열 클러스터링'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/survival-analysis',
-    //       label: '생존 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day4-exercise',
-    //       label: '4일차 종합 실습'
-    //     },
-    //   ]
-    // },
     // {
     //   type: 'category',
     //   label: '5일차 - 텍스트 분석',
