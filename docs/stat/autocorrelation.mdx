@@ -5,19 +5,31 @@
 
 *   **정의:** 시계열 데이터에서 **서로 다른 시점(lag)** 간의 상관계수. (1시점 전과 현재, 2시점 전과 현재, ... )
 *   **용도:** 시계열 정상성, 계절성, 추세 등 특성 파악 사용.
-*   **Python ACF 계산/그리기:**
+* 실습 데이터
+
+```python
+temp = pd.read_excel('washington_temp.xlsx') # 기온 데이터 불러오기
+temp['date'] = pd.to_datetime(temp[['Year', 'Month', 'Day']]) # 컬럼으로 나눠진 연, 월, 일을 하나의 날짜로 합침
+temp.set_index('date', inplace=True) # 날짜를 인덱스로
+```
+
+* 월평균 기온 데이터
+```python
+monthly = temp.resample('M').AvgTemperature.mean()
+monthly.plot() # 월평균 기온 그래프
+```
+
+*   **Python ACF 계산:**
     ```python
     from statsmodels.tsa.stattools import acf
+    acf(monthly) # ACF 값 계산: 6개월(-0.92), 12개월(+0.91) 등 주기적 상관 확인
+    ```
+    
+*   **Python ACF 그리기:**
+
+    ```python
     from statsmodels.graphics.tsaplots import plot_acf
-    import matplotlib.pyplot as plt
-
-    # 예시: 월평균 기온 데이터
-    # monthly = temp.resample('M').AvgTemperature.mean()
-    acf_values = acf(monthly) # ACF 값 계산
-    print(acf_values) # 6개월(-0.92), 12개월(+0.91) 등 주기적 상관 확인
-
     plot_acf(monthly) # ACF 그래프 그리기
-    plt.show()
     ```
 *   **ACF Plot 해석:**
     *   막대: 각 시차(Lag)별 자기 상관 계수.

@@ -1,2 +1,23 @@
 # 5일차 종합 실습
 
+- 장비 유지보수 활동에 대한 방대한 양의 텍스트 기반 로그 데이터(작업 일지, 고장 보고서 등)
+- 각 로그에는 각 유지보수 작업 시 담당 기술자가 자연어로 작성한 고장 증상 설명, 수행 조치 내역 등이 상세히 기록
+- 로그 데이터 속에 숨겨진 장비 고장의 주요 원인, 반복되는 문제 패턴, 특정 부품과의 연관성 등 중요한 정보가 있을 것으로 기대
+- 이 텍스트 데이터를 효과적으로 분석하여 인사이트를 도출:
+    1. 자주 발생하는 고장 유형을 파악하여 예방 정비 계획을 최적화
+    1. 특정 장비나 부품의 잠재적 문제를 미리 감지
+    1. 신입 기술자 교육이나 문제 해결 지원에 활용
+
+| 컬럼 | 설명 |
+|---|---|
+| equipment_type | 장비 유형 |
+| maintenance_type | 유지보수 유형 |
+| description | 문제 상황 및 조치 내역
+
+[실습 데이터 maintenance_log.xlsx](https://github.com/euphoris/datasets/raw/refs/heads/master/maintenance_log.xlsx)
+
+description의 내용을 형태소 분석으로 명사만 추출하여 문서 단어 행렬을 생성하고, 단어별 빈도를 조사해보세요.
+
+maintenance_type을 `y = df.maintenance_type.map({'check': 0, 'fix': 1})`로 변환하여 나이브 베이즈로 분류해보세요.
+
+<iframe src="https://tally.so/embed/3NPGZj?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1600" frameborder="0" marginheight="0" marginwidth="0" title="[통계] day 5 종합 실습"></iframe>

@@ -58,16 +58,11 @@
     ```
 *   **Soft-DTW:** DTW 경로 탐색을 확률적/부드럽게(soft) 수행. 미분 가능하여 딥러닝 등에 활용 용이. Barycenter 계산도 가능.
     ```python
-    from tslearn.metrics import soft_dtw_alignment
     from tslearn.barycenters import softdtw_barycenter
-
-    # Soft-DTW 정렬 시각화 (슬라이드 337 참고)
-    # alignment, score = soft_dtw_alignment(x, y, gamma=0.5)
-    # plt.imshow(alignment, cmap='gray')
-
-    # Soft-DTW Barycenter
-    b_soft = softdtw_barycenter(dataset, gamma=0.5)
-    # ... 시각화 ...
+    b = softdtw_barycenter(dataset, gamma=0.5)
+    plt.plot(x, linestyle='dotted')
+    plt.plot(y, linestyle='dotted')
+    plt.plot(b)
     ```
 
 ## 시계열 K-Means 클러스터링

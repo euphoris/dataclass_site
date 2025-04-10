@@ -176,54 +176,54 @@ const sidebars: SidebarsConfig = {
           id: 'stat/survival-analysis',
           label: '생존 분석'
         },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/day4-exercise',
-        //   label: '4일차 종합 실습'
-        // },
+        {
+          type: 'doc',
+          id: 'stat/day4-exercise',
+          label: '4일차 종합 실습'
+        },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '5일차 - 텍스트 분석',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/text-analysis',
-    //       label: '텍스트 데이터 분석 소개'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/document-term-matrix',
-    //       label: '단어 통계'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/tokenization',
-    //       label: '형태소 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/topic-modeling',
-    //       label: '토픽 모델링'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/text-classification',
-    //       label: '문서 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/language-models',
-    //       label: '언어 모형과 생성형 인공지능'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day5-exercise',
-    //       label: '5일차 종합 실습'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '5일차 - 텍스트 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/text-analysis',
+          label: '텍스트 데이터 분석 소개'
+        },
+        {
+          type: 'doc',
+          id: 'stat/document-term-matrix',
+          label: '단어 통계'
+        },
+        {
+          type: 'doc',
+          id: 'stat/tokenization',
+          label: '형태소 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/topic-modeling',
+          label: '토픽 모델링'
+        },
+        {
+          type: 'doc',
+          id: 'stat/text-classification',
+          label: '문서 분류'
+        },
+        {
+          type: 'doc',
+          id: 'stat/language-models',
+          label: '언어 모형과 생성형 인공지능'
+        },
+        {
+          type: 'doc',
+          id: 'stat/day5-exercise',
+          label: '5일차 종합 실습'
+        },
+      ]
+    },
   ],
   reinforcementLearningSidebar: [
     {
