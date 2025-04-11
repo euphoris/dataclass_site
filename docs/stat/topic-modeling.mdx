@@ -231,20 +231,14 @@
 *   특정 단어(예: '모발')의 인덱스(번호) 찾기
     ```python
     words = cv.get_feature_names_out().tolist() # 단어 목록
-    try:
-        i = words.index('모발')
-    except ValueError:
-        print("'모발' not in vocabulary")
-        i = -1 # or handle error appropriately
+    i = words.index('모발')
     ```
 *   해당 단어의 임베딩 벡터(각 토픽에 대한 값) 시각화
     ```python
-    if i != -1:
-        plt.plot(word_emb[i])
-        plt.xlabel("Topic Index")
-        plt.ylabel("Loading")
-        plt.title("Word Embedding Vector for '모발'")
-        plt.show()
+    plt.plot(word_emb[i])
+    plt.xlabel("Topic Index")
+    plt.ylabel("Loading")
+    plt.title("Word Embedding Vector for '모발'")
     ```
 *   (이미지: 특정 단어('모발')의 임베딩 벡터 시각화 - 100개 토픽 축에서의 값)
 
@@ -263,21 +257,14 @@
     ```python
     import numpy as np
 
-    if i != -1:
-        # Get similarity scores for the i-th word
-        sim_i = sim[i]
-        # Get indices that would sort sim_i in ascending order
-        # We use argsort to get indices instead of sorted values
-        s = np.argsort(sim_i)
+    sim_i = sim[i]
+    s = np.argsort(sim_i)
 
-        # Get top 10 most similar words (indices)
-        # s[-1] is the index of the word itself (similarity=1)
-        # s[-2] is the most similar word, s[-3] the second, etc.
-        related_indices = s[-2:-12:-1] # Top 10 excluding self
+    related_indices = s[-2:-12:-1] # Top 10 excluding self
 
-        print(f"Words similar to '{words[i]}':")
-        for j in related_indices:
-            print(f"- {words[j]} (Similarity: {sim_i[j]:.4f})")
+    print(f"Words similar to '{words[i]}':")
+    for j in related_indices:
+        print(f"- {words[j]} (Similarity: {sim_i[j]:.4f})")
     ```
 
 
@@ -465,12 +452,11 @@
     ```
 *   회전된 단어('모발') 임베딩 벡터 시각화 (특정 토픽에서 값이 두드러짐 확인)
     ```python
-    if i != -1: # index of '모발'
-        plt.plot(rot[i])
-        plt.xlabel("Rotated Topic Index")
-        plt.ylabel("Loading")
-        plt.title("Rotated Word Embedding Vector for '모발'")
-        plt.show()
+    plt.plot(rot[i])
+    plt.xlabel("Rotated Topic Index")
+    plt.ylabel("Loading")
+    plt.title("Rotated Word Embedding Vector for '모발'")
+    plt.show()
     ```
 *   (이미지: 회전 후 '모발' 단어 임베딩 벡터 시각화 - 특정 토픽(축)에서 값이 뾰족하게 나타남)
 
@@ -483,10 +469,11 @@
 
 ```python
 # i번 단어와 가장 관련도가 큰 토픽 번호
-t = np.argmax(rot[i])
+t = np.argmax(np.abs(rot[i]))
 
 # t번 토픽과 관련도가 큰 단어들
-topic_words_idx = np.argsort(rot[:, t])
+sign = np.sign(rot[i, t]) # i번 단어의 로딩값 부호
+topic_words_idx = np.argsort(sign * rot[:, t])
 
 # 관련도 순으로 출력
 for j in topic_words_idx[-1:-11:-1]:
