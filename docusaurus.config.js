@@ -78,7 +78,7 @@ const config = {
           type: 'docSidebar',
           sidebarId: 'statSidebar',
           position: 'left',
-          label: '빅데이터 스쿨 패스트트랙',
+          label: '데이터 분석 및 시각화',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {

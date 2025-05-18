@@ -1,4 +1,4 @@
-# 통계적 방법과 AI 방법의 차이 및 적절한 활용 시점
+# 데이터 분석의 종류와 관련 분야
 
 ## 통계와 관련된 분야 및 주제들
 
@@ -89,4 +89,4 @@
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wgzEQD?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1472" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 통계와 AI"></iframe>
+<iframe src="https://tally.so/embed/wgzEQD?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 통계와 AI"></iframe>

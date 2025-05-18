@@ -20,7 +20,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/stat/lab">
-            빅데이터 스쿨 패스트트랙
+            데이터 분석 및 시각화
           </Link>
         </div>
       </div>

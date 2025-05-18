@@ -31,7 +31,12 @@ const sidebars: SidebarsConfig = {
         {
           type: 'doc',
           id: 'stat/statistics-and-ai',
-          label: '통계와 AI'
+          label: '데이터 분석의 종류와 관련 분야'
+        },
+        {
+          type: 'doc',
+          id: 'stat/data',
+          label: '데이터 수집과 전처리'
         },
         {
           type: 'doc',
@@ -40,13 +45,18 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'stat/descriptive-statistics',
-          label: '기술 통계'
+          id: 'stat/central-tendency',
+          label: '기술 통계: 중심경향치'
+        },
+         {
+          type: 'doc',
+          id: 'stat/variability',
+          label: '기술 통계: 변산성 측정치'
         },
         {
           type: 'doc',
-          id: 'stat/confidence-interval',
-          label: '신뢰구간'
+          id: 'stat/distribution',
+          label: '분포의 특성과 기술통계'
         },
         {
           type: 'doc',
@@ -55,175 +65,181 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    {
-      type: 'category',
-      label: '2일차 - 예측',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/hypothesis-testing',
-          label: '통계적 가설 검정'
-        },
-        {
-          type: 'doc',
-          id: 'stat/correlation',
-          label: '상관 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/regression',
-          label: '회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/multiple-regression',
-          label: '다중 회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/variable-transformation',
-          label: '변수의 변형'
-        },
-        {
-          type: 'doc',
-          id: 'stat/day2-exercise',
-          label: '2일차 종합 실습'
-        },
-        {
-          type: 'doc',
-          id: 'stat/model-selection',
-          label: '모형 선택'
-        },
-        {
-          type: 'doc',
-          id: 'stat/interaction',
-          label: '상호작용'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '3일차 - 머신러닝',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/supervised-learning-classification',
-          label: '지도학습 - 분류'
-        },
-        {
-          type: 'doc',
-          id: 'stat/supervised-learning-regression',
-          label: '지도학습 - 회귀'
-        },
-        {
-          type: 'doc',
-          id: 'stat/unsupervised-learning-clustering',
-          label: '비지도학습 - 클러스터링'
-        },
-        {
-          type: 'doc',
-          id: 'stat/unsupervised-learning-dimension-reduction',
-          label: '비지도학습 - 차원 축소'
-        },
-        {
-          type: 'doc',
-          id: 'stat/day3-exercise',
-          label: '3일차 종합 실습'
-        },
-        {
-          type: 'doc',
-          id: 'stat/reinforcement-learning',
-          label: '강화학습'
-        },
-        {
-          type: 'doc',
-          id: 'stat/deep-learning',
-          label: '딥러닝'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 시계열 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/time-series',
-          label: '시계열 데이터 분석의 소개'
-        },
-        {
-          type: 'doc',
-          id: 'stat/python-time-series',
-          label: 'Python으로 시계열 데이터 다루기'
-        },
-        {
-          type: 'doc',
-          id: 'stat/autocorrelation',
-          label: '자기 상관'
-        },
-        {
-          type: 'doc',
-          id: 'stat/time-series-prediction',
-          label: '시계열 예측'
-        },
-        {
-          type: 'doc',
-          id: 'stat/time-series-clustering',
-          label: '시계열 클러스터링'
-        },
-        {
-          type: 'doc',
-          id: 'stat/survival-analysis',
-          label: '생존 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/day4-exercise',
-          label: '4일차 종합 실습'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '5일차 - 텍스트 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/text-analysis',
-          label: '텍스트 데이터 분석 소개'
-        },
-        {
-          type: 'doc',
-          id: 'stat/document-term-matrix',
-          label: '단어 통계'
-        },
-        {
-          type: 'doc',
-          id: 'stat/tokenization',
-          label: '형태소 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/topic-modeling',
-          label: '토픽 모델링'
-        },
-        {
-          type: 'doc',
-          id: 'stat/text-classification',
-          label: '문서 분류'
-        },
-        {
-          type: 'doc',
-          id: 'stat/language-models',
-          label: '언어 모형과 생성형 인공지능'
-        },
-        {
-          type: 'doc',
-          id: 'stat/day5-exercise',
-          label: '5일차 종합 실습'
-        },
-      ]
-    },
+    
+    // {
+      //   type: 'category',
+      //   label: '2일차 - 예측',
+      //   items: [
+          // {
+          //   type: 'doc',
+          //   id: 'stat/confidence-interval',
+          //   label: '신뢰구간'
+          // },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/hypothesis-testing',
+    //       label: '통계적 가설 검정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/correlation',
+    //       label: '상관 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/regression',
+    //       label: '회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/multiple-regression',
+    //       label: '다중 회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/variable-transformation',
+    //       label: '변수의 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/day2-exercise',
+    //       label: '2일차 종합 실습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/model-selection',
+    //       label: '모형 선택'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/interaction',
+    //       label: '상호작용'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 머신러닝',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/supervised-learning-classification',
+    //       label: '지도학습 - 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/supervised-learning-regression',
+    //       label: '지도학습 - 회귀'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/unsupervised-learning-clustering',
+    //       label: '비지도학습 - 클러스터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/unsupervised-learning-dimension-reduction',
+    //       label: '비지도학습 - 차원 축소'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/day3-exercise',
+    //       label: '3일차 종합 실습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/reinforcement-learning',
+    //       label: '강화학습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/deep-learning',
+    //       label: '딥러닝'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 시계열 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/time-series',
+    //       label: '시계열 데이터 분석의 소개'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/python-time-series',
+    //       label: 'Python으로 시계열 데이터 다루기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/autocorrelation',
+    //       label: '자기 상관'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/time-series-prediction',
+    //       label: '시계열 예측'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/time-series-clustering',
+    //       label: '시계열 클러스터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/survival-analysis',
+    //       label: '생존 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/day4-exercise',
+    //       label: '4일차 종합 실습'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '5일차 - 텍스트 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/text-analysis',
+    //       label: '텍스트 데이터 분석 소개'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/document-term-matrix',
+    //       label: '단어 통계'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/tokenization',
+    //       label: '형태소 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/topic-modeling',
+    //       label: '토픽 모델링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/text-classification',
+    //       label: '문서 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/language-models',
+    //       label: '언어 모형과 생성형 인공지능'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/day5-exercise',
+    //       label: '5일차 종합 실습'
+    //     },
+    //   ]
+    // },
   ],
   reinforcementLearningSidebar: [
     {

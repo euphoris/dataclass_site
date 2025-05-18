@@ -1,0 +1,140 @@
+# 분포의 특성과 기술 통계
+
+## 왜도(skewness)
+
+$$
+\mathbb{E}\left[\left(\frac{X-\mu}{\sigma}\right)^3\right] 
+$$
+
+꼬리가 한쪽 방향으로 늘어진 정도(0이면 좌우대칭)
+
+```python
+from scipy.stats import skew
+skew(df.price)
+```
+
+## 첨도(kurtosis)
+$$
+\mathbb{E}\left[\left(\frac{X-\mu}{\sigma}\right)^4\right]
+$$
+
+- 꼬리의 두터움 또는 이상치의 존재
+    - 평균에서 ±1 표준편차 이내의 점들은 4제곱을 하면 거의 0이 됨 → 영향 X
+    - 평균에서 벗어난 점들이 많거나, 멀리 벗어날 수록 영향이 큼
+- 초과(excess) 첨도: 위의 수식 -3
+    - 정규분포의 첨도 = 3이므로 비교를 위해 → 정규분포의 초과 첨도 = 0
+    - python에서도 대부분 이 방식을 사용
+- 첨도 = 0
+    - 첨도가 높다(첨도 > 0) → 정규분포보다 꼬리가 두껍거나 이상치가 있음
+    - 첨도가 낮다(첨도 < 0) → 정규분포보다 꼬리가 얇음
+
+```python
+from scipy.stats import kurtosis
+kurtosis(df.price)
+```
+
+## 히스토그램 (histogram)
+
+데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것
+
+```python
+import seaborn as sns # 시본 임포트
+sns.histplot(
+    x='price', # x축(가로) 변수
+    data=df)  # 데이터
+```
+
+
+막대기 수는 bins로 설정
+```python
+sns.histplot(x='price', data=df, bins=30)
+```
+
+seaborn을 포함해 Python의 대다수 시각화 라이브러리는 matplotlib에 의존
+
+```python
+import matplotlib.pyplot as plt
+
+# 가로축 눈금을 100에서 2100까지 200 간격으로 설정
+xs = list(range(100, 2100, 200))
+sns.histplot(x='price', data=df, bins=xs)
+plt.xticks(xs)
+```
+
+## 커널 밀도 추정 (kernel density estimation)
+
+데이터 밀도 추정 기법
+kde=True로 설정하면 데이터의 밀도를 추정하여 표시
+
+```python
+sns.histplot(x='price', data=df, kde=True)
+```
+
+## 표준화 (standardization)
+
+$$
+Z = \frac{X - \mu}{\sigma}
+$$
+
+- 원래의 값에서 평균을 빼고, 표준편차로 나누는 것
+- 표준화하면 평균 = 0, 표준편차 = 1이 되므로 서로 범위가 다른 값을 비교하기 쉬움
+
+```python
+평균 = df['mileage'].mean()
+표준편차 = df['mileage'].std()
+df['Z_mileage'] = (df['mileage'] - 평균) / 표준편차
+```
+
+## 이상치 찾기
+
+|Z-score|가 3보다 큰 사례
+```python
+df[df['Z_mileage'].abs() > 3]
+```
+
+IQR의 1.5배를 넘는 사례
+```python
+Q1 = df['mileage'].quantile(0.25)
+Q3 = df['mileage'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+df[(df['mileage'] < lower_bound) | (df['mileage'] > upper_bound)]
+```
+
+## ydata-profiling
+
+python의 탐색적 데이터 분석 라이브러리 
+
+설치
+```bash
+pip install ydata-profiling
+```
+
+보고서 생성
+```python
+from ydata_profiling import ProfileReport
+report = ProfileReport(df, title='My Data')
+report.to_file("my_report.html")
+```
+
+## 퀴즈
+
+{/* 
+(3)
+
+(2)
+
+(3)
+
+(3)
+
+(2)
+
+(3)
+
+(3)
+
+(4) */}
+
+<iframe src="https://tally.so/embed/w85ker?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2600" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 분포"></iframe>

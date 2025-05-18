@@ -4,6 +4,10 @@
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
+### 수정
+ - `docusaurus.config.js`
+ - `src\pages\index.tsx`
+
 ### Installation
 
 ```
