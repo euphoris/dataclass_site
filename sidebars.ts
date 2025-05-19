@@ -65,45 +65,61 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    
-    // {
-      //   type: 'category',
-      //   label: '2일차 - 예측',
-      //   items: [
+
+    {
+        type: 'category',
+        label: '2일차 - 예측',
+        items: [
+          {
+            type: 'doc',
+            id: 'stat/estimation',
+            label: '추정'
+          },
+          {
+            type: 'doc',
+            id: 'stat/confidence-interval',
+            label: '신뢰구간'
+          },
+          {
+            type: 'doc',
+            id: 'stat/hypothesis-testing',
+            label: '통계적 가설 검정'
+          },
+          {
+            type: 'doc',
+            id: 'stat/group-differences',
+            label: '집단 비교'
+          },
+          {
+            type: 'doc',
+            id: 'stat/correlation',
+            label: '상관 분석'
+          },
+          {
+            type: 'doc',
+            id: 'stat/regression',
+            label: '회귀 분석'
+          },
           // {
           //   type: 'doc',
-          //   id: 'stat/confidence-interval',
-          //   label: '신뢰구간'
+          //   id: 'stat/day2-exercise',
+          //   label: '2일차 종합 실습'
           // },
+          {
+            type: 'doc',
+            id: 'stat/multiple-regression',
+            label: '다중 회귀 분석'
+          },
+      ]
+    },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 회귀',
+    //   items: [
     //     {
     //       type: 'doc',
-    //       id: 'stat/hypothesis-testing',
-    //       label: '통계적 가설 검정'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/correlation',
-    //       label: '상관 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/regression',
-    //       label: '회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/multiple-regression',
-    //       label: '다중 회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/variable-transformation',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day2-exercise',
-    //       label: '2일차 종합 실습'
+    //       id: 'stat/day1-2-review',
+    //       label: '1-2일차 복습'
     //     },
     //     {
     //       type: 'doc',
@@ -112,24 +128,38 @@ const sidebars: SidebarsConfig = {
     //     },
     //     {
     //       type: 'doc',
-    //       id: 'stat/interaction',
-    //       label: '상호작용'
+    //       id: 'stat/cross-validation',
+    //       label: '교차 검증'
     //     },
-    //   ]
-    // },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 머신러닝',
-    //   items: [
     //     {
     //       type: 'doc',
-    //       id: 'stat/supervised-learning-classification',
-    //       label: '지도학습 - 분류'
+    //       id: 'stat/variable-transformation',
+    //       label: '변수의 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/interaction',
+    //       label: '상호작용'
     //     },
     //     {
     //       type: 'doc',
     //       id: 'stat/supervised-learning-regression',
     //       label: '지도학습 - 회귀'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/day3-exercise',
+    //       label: '3일차 종합 실습'
+    //     },
+    //   ]
+    // },
+    //   type: 'category',
+    //   label: '4일차 - 비지도학습',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/supervised-learning-classification',
+    //       label: '지도학습 - 분류'
     //     },
     //     {
     //       type: 'doc',
@@ -140,11 +170,6 @@ const sidebars: SidebarsConfig = {
     //       type: 'doc',
     //       id: 'stat/unsupervised-learning-dimension-reduction',
     //       label: '비지도학습 - 차원 축소'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day3-exercise',
-    //       label: '3일차 종합 실습'
     //     },
     //     {
     //       type: 'doc',
