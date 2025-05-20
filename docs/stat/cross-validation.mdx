@@ -1,0 +1,107 @@
+# 교차 검증
+
+## 교차 검증 (Cross Validation, CV)
+
+*   **목적:** 모형의 **일반화 성능 (새로운 데이터 예측 성능)** 평가 방법.
+*   **원리:** 데이터를 **훈련(train)셋**과 **테스트(test)셋**으로 분할. 훈련셋으로 모형 학습 후, **별개 테스트셋**으로 예측 성능 검증.
+*   **장점:** 수정R²/AIC/BIC 등 이론적 보정보다 **과적합 더 현실적으로 반영 가능**. 이론적 가정 불필요. 데이터 충분 시 권장.
+*   **단점:** 데이터 분할 필요. 계산 비용 증가.
+
+## 교차 검증 종류
+
+*   **데이터 분할/활용 방식** 따라 여러 종류 존재.
+    *   **LpO CV (Leave-p-out):** p개 제외한 데이터로 학습, p개로 테스트. 모든 조합 시도 (현실적으로 어려움).
+    *   **LOOCV (Leave-one-out):** 1개 제외한 데이터로 학습, 1개로 테스트. N번 반복 (N=데이터 개수).
+    *   **k-fold CV:** 데이터 k개 묶음(fold) 분할. k-1개로 학습, 1개로 테스트. k번 반복하며 테스트셋 변경. 가장 널리 사용.
+    *   **Holdout:** 데이터 한 번만 훈련/테스트셋 분할하여 1회 검증. 가장 간단.
+
+## 교차 검증 결과 해석
+
+| 훈련 오차 | 테스트 오차 | 상태        | 조치                |
+| :-------- | :---------- | :---------- | :------------------ |
+| 높음      | 높음        | **과소적합** (Underfitting) | 모형 복잡하게 수정  |
+| 낮음      | 낮음        | **적절**    | 바람직              |
+| 낮음      | 높음        | **과적합** (Overfitting)  | 모형 단순하게 수정  |
+
+## Python 교차 검증 코드 (Holdout 예시)
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# 1. 데이터 분할 (80% 훈련, 20% 테스트)
+train_df, test_df = train_test_split(
+    df,               # 원본 데이터
+    test_size=0.2,    # 테스트 데이터 비율
+    random_state=42   # 난수 시드 고정 (재현성 위함)
+)
+
+# 2. 훈련 데이터로 모형 학습
+m = ols('price ~ year', data=train_df).fit()
+
+# 3. 테스트 데이터로 예측
+y_pred = m.predict(test_df)
+
+# 4. 테스트 데이터 예측 오차(MSE) 계산
+mean_squared_error(test_df.price, y_pred)
+```
+
+## 전진 선택
+
+```python
+import numpy as np
+depvar = 'price'
+features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+included = []
+
+threshold = 0.01
+changed = True
+best_model = ols(depvar + ' ~ 1', data=train_df).fit()
+best_mse = np.inf # 최고의 MSE를 ∞으로 설정 (줄여나갈 것이므로)
+
+while changed:
+    excluded = list(set(features) - set(included))
+    best_feature = None
+    for new_column in excluded:
+        model = ols(depvar + ' ~ ' + ' + '.join(included + [new_column]), data=train_df).fit()
+        mse = mean_squared_error(test_df[depvar], model.predict(test_df))
+        if mse < best_mse - threshold:
+            best_feature = new_column
+            best_mse = mse
+            best_model = model
+    changed = best_feature is not None
+    if changed:
+        included.append(best_feature)
+        print('Add', best_feature, 'MSE:', best_mse)
+```
+
+## 후진 선택
+
+```python
+depvar = 'price'
+features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+included = features.copy()
+threshold = 0.01
+changed = True
+best_model = ols(depvar + ' ~ ' + ' + '.join(included), data=train_df).fit()
+best_mse = np.inf
+
+while changed:
+    excluded = list(set(features) - set(included))
+    best_feature = None
+    for remove_feature in included:
+        model = ols(depvar + ' ~ ' + ' + '.join(list(set(included) - set([remove_feature]))), data=train_df).fit()
+        mse = mean_squared_error(test_df[depvar], model.predict(test_df))
+        if mse < best_mse - threshold:
+            best_feature = remove_feature
+            best_model = model
+            best_mse = mse
+    changed = best_feature is not None
+    if changed:
+        included.remove(best_feature)
+        print('Remove', best_feature, 'MSE:', best_mse)
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/w75poL?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1518" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 교차 검증"></iframe>

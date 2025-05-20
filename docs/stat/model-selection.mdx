@@ -3,7 +3,7 @@
 
 *   여러 예측 모형 중 어떤 모형이 가장 좋은지 선택하는 과정.
 
-## 과적합 (Overfitting)
+## 과대적합 (Overfitting)
 
 *   **원인:** 최소제곱법은 **주어진 표본**에서 잔차 분산 가장 작게 하는 계수 찾음.
 *   **문제점:** 표본에는 실제 모집단 패턴 외 **표집 오차(noise)** 포함됨. 표본 데이터에만 지나치게 맞춰진 모형은 새로운 데이터(모집단) 예측 성능 떨어짐.
@@ -13,58 +13,26 @@
 *   **최소제곱법 특성:** 종속변수와 아무 관련 없는 독립변수 추가해도 표본 잔차 분산 **거의 항상 작아짐** (우연한 관계 때문).
 *   **결과:** 독립변수 **많을수록** 표본 데이터 대한 $R^2$ 값은 **무조건 높아지는 경향**. → **과적합 위험 증가**.
 
+```python
+import numpy as np
+np.random.seed(0)
+random_data = pd.DataFrame({
+    'x1': np.random.randn(5),  # 모든 변수를 무작위로 생성
+    'x2': np.random.randn(5),
+    'x3': np.random.randn(5),
+    'x4': np.random.randn(5),
+    'y': np.random.randn(5)
+})
+# 회귀분석을 하면 R제곱이 100%
+ols('y ~ x1 + x2 + x3 + x4', data=random_data).fit().summary()
+```
+
 ## 수정 R제곱, AIC, BIC
 
 *   $R^2$ 단점 보완 위해 등장한 모형 비교 지표. 모형 복잡도(**독립변수 개수**)에 **페널티** 부여.
 *   **수정 R제곱 (Adjusted R-squared):** $R^2$ 보정. **클수록** 좋음.
 *   **AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion):** 잔차 분산 보정. **작을수록** 좋음.
 
-## 교차 검증 (Cross Validation, CV)
-
-*   **목적:** 모형의 **일반화 성능 (새로운 데이터 예측 성능)** 평가 방법.
-*   **원리:** 데이터를 **훈련(train)셋**과 **테스트(test)셋**으로 분할. 훈련셋으로 모형 학습 후, **별개 테스트셋**으로 예측 성능 검증.
-*   **장점:** 수정R²/AIC/BIC 등 이론적 보정보다 **과적합 더 현실적으로 반영 가능**. 이론적 가정 불필요. 데이터 충분 시 권장.
-*   **단점:** 데이터 분할 필요. 계산 비용 증가.
-
-## 교차 검증 종류
-
-*   **데이터 분할/활용 방식** 따라 여러 종류 존재.
-    *   **LpO CV (Leave-p-out):** p개 제외한 데이터로 학습, p개로 테스트. 모든 조합 시도 (현실적으로 어려움).
-    *   **LOOCV (Leave-one-out):** 1개 제외한 데이터로 학습, 1개로 테스트. N번 반복 (N=데이터 개수).
-    *   **k-fold CV:** 데이터 k개 묶음(fold) 분할. k-1개로 학습, 1개로 테스트. k번 반복하며 테스트셋 변경. 가장 널리 사용.
-    *   **Holdout:** 데이터 한 번만 훈련/테스트셋 분할하여 1회 검증. 가장 간단.
-
-## 교차 검증 결과 해석
-
-| 훈련 오차 | 테스트 오차 | 상태        | 조치                |
-| :-------- | :---------- | :---------- | :------------------ |
-| 높음      | 높음        | **과소적합** (Underfitting) | 모형 복잡하게 수정  |
-| 낮음      | 낮음        | **적절**    | 바람직              |
-| 낮음      | 높음        | **과적합** (Overfitting)  | 모형 단순하게 수정  |
-
-## Python 교차 검증 코드 (Holdout 예시)
-
-```python
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-
-# 1. 데이터 분할 (80% 훈련, 20% 테스트)
-train_df, test_df = train_test_split(
-    df,               # 원본 데이터
-    test_size=0.2,    # 테스트 데이터 비율
-    random_state=42   # 난수 시드 고정 (재현성 위함)
-)
-
-# 2. 훈련 데이터로 모형 학습
-m = ols('price ~ year', data=train_df).fit()
-
-# 3. 테스트 데이터로 예측
-y_pred = m.predict(test_df)
-
-# 4. 테스트 데이터 예측 오차(MSE) 계산
-mse = mean_squared_error(test_df.price, y_pred)
-print(f"Test MSE: {mse}")
-```
 
 ## 단계적 회귀분석 (Stepwise Regression)
 
@@ -83,12 +51,57 @@ print(f"Test MSE: {mse}")
 *   기존 변수 포함 상태에서, 설명력 가장 높이는 다음 변수 추가.
 *   더 이상 추가해도 설명력 유의하게 향상되지 않으면 중단.
 
+```python
+features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+included = []
+
+threshold = 0.01
+changed = True
+best_model = ols('price ~ 1', data=df).fit() # 절편만 있는 모형
+
+while changed:
+    excluded = list(set(features) - set(included)) # 미포함 독립변수
+    best_feature = None # 후보 독립변수
+    for new_feature in excluded: # 하나씩 추가함
+        model = ols('price ~ ' + ' + '.join(included + [new_feature]), data=df).fit()
+        if model.aic < best_model.aic - threshold:
+            # 모델의 AIC가 최상의 모델보다 역치 이하로 개선되면
+            best_feature = new_feature  # 추가 변수 선정
+            best_model = model  # 최상의 모델을 교체
+    changed = best_feature is not None 
+    if changed: # 변경이 발생했으면
+        included.append(best_feature) # 추가
+        print('Add', best_feature, 'AIC:', best_model.aic)
+```
+
 ## 후진 선택 (Backward Selection)
 
 *   모든 변수 포함 모형에서 시작.
 *   설명력 가장 적게 감소시키는 변수 1개 제거.
 *   남은 변수 중, 설명력 가장 적게 감소시키는 다음 변수 제거.
 *   변수 제거 시 설명력 유의하게 감소하면 중단.
+
+```python
+features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+included = features.copy()
+
+threshold = 0.01
+changed = True
+best_model = ols('price ~ ' + ' + '.join(included), data=df).fit()
+
+while changed:
+    best_feature = None
+    for remove_feature in included:
+        model_features = list(set(included) - set([remove_feature]))
+        model = ols('price ~ ' + ' + '.join(model_features), data=df).fit()
+        if model.aic < best_model.aic - threshold:
+            best_feature = remove_feature
+            best_model = model
+    changed = best_feature is not None
+    if changed:
+        included.remove(best_feature)
+        print('Remove', best_feature, 'AIC:', best_model.aic)
+```
 
 ## 단계적 회귀분석 주의점
 
@@ -97,4 +110,5 @@ print(f"Test MSE: {mse}")
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/npzgOb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2349" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 모형 선택"></iframe>
+<iframe src="https://tally.so/embed/npzgOb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2200" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 모형 선택"></iframe>
+

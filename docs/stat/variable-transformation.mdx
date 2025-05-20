@@ -1,19 +1,19 @@
 # 변수의 변형
-## 변수의 변형 (Variable Transformation)
+## 변수의 변형
 
 *   **필요성:** 선형 모형은 독립-종속 변수 간 **선형 관계 가정**. 현실 데이터는 비선형 관계 많음.
 *   **방법:** 독립변수(또는 종속변수)에 **비선형 함수(로그, 제곱근, 제곱 등) 적용**하여 관계 선형화 시도.
 *   **예시:** $z = \log x$, $\hat{y} = wz + b$
 *   **Python:** 관계식 내 `numpy` 등 수학 함수 직접 사용 가능 (`np.log(x)`).
 
-## 로그 함수 (Logarithm) 변환
+## 로그 함수 변환
 
 *   **형태:** 오른쪽 위로 갈수록 완만해짐 (증가율 감소).
 *   **특성:** 큰 값 차이 줄여줌 (예: 1 vs 10, 10 vs 100, 100 vs 1000 이 로그 스케일에서는 등간격).
 *   **효과:** 데이터 오른쪽 긴 꼬리(positive skew) **왼쪽으로 끌어당겨 분포 대칭적으로 만듦**.
 *   **용도:** 소득, 가격 등 **오른쪽으로 치우친(positive skewed)** 변수 변환에 자주 사용. 간격 일정하게 만드는 효과.
 
-## 왜도 (Skewness)
+## 왜도
 
 *   데이터 분포의 **비대칭 정도**.
     *   `Negative Skew`: 왼쪽 꼬리 김 (- 방향 치우침). 평균 < 중간값 < 최빈값.
@@ -46,7 +46,7 @@ plt.ylabel('Price')
 plt.show()
 ```
 
-## I() 함수 (Inhibit Interpretation)
+## I() 함수
 
 *   `statsmodels` 관계식 내에서 **산술 연산자(+, *, **, / 등) 그대로 사용**하고 싶을 때 사용. (`+`는 변수 추가 의미이므로)
 *   **예시:** `x`와 `z`를 더한 변수를 독립변수로 사용:
@@ -63,7 +63,7 @@ plt.show()
     y ~ I(x**2) + x
     ```
 
-## 절편 없는 모형 (Regression through the Origin)
+## 절편 없는 모형
 
 *   **목적:** 이론적으로 $x=0$ 일 때 $y=0$ 이어야 하는 경우 (예: 속도 0일 때 제동거리 0).
 *   **관계식:** `0 +` 추가.
@@ -105,7 +105,6 @@ m2 = ols('dist ~ 0 + I(speed**2) + speed', data=sp).fit()
     *   새로운 데이터 예측 시, 기존 데이터 기준 순위 다시 매겨야 함 (번거로움).
     *   관찰 범위 벗어난 값 예측 불가 (순위 기반이므로).
 
-{/* 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/31RjML?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2449" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 변수의 변형"></iframe> */}
+<iframe src="https://tally.so/embed/31RjML?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="3000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 변수의 변형"></iframe>

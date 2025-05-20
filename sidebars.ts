@@ -100,59 +100,49 @@ const sidebars: SidebarsConfig = {
             id: 'stat/regression',
             label: '회귀 분석'
           },
-          // {
-          //   type: 'doc',
-          //   id: 'stat/day2-exercise',
-          //   label: '2일차 종합 실습'
-          // },
           {
             type: 'doc',
             id: 'stat/multiple-regression',
             label: '다중 회귀 분석'
           },
+        ]
+      },
+    {
+      type: 'category',
+      label: '3일차 - 회귀',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/model-selection',
+          label: '모형 선택'
+        },
+        {
+          type: 'doc',
+          id: 'stat/cross-validation',
+          label: '교차 검증'
+        },
+        {
+          type: 'doc',
+          id: 'stat/variable-transformation',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'stat/interaction',
+          label: '상호작용'
+        },
+        {
+          type: 'doc',
+          id: 'stat/supervised-learning-regression',
+          label: '지도학습 - 회귀'
+        },
+        {
+          type: 'doc',
+          id: 'stat/exercise-coating',
+          label: '종합 실습: 도장 품질 예측'
+        },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 회귀',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day1-2-review',
-    //       label: '1-2일차 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/model-selection',
-    //       label: '모형 선택'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/cross-validation',
-    //       label: '교차 검증'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/variable-transformation',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/interaction',
-    //       label: '상호작용'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/supervised-learning-regression',
-    //       label: '지도학습 - 회귀'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/day3-exercise',
-    //       label: '3일차 종합 실습'
-    //     },
-    //   ]
-    // },
     //   type: 'category',
     //   label: '4일차 - 비지도학습',
     //   items: [
@@ -166,6 +156,11 @@ const sidebars: SidebarsConfig = {
     //       id: 'stat/unsupervised-learning-clustering',
     //       label: '비지도학습 - 클러스터링'
     //     },
+            // {
+        //   type: 'doc',
+        //   id: 'stat/exercise-classification',
+        //   label: '종합 실습: 분류'
+        // },
     //     {
     //       type: 'doc',
     //       id: 'stat/unsupervised-learning-dimension-reduction',

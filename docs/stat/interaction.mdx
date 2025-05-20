@@ -29,7 +29,7 @@ m2 = ols('y ~ x + x:m', data=d2).fit() # 또는 ols('y ~ x*m', data=d2).fit() �
 # 절편/기울기 모두 다른 경우
 m3 = ols('y ~ x + m + x:m', data=d3).fit() # 또는 ols('y ~ x*m', data=d3).fit() 사용 가능
 ```
-
+{/* 
 ## 반응표면분석법 (Response Surface Methodology, RSM)
 
 *   **목적:** 여러 입력 변수(요인)와 출력 변수(반응) 간 관계 탐색/모델링하여, 반응 변수 **최적화 조건** 찾는 통계 기법.
@@ -38,9 +38,9 @@ m3 = ols('y ~ x + m + x:m', data=d3).fit() # 또는 ols('y ~ x*m', data=d3).fit(
     *   **실험 계획법 (DOE)** 사용 (예: 중심합성설계 CCD, 박스-벤켄 설계 BBD).
     *   수학적 모델링 (주로 **2차항, 상호작용항 포함** 모델 사용).
     *   **곡면(비선형)** 관계 파악 및 **최적점** 탐색.
-    *   곡률 모델링 위해 최소 3수준 이상 실험 필요.
+    *   곡률 모델링 위해 최소 3수준 이상 실험 필요. */}
 
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mOERBk?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1500" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 상호작용"></iframe>
+<iframe src="https://tally.so/embed/mOERBk?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 상호작용"></iframe>
