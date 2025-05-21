@@ -103,31 +103,7 @@
     y_pred = model.predict(X_test)
     ```
 
-## 평가 (Classification Metrics)
-
-*   분류 모델 성능 평가 지표들.
-*   **Python (sklearn.metrics):**
-    ```python
-    from sklearn.metrics import * # confusion_matrix, accuracy_score 등 포함
-
-    # 혼동 행렬
-    cm = confusion_matrix(y_test, y_pred)
-    print("Confusion Matrix:\n", cm)
-
-    # 정확도
-    acc = accuracy_score(y_test, y_pred)
-    print(f"Accuracy: {acc:.4f}")
-
-    # 정밀도 (양성 클래스=1 기준)
-    prec = precision_score(y_test, y_pred)
-    print(f"Precision: {prec:.4f}")
-
-    # 재현도 (양성 클래스=1 기준)
-    rec = recall_score(y_test, y_pred)
-    print(f"Recall: {rec:.4f}")
-    ```
-
-## 혼동 행렬 (Confusion Matrix)
+## 혼동 행렬
 
 *   실제 클래스와 예측 클래스 간의 개수 요약 표.
 
@@ -136,42 +112,54 @@
 | **실제: 음성 (0)** | **TN** (True Negative)<br/>진음성  | **FP** (False Positive)<br/>위양성 (1종 오류) |
 | **실제: 양성 (1)** | **FN** (False Negative)<br/>위음성 (2종 오류) | **TP** (True Positive)<br/>진양성  |
 
-## 진/위 양성/음성 (True/False Positive/Negative)
+
+```python
+from sklearn.metrics import * # confusion_matrix, accuracy_score 등 포함
+confusion_matrix(y_test, y_pred)
+```
+
+## 진/위 양성/음성
 
 *   혼동행렬 용어. **양성/음성**은 **예측** 기준.
 *   현실에서는 실제 값 모르는 경우 많음.
 *   **진(True):** 예측 맞음 (실제=예측).
 *   **위(False):** 예측 틀림 (실제≠예측).
 
-## 정확도 (Accuracy)
+## 정확도
 
 *   전체 예측 중 올바르게 예측한 비율.
     $$ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} $$
 *   특별히 음성/양성 구분 중요하지 않으면 사용.
 *   **주의:** 데이터 불균형(imbalanced data) 시 문제될 수 있음 (예: 99%가 음성일 때 모두 음성 예측해도 정확도 99%).
-
-## 정밀도 (Precision)
+```python
+accuracy_score(y_test, y_pred)
+```
+## 정밀도
 
 *   **양성(Positive)으로 예측**한 것들 중 **실제로 양성**인 비율.
     $$ \text{Precision} = \frac{TP}{TP + FP} $$
 *   **FP(위양성)** 줄이는 것이 중요할 때 사용 (예: 스팸 필터 - 정상 메일을 스팸 처리하면 안 됨, 채용 - 부적격자 잘못 뽑으면 안 됨).
 *   보통 문턱값(threshold) 높이면(보수적 예측) 정밀도 높아짐.
-
-## 문턱값 (Threshold)
+```python
+precision_score(y_test, y_pred)
+```
+## 문턱값
 
 *   분류 모델이 예측 확률(또는 점수)을 바탕으로 최종 클래스(0 또는 1) 결정하는 기준 값.
 *   **문턱값 조절 영향:**
     *   **높이면:** 양성 예측 감소 (TP↓, FP↓). **정밀도↑, 재현도↓**.
     *   **낮추면:** 양성 예측 증가 (TP↑, FP↑). **정밀도↓, 재현도↑**.
 
-## 재현도 (Recall / Sensitivity / Hit Rate)
+## 재현도
 
 *   **실제 양성**인 것들 중 **양성으로 예측**한 비율.
     $$ \text{Recall} = \frac{TP}{TP + FN} $$
 *   **FN(위음성)** 줄이는 것이 중요할 때 사용 (예: 암 진단, 전염병 검사 - 실제 환자 놓치면 안 됨).
 *   보통 문턱값 낮추면(적극적 예측) 재현도 높아짐.
-
-## 특이도 (Specificity)
+```python
+recall_score(y_test, y_pred)
+```
+## 특이도
 
 *   **실제 음성**인 것들 중 **음성으로 예측**한 비율.
     $$ \text{Specificity} = \frac{TN}{TN + FP} $$
@@ -182,13 +170,13 @@
 
 *   검사 종류(PCR, 항원 등) 따라 민감도(재현도)/특이도 다름. 목적에 따라 적합한 검사 선택.
 
-## F1 점수 (F1 Score)
+## F1 점수
 
 *   정밀도(p)와 재현도(r)의 **조화 평균**. 둘 사이 균형 나타내는 지표.
     $$ F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2TP}{2TP + FP + FN} $$
 *   정밀도/재현도 모두 중요할 때 사용. 0 ~ 1 범위, 1에 가까울수록 좋음.
 
-## ROC 곡선 (Receiver Operating Characteristic Curve)
+## ROC 곡선
 
 *   분류 모델 성능 시각화 도구.
 *   **가로축:** FPR (1 - 특이도).
@@ -196,7 +184,7 @@
 *   **작성:** 문턱값 변화시키며 FPR, TPR 계산하여 곡선 그림.
 *   **해석:** 좌상단(0, 1)에 가까울수록(볼록할수록) 좋은 모델. 대각선은 무작위 예측 수준.
 
-## AUC (Area Under the ROC Curve)
+## AUC
 
 *   ROC 곡선 아래 면적. 0 ~ 1 범위.
 *   모델 성능 정량적 지표. 1에 가까울수록 좋음. 무작위 예측 시 0.5.
@@ -214,18 +202,14 @@ prob = model.predict_proba(X_test)[:, 1]
 fpr, tpr, thresholds = roc_curve(y_test, prob)
 
 # ROC 곡선 그리기
-plt.plot(fpr, tpr, marker='.')
-plt.xlabel('False Positive Rate (1 - Specificity)')
-plt.ylabel('True Positive Rate (Recall)')
-plt.title('ROC Curve')
-plt.grid(True)
-plt.show()
+plt.plot(fpr, tpr)
+```
 
-# AUC 계산
-auc = roc_auc_score(y_test, prob)
-print(f"AUC: {auc:.4f}")
+AUC 계산
+```python
+roc_auc_score(y_test, prob)
 ```
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/3jz1VJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1696" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 지도학습 - 분류"></iframe>
+<iframe src="https://tally.so/embed/3jz1VJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 지도학습 - 분류"></iframe>

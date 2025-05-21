@@ -1,0 +1,97 @@
+# 키워드 추출
+
+## 키워드 추출
+
+  * 주요 개념:
+      * 키워드 추출
+      * MSS
+      * MMR
+
+## 키워드 추출
+
+  * 자주 나오는 단어 중에 문서와 가장 비슷한 단어를 찾음
+    ```python
+    word_emb = sbert.encode(words)
+    dists = cosine_distances(doc_emb[[doc_idx]], word_emb).flatten()
+    for i in np.argsort(dists)[:5]:
+        print(words[i])
+    ```
+  * 문서의 내용과 비슷한 단어들이 키워드로 뽑힘
+  * 비슷비슷한 키워드들이 뽑힐 수 있음
+  * 해결책:
+      * Max Sum Similarity
+      * Maximal Marginal Relevance
+
+## Max Sum Similarity
+
+  * 1차적으로 문서와 유사한 n개의 키워드를 추출
+  * 이중에서 k개의 키워드를 뽑아 조합하고, 그들 간의 유사도 합계를 구함
+  * 키워드들의 유사도 합계가 가장 낮은 조합을 선택
+  * 문서와 유사하면서, 서로 다른 키워드를 뽑는 방법
+
+## 후보의 개수
+
+  * n을 키우면 더 다양한 후보를 고려할 수 있음
+  * 그러나 조합의 개수는 $\frac{n!}{(n-k)!k!}$ 크면 급격하게 증가
+  * 다양성과 계산 시간을 고려하여 n과 k를 적절히 선택
+
+
+```python
+from scipy.special import factorial
+n = 10
+k = 5
+factorial(n)/factorial(n-k)/factorial(k)
+```
+
+
+
+## Max Sum Similarity
+
+```python
+from itertools import combinations
+
+max_dist = 0
+keywords = None
+candidates = np.argsort(dists)[:n] # n개의 후보
+for combi in combinations(candidates, k): # k개씩 조합해서 시도
+    word_dists = cosine_distances(word_emb[list(combi)]) # 키워드 간 거리 계산
+    sum_dist = word_dists.sum() # 거리 합계
+    if sum_dist > max_dist: # 키워드들이 서로 거리가 최대인 것을 찾음
+        max_dist = sum_dist
+        keywords = combi
+
+for i in keywords:
+    print(words[i])
+```
+
+## Maximal Marginal Relevance
+
+  * 키워드를 하나씩 순차적으로 추가
+  * 문서와 유사도가 높으면서 기존의 키워드와 유사도가 낮은 키워드를 추가하는 방식
+  * 다양성(diversity) 하이퍼파라미터를 통해 문서-키워드 유사도와 키워드-키워드 유사도 중에 어느 쪽에 더 가중치를 줄지 결정할 수 있음
+  * diversity $=0$: 문서와 유사도가 가장 높은 키워드를 선택
+  * diversity $=1$: 기존 키워드와 유사도가 가장 낮은 키워드를 선택
+
+## Maximal Marginal Relevance
+
+```python
+diversity = 0.0 #다양성이 0이면 처음에 했던 키워드 추출 방법과 같음
+keyword, *candidates = np.argsort(dists)[:n].tolist()
+keywords = [keyword]
+for _ in range(k-1):
+    doc_sims = cosine_distances(doc_emb[[doc_idx]], word_emb[candidates])[0] #문서와 유사도 계산
+    keyword_sims = cosine_distances(word_emb[keywords], word_emb[candidates]) #키워드와 유사도 계산
+    keyword_sims = np.min(keyword_sims, axis=0) #가장 높은 키워드 유사도를 선택
+    mmr = (1 diversity) * doc_sims diversity keyword_sims #MMR: 문서와는 비슷하고, 기존 키워드와는 달라야함
+    most_similar_idx = np.argmin(mmr) #MMR이 가장 높은 키워드 위치
+    keyword = candidates[most_similar_idx] #후보에서 해당 키워드를 선택
+    keywords.append(keyword) #새 키워드 추가
+    candidates.remove(keyword) #추가된 키워드는 후보에서 제거
+
+[words[i] for i in keywords] #키워드 보기
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mB5loA?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1017" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 키워드 추출"></iframe>
+

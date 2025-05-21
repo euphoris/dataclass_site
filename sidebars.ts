@@ -143,41 +143,57 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    //   type: 'category',
-    //   label: '4일차 - 비지도학습',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/supervised-learning-classification',
-    //       label: '지도학습 - 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/unsupervised-learning-clustering',
-    //       label: '비지도학습 - 클러스터링'
-    //     },
-            // {
+    {
+      type: 'category',
+      label: '4일차 - 비지도학습',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/supervised-learning-classification',
+          label: '지도학습 - 분류'
+        },
+        {
+          type: 'doc',
+          id: 'stat/exercise-classification',
+          label: '종합 실습: 재무 건전성 분류'
+        },
+        {
+          type: 'doc',
+          id: 'stat/unsupervised-learning-dimension-reduction',
+          label: '비지도학습 - 차원 축소'
+        },
+        {
+          type: 'doc',
+          id: 'stat/unsupervised-learning-clustering',
+          label: '비지도학습 - 클러스터링'
+        },
+        {
+          type: 'doc',
+          id: 'nlp/dtm',
+          label: '문서 단어 행렬'
+        },
+        {
+          type: 'doc',
+          id: 'nlp/sentence-embedding',
+          label: '임베딩'
+        },
+        {
+          type: 'doc',
+          id: 'nlp/keyword-extraction',
+          label: '키워드 추출'
+        },
+        // {
         //   type: 'doc',
-        //   id: 'stat/exercise-classification',
-        //   label: '종합 실습: 분류'
+        //   id: 'stat/reinforcement-learning',
+        //   label: '강화학습'
         // },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/unsupervised-learning-dimension-reduction',
-    //       label: '비지도학습 - 차원 축소'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/reinforcement-learning',
-    //       label: '강화학습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/deep-learning',
-    //       label: '딥러닝'
-    //     },
-    //   ]
-    // },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/deep-learning',
+        //   label: '딥러닝'
+        // },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '4일차 - 시계열 분석',

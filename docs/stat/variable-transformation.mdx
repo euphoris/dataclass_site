@@ -46,6 +46,28 @@ plt.ylabel('Price')
 plt.show()
 ```
 
+## Box-Cox 변환
+
+```python
+from scipy.stats import boxcox
+df['mileage_tr'], lambd = boxcox(df.mileage)
+```
+
+회귀 분석
+```python
+ols('price ~ mileage_tr', data=df).fit().summary()
+```
+
+변환 함수의 시각화
+
+```python
+# 변환 함수의 플롯
+import matplotlib.pyplot as plt
+x = np.linspace(0, 200000, 100)
+y = boxcox(x, lambd)
+plt.plot(x, y)
+```
+
 ## I() 함수
 
 *   `statsmodels` 관계식 내에서 **산술 연산자(+, *, **, / 등) 그대로 사용**하고 싶을 때 사용. (`+`는 변수 추가 의미이므로)
