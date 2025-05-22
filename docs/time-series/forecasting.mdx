@@ -1,0 +1,191 @@
+# 시계열 예측
+
+
+## 시계열 예측
+* 주요 개념:
+    * sktime 
+    * 마지막 값으로, 평균으로, 표류로 예측 
+    * 계절성을 고려한 예측 
+
+
+## sktime
+* 시계열 머신러닝 라이브러리 
+* 설치: 
+```python
+pip install sktime
+```
+* 예측을 위한 임포트 
+```python
+from sktime.forecasting.naive import NaiveForecaster
+```
+
+
+## 실습 데이터
+* 파일 로딩 
+```python
+import pandas as pd
+beer = pd.read_excel('beer.xlsx', parse_dates=True, index_col='quarter')
+y = beer.production
+```
+* 20개 분기 날짜 만들기 
+```python
+future = pd.date_range(beer.index[-1], periods = 20, freq ='Q')
+```
+
+
+## 예측을 위한 다음 날짜
+```python
+#마지막 날짜
+last_date = beer.index[-1]
+
+#예측 시작일
+start_date = beer.index[-1] + pd.offsets.QuarterBegin()
+```
+* 요일: `pd.offsets.Week(weekday=0)` #0은 월요일 
+* 월초: `MonthBegin`, 월말: `MonthEnd` 
+* 기초: `QuarterBegin`, 분기말: `QuarterEnd` 
+* 연초: `YearBegin`, 연말: `YearEnd` 
+
+
+## 예측을 위한 다음 날짜
+```python
+# 20개 분기초(5년) 날짜 만들기
+future_dates = pd.date_range(start=start_date, periods = 20, freq='QS')
+```
+freq 
+* 매주 월요일: `W-MON` 
+* 월초: `MS` 
+* 월말: `M` 
+* 분기초: `QS` 
+* 분기말: `Q` 
+* 연초: `YS` 
+* 연말: `Y` 
+
+
+## 마지막 값으로 예측
+* 모든 예측값을 단순하게 마지막 값으로 
+* 다양한 경제 금융 시계열에 잘 맞음 
+* 데이터가 랜덤 워크(random walk)할 때 최적 예측치(상승 50%, 하락 50% 이므로) 
+```python
+fc_last = NaiveForecaster(strategy="last") #단순 기법
+fc_last.fit(y) #모형 적합
+y_pred_last = fc_last.predict(fh=future_dates)
+pred_last = pd.DataFrame({'production': y_pred_last}, index=future_dates) 
+
+beer.production.plot()
+pred_last.production.plot()
+```
+
+
+## 평균으로 예측
+* 과거 데이터의 평균으로 예측 
+* 평균 기법으로 예측한 표 만들기 
+```python
+fc_mean = NaiveForecaster(strategy="mean") #평균 기법
+fc_mean.fit(y) # 모형 적합: 모형의 파라미터(평균) 추정
+y_pred_mean = fc_mean.predict(fh=future_dates)
+pred_mean = pd.DataFrame({'production': y_pred_mean}, index=future_dates)
+```
+* 시각화 
+```python
+beer.production.plot()
+pred_mean.production.plot()
+```
+
+
+## 평균 기간의 제한
+```python
+from sktime.forecasting.naive import NaiveForecaster
+y = beer.production
+fc_mean_12 = NaiveForecaster(strategy="mean", window_length = 12)
+#과거 12개 분기(=3년) 평균치만 사용
+fc_mean_12.fit(y)
+y_pred_mean_12 = fc_mean_12.predict(fh=future_dates)
+pred_mean_12 = pd.DataFrame({'production': y_pred_mean_12}, index=future_dates)
+
+beer.production.plot()
+pred_mean_12.production.plot()
+```
+
+
+
+## 표류로 예측
+* 과거 데이터에 나타난 평균 변화량을 적용 
+```python
+fc_drift = NaiveForecaster(strategy="drift")
+fc_drift.fit(y) # 모형 적합
+y_pred_drift = fc_drift.predict(fh=future_dates)
+pred_drift = pd.DataFrame({'production': y_pred_drift}, index=future_dates)
+
+beer.production.plot()
+pred_drift.production.plot()
+```
+
+
+## 표류 기간의 제한
+```python
+fc_drift_12 = NaiveForecaster(strategy="drift", window_length = 12)
+fc_drift_12.fit(y)
+y_pred_drift_12 = fc_drift_12.predict(fh=future_dates)
+pred_drift_12 = pd.DataFrame({'production': y_pred_drift_12}, index=future_dates)
+
+beer.production.plot()
+pred_drift_12.production.plot()
+```
+
+
+
+## 마지막 + 계절성
+```python
+fc_last_season = NaiveForecaster (strategy="last", sp=4) #계절성 주기: 4분기
+#분기 단위 데이터로 표시
+yp = beer.production.copy()
+yp.index = beer.index.to_period('Q')
+future_periods = future_dates.to_period('Q')
+
+#나머지는 동일
+fc_last_season.fit(yp)
+y_pred_ls = fc_last_season.predict(fh=future_periods)
+pred_ls = pd.DataFrame({'production': y_pred_ls}, index=future_periods)
+
+beer.production.plot()
+pred_ls.production.plot()
+```
+
+
+
+## 평균 + 계절성
+```python
+fc_mean_season = NaiveForecaster (strategy="mean", sp=4) #계절성 주기: 4분기
+#분기 단위 데이터로 표시
+yp = beer.production.copy()
+yp.index = beer.index.to_period('Q')
+future_periods = future_dates.to_period('Q')
+
+# 나머지는 동일
+fc_mean_season.fit(yp)
+y_pred_ms = fc_mean_season.predict(fh=future_periods)
+pred_ms = pd.DataFrame({'production': y_pred_ms}, index=future_periods)
+
+beer.production.plot()
+pred_ms.production.plot()
+```
+
+
+
+## 표류 + 계절성
+* 표류에는 계절성이 지원되지 않음 
+* 기존 추정치들을 결합 
+```python
+seasonal = y_pred_ls.copy() #마지막 + 계절성을 복사
+seasonal.index = y_pred_drift.index #인덱스를 맞춤
+y_pred_ds = y_pred_drift + seasonal - y_pred_last #마지막 값이 2번 반복되므로 빼줌
+pred_ds = pd.DataFrame({'production': y_pred_ds}, index=future_dates)
+
+beer.production.plot()
+pred_ds.production.plot()
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mZyXKV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1515" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 시계열 예측"></iframe>

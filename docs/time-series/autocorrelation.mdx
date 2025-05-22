@@ -1,0 +1,119 @@
+# 자기 상관 
+
+
+## 자기 상관 
+* 주요 개념: 
+    * ACF 
+    * 차분 
+    * 계절적으로 조정된 데이터 
+
+
+## Autocorrelation, $r_k$ 
+ACF Auto Correlation Function 
+
+* 1시점, 2시점, 3시점, ... 간격으로 상관을 구한 것 
+* 시계열의 정상성, 계절성 등 여러 가지 특성을 파악하는 데 사용 
+
+
+## 기온 데이터 
+* 기온 데이터 불러오기 
+```python
+import pandas as pd
+temp = pd.read_excel('washington_temp.xlsx')
+```
+* 컬럼으로 나눠진 연, 월, 일을 하나의 날짜로 합침 
+```python
+temp['date'] = pd.to_datetime(temp[['Year', 'Month', 'Day']])
+```
+* 날짜를 인덱스로 
+```python
+temp.set_index('date', inplace=True)
+```
+
+
+## 월평균 기온 
+```python
+monthly = temp.resample('M').AvgTemperature.mean()
+monthly.plot()
+```
+
+
+## ACF 구하기 
+```python
+from statsmodels.tsa.stattools import acf
+acf(monthly)
+```
+* 6개월 간격으로 강한 음의 상관관계(-0.92) 
+* 12개월 간격으로 강한 양의 상관관계 ($+0.91$) 
+
+```python
+#시각화
+from statsmodels.graphics.tsaplots import plot_acf
+plot_acf(monthly);
+```
+* 하늘색 음영은 오차 범위를 나타냄 
+* 막대가 오차 범위를 벗어나야, 상관관계에 대한 충분한 증거가 있음 
+* 시차가 커질 수록, 해당 시차의 사례가 부족하므로 오차 범위가 넓어짐 
+
+
+## 차분 Differencing 
+* 시계열 데이터를 일정 시점 간의 차이를 구하는 것 
+* 간단히 말하면 "전월 대비" 
+* 시계열에서 추세를 제거 
+* 비정상(non-stationary) 시계열을 정상 시계열로 돌릴 수 있음 
+```python
+diff1 = monthly.diff().dropna()
+diff1.plot()
+```
+
+
+## 계절성 차분 
+* 12개월(=1년) 간격으로 차분 
+* 간단히 말하면 "전년 동월 대비" 
+```python
+diff_season = monthly.diff(12).dropna()
+diff_season.plot()
+```
+* ACF를 시각화하면, 계절성과 추세가 모두 없어짐 
+```python
+plot_acf(diff_season)
+```
+
+
+## 시계열 분해 
+* 추세(trend): 이동평균 
+* 계절성(seaonal): 월 평균 
+```python
+from statsmodels.tsa.seasonal import seasonal_decompose
+result = seasonal_decompose(monthly, model='additive', period =12)
+result.plot();
+```
+
+
+## 계절적으로 조정된 데이터 
+```python
+# 원 데이터에서 계절성을 제거
+adjusted = monthly - result.seasonal
+adjusted.plot()
+# ACF 확인
+acf(adjusted)
+# ACF 시각화
+plot_acf(adjusted);
+```
+
+
+## 나머지 성분 
+#추세와 계절성을 제거한 나머지 성분
+```python
+result.resid.plot();
+```
+
+ACF 확인
+```python
+acf(result.resid.dropna())
+plot_acf(result.resid.dropna());
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/nGyadk?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2192" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 자기상관"></iframe>

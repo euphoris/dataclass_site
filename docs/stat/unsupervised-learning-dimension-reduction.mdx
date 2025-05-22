@@ -44,19 +44,12 @@
     ```python
     cc = pd.read_excel('cancer.xlsx')
     X = cc.iloc[:, 1:] # 독립변수(특성)들만 사용
-    y_labels = cc.iloc[:, 0].map({'M': 1, 'B': 0}) # 라벨은 시각화에만 사용
     ```
 *   **PCA 수행:** (n_components=2 : 2차원으로 축소)
     ```python
     from sklearn.decomposition import PCA
-    from sklearn.preprocessing import StandardScaler
-
-    # PCA는 분산 기반이므로, 변수 스케일링 필수
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
     pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X_scaled) # 학습 및 변환 동시 수행
+    X_pca = pca.fit_transform(X) # 학습 및 변환 동시 수행
     ```
 
 ## 시각화 (PCA 결과)
@@ -66,13 +59,7 @@
     import matplotlib.pyplot as plt
 
     plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_labels, cmap='viridis', edgecolor='k', alpha=0.7)
-    plt.xlabel('Principal Component 1')
-    plt.ylabel('Principal Component 2')
-    plt.title('PCA of Cancer Dataset (2 Components)')
-    plt.legend(handles=scatter.legend_elements()[0], labels=['Benign (B)', 'Malignant (M)']) # 범례 추가
-    plt.grid(True)
-    plt.show()
+    plt.scatter(X_pca[:, 0], X_pca[:, 1], c=cc.iloc[:, 0].map({'M': 1, 'B': 0})
     ```
 
 ## 결정 경계(Decision Boundary) 시각화

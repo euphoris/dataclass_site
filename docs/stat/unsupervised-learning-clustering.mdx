@@ -36,16 +36,13 @@
 *   데이터 로드.
     ```python
     import pandas as pd
-    of = pd.read_csv('old_faithful.tsv', sep='\t') # 탭으로 구분된 파일
+    of = pd.read_excel('old_faithful.xlsx') # 탭으로 구분된 파일
     of.head()
     ```
 *   시각화 (대기 시간 vs 분출 시간).
     ```python
     import matplotlib.pyplot as plt
-    plt.scatter(of['waiting'], of['eruptions'])
-    plt.xlabel('Waiting time (minutes)')
-    plt.ylabel('Eruption duration (minutes)')
-    plt.show()
+    plt.scatter(of['waiting'], of['eruption'])
     ```
     *   두 그룹(짧은 간격-짧은 분출 / 긴 간격-긴 분출) 경향 관찰됨.
 
@@ -56,7 +53,7 @@
     from sklearn.preprocessing import StandardScaler
     scaler = StandardScaler()
     # 클러스터링할 변수만 선택하여 표준화
-    X_scaled = scaler.fit_transform(of[['waiting', 'eruptions']])
+    X_scaled = scaler.fit_transform(of[['waiting', 'eruption']])
     ```
 *   **K-Means 모델 학습:** (군집 개수 K=2 지정)
     ```python
@@ -71,20 +68,15 @@
 *   군집 라벨 할당:
     ```python
     # 학습된 kmeans 모델로 각 데이터 포인트 예측(할당)
-    cluster_labels = kmeans.predict(X_scaled)
     # 원본 데이터프레임에 'cluster' 열 추가
-    of['cluster'] = cluster_labels
+    of['cluster'] = kmeans.predict(X_scaled)
     ```
 *   결과 시각화:
     ```python
-    plt.scatter(of['waiting'], of['eruptions'], c=of['cluster'], cmap='viridis') # c=군집라벨, cmap=색상맵
+    plt.scatter(of['waiting'], of['eruption'], c=of['cluster'], cmap='viridis') # c=군집라벨, cmap=색상맵
     # 군집 중심점 표시 (선택 사항)
     centers = scaler.inverse_transform(kmeans.cluster_centers_) # 원래 스케일로 복원
     plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75, marker='X') # 중심점 빨간 X 표시
-    plt.xlabel('Waiting time (minutes)')
-    plt.ylabel('Eruption duration (minutes)')
-    plt.title('K-Means Clustering Results (k=2)')
-    plt.show()
     ```
 
 ## 퀴즈
