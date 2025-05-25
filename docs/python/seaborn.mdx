@@ -1,0 +1,127 @@
+
+
+# seaborn으로 데이터 시각화
+
+
+
+## Python 데이터 시각화
+
+* **데이터 시각화: 데이터를 그래프나 차트 등 시각적 형태로 표현하는 과정
+* **matplotlib**: Python의 대표적인 표준 시각화 라이브러리, 다양한 종류의 정적, 애니메이션, 인터랙티브 시각화 생성 가능
+* **seaborn**: matplotlib을 기반으로 하며, 더 아름답고 통계적으로 의미 있는 고급 시각화 기능을 간편하게 제공
+    * Anaconda 배포판에 기본 포함
+* **임포트**:
+```python
+import matplotlib.pyplot as plt  # matplotlib의 pyplot 모듈
+import seaborn as sns  # seaborn 라이브러리
+```
+
+
+
+## 선 그래프 (Line Plot)
+
+* **`sns.lineplot(x='x축_열이름', y='y축_열이름', data=데이터프레임)`**
+* **용도**: 시간의 흐름에 따른 데이터 변화, 연속적인 값들의 추세 시각화
+* 주요 인자:
+    * `x`: x축에 해당하는 데이터프레임의 열 이름
+    * `y`y`: y축에 해당하는 데이터프레임의 열 이름
+    * `data`: 사용할 데이터프레임 객체
+    * `hue`: 특정 열의 값에 따라 선 색상 구분
+    * `estimator`: y값의 집계 방법 (기본값은 평균)
+
+```python
+sns.lineplot(data=df, x='year', y='price')  # 연도별 가격 변화
+sns.lineplot(data=df, x='year', y='price', hue='model')  # 연도별 모델별 가격 변화
+sns.lineplot(data=df, x='year', y='price', estimator='std')  # 연도별 표준편차 변화
+```
+
+
+
+## 막대 그래프 (Bar Plot / Count Plot)
+
+* **`sns.barplot(x='x축_범주형열', y='y축_수치형열', data=데이터프레임)`**:
+    * 범주형 데이터에 따른 수치형 데이터의 크기(예: 평균, 합계 등) 비교
+```python
+sns.barplot(data=df, x='model', y='price')  # 모델별 가격 평균
+```
+
+* **`sns.countplot(x='x축_범주형열', data=데이터프레임)`**:
+    * 범주형 데이터의 각 항목별 빈도수(개수) 시각화 (y축 별도 지정 불필요)
+```python
+sns.countplot(data=df, x='model')  # 모델별 개수
+```
+
+
+## 산점도 (Scatter Plot)
+
+* **`sns.scatterplot(x='x축_숫자형열', y='y축_숫자형열', data=데이터프레임)`**
+* **용도**: 두 숫자형 변수 간의 관계(상관관계, 분포)를 점으로 표현
+* **주요 인자**:
+    * `hue`: 특정 열 값에 따라 점 색상 구분
+    * `size`: 특정 열 값에 따라 점 크기 구분
+    * `style`: 특정 열 값에 따라 점 모양 구분
+
+```python
+sns.scatterplot(data=df, x='mileage', y='price')  # 주행거리와 가격의 관계
+sns.scatterplot(data=df, x='mileage', y='price', hue='model')  # 모델별 주행거리와 가격의 관계
+```
+
+
+
+## 상자-수염 그림 (Box Plot)
+
+* **`sns.boxplot(x='범주형열', y='숫자형열', data=데이터프레임)` 또는 `sns.boxplot(data=데이터프레임의_숫자형열)`**:
+    * 데이터의 사분위수, 중앙값, 이상치 등을 상자 그림으로 표현
+    * 범주별 데이터 분포 비교에 유용
+```python
+sns.boxplot(data=df, y='price')  # 가격 분포
+sns.boxplot(data=df, x='model', y='price')  # 모델별 가격 분포
+```
+
+## 히스토그램 (Histogram)
+
+* **`sns.histplot(x='숫자형열', data=데이터프레임, bins='auto' 또는 정수)`**:
+    * 단일 숫자형 변수의 값 분포를 구간별 막대(빈도수)로 표현
+    * `bins`: 막대의 개수 또는 구간 정의
+
+```python
+sns.histplot(data=df, x='price')  # 가격의 히스토그램
+sns.histplot(data=df, x='price', bins=10)  # 가격의 히스토그램(막대 10개)
+sns.histplot(data=df, x='price', hue='model')  # 모델별 가격의 히스토그램
+```
+
+
+
+## 차트 꾸미기 기초 (`plt` 객체 활용)
+
+* 차트의 가독성 및 정보 전달력 향상
+* **`plt.title('차트 제목')`**: 차트 상단에 제목 추가
+* **`plt.xlabel('X축 레이블')`**: X축 이름(설명) 추가
+* **`plt.ylabel('Y축 레이블')`**: Y축 이름(설명) 추가
+* **`plt.legend()`**: 범례 표시 (seaborn에서 `hue` 등 사용 시 자동 생성되는 경우 많음, 위치 조정 등 가능)
+* **`plt.xticks()` / `plt.yticks()`**: 축 눈금 값, 레이블 조정
+
+
+
+## 하나의 이미지에 여러 차트 그리기
+- `subplot` 함수를 이용해 여러 차트를 그릴 수 있음
+- 한 셀에서 실행
+```python
+plt.subplot(1, 2, 1)  # 1행 2열의 첫 번째 서브플롯
+sns.histplot(data=df[df.model=='Avante'], x='price')  # Avante 모델의 가격 히스토그램
+plt.subplot(1, 2, 2)  # 1행 2열의 두 번째 서브플롯
+sns.histplot(data=df[df.model=='K3'], x='price')  # K3 모델의 가격 히스토그램
+```
+
+
+## 생성된 차트 저장
+
+* `plt.savefig('저장할_파일명.png', dpi=해상도)`
+* 파일명 확장자에 따라 다양한 포맷 지원 (예: `.jpg`, `.pdf`, `.svg`)
+* 그래프를 그린 셀에서 함께 실행해야 함
+    
+```python
+plt.savefig('price_histogram.png')  # 가격 히스토그램을 이미지로 저장
+```
+
+    

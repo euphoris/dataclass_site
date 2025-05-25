@@ -1,0 +1,168 @@
+
+
+# openpyxl로 엑셀 다루기
+
+
+## openpyxl 라이브러리 소개
+
+* **openpyxl**: 파이썬(Python)으로 **Excel (.xlsx) 파일**을 다루기 위한 라이브러리
+* **주요 기능**:
+    * Excel 파일 **읽기** (기존 파일 열기)
+    * Excel 파일 **쓰기** (새 파일 생성, 기존 파일 수정)
+    * 시트(Sheet) 관리: 생성, 선택, 이름 변경 등
+    * 셀(Cell) 데이터 관리: 읽기, 쓰기 등
+    * 행(Row) 및 열(Column) 조작
+    * 다양한 스타일 적용 (폰트, 색상, 정렬 등)
+* **설치**: openpyxl 라이브러리를 사용하기 전에 먼저 설치해야 .
+* **Anaconda Prompt (또는 명령 프롬프트)** 실행 후 다음 명령어 입력 및 실행:
+    * `pip install openpyxl`
+* **임포트**: 파이썬 코드에서 openpyxl을 사용하기 위해 임포트
+    * `import openpyxl`
+
+
+
+## 기존 엑셀 워크북 열기
+
+* **`openpyxl.load_workbook('파일명.xlsx')`**:
+    * 지정된 이름의 Excel 파일을 열기
+    * 파일명은 **경로를 포함**할 수 있음 (예: `'C:/Users/User/Documents/my_excel.xlsx'`).
+    * 반환 값은 **Workbook 객체**
+* **예시**:
+```python
+from openpyxl import load_workbook
+workbook = load_workbook('example.xlsx')  # 현재 폴더에 있는 example.xlsx 파일 열기
+```
+
+
+
+## 새로운 엑셀 워크북 만들기
+
+* **`openpyxl.Workbook()`**:
+    * 비어 있는 새로운 Excel 워크북(Workbook) 객체를 생성
+    * 기본적으로 하나의 활성화된 시트('Sheet')를 포함
+* **예시**:
+```python
+from openpyxl import Workbook
+new_workbook = Workbook()  # 새로운 워크북 생성
+```
+
+
+
+## 시트(Sheet) 선택
+
+* **시트 목록 확인**: `workbook.sheetnames` (모든 시트 이름을 리스트로 반환)
+    * 예: `print(workbook.sheetnames)`  ➡️  `['Sheet1', 'Data', 'Report']`
+* **워크북 내 시트 선택**:
+    * **이름으로 선택**: `workbook['시트 이름']` (반환 값은 Worksheet 객체)
+        * 예: `sheet = workbook['Sheet1']`
+    * **인덱스로 선택**: `workbook.worksheets`는 모든 시트의 리스트를 반환합니다 (0부터 시작).
+        * 예: `sheet = workbook.worksheets[-1]` (마지막 시트)
+* **활성화된 시트 가져오기**: `workbook.active` (처음 열거나 새로 생성했을 때 활성화된 시트)
+    * 예: `active_sheet = workbook.active`
+
+--
+
+## 시트(Sheet) 관리
+
+* **시트 이름 확인**: `sheet.title` (시트 객체의 이름 속성)
+    * 예: `print(sheet.title)`
+* **시트 이름 변경**: `sheet.title = '새로운 시트 이름'`
+    * 예: `sheet.title = 'Data'`
+* **새 시트 생성**: `workbook.create_sheet('새 시트 이름')`
+    * 기본적으로 마지막 위치에 생성됩니다.
+    * `workbook.create_sheet('새 시트 이름', 0)` 와 같이 인덱스를 지정하여 특정 위치에 생성 가능.
+    * 예: `new_sheet = workbook.create_sheet('보고서')`
+
+
+
+## 셀(Cell) 값 읽기 📥
+
+* **`sheet['셀 주소'].value`**:
+    * Excel 시트의 셀 주소 (예: 'A1', 'B5')를 사용하여 셀에 접근하고 `.value` 속성으로 값을 읽어옵니다.
+    * 값이 없으면 `None`을 반환
+    * 예: `value_a1 = sheet['A1'].value`
+* **`sheet.cell(row=행번호, column=열번호).value`**:
+    * 행 번호와 열 번호(1부터 시작)를 사용하여 셀에 접근하고 `.value` 속성으로 값을 읽어옵니다.
+    * 행 번호와 열 번호를 변수로 사용할 때 유용
+    * 예: `value_b2 = sheet.cell(row=2, column=2).value`
+
+
+
+## 셀(Cell) 값 쓰기 📤
+
+* **`sheet['셀 주소'] = '새로운 값'`**:
+    * Excel 시트의 셀 주소에 새로운 값을 할당
+    * 값은 문자열, 숫자, 불리언 등 다양한 데이터 타입이 될 수 있습니다.
+    * 예: `sheet['A1'] = 'Hello, Excel!'`
+* **`sheet.cell(row=행번호, column=열번호, value='새로운 값')`**:
+    * 행 번호와 열 번호로 셀을 지정하고 `value` 매개변수를 사용하여 값을 씁니다.
+    * 예: `sheet.cell(row=3, column=1, value=123)`
+
+
+
+## 범위(Range) 다루기
+
+* **범위 선택**: 슬라이싱과 유사한 방식으로 여러 셀을 한 번에 선택할 수 있습니다.
+    * `sheet['A1':'C5']`: A1부터 C5까지의 모든 셀을 포함하는 튜플 형태의 제너레이터를 반환 각 요소는 행(튜플)이고, 각 행은 셀 객체입니다.
+    * **반복문으로 접근**:
+```python
+from openpyxl.utils import get_column_letter
+for row in sheet['A1':'C5']:  # 범위의 모든 행에 대해 반복
+    for cell in row:  # 행의 모든 셀에 대해 반복
+        col_letter = get_column_letter(cell.column)
+        print(col_letter, cell.row, cell.value)
+```
+
+* **열 전체 또는 행 전체 선택**:
+    * `sheet['A']`: A열 전체
+    * `sheet['1']`: 1행 전체
+    * `sheet['A:C']`: A열부터 C열 전체
+    * `sheet['1:5']`: 1행부터 5행 전체
+
+
+
+## 문자 → (열, 행) 좌표로 바꾸기
+
+앞에서 get_column_letter로 열 번호를 문자로 바꿀 수 있음
+반대로 문자를 열 번호로 바꾸는 것은 다음과 같이 할 수 있음
+
+```python
+from openpyxl.utils.cell import coordinate_from_string, column_index_from_string
+col_letter, row = coordinate_from_string('A4') # 셀 이름(A4)를 열, 행 좌표('A',4)로 바꿈
+col = column_index_from_string(col_letter) # 열 문자를 열 번호로 바꿈 (A → 1)
+row, col
+```
+
+
+
+## 행(Row) 및 열(Column) 다루기
+
+* **행 접근**:
+    * `sheet.rows`: 모든 행을 순회 가능한 객체로 반환. 각 요소는 셀 객체의 튜플입니다.
+```python
+for row_cells in sheet.rows:
+    for cell in row_cells:
+        print(cell.value)
+```
+
+* **열 접근**:
+    * `sheet.columns`: 모든 열을 순회 가능한 객체로 반환. 각 요소는 셀 객체의 튜플입니다.
+```python    
+for col_cells in sheet.columns:
+    for cell in col_cells:
+        print(cell.value)
+```     
+
+
+## 워크북 저장
+
+* **`workbook.save('파일명.xlsx')`**:
+    * 현재 워크북의 내용을 지정된 파일명으로 저장.
+    * **주의**:
+        * 기존 파일과 같은 이름으로 저장하면 **덮어쓰기**
+        * 저장 시 파일 확장자를 `.xlsx`로 지정해야 .
+        * 파일명에 경로를 포함하여 특정 위치에 저장할 수 있음
+* **예시**:
+    * `workbook.save('output.xlsx')`
+    * `new_workbook.save('new_excel_file.xlsx')`
+

@@ -1,0 +1,158 @@
+
+# 조건문과 반복문
+
+
+
+## for 반복문
+
+* **정의**: 리스트, 문자열 등 순회 가능한(iterable) 객체의 각 요소를 반복적으로 처리하는 구조
+
+```python
+for 변수 in iterable:
+    # 반복할 코드
+```
+
+- 예시:
+```python
+import os
+for item_name in os.listdir():
+    print(item_name)
+```
+
+
+## `range()`
+
+* **`range()` 함수**: `for` 반복문과 함께 자주 사용되며, 특정 규칙에 따라 연속된 숫자(정수)들을 생성.
+* 생성된 숫자들을 하나씩 반복 변수에 할당하여 루프 실행.
+
+
+* **예시**: 5번 반복 (0, 1, 2, 3, 4)
+```python
+for i in range(5):  # i는 0, 1, 2, 3, 4 순으로 변함
+    print(f"현재 숫자: {i}")
+```
+- **`range(start, stop)`**:
+    * `start`부터 `stop-1`까지의 숫자를 생성.
+    * **예시**: 2부터 5까지의 숫자 (2, 3, 4, 5)
+```python
+for i in range(2, 6):  # i는 2, 3, 4, 5 순으로 변함
+    print(f"값: {i}")
+```
+
+    3.  **`range(start, stop, step)`**:
+        * `start`부터 `stop-1`까지 `step` 간격으로 숫자를 생성.
+        * `step`은 양수 또는 음수 가능.
+        * **예시 1**: 1부터 10까지 홀수만 (1, 3, 5, 7, 9)
+            ```python
+            for i in range(1, 10, 2): # i는 1, 3, 5, 7, 9 순으로 변함
+                print(f"홀수: {i}")
+            ```
+* **예시 2**: 5부터 1까지 역순으로 (5, 4, 3, 2, 1)
+    ```python
+    for i in range(5, 0, -1): # i는 5, 4, 3, 2, 1 순으로 변함
+        print(f"카운트다운: {i}")
+    ```
+
+
+
+
+## 조건문 `if` 소개: 특정 조건 만족 시 실행 🚦
+
+* **`if 조건식:`**: `조건식`이 참(`True`)일 경우에만 `if` 블록 안의 코드 실행
+* **`os.path.exists(경로)`**: 파일 또는 폴더가 해당 경로에 존재하면 `True` 반환
+* **예시**: 'important_file.txt' 파일이 현재 폴더에 존재하면 메시지 출력
+    ```python
+    import os
+    file_to_check = "important_file.txt"
+    if os.path.exists(file_to_check):
+        print(f"'{file_to_check}' 파일이 존재합니다!")
+    # 파일이 존재하지 않으면 아무것도 출력되지 않음
+    ```
+
+
+
+## `if`문 활용: 파일만 골라내기
+
+* **`os.path.isfile(경로)`**: 해당 경로가 파일이면 `True` 반환
+* **결합**: `os.listdir()`로 목록 가져오고, `for`로 순회하며, `if os.path.isfile()`로 파일만 선별
+* **예시**: 현재 폴더 내 항목 중 엑셀 파일 이름만 출력
+```python
+num_excel_files = 0
+for name in os.listdir():
+    if name.endswith('.xlsx'):  # .xlsx 확장자를 가진 파일만
+        print(f"엑셀 파일: {name}")
+        num_excel_files += 1
+```
+
+
+
+## 조건에 맞는 파일 삭제
+
+삭제할 파일 만들기
+```python
+import os
+with open("delete_me.txt", "w") as f:
+    f.write("이 파일은 삭제될 예정입니다.")
+```
+
+if문으로 삭제
+```python
+import os
+file_to_delete = "delete_me.txt"
+for name in os.listdir():
+    if name == file_to_delete:
+        os.remove(name)  # 파일 삭제
+        print(f"'{name}' 파일을 삭제했습니다.")
+```
+
+
+
+## `if-else` 문: 두 가지 경우 처리 ✌️
+
+* **`if 조건식: ... else: ...`**:
+    * `조건식`이 참이면 `if` 블록 실행
+    * `조건식`이 거짓이면 `else` 블록 실행
+* **예시**: 파일의 종류에 따라 다른 메시지 출력
+```python
+num_excel_files = 0
+num_total_files = 0
+for name in os.listdir():
+    num_total_files += 1
+    if name.endswith('.xlsx'):  # .xlsx 확장자를 가진 파일만
+        print(f"엑셀 파일: {name}")
+        num_excel_files += 1
+    else:
+        print(f"'{name}'은(는) 엑셀 파일이 아닙니다.")
+```
+
+
+## 홀짝 가리기
+
+```python
+for i in range(1, 11):  # 1부터 10까지 반복
+    if i % 2 == 0:  # 짝수인지 확인
+        print(f"{i}는 짝수입니다.")
+    else:  # 홀수인 경우
+        print(f"{i}는 홀수입니다.")
+```
+
+
+
+## `if-elif-else` 문: 여러 조건 중 하나 처리
+
+```python
+num_excel_files = 0
+num_pptx_files = 0
+num_total_files = 0
+for name in os.listdir():
+    num_total_files += 1
+    if name.endswith('.xlsx'):
+        num_excel_files += 1
+        print(f"엑셀 파일: {name}")
+    elif name.endswith('.pptx'):
+        num_pptx_files += 1
+        print(f"프레젠테이션 파일: {name}")
+    else:
+        print(f"기타 파일: {name}")
+```
+

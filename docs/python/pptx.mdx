@@ -1,0 +1,159 @@
+# python-pptx로 파워포인트 보고서 자동화
+
+## python-pptx 라이브러리 소개
+
+* **python-pptx**: 파이썬 코드를 사용하여 Microsoft PowerPoint (.pptx) 파일의 생성 및 수정을 자동화하는 라이브러리
+* **주요 기능**:
+    * 새 프레젠테이션 생성
+    * 기존 프레젠테이션 열기 및 수정
+    * 슬라이드 추가, 레이아웃 적용
+    * 텍스트, 도형, 표, 그림 등 삽입
+    * 텍스트 서식 지정
+
+* **설치**: 
+```sh
+pip install python-pptx
+```
+
+* **임포트**: 파이썬 스크립트에서 `Presentation` 클래스 임포트
+```python
+from pptx import Presentation
+```
+
+
+
+## 새로운 프레젠테이션 객체 생성
+
+* 새로운 프레젠테이션 객체(`prs`) 생성
+* 기본 제공 템플릿(가장 기본적인 슬라이드 마스터와 레이아웃 포함)을 사용하여 생성
+```python
+prs = Presentation()
+```
+* **기존 템플릿 사용**:
+* 특정 `.pptx` 파일을 인자로 전달하여 해당 파일을 템플릿으로 사용 가능
+```python
+prs = Presentation('template.pptx')
+```
+
+
+## 슬라이드 레이아웃(Slide Layout) 이해
+
+* **정의**: 슬라이드에 미리 정의된 내용 틀(Placeholders)의 배치와 디자인
+* **종류**: 제목 슬라이드, 제목 및 내용 슬라이드, 섹션 머리글, 빈 슬라이드 등 다양
+* **접근**: `prs.slide_layouts` 속성을 통해 프레젠테이션에 포함된 레이아웃 목록 접근 (리스트 형태)
+    * 각 레이아웃은 인덱스 번호로 구분 (일반적으로 0번은 제목 슬라이드, 1번은 제목 및 내용 등)
+
+
+
+## 새 슬라이드 추가
+
+* **1단계: 사용할 슬라이드 레이아웃 선택**
+```python
+title_slide_layout = prs.slide_layouts[0] # 0번 인덱스: 일반적으로 제목 슬라이드 레이아웃
+content_slide_layout = prs.slide_layouts[1] # 1번 인덱스: 일반적으로 제목 및 내용 슬라이드
+```
+
+* **2단계: 선택한 레이아웃으로 새 슬라이드 추가**
+    * `prs.slides`는 프레젠테이션 내 모든 슬라이드 컬렉션
+```python
+slide = prs.slides.add_slide(title_slide_layout)
+```
+
+
+
+## 제목 슬라이드에 텍스트 입력 (Placeholder 활용)
+
+* **Placeholder (개체 틀)**: 슬라이드 레이아웃에 미리 정의된 텍스트, 그림 등을 넣을 수 있는 영역
+* **접근**: 슬라이드 객체의 `placeholders` 속성 또는 `shapes` 속성으로 접근
+    * `title_placeholder = slide.shapes.title` (제목 개체 틀) 또는 `slide.placeholders[0]` (인덱스로 접근, 레이아웃에 따라 다름)
+    * `subtitle_placeholder = slide.placeholders[1]` (부제목 또는 내용 개체 틀)
+* **텍스트 입력**: `.text` 속성에 문자열 할당
+    * `title_placeholder.text = "보고서 제목"`
+    * `subtitle_placeholder.text = "부제목 내용입니다."`
+
+
+## 작업한 프레젠테이션을 실제 파일로 저장하기
+
+* **저장**: `Presentation` 객체의 `save()` 메소드 사용
+    * `prs.save('파일명.pptx')`
+* **파일명**: 저장할 프레젠테이션 파일의 이름 (.pptx 확장자 포함)
+* **경로**: 파일명에 전체 경로 포함 시 특정 위치에 저장 가능
+* **주의**: 동일 이름 파일 존재 시 덮어씀
+* **예시**: `prs.save('자동생성_보고서_최종.pptx')`
+
+이미 파일이 있을 경우 파일 이름 뒤에 번호 붙이기
+
+```python
+import os
+base_filename = '보고서' # 기본 파일 이름
+filename = base_filename # 실제 저장할 파일 이름
+i = 1 # 파일 번호
+while os.path.exists(f'{filename}.pptx'): # 이미 저장할 파일이 존재하면, 다음을 반복
+    filename = f'{base_filename}_{i}' # 파일 이름에 번호를 붙임
+    i += 1 # 번호를 1 증가
+# 파일이 존재하지 않으면 반복을 중단
+prs.save(f'{filename}.pptx')  # 자동으로 번호가 붙은 파일 이름으로 저장
+```
+
+
+
+## 텍스트 서식 지정
+
+* **텍스트 프레임 (`text_frame`)**: 텍스트 상자 내 텍스트 전체 영역, 단락(paragraph) 포함
+* **단락 (`paragraph`)**: `text_frame.paragraphs[0]` 또는 `text_frame.add_paragraph()`로 접근
+* **실행 (`run`)**: 단락 내에서 동일한 서식을 공유하는 텍스트 조각. `paragraph.add_run()`로 생성
+
+```python
+from pptx.util import Pt
+slide = prs.slides.add_slide(content_slide_layout)
+content_placeholder = slide.placeholders[1]  # 내용 개체 틀
+
+# p = content_placeholder.text_frame.paragraphs[0]  # 첫 번째 단락 가져오기
+# p.text = "이 보고서는 자동으로 생성된 보고서입니다."  # 단락에 텍스트 추가
+
+p = content_placeholder.text_frame.paragraphs[0]  # 첫 번째 단락 가져오기
+run = p.add_run()
+run.text = "이 보고서는 "
+
+run = p.add_run()
+run.text = "굵은 글씨"
+run.font.bold = True
+run.font.size = Pt(50)
+run.font.name = '맑은 고딕'
+
+run = p.add_run()
+run.text = "로 작성되었습니다."
+
+p = content_placeholder.text_frame.add_paragraph()  # 새 단락 추가
+```
+
+
+
+## 픽처 플레이스홀더에 이미지 넣기
+
+```python
+picture_slide_layout = prs.slide_layouts[8]  # 이미지 슬라이드 레이아웃
+slide = prs.slides.add_slide(picture_slide_layout)
+picture_placeholder = slide.placeholders[1]  # 내용 개체 틀
+picture_placeholder.insert_picture('price_histogram.png') # 플레이스홀더에 이미지 추가
+```
+
+## Seaborn 차트 저장 없이 임의 위치에 추가
+
+```python
+from pptx.util import Inches
+import io
+sns.lineplot(x='x', y='y', data=data) # 차트
+image_stream = io.BytesIO()  # 차트 이미지를 저장할 스트림(메모리 상 공간)
+plt.savefig(image_stream, format='png', dpi=300) # 스트림에 저장
+image_stream.seek(0)  # 스트림의 시작 위치로 이동
+plt.close()  # 차트 닫기
+
+slide_layout = prs.slide_layouts[5] # 예: 빈 슬라이드 레이아웃
+slide = prs.slides.add_slide(slide_layout)
+
+left = Inches(1)  # 왼쪽에서 1인치
+top = Inches(1.5)  # 오른쪽에서 1.5인치
+height = Inches(4) # 이미지 높이는 4인치 (너비는 자동 조정)
+pic = slide.shapes.add_picture(image_stream, left, top, height=height) # 이미지 삽입
+```

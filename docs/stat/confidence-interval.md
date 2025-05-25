@@ -44,21 +44,7 @@
     *   해석: 중간값의 95% 신뢰구간은 약 770 ~ 865 추정.
     *   **특징:** 시뮬레이션 기반이므로 실행할 때마다 결과 조금씩 달라질 수 있음.
 
-## 여론조사의 "표본오차" 항목
-
-*   국내 여론조사 결과 발표 시 "**표본오차**"라는 이름으로 **오차 범위** 표시.
-*   **계산 근거:** 중심극한정리(CLT)에 따라, 보통 **95% 신뢰수준**에서 오차 범위 계산.
-$$
-\pm 1.96 * \frac{\sqrt{p*(1-p)}}{\sqrt N} = \pm 1.96 * \frac{50\%}{\sqrt N} 
-$$
-*   **계수 의미:**
-    *   **1.96:** 신뢰수준 95% 해당 값 (정규분포 기준. 99%면 약 2.58).
-    *   **50:** 보통 응답 비율 50%(찬반 등)일 때 변산성(오차) 가장 크므로, 이를 기준 계산.
-    *   **N:** 설문 응답자 수.
-*   **활용:** 원하는 오차 범위 목표 시, 필요한 **설문 응답자 수 역산** 가능.
-    *   예: ±10% 오차 범위 목표 → 약 100명 필요.
-    *   표본 크기 4배 늘리면 오차 범위 1/2로 줄어듦 ($\sqrt N$에 반비례).
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wvzlJ0?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1500" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 추정과 신뢰구간"></iframe>
+<iframe src="https://tally.so/embed/wvzlJ0?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 추정과 신뢰구간"></iframe>

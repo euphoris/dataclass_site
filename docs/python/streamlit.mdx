@@ -1,0 +1,141 @@
+
+# streamlit으로 인터랙티브 웹 대시보드
+
+
+
+## streamlit 라이브러리 소개
+
+* **streamlit**: Python 언어만으로 데이터 과학자나 개발자가 쉽고 빠르게 데이터 기반 웹 애플리케이션을 구축할 수 있도록 지원하는 오픈소스 프레임워크
+* **특징**:
+    * 적은 코드로 인터랙티브한 웹 UI 구현
+    * 실시간 코드 변경 감지 및 자동 앱 새로고침
+    * 데이터 시각화, 위젯 등 다양한 컴포넌트 제공
+* **설치**: Anaconda Prompt (또는 명령 프롬프트, 터미널) 실행 후 다음 명령어 입력
+    * `pip install streamlit`
+
+
+
+## VS Code 소개
+
+* **Visual Studio Code (VS Code) 소개**:
+    * Microsoft에서 개발한 **무료 소스 코드 편집기** (IDE - 통합 개발 환경에 가까움)
+    * 다양한 프로그래밍 언어 지원 (Python, JavaScript, Java 등)
+    * 강력한 기능: 디버깅, Git 연동, 확장 프로그램, 터미널 통합 등
+    * **특징**: 가볍고 빠르며, 사용자 맞춤 설정이 용이
+
+* **Jupyter Notebook vs. Visual Studio Code (Streamlit 개발 관점)**:
+
+    | 특징             | Jupyter Notebook                         | Visual Studio Code                          |
+    | : | : | : |
+    | **주요 용도** | 데이터 탐색, 실험, 빠른 프로토타이핑, 교육 | 웹 애플리케이션 개발, 복잡한 프로젝트 관리, 전체적인 소프트웨어 개발 |
+    | **실행 단위** | 셀(Cell) 단위 실행 및 즉각적 결과 확인      | 전체 스크립트(`.py`) 실행 또는 디버깅 모드     |
+    | **파일 관리** | 개별 노트북 파일(`.ipynb`) 중심          | 프로젝트 폴더 기반의 파일 및 모듈 관리 용이 |
+    | **애플리케이션 배포** | 노트북 자체는 웹 앱 배포에 부적합       | `.py` 스크립트 기반으로 Streamlit 앱 실행 및 배포 |
+    | **편집 기능** | 코드 셀 + 마크다운 셀                    | 고급 코드 편집 기능, 자동 완성, 리팩토링 등  |
+
+## streamlit 애플리케이션 실행 방법
+- dashboard.py 를 만들고 작업
+- 임포트: 파이썬 스크립트 상단에 다음과 같이 작성
+```python
+import streamlit as st
+```
+
+실행: 터미널(Anaconda Prompt 등)에서 다음 명령 입력
+```bash
+streamlit run dashboard.py
+```
+
+- 실행 결과: 명령 실행 시 웹 브라우저가 자동으로 열리면서 애플리케이션 실행
+- 기본적으로 로컬호스트 http://localhost:8501 에서 실행
+
+## 웹 페이지에 제목 및 부제목 표시
+
+- `st.title('페이지 제목 텍스트')`: 웹 애플리케이션의 가장 큰 제목 표시
+- `st.header('섹션 제목 텍스트')`: 주요 섹션의 제목 표시
+- `st.subheader('소제목 텍스트')`: 하위 섹션 또는 부가 설명 제목 표시
+- `dashboard.py`를 다음과 같이 수정 후 저장
+- 대시보드에서 상단 "Always rerun"을 선택하면, 파일 저장 시 자동으로 업데이트
+
+```python
+import streamlit as st
+st.title('나의 첫 Streamlit 앱')
+st.header('데이터 분석 결과')
+st.subheader('상세 분석 내용')
+```
+
+## 다양한 형태의 텍스트 표시
+
+- `st.text('일반 텍스트 내용')`: 고정폭 글꼴로 단순 텍스트 표시
+- `st.markdown('마크다운 형식 지원 텍스트')`: 마크다운 문법 사용 가능 (굵게: `**굵게**`, 기울임: `*기울임*`, 목록, 링크 등)
+- `st.write(*args)`: 다용도 출력 함수. 문자열, 숫자, 데이터프레임, 차트 등 다양한 객체 자동 인식 및 적절한 형태로 표시
+- dashboard.py끝에 다음 내용을 추가 후 저장
+```python
+st.markdown("분석 **결과**는 다음과 같습니다:")
+```
+
+## pandas DataFrame 표 형태로 표시
+- `st.dataframe(pandas_dataframe)`: 인터랙티브한 테이블 형태로 DataFrame 표시 (정렬, 크기 조절 등 가능)
+- 다음 내용 추가 후 저장
+```python
+import pandas as pd
+df = pd.read_excel('실습 데이터/car.xlsx')
+st.dataframe(df)
+```
+
+- 단순히 write를 사용해도 됨
+```python
+st.write(df)
+```
+
+- `st.table(pandas_dataframe)`:
+정적인 테이블 형태로 DataFrame 표시 (단순 표 출력)
+- 위의 st.dataframe을 st.table로 변경 후 저장
+```python
+st.table(df)
+```
+
+## 데이터 시각화 차트 웹 앱에 표시
+
+- `st.pyplot(matplotlib_figure_object)`: Matplotlib 또는 Seaborn(Matplotlib 기반)으로 생성한 Figure 객체를 Streamlit 앱에 표시
+
+```python
+import seaborn as sns
+ax = sns.lineplot(x='year', y='price', data=df) # 차트
+st.pyplot(ax.figure) # 차트의 그림(figure)
+
+pyplot은 write로 변경해도 동일:
+st.write(ax.figure)
+```
+
+## 인터랙션
+사용자의 입력에 따라 다른 결과를 제시
+
+```python
+model = st.selectbox('차종', options=['전체', 'Avante', 'K3'])
+if model == '전체':
+    st.write('## 전체 차종의 가격 분포')
+    ax = sns.boxplot(y='price', data=df)
+else:
+    st.write(f'## {model} 차종의 가격 분포')
+    ax = sns.boxplot(y='price', data=df[df['model'] == model])
+st.write(ax.figure) # 차트의 그림(figure)
+```
+
+## 캐시
+
+- 인터랙션이 있을 때마다 모든 계산을 다시 수행
+- 시간이 오래 걸리는 계산은 캐시(cache, 임시 저장)를 해두면 반응 속도를 높일 수 있음
+
+```python
+import time
+@st.cache_resource  # 이 함수의 실행 결과는 캐시됨
+def long_running_function(): # 오래 걸리는 함수
+    time.sleep(10)  # 10초 대기
+    return 123
+
+# 버튼 클릭 시 오래 걸리는 함수 실행
+if st.button('오래 걸리는 함수 실행'):
+    with st.spinner('잠시만 기다려 주세요...'):
+        result = long_running_function()
+    st.success(f'결과: {result}')
+```

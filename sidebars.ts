@@ -28,16 +28,16 @@ const sidebars: SidebarsConfig = {
           id: 'stat/why-learn-statistics',
           label: '통계를 배워야 하는 이유'
         },
-        {
-          type: 'doc',
-          id: 'stat/statistics-and-ai',
-          label: '데이터 분석의 종류와 관련 분야'
-        },
-        {
-          type: 'doc',
-          id: 'stat/data',
-          label: '데이터 수집과 전처리'
-        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/statistics-and-ai',
+        //   label: '데이터 분석의 종류와 관련 분야'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/data',
+        //   label: '데이터 수집과 전처리'
+        // },
         {
           type: 'doc',
           id: 'stat/python',
@@ -59,129 +59,133 @@ const sidebars: SidebarsConfig = {
           label: '분포의 특성과 기술통계'
         },
         {
+            type: 'doc',
+            id: 'stat/estimation',
+            label: '추정'
+        },
+        {
           type: 'doc',
           id: 'stat/day1-exercise',
           label: '1일차 종합 실습'
         },
       ]
     },
-
-    {
-        type: 'category',
-        label: '2일차 - 예측',
-        items: [
-          {
-            type: 'doc',
-            id: 'stat/estimation',
-            label: '추정'
-          },
-          {
-            type: 'doc',
-            id: 'stat/confidence-interval',
-            label: '신뢰구간'
-          },
-          {
-            type: 'doc',
-            id: 'stat/hypothesis-testing',
-            label: '통계적 가설 검정'
-          },
-          {
-            type: 'doc',
-            id: 'stat/group-differences',
-            label: '집단 비교'
-          },
-          {
-            type: 'doc',
-            id: 'stat/correlation',
-            label: '상관 분석'
-          },
-          {
-            type: 'doc',
-            id: 'stat/regression',
-            label: '회귀 분석'
-          },
-          {
-            type: 'doc',
-            id: 'stat/multiple-regression',
-            label: '다중 회귀 분석'
-          },
-        ]
-      },
-    {
-      type: 'category',
-      label: '3일차 - 회귀',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/model-selection',
-          label: '모형 선택'
-        },
-        {
-          type: 'doc',
-          id: 'stat/cross-validation',
-          label: '교차 검증'
-        },
-        {
-          type: 'doc',
-          id: 'stat/variable-transformation',
-          label: '변수의 변형'
-        },
-        {
-          type: 'doc',
-          id: 'stat/interaction',
-          label: '상호작용'
-        },
-        {
-          type: 'doc',
-          id: 'stat/supervised-learning-regression',
-          label: '지도학습 - 회귀'
-        },
-        {
-          type: 'doc',
-          id: 'stat/exercise-coating',
-          label: '종합 실습: 도장 품질 예측'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 비지도학습',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/supervised-learning-classification',
-          label: '지도학습 - 분류'
-        },
-        {
-          type: 'doc',
-          id: 'stat/exercise-classification',
-          label: '종합 실습: 재무 건전성 분류'
-        },
-        {
-          type: 'doc',
-          id: 'stat/unsupervised-learning-dimension-reduction',
-          label: '비지도학습 - 차원 축소'
-        },
-        {
-          type: 'doc',
-          id: 'stat/unsupervised-learning-clustering',
-          label: '비지도학습 - 클러스터링'
-        },
-        {
-          type: 'doc',
-          id: 'nlp/dtm',
-          label: '문서 단어 행렬'
-        },
-        {
-          type: 'doc',
-          id: 'nlp/sentence-embedding',
-          label: '임베딩'
-        },
-        {
-          type: 'doc',
-          id: 'nlp/keyword-extraction',
-          label: '키워드 추출'
-        },
+    // {
+    //   type: 'category',
+    //   label: '2일차 - 집단 비교',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/confidence-interval',
+    //       label: '신뢰구간'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/margin-of-error',
+    //       label: '오차 범위'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/hypothesis-testing',
+    //       label: '통계적 가설 검정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/group-differences',
+    //       label: '집단 비교'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/correlation',
+    //       label: '상관 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/regression',
+    //       label: '회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/multiple-regression',
+    //       label: '다중 회귀 분석'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 회귀',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/model-selection',
+    //       label: '모형 선택'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/cross-validation',
+    //       label: '교차 검증'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/variable-transformation',
+    //       label: '변수의 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/interaction',
+    //       label: '상호작용'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/supervised-learning-regression',
+    //       label: '지도학습 - 회귀'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/exercise-coating',
+    //       label: '종합 실습: 도장 품질 예측'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 비지도학습',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/supervised-learning-classification',
+    //       label: '지도학습 - 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/exercise-classification',
+    //       label: '종합 실습: 재무 건전성 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/unsupervised-learning-dimension-reduction',
+    //       label: '비지도학습 - 차원 축소'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/unsupervised-learning-clustering',
+    //       label: '비지도학습 - 클러스터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'nlp/dtm',
+    //       label: '문서 단어 행렬'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'nlp/sentence-embedding',
+    //       label: '임베딩'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'nlp/keyword-extraction',
+    //       label: '키워드 추출'
+    //     },
         // {
         //   type: 'doc',
         //   id: 'stat/reinforcement-learning',
@@ -192,53 +196,53 @@ const sidebars: SidebarsConfig = {
         //   id: 'stat/deep-learning',
         //   label: '딥러닝'
         // },
-      ]
-    },
-    {
-      type: 'category',
-      label: '5일차 - 시계열 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/time-series',
-          label: '시계열 데이터 분석의 소개'
-        },
-        {
-          type: 'doc',
-          id: 'stat/python-time-series',
-          label: 'Python으로 시계열 데이터 다루기'
-        },
-        {
-          type: 'doc',
-          id: 'time-series/decomposition',
-          label: '시계열 분해'
-        },
-        {
-          type: 'doc',
-          id: 'time-series/autocorrelation',
-          label: '자기 상관'
-        },
-        {
-          type: 'doc',
-          id: 'time-series/forecasting',
-          label: '시계열 예측'
-        },
-        {
-          type: 'doc',
-          id: 'stat/time-series-clustering',
-          label: '시계열 클러스터링'
-        },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '5일차 - 시계열 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/time-series',
+    //       label: '시계열 데이터 분석의 소개'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/python-time-series',
+    //       label: 'Python으로 시계열 데이터 다루기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'time-series/decomposition',
+    //       label: '시계열 분해'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'time-series/autocorrelation',
+    //       label: '자기 상관'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'time-series/forecasting',
+    //       label: '시계열 예측'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/time-series-clustering',
+    //       label: '시계열 클러스터링'
+    //     },
         // {
         //   type: 'doc',
         //   id: 'stat/survival-analysis',
         //   label: '생존 분석'
         // },
-        {
-          type: 'doc',
-          id: 'stat/exercise-greenhouse-forecasting',
-          label: '종합 실습: 온실 가스 배출 예측'
-        },
-      ]
+      //   {
+      //     type: 'doc',
+      //     id: 'stat/exercise-greenhouse-forecasting',
+      //     label: '종합 실습: 온실 가스 배출 예측'
+      //   },
+      // ]
     // {
     //   type: 'category',
     //   label: '5일차 - 텍스트 분석',
@@ -278,7 +282,7 @@ const sidebars: SidebarsConfig = {
     //       id: 'stat/day5-exercise',
     //       label: '5일차 종합 실습'
     //     },
-    },
+    // },
   ],
   reinforcementLearningSidebar: [
     {
@@ -876,6 +880,52 @@ const sidebars: SidebarsConfig = {
       id: 'nlp/deep-learning',
       label: '딥러닝'
     }
+  ],
+  pythonSidebar: [
+    { type: 'doc',
+      id: 'python/intro',
+      label: '소개 및 기초'
+    },
+    { type: 'doc',
+      id: 'python/vibe-coding',
+      label: '바이브 코딩'
+    },
+    { type: 'doc',
+      id: 'python/data-type-and-function',
+      label: '자료형과 함수'
+    },
+    { type: 'doc',
+      id: 'python/data-structure',
+      label: '리스트와 딕셔너리'
+    },
+    { type: 'doc',
+      id: 'python/bool',
+      label: 'os 모듈과 불리언'
+    },
+    { type: 'doc',
+      id: 'python/control-flow',
+      label: '조건문과 반복문'
+    },
+    { type: 'doc',
+      id: 'python/openpyxl',
+      label: 'openpyxl 엑셀 자동화'
+    },
+    { type: 'doc',
+      id: 'python/pandas',
+      label: 'pandas 데이터 분석'
+    },
+    { type: 'doc',
+      id: 'python/seaborn',
+      label: 'seaborn 시각화'
+    },
+    { type: 'doc',
+      id: 'python/pptx',
+      label: 'pptx 보고서 자동화'
+    },
+    { type: 'doc',
+      id: 'python/streamlit',
+      label: 'streamlit 대시보드'
+    },
   ]
 };
 

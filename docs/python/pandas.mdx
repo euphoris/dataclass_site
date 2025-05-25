@@ -1,0 +1,177 @@
+
+# pandas로 데이터 분석 첫걸음
+
+
+
+
+## pandas 라이브러리 소개
+
+* **pandas**: Python에서 데이터 분석 및 조작을 위한 핵심적이고 강력한 라이브러리
+* **주요 자료구조**: Series (1차원), DataFrame (2차원 테이블 형태)
+```python
+import pandas as pd
+```
+
+
+
+## 외부 데이터 파일 불러오기
+
+* **Excel 파일 읽기**: `pd.read_excel('파일명.xlsx', sheet_name='시트명 또는 인덱스')`
+    * `sheet_name` 생략 시 첫 번째 시트 불러옴
+    * 다양한 옵션 제공 (예: 특정 행을 헤더로 지정, 특정 열만 선택 등)
+    * **결과**: DataFrame 객체로 데이터 반환
+
+df = pd.read_excel('car.xlsx')
+df.head()
+
+
+
+## 데이터프레임 기본 정보 탐색
+
+* `df.head(n=5)`: 처음 n개 행 확인 (기본값 5)
+* `df.tail(n=5)`: 마지막 n개 행 확인 (기본값 5)
+* `df.shape`: (행 개수, 열 개수) 튜플 반환
+* `df.info()`: 데이터 타입, 각 열의 non-null 값 개수, 메모리 사용량 등 요약 정보 출력
+* `df.dtypes`: 각 열의 데이터 타입 확인
+
+
+
+## 열 선택
+
+* 특정 열 선택 (Series 반환): df['열이름'] 또는 df.열이름 ()
+```python
+df['price']
+df.price  # 열 이름에 공백/특수문자 없을 시
+```
+
+* **여러 열 선택 (DataFrame 반환)**: `df[['열이름1', '열이름2']]` (리스트 형태로 전달)
+```python
+df[['price', 'mileage']]
+```
+
+## 이름 기반 인덱싱 및 슬라이싱
+
+- `.loc[]`: 레이블(이름) 기반 인덱싱/슬라이싱 
+- 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
+
+```python
+df.loc[3] # 3번 행
+df.loc[3:5] # 3번에서 5번 행까지
+df.loc[270:]  # 270번행에서 끝까지
+df.loc[:3]  # 처음부터 3번행까지
+df.loc[:, 'model']  # 모든 행의 model 열
+df.loc[:, 'model':'year'] # 모든 행의 model 열에서 year 열까지
+```
+
+
+## 정수 위치 기반 인덱싱 및 슬라이싱    
+
+- `.iloc[]`: 정수 위치 기반 인덱싱/슬라이싱 
+- 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
+- 슬라이싱에서 마지막은 포함하지 않음
+- `3:5`의 경우 `5`는 미포함
+
+```python
+df.iloc[3] # 3번 행
+df.iloc[3:5] # 3번에서 4번 행까지
+df.iloc[270:]  # 270번행에서 끝까지
+df.iloc[:3]  # 처음부터 2번행까지
+df.iloc[:, 1]  # 모든 행의 1번열
+df.iloc[:, 1:4] # 모든 행의 1번열에서 3번열까지
+```
+
+
+
+## 조건으로 데이터 필터링
+
+- Boolean 인덱싱: 조건을 만족하는 행만 선택
+```python
+cond = df['my_car_damage'] > 0  # 자차 처리 내역이 있는 경우
+df[cond] # 해당 조건에 맞는 사례
+```
+
+- 한 줄로
+```python
+df[df['my_car_damage'] > 0]
+```
+
+## 여러 조건 결합
+
+연산자 우선순위 때문에 각 조건은 ()로 묶어야 함
+
+`&` (AND)
+```python
+df[(df['model'] == 'Avante') & (df['my_car_damage'] > 0)]
+# 차종이 Avante이고 그리고(AND) my_car_damage가 0보다 큰 경우
+```
+
+`|` (OR):
+```python
+df[(df['my_car_damage'] == 0) | (df['other_car_damage'] == 0)]
+# my_car_damage가 0이거나 또는(OR) other_car_damage가 0인 경우
+```
+
+`~` (NOT):
+```python
+df[~(df['my_car_damage'] == 0)]
+# my_car_damage가 0이 아닌(NOT) 경우
+```
+
+
+
+
+
+## `query()` 메소드
+
+* **`df.query('조건 문자열')`**: 문자열 형태로 조건식을 작성하여 데이터 필터링
+* **장점**: SQL과 유사한 간결한 문법
+```python
+df.query('my_car_damage > 0')  # my_car_damage가 0보다 큰 경우
+df.query('model == "Avante" and my_car_damage > 0')  # 차종이 Avante이고 my_car_damage가 0보다 큰 경우
+df.query('my_car_damage == 0 or other_car_damage == 0')  # my_car_damage가 0이거나 other_car_damage가 0인 경우
+df.query('not (my_car_damage == 0)')  # my_car_damage가 0이 아닌 경우
+```
+
+## 변수 사용
+`@변수명`을 사용하여 외부 변수를 쿼리 내에서 참조
+
+```python
+last_year = df.year.max()
+df.query('year == @last_year')  # last_year 변수에 저장된 값과 year 열이 같은 행을 선택
+```
+
+
+
+## 기본 기술 통계량 계산
+
+* **`df.describe()`**: 숫자형 열에 대한 주요 기술 통계량 요약 (개수, 평균, 표준편차, 최소값, 사분위수, 최대값)
+    * `include='all'` 옵션 시 모든 열(문자열 포함)에 대한 통계량 포함 (최빈값, 고유값 개수 등)
+* **개별 통계 함수 (주로 숫자형 열에 적용)**:
+    * `.sum()`: 합계
+    * `.mean()`: 평균
+    * `.median()`: 중앙값
+    * `.std()`: 표준편차
+    * `.min()`: 최소값
+    * `.max()`: 최대값
+    * `.count()`: 결측치 제외한 데이터 개수
+    * `.unique`: 고유값 종류
+    * `.nunique()`: 고유값 개수
+    * `.value_counts()`: 고유값별 개수
+
+
+
+## 데이터 그룹화(Grouping) 및 그룹별 통계 계산
+
+* **`.groupby('그룹화 기준 열')` 또는 `.groupby(['기준열1', '기준열2'])`**:
+    * 지정된 열(들)의 값에 따라 데이터를 그룹으로 묶음
+    * 결과는 GroupBy 객체 반환
+* **그룹별 통계 계산 (집계)**: GroupBy 객체에 집계 함수 적용
+```python
+df.groupby('model').agg({  # 모델별
+    'price': 'mean',  # 가격의 평균 
+    'mileage': ['mean', 'std'] # 주행거리의 평균 및 표준편차
+})  
+```
+
+
+
