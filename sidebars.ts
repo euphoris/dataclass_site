@@ -59,41 +59,61 @@ const sidebars: SidebarsConfig = {
           label: '분포의 특성과 기술통계'
         },
         {
-            type: 'doc',
-            id: 'stat/estimation',
-            label: '추정'
-        },
-        {
           type: 'doc',
           id: 'stat/day1-exercise',
           label: '1일차 종합 실습'
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '2일차 - 집단 비교',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/confidence-interval',
-    //       label: '신뢰구간'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/margin-of-error',
-    //       label: '오차 범위'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/hypothesis-testing',
-    //       label: '통계적 가설 검정'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/group-differences',
-    //       label: '집단 비교'
-    //     },
+    {
+      type: 'category',
+      label: '2일차 - 집단 비교',
+      items: [
+        {
+            type: 'doc',
+            id: 'stat/review-descriptive-statistics',
+            label: '기술 통계 복습'
+        },
+        {
+            type: 'doc',
+            id: 'stat/estimation',
+            label: '추정'
+        },
+        {
+          type: 'doc',
+          id: 'stat/confidence-interval',
+          label: '신뢰구간'
+        },
+        {
+          type: 'doc',
+          id: 'stat/margin-of-error',
+          label: '오차 범위에 영향을 주는 요소'
+        },
+        {
+          type: 'doc',
+          id: 'stat/hypothesis-testing',
+          label: '통계적 가설 검정 (1)'
+        },
+        {
+          type: 'doc',
+          id: 'stat/hypothesis-testing-2',
+          label: '통계적 가설 검정 (2)'
+        },
+        {
+          type: 'doc',
+          id: 'stat/group-differences',
+          label: '집단 비교'
+        },
+        {
+          type: 'doc',
+          id: 'stat/effect-size',
+          label: '효과 크기'
+        },
+        {
+          type: 'doc',
+          id: 'stat/exercise-estimation-testing',
+          label: '종합 실습: 추정과 가설 검정'
+        },
     //     {
     //       type: 'doc',
     //       id: 'stat/correlation',
@@ -109,8 +129,8 @@ const sidebars: SidebarsConfig = {
     //       id: 'stat/multiple-regression',
     //       label: '다중 회귀 분석'
     //     },
-    //   ]
-    // },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '3일차 - 회귀',

@@ -1,0 +1,95 @@
+# 효과 크기
+
+## 효과 크기
+
+* 집단 간 차이를 표현하는 방법 
+* 주요 개념: 
+    * 에타 제곱 
+    * 코헨의 d 
+    * CLES 
+
+## 효과 크기(effect size)
+
+* 관찰된 현상의 크기를 나타내는 방법 
+* 방법: 
+    * 분산을 이용하는 방법 
+    * 평균 차이를 이용하는 방법 
+
+## 에타 제곱 $\eta^{2}$ eta squared
+
+* 분산을 이용한 효과 크기 표현 방법 
+
+$$
+\eta^{2}=\frac{처치SS}{전체SS}
+$$ 
+
+* 전체 SS = $(X - 전체평균)^2$의 합계 
+* 처치 SS = $(집단평균 - 전체평균)^2$의 합계 
+* 처치 SS = $(집단평균 - 전체평균)^2$의 합계 
+* SS: 제곱합(Sum of Squares) 
+
+```python
+pg.compute_effsize(avante, k3, eftype='eta-square')
+```
+
+* 약 0.015, 즉 가격 차이의 분산에서 1.5% 정도가 차종에 따른 것 
+
+## 에타 제곱
+
+* 에타제곱 $=1$ 
+    * 집단 간 차이만 있고 집단 내 차이는 없음 
+    * 실험 조건에 따라 모든 것이 달라짐 
+    * 실험 조건이 같으면 결과도 같음 
+    * 예) 대조군 데이터는 1, 1, 1이고, 실험군 데이터는 3,3,3인 경우 
+* 에타제곱 $=0$ 
+    * 집단 간 차이는 없고 집단 내 차이만 있음 
+    * 실험 조건에 따라 아무 것도 달라지지 않음 
+    * 같은 실험 조건에도 서로 다름 
+    * 예) 대조군 데이터는 1, 2, 3이고, 실험군 데이터도 1, 2, 3인 경우 
+
+## 코헨의 d
+
+* 두 집단의 평균 차이를 데이터의 표준편차로 나눈 것 
+    (표준편차를 잣대로 평균 차이의 크기를 알기 쉽게 나타낸 것) 
+
+$$
+\frac{\overline{X}_{1}-\overline{X}_{2}}{s}
+$$ 
+
+```python
+pg.compute_effsize(avante, k3, eftype='cohen')
+```
+
+약 -0.24, 즉 아반떼가 K3보다 평균적으로 표준편차의 0.24배 저렴함 
+
+* 글래스의 델타(Glass' $\Delta$ ): 대조군(control group)의 표준편차를 사용 
+* 헷지의 g(Hedge's g): 작은 표본에서 나타나는 코헨의 d의 편향을 보정한 것 
+
+```python
+pg.compute_effsize(avante, k3, eftype='hedges')
+```
+
+## Common Language Effect Size (CLES)
+
+A, B 두 집단에서 무작위로 값을 하나씩 뽑았을 때 A집단에서 뽑힌 값이 B집단에서 뽑힌 값보다 클 확률 
+
+```python
+pg.compute_effsize(avante, k3, eftype='CLES')
+```
+
+* 약 0.398. 즉, 중고차 시장에서 무작위로 아반떼와 K3를 한 대씩 골랐을 때 아반떼가 더 비쌀 가능성은 39.8% 
+
+## 기타 효과 크기
+
+* Phi($\phi$) coefficient: 0~1 
+    * $2\times2$ 분할표에서 두 변수의 관계를 나타낸 것 
+    * Matthews correlation coefficient과 같음 
+    * Cramer's V: $\phi$를 일반화하여, 범주가 3개 이상인 경우에 사용할 수 있게 한 것 
+* Rank-Biserial Correlation (RBC) 
+    * 순위(rank)와 집단의 상관관계 
+    * -1~+1까지
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3xdXpd?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0" title="통계(10) 효과크기"></iframe>

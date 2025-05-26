@@ -118,6 +118,27 @@ report = ProfileReport(df, title='My Data')
 report.to_file("my_report.html")
 ```
 
+### 설치 문제 해결
+
+다음의 오류가 발생할 경우:
+
+```
+ImportError: cannot import name 'TypeIs' from 'typing_extensions'
+```
+
+- 시작 &rightarrow; Anaconda 3 &rightarrow; Anaconda Prompt 실행 후,
+- 다음 명령으로 `typing_extensions` 패키지 삭제
+
+```bash
+pip uninstall typing_extensions
+```
+
+- 다시 설치
+
+```bash
+pip install typing_extensions
+```
+
 ## 퀴즈
 
 {/* 
