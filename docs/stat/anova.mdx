@@ -1,0 +1,51 @@
+# 여러 집단의 평균 비교
+
+## 분산 분석 Analysis of Variance
+* 집단 간 차이가 크다면 집단 내 분산에 비해 집단 간 분산이 커질 것 
+* 모집단이 정규분포를 따르거나, 각 집단의 표본 크기가 충분히 크면 집단 간 분산/집단 내 분산의 비율은 F 분포를 따름 
+* 이를 통해 "모든 집단들의 평균이 같다"는 귀무가설을 검정할 수 있음 
+* 귀무가설을 기각할 경우, "적어도 한 집단의 평균은 다르다"라는 대립가설을 채택 
+
+## 등분산성 homoscedasticity
+* 분산분석은 집단간 분산이 같아야 함 
+* 등분산성은 Levene 검정으로 확인할 수 있음 
+* 귀무가설: 집단 간 분산이 같다 
+* p < 유의수준 → 귀무가설 기각 → 집단 간 분산이 다름 
+* 집단간 분산이 다를 경우(이분산), 별도의 보정이 필요 
+
+## 등분산성 검정
+```python
+pg.homoscedasticity(dv='price', group='model', data=df)
+```
+* 귀무가설: 모든 집단의 분산이 같다 
+
+| equal_var | 분산분석 | 사후검정 |
+|---|---|---|
+| True | pg.anova | pairwise_tukeyhsd |
+| False | pg.welch_anova | pg.pairwise_gameshowell |
+
+
+## Python 분산 분석
+* 분산분석(등분산이면 `anova`, 이분산이면 `welch_anova` 사용) 
+```python
+pg.anova(dv='price', between='model', data=df)
+```
+
+
+## Python 분산 분석 (3집단 이상 비교)
+* 데이터 
+    ```python
+    hr = pd.read_excel('hr.xlsx')
+    ```
+* 등분산성 검정 
+    ```python
+    pg.homoscedasticity(dv= 'rating', group='job_level', data=hr)
+    ```
+* 분산 분석(등분산이 아닐 경우 `welch_anova`를 사용) 
+    ```python
+    pg.welch_anova(dv='rating', between='job_level', data=hr)
+    ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/meB5BJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="992" frameborder="0" marginheight="0" marginwidth="0" title="[통계]  분산분석"></iframe>

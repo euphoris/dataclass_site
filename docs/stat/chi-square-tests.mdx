@@ -1,0 +1,84 @@
+# 비율의 비교 
+
+## 비율의 비교 
+* 비율에 대한 가설 검정 
+* 주요 개념:
+    * 분할표 
+    * 카이제곱 적합도 검정 
+    * 카이제곱 독립성 검정 
+    * 맥니마 검정 
+
+## 카이제곱 분포 
+* $\chi^{2}$ 분포 (x는 그리스 문자 "카이") 
+* 값들을 더하면 → 정규분포로 근사 
+* 제곱해서 더하면 → 카이제곱분포로 근사 
+$$
+\chi^2=\sum\frac{(O-E)^2}{E}
+$$
+* O: 관찰빈도 
+* E: 기대빈도 
+
+
+
+## 카이제곱 적합도 검정 chi-square test for goodness of fit 
+* 표본에서 얻은 분포가 귀무가설에서 가정하는 모집단 분포와 잘 맞는지(goodness-of-fit)를 알아보R기 위해 사용 
+* 귀무가설: 모집단에서 비율은 기대빈도의 비율과 같다 
+* 예: 브랜드 선호도
+    * 50명을 대상으로 설문했을 때, A브랜드를 선호하는 고객은 31명(62%), B브랜드를 선호하는 고객은 19명(38%) → A 브랜드에 대한 선호도가 통계적으로 유의하게 높은가? 
+    * 100명을 대상으로 설문했을 때, A브랜드를 선호하는 고객은 62명(62%), B브랜드를 선호하는 고객은 38명(38%) → A 브랜드에 대한 선호도가 통계적으로 유의하게 높은가? 
+
+## Python 카이제곱 적합도 검정 
+```python
+from scipy.stats import chisquare
+
+chisquare([31, 19], [25, 25])
+```
+* 귀무가설: 모집단에서 두 브랜드의 선호도는 50%:50%으로 같다 
+* 관찰빈도, 기대빈도 순으로 입력 
+* 결과는 카이제곱값, p-value 
+
+## 분할표 contingency table 
+* 행과 열이 서로 다른 범주형 변수의 값을 나타내는 표 
+* 교차표(cross table) 또는 피봇 테이블(pivot table)이라고도 함 
+* 표의 각 칸에는 사례 수를 표기 
+
+```python
+hr.pivot_table(index='marriage', columns='department', aggfunc='size')
+```
+
+
+| marriage | Engineering | Finance | Sales |
+|---|---|---|---|
+| married | 462 | 36 | 209 |
+| single | 499 | 27 | 237 |
+
+
+## 카이제곱 독립성 검정 chi-square test for independence 
+* 카이제곱 독립성 검정은 두 범주 변수 간에 관계가 있는지 알아보기 위해 사용 
+* 귀무가설: 두 변수가 독립적이다(=관계가 없다) 
+* 예시:
+    * 남녀 간의 브랜드 선호도 차이 
+    * 지역 별 정당 지지율에 차이 
+    * 혈액형과 성격유형의 관계 
+* 데이터가 적으면 p-value가 부정확할 수 있음 
+* 모든 기대빈도가 5혹은 그 이상이어야 함 
+* Cramér's V: 두 변수의 관계를 0~1로 표시 
+    * 0: 전혀 관련이 없음 
+    * 1: 완전히 일치 
+
+## 카이제곱 검정 
+```python
+expected, observed, stats = pg.chi2_independence(
+    x='marriage', y='department', data=hr)
+stats
+```
+
+
+## Fisher's Exact Test 
+* 카이제곱 독립성 검정은 모든 셀의 기대값이 5 혹은 그 이상이라는 가정에 기반 
+* 만약 이러한 가정에 위배될 경우, 카이제곱 독립성 검정을 사용할 수 없고, Fisher's exact test를 대신 사용 
+* Fisher's exact test는 검정 통계량을 따로 계산하지 않으나 유의 확률을 제공 
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wLdDGz?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="696" frameborder="0" marginheight="0" marginwidth="0" title="[통계]  카이제곱 검정"></iframe>

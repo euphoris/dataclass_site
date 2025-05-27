@@ -67,7 +67,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '2일차 - 집단 비교',
+      label: '2일차 - 집단 비교 I',
       items: [
         {
             type: 'doc',
@@ -114,11 +114,54 @@ const sidebars: SidebarsConfig = {
           id: 'stat/exercise-estimation-testing',
           label: '종합 실습: 추정과 가설 검정'
         },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/correlation',
-    //       label: '상관 분석'
-    //     },
+    
+      ]
+    },
+    {
+      type: 'category',
+      label: '3일차 - 집단 비교 II',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/paired-samples',
+          label: '대응 표본'
+        },
+        {
+          type: 'doc',
+          id: 'stat/chi-square-tests',
+          label: '비율의 비교'
+        },
+        {
+          type: 'doc',
+          id: 'stat/mcnemar-test',
+          label: '대응표본의 비율 비교'
+        },
+        {
+          type: 'doc',
+          id: 'stat/anova',
+          label: '여러 집단의 평균 비교'
+        },
+        {
+          type: 'doc',
+          id: 'stat/post-hoc-tests',
+          label: '사후 검정'
+        },
+        {
+          type: 'doc',
+          id: 'stat/planned-comparison',
+          label: '계획 비교'
+        },
+        {
+          type: 'doc',
+          id: 'stat/correlation',
+          label: '상관 분석'
+        },
+      ]
+    },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 회귀 분석',
+    //   items: [
     //     {
     //       type: 'doc',
     //       id: 'stat/regression',
@@ -129,12 +172,6 @@ const sidebars: SidebarsConfig = {
     //       id: 'stat/multiple-regression',
     //       label: '다중 회귀 분석'
     //     },
-      ]
-    },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 회귀',
-    //   items: [
     //     {
     //       type: 'doc',
     //       id: 'stat/model-selection',

@@ -1,0 +1,46 @@
+
+# 대응표본의 비율 비교 
+
+## 맥니마 검정 McNemar test 
+* 맥니마 검정(McNemar test): 범주형 자료의 대응 표본을 비교하기 위한 비모수 검정 
+* 두 개의 범주형 변수 사이의 변화를 검정할 때 사용 
+* 특히 이진(두 가지 범주로 구성된) 변수에 대한 대응 표본에 사용 
+* 귀무 가설: 두 범주형 변수 사이에 차이가 없다 
+* 맥니마 검정을 수행하려면 먼저 교차표(contingency table)를 작성 
+* 표의 각 셀은 두 변수의 조합에 따른 관측 빈도 
+
+## 맥니마 검정의 예시 
+* 동일한 사람들을 대상으로 처치를 한 후, 처치 전 vs. 처치 후를 비교 
+* 예: 총 100명의 고객을 대상으로 시승 행사를 하고, 행사 전후 브랜드에 대한 호불호 변화(50 vs. $50\rightarrow60$ vs. 40)으로 "호"가 많아짐 
+
+| 시승행사 전 | 시승행사 후 (호) | 시승행사 후 (불호) |
+|---|---|---|
+| 호 | 40 | 10 |
+| 불호 | 20 | 30 |
+
+
+## 맥니마 검정의 예시 
+* 쌍으로 관찰된 되는 데이터를 비교 
+* 예: 일란성 쌍둥이 자매의 언니 vs. 동생에 대해서 각각 특정 질환 감염여부를 비교 
+
+| 언니 | 동생 (감염) | 동생 (미감염) |
+|---|---|---|
+| 감염 | 40 | 10 |
+| 미감염 | 20 | 30 |
+
+
+## Python 맥니마 검정 
+```python
+from statsmodels.stats.contingency_tables import mcnemar
+table = [[40,10],[20,30]]
+
+m = mcnemar(table, exact=False, correction=False)
+```
+
+* `exact`: False로 하면 카이제곱 분포를 사용 
+* 대각합이 25 미만이면 True 사용 
+* `correction`: 보정 사용 여부 
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/nG4RKk?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1250" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 맥니마 검정"></iframe>

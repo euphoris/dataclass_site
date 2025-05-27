@@ -28,10 +28,11 @@
 *   **예시: 중간값의 95% 신뢰구간 계산 (scipy 활용)**
     ```python
     import numpy as np
-    import scipy.stats as sp # scipy 통계 기능 사용
+    import scipy as sp # scipy 통계 기능 사용
 
+    np.random.seed(1234) # 재현성 있는 결과를 위해 시드 설정
     # 부트스트래핑 실행
-    res = sp.bootstrap(
+    res = sp.stats.bootstrap(
         [df.price],              # 데이터
         np.median,               # 계산할 통계량 (중간값)
         n_resamples=10000,       # 시뮬레이션(재표집) 횟수
