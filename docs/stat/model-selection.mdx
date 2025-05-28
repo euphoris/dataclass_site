@@ -52,26 +52,32 @@ ols('y ~ x1 + x2 + x3 + x4', data=random_data).fit().summary()
 *   더 이상 추가해도 설명력 유의하게 향상되지 않으면 중단.
 
 ```python
-features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+data = df
+depvar = 'price'
+features = ['year', 'mileage', 'model', 'my_car_damage', 'other_car_damage']
 included = []
 
 threshold = 0.01
 changed = True
-best_model = ols('price ~ 1', data=df).fit() # 절편만 있는 모형
-
+best_formula = depvar + ' ~ 1'  
+best_model = ols(best_formula, data=data).fit() # 절편만 있는 모형
+print(f'{best_formula} (AIC: {best_model.aic})')  # 절편만 있는 모형 출력
 while changed:
     excluded = list(set(features) - set(included)) # 미포함 독립변수
     best_feature = None # 후보 독립변수
     for new_feature in excluded: # 하나씩 추가함
-        model = ols('price ~ ' + ' + '.join(included + [new_feature]), data=df).fit()
+        formula = depvar + ' ~ ' + ' + '.join(included + [new_feature])
+        model = ols(formula, data=data).fit()
         if model.aic < best_model.aic - threshold:
             # 모델의 AIC가 최상의 모델보다 역치 이하로 개선되면
             best_feature = new_feature  # 추가 변수 선정
             best_model = model  # 최상의 모델을 교체
+            best_formula = formula  # 최상의 공식 업데이트
     changed = best_feature is not None 
     if changed: # 변경이 발생했으면
         included.append(best_feature) # 추가
-        print('Add', best_feature, 'AIC:', best_model.aic)
+        print(f'{best_formula} (AIC: {best_model.aic})')
+best_model.summary()  # 최종 모형 요약 출력
 ```
 
 ## 후진 선택 (Backward Selection)
@@ -82,25 +88,31 @@ while changed:
 *   변수 제거 시 설명력 유의하게 감소하면 중단.
 
 ```python
+data = df
+depvar = 'price'
 features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
 included = features.copy()
 
 threshold = 0.01
 changed = True
-best_model = ols('price ~ ' + ' + '.join(included), data=df).fit()
-
+best_formula = depvar + ' ~ ' + ' + '.join(included)  # 초기 모형
+best_model = ols(best_formula, data=data).fit()
+print(f'{best_formula} (AIC: {best_model.aic})')  # 초기 모형 출력
 while changed:
     best_feature = None
     for remove_feature in included:
         model_features = list(set(included) - set([remove_feature]))
-        model = ols('price ~ ' + ' + '.join(model_features), data=df).fit()
+        formula = depvar + ' ~ ' + ' + '.join(model_features)
+        model = ols(formula, data=data).fit()
         if model.aic < best_model.aic - threshold:
             best_feature = remove_feature
             best_model = model
+            best_formula = formula
     changed = best_feature is not None
     if changed:
         included.remove(best_feature)
-        print('Remove', best_feature, 'AIC:', best_model.aic)
+        print(f'{best_formula} (AIC: {best_model.aic})')
+best_model.summary()  # 최종 모형 요약 출력        
 ```
 
 ## 단계적 회귀분석 주의점

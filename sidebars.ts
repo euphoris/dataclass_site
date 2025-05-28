@@ -158,56 +158,62 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
+    {
+      type: 'category',
+      label: '4일차 - 회귀 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/regression',
+          label: '회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/multiple-regression',
+          label: '다중 회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/model-selection',
+          label: '모형 선택'
+        },
+        {
+          type: 'doc',
+          id: 'stat/cross-validation',
+          label: '교차 검증'
+        },
+        {
+          type: 'doc',
+          id: 'stat/variable-transformation',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'stat/exercise-coating',
+          label: '종합 실습: 도장 품질 예측'
+        },
+      ]
+    },
+    // {
+      //   type: 'category',
+      //   label: '5일차 - 고급 회귀 분석',
+      //   items: [
+        // {
+        //   type: 'doc',
+        //   id: 'stat/interaction',
+        //   label: '상호작용'
+        // },
+    //   ]
+    //   },
     // {
     //   type: 'category',
-    //   label: '4일차 - 회귀 분석',
+    //   label: '4일차 - 비지도학습',
     //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/regression',
-    //       label: '회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/multiple-regression',
-    //       label: '다중 회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/model-selection',
-    //       label: '모형 선택'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/cross-validation',
-    //       label: '교차 검증'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/variable-transformation',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/interaction',
-    //       label: '상호작용'
-    //     },
     //     {
     //       type: 'doc',
     //       id: 'stat/supervised-learning-regression',
     //       label: '지도학습 - 회귀'
     //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/exercise-coating',
-    //       label: '종합 실습: 도장 품질 예측'
-    //     },
-    //   ]
-    // },
-    // {
-    //   type: 'category',
-    //   label: '4일차 - 비지도학습',
-    //   items: [
     //     {
     //       type: 'doc',
     //       id: 'stat/supervised-learning-classification',

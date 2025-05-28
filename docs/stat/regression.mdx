@@ -64,7 +64,7 @@ from statsmodels.formula.api import ols
 m = ols("price ~ mileage", data=df).fit()
 
 # 3. 결과 확인
-print(m.summary())
+m.summary()
 ```
 
 ## 회귀계수 추정 결과 해석
@@ -97,8 +97,7 @@ import pandas as pd
 new_df = pd.DataFrame({'mileage': [10000, 20000]})
 
 # 2. 학습된 모형(m)으로 예측 수행
-predictions = m.predict(new_df)
-print(predictions)
+m.predict(new_df)
 ```
 
 ## R 제곱 (R-squared / 결정계수)

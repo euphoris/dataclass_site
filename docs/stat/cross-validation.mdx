@@ -49,57 +49,65 @@ mean_squared_error(test_df.price, y_pred)
 ## 전진 선택
 
 ```python
-import numpy as np
 depvar = 'price'
-features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+features = ['year', 'mileage', 'model', 'my_car_damage', 'other_car_damage']
 included = []
 
 threshold = 0.01
 changed = True
-best_model = ols(depvar + ' ~ 1', data=train_df).fit()
-best_mse = np.inf # 최고의 MSE를 ∞으로 설정 (줄여나갈 것이므로)
+best_formula = depvar + ' ~ 1'  # 절편만 있는 모형
+best_model = ols(best_formula, data=train_df).fit()
+best_mse = mean_squared_error(test_df[depvar], best_model.predict(test_df))
+print(f'{best_formula} (MSE: {best_mse})')  # 절편만 있는 모형 출력
 
 while changed:
     excluded = list(set(features) - set(included))
     best_feature = None
     for new_column in excluded:
-        model = ols(depvar + ' ~ ' + ' + '.join(included + [new_column]), data=train_df).fit()
+        formula = depvar + ' ~ ' + ' + '.join(included + [new_column])
+        model = ols(formula, data=train_df).fit()
         mse = mean_squared_error(test_df[depvar], model.predict(test_df))
         if mse < best_mse - threshold:
             best_feature = new_column
             best_mse = mse
             best_model = model
+            best_formula = formula
     changed = best_feature is not None
     if changed:
         included.append(best_feature)
-        print('Add', best_feature, 'MSE:', best_mse)
+        print(f'{best_formula} (MSE: {best_mse})')
+best_model.summary()  # 최종 모형 요약 출력        
 ```
 
 ## 후진 선택
 
 ```python
 depvar = 'price'
-features = ['year', 'mileage', 'my_car_damage', 'other_car_damage']
+features = ['year', 'mileage', 'model', 'my_car_damage', 'other_car_damage']
 included = features.copy()
 threshold = 0.01
 changed = True
-best_model = ols(depvar + ' ~ ' + ' + '.join(included), data=train_df).fit()
-best_mse = np.inf
-
+best_formula = depvar + ' ~ ' + ' + '.join(included)  # 초기 모형
+best_model = ols(best_formula, data=train_df).fit()
+best_mse = mean_squared_error(test_df[depvar], best_model.predict(test_df))
+print(f'{best_formula} (MSE: {best_mse})')  # 초기 모형 출력
 while changed:
     excluded = list(set(features) - set(included))
     best_feature = None
     for remove_feature in included:
-        model = ols(depvar + ' ~ ' + ' + '.join(list(set(included) - set([remove_feature]))), data=train_df).fit()
+        formula = depvar + ' ~ ' + ' + '.join(list(set(included) - set([remove_feature])))
+        model = ols(formula, data=train_df).fit()
         mse = mean_squared_error(test_df[depvar], model.predict(test_df))
         if mse < best_mse - threshold:
             best_feature = remove_feature
             best_model = model
             best_mse = mse
+            best_formula = formula
     changed = best_feature is not None
     if changed:
         included.remove(best_feature)
-        print('Remove', best_feature, 'MSE:', best_mse)
+        print(f'{best_formula} (MSE: {best_mse})')
+best_model.summary()  # 최종 모형 요약 출력        
 ```
 
 ## 퀴즈
