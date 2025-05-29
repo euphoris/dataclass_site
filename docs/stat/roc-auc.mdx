@@ -1,0 +1,46 @@
+# ROC 곡선
+
+## ROC 곡선 Receiver Operating Characteristic 
+
+  * 수신자 특성 곡선: 신호 이론에서 유래한 이름 
+    감도를 높이면 노이즈도 같이 올라가는 상황에서 최적의 감도를 결정하는 문제 
+  * 가로축은 FPR(=1-특이도), 세로축은 TPR(=재현도) 
+  * 문턱값을 변화시키면서 특이도와 재현도의 변화를 곡선으로 표시 
+  * 곡선하 면적(Area Under the Curve): ROC 곡선 아래의 면적 
+  * 완벽하게 반대로 예측하면 0\~ 무작위로 예측할 경우 0.5 \~ 완벽하게 예측하면 1 
+
+
+
+
+## Python ROC 곡선 
+
+  * 임포트 
+    ```python
+    from sklearn.metrics import roc_auc_score, roc_curve
+    import matplotlib.pyplot as plt
+    ```
+    
+  * 시각화 
+    ```python
+    fpr, tpr, threshold = roc_curve(y_test, prob)
+    plt.plot(fpr, tpr)
+    ```
+    
+  * AUC 
+    ```python
+    roc_auc_score(y_test, prob)
+    ```
+
+## 퀴즈
+
+```python
+hi = pd.read_excel('hiring.xlsx')  # 데이터 불러오기
+hi['y'] = hi.hire.map({'P': 1, 'F': 0}) # P는 1, F는 0으로 변환
+m = logit('y ~ gpa + test + major', hi).fit() # 분석
+
+y_test = hi.y  # 실제 값
+prob = m.predict(hi)  # 확률 예측
+y_pred = np.where(prob > 0.5, 1, 0)  # 문턱값보다 크면 1, 아니면 0으로 예측
+```
+
+<iframe src="https://tally.so/embed/wo1VVe?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="858" frameborder="0" marginheight="0" marginwidth="0" title="[통계] ROC 곡선"></iframe>
