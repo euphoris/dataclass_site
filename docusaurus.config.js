@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'statSidebar',
+          sidebarId: 'pythonSidebar',
           position: 'left',
-          label: '데이터 분석 및 시각화',
+          label: 'Python 데이터 분석 & 자동화',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -94,6 +94,14 @@ const config = {
         {
           title: 'Docs',
           items: [
+            {
+              label: 'Python',
+              to: '/docs/python',
+            },
+            {
+              label: '통계',
+              to: '/docs/stat/lab',
+            },
             // {
             //   label: '강화 학습',
             //   to: '/docs/reinforcement-learning/lab',

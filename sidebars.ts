@@ -971,6 +971,10 @@ const sidebars: SidebarsConfig = {
   ],
   pythonSidebar: [
     { type: 'doc',
+      id: 'python/index',
+      label: 'Python 데이터분석/자동화'
+    },
+    { type: 'doc',
       id: 'python/intro',
       label: '소개 및 기초'
     },
