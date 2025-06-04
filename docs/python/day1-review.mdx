@@ -1,0 +1,44 @@
+# 1일차 복습
+
+## 1. 파일 확장자 고르기
+
+다음과 같이 하면 `name` 변수의 내용을 마침표(`.`)를 기준으로 분리해서 리스트로 만듭니다.
+```python
+name.split('.')
+```
+
+위의 코드를 이용해서 실습 데이터 폴더에서 모든 파일의 확장자(예: `.csv`, `.xlsx`)를 추출하는 코드를 작성하세요.
+
+## 2. 확장자 개수 세기
+
+아래 코드를 사용하면 빈 딕셔너리를 만듭니다, csv 키가 없으면 0을
+```python
+count = {} # 빈 딕셔너리 생성
+```
+
+그리고 다음 코드를 이용하면 `count` 딕셔너리에 `csv` 키가 있으면 해당 값을, 없으면 0을 반환합니다
+```python
+count.get('csv', 0) # 'csv' 키가 있으면 해당 값을, 없으면 0 반환
+```
+
+위의 코드를 이용해서 실습 데이터 폴더에서 모든 파일의 확장자 개수를 세는 코드를 작성하세요.
+
+## 3. 확장자 개수 총합 구하기
+
+아래 코드를 사용하면 `count` 딕셔너리의 모든 키와 값을 순회할 수 있습니다. 아래 코드를 이용해서 `count`의 모든 값의 총합계를 구하세요.
+
+```python
+for key, value in count.items():
+    ...
+```
+
+## 4. 확장자 개수 비율 구하기
+
+새로운 딕셔너리 `percentages`를 만들어서,
+`count`의 모든 키와 값을 순회하면서, 각 확장자의 비율을 퍼센트로 계산하여 `percentages` 딕셔너리에 저장하세요.
+
+## 제출
+
+위의 문제들을 풀고 아래 폼을 제출하세요.
+
+<iframe src="https://tally.so/embed/n0yN46?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1365" frameborder="0" marginheight="0" marginwidth="0" title="[Python] day1"></iframe>

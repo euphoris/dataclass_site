@@ -25,13 +25,13 @@
 
 * **Jupyter Notebook vs. Visual Studio Code (Streamlit 개발 관점)**:
 
-    | 특징             | Jupyter Notebook                         | Visual Studio Code                          |
-    | : | : | : |
-    | **주요 용도** | 데이터 탐색, 실험, 빠른 프로토타이핑, 교육 | 웹 애플리케이션 개발, 복잡한 프로젝트 관리, 전체적인 소프트웨어 개발 |
-    | **실행 단위** | 셀(Cell) 단위 실행 및 즉각적 결과 확인      | 전체 스크립트(`.py`) 실행 또는 디버깅 모드     |
-    | **파일 관리** | 개별 노트북 파일(`.ipynb`) 중심          | 프로젝트 폴더 기반의 파일 및 모듈 관리 용이 |
-    | **애플리케이션 배포** | 노트북 자체는 웹 앱 배포에 부적합       | `.py` 스크립트 기반으로 Streamlit 앱 실행 및 배포 |
-    | **편집 기능** | 코드 셀 + 마크다운 셀                    | 고급 코드 편집 기능, 자동 완성, 리팩토링 등  |
+| 특징             | Jupyter Notebook                         | Visual Studio Code                          |
+| :---: | :---: | :---: |
+| **주요 용도** | 데이터 탐색, 실험, 빠른 프로토타이핑, 교육 | 웹 애플리케이션 개발, 복잡한 프로젝트 관리, 전체적인 소프트웨어 개발 |
+| **실행 단위** | 셀(Cell) 단위 실행 및 즉각적 결과 확인      | 전체 스크립트(`.py`) 실행 또는 디버깅 모드     |
+| **파일 관리** | 개별 노트북 파일(`.ipynb`) 중심          | 프로젝트 폴더 기반의 파일 및 모듈 관리 용이 |
+| **애플리케이션 배포** | 노트북 자체는 웹 앱 배포에 부적합       | `.py` 스크립트 기반으로 Streamlit 앱 실행 및 배포 |
+| **편집 기능** | 코드 셀 + 마크다운 셀                    | 고급 코드 편집 기능, 자동 완성, 리팩토링 등  |
 
 ## streamlit 애플리케이션 실행 방법
 - dashboard.py 를 만들고 작업
@@ -87,8 +87,7 @@ st.dataframe(df)
 st.write(df)
 ```
 
-- `st.table(pandas_dataframe)`:
-정적인 테이블 형태로 DataFrame 표시 (단순 표 출력)
+- `st.table(pandas_dataframe)`: 정적인 테이블 형태로 DataFrame 표시 (단순 표 출력)
 - 위의 st.dataframe을 st.table로 변경 후 저장
 ```python
 st.table(df)
@@ -102,8 +101,9 @@ st.table(df)
 import seaborn as sns
 ax = sns.lineplot(x='year', y='price', data=df) # 차트
 st.pyplot(ax.figure) # 차트의 그림(figure)
-
+```
 pyplot은 write로 변경해도 동일:
+```python
 st.write(ax.figure)
 ```
 
@@ -139,3 +139,7 @@ if st.button('오래 걸리는 함수 실행'):
         result = long_running_function()
     st.success(f'결과: {result}')
 ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mZKqbo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1641" frameborder="0" marginheight="0" marginwidth="0" title="[python] streamlit"></iframe>

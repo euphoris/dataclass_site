@@ -1,8 +1,4 @@
-
-
 # seaborn으로 데이터 시각화
-
-
 
 ## Python 데이터 시각화
 
@@ -15,8 +11,6 @@
 import matplotlib.pyplot as plt  # matplotlib의 pyplot 모듈
 import seaborn as sns  # seaborn 라이브러리
 ```
-
-
 
 ## 선 그래프 (Line Plot)
 
@@ -35,8 +29,6 @@ sns.lineplot(data=df, x='year', y='price', hue='model')  # 연도별 모델별 �
 sns.lineplot(data=df, x='year', y='price', estimator='std')  # 연도별 표준편차 변화
 ```
 
-
-
 ## 막대 그래프 (Bar Plot / Count Plot)
 
 * **`sns.barplot(x='x축_범주형열', y='y축_수치형열', data=데이터프레임)`**:
@@ -51,7 +43,6 @@ sns.barplot(data=df, x='model', y='price')  # 모델별 가격 평균
 sns.countplot(data=df, x='model')  # 모델별 개수
 ```
 
-
 ## 산점도 (Scatter Plot)
 
 * **`sns.scatterplot(x='x축_숫자형열', y='y축_숫자형열', data=데이터프레임)`**
@@ -65,8 +56,6 @@ sns.countplot(data=df, x='model')  # 모델별 개수
 sns.scatterplot(data=df, x='mileage', y='price')  # 주행거리와 가격의 관계
 sns.scatterplot(data=df, x='mileage', y='price', hue='model')  # 모델별 주행거리와 가격의 관계
 ```
-
-
 
 ## 상자-수염 그림 (Box Plot)
 
@@ -90,8 +79,6 @@ sns.histplot(data=df, x='price', bins=10)  # 가격의 히스토그램(막대 10
 sns.histplot(data=df, x='price', hue='model')  # 모델별 가격의 히스토그램
 ```
 
-
-
 ## 차트 꾸미기 기초 (`plt` 객체 활용)
 
 * 차트의 가독성 및 정보 전달력 향상
@@ -100,8 +87,6 @@ sns.histplot(data=df, x='price', hue='model')  # 모델별 가격의 히스토�
 * **`plt.ylabel('Y축 레이블')`**: Y축 이름(설명) 추가
 * **`plt.legend()`**: 범례 표시 (seaborn에서 `hue` 등 사용 시 자동 생성되는 경우 많음, 위치 조정 등 가능)
 * **`plt.xticks()` / `plt.yticks()`**: 축 눈금 값, 레이블 조정
-
-
 
 ## 하나의 이미지에 여러 차트 그리기
 - `subplot` 함수를 이용해 여러 차트를 그릴 수 있음
@@ -112,7 +97,6 @@ sns.histplot(data=df[df.model=='Avante'], x='price')  # Avante 모델의 가격 
 plt.subplot(1, 2, 2)  # 1행 2열의 두 번째 서브플롯
 sns.histplot(data=df[df.model=='K3'], x='price')  # K3 모델의 가격 히스토그램
 ```
-
 
 ## 생성된 차트 저장
 
@@ -125,3 +109,6 @@ plt.savefig('price_histogram.png')  # 가격 히스토그램을 이미지로 저
 ```
 
     
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wk1M1o?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1674" frameborder="0" marginheight="0" marginwidth="0" title="[Python] seaborn"></iframe>

@@ -999,6 +999,10 @@ const sidebars: SidebarsConfig = {
       label: '조건문과 반복문'
     },
     { type: 'doc',
+      id: 'python/day1-review',
+      label: '★ 1일차 복습'
+    },
+    { type: 'doc',
       id: 'python/openpyxl',
       label: 'openpyxl 엑셀 자동화'
     },
