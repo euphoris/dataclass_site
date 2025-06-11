@@ -1,0 +1,234 @@
+
+# SELECT
+
+---
+## 질의 작성기
+* 질의 작성기 (Query Builder): GUI를 통해 드래그 앤 드롭 방식으로 SQL 쿼리를 시각적으로 생성하는 도구
+* 사용 방법:
+    1. 테이블을 마우스로 드래그하여 질의 작성기에 추가
+    2. 원하는 열(컬럼) 선택
+    3. 워크시트로 이동
+    4. 명령문 실행(CTRL+ENTER)
+    5. 질의 결과
+
+---
+## SELECT 문의 기본 구조: SELECT 절과 FROM 절
+* SQL의 가장 기본적이고 중요한 명령어: 데이터베이스에서 원하는 데이터를 가져오는 역할
+* `SELECT` 절: 조회하고자 하는 열(컬럼)을 지정
+* `FROM` 절: 데이터가 위치한 테이블을 지정
+* 기본 문법:
+```sql
+SELECT column1, column2, ...
+FROM table_name;
+```
+* 예시: `TB_COMPANY_MASTER` 테이블에서 `COMPANY_NM` (업체명)과 `CEO_NM` (대표자명) 조회
+```sql
+SELECT COMPANY_NM, CEO_NM
+FROM TB_COMPANY_MASTER;
+```
+
+---
+## 모든 열 조회 및 특정 열 선택 조회
+* 모든 열 조회 (`*` 와일드카드): 테이블의 모든 열을 빠르게 확인하고 싶을 때 사용
+```sql
+SELECT *
+FROM TB_COMPANY_MASTER;
+```
+* 특정 열 선택 조회: 필요한 데이터만 선택하여 효율적으로 조회
+```sql
+SELECT BIZ_REG_NO, COMPANY_NM, ESTABLISH_DT
+FROM TB_COMPANY_MASTER;
+```
+* 열의 순서: `SELECT` 절에 명시한 순서대로 결과가 표시됨
+
+---
+## AS 키워드를 이용한 열 별칭(Alias) 지정
+* 열 별칭(Column Alias)의 필요성:
+    * 조회 결과의 열 이름을 더 이해하기 쉽게 변경
+    * 연산 결과나 함수 사용 시 결과 열에 의미 있는 이름 부여
+    * 테이블 간 JOIN 시 동일한 열 이름 구분
+* `AS` 키워드 사용법:
+    * 별칭에 공백이나 특수문자가 포함될 경우 큰따옴표(`" "`)로 묶어줌 (Oracle 기준)
+```sql
+SELECT original_column_name AS alias_name
+FROM table_name;
+```
+    
+* 예시:
+```sql
+SELECT COMPANY_NM AS "회사명", CEO_NM AS "대표자 이름", ESTABLISH_DT AS "설립일"
+FROM TB_COMPANY_MASTER;
+```
+
+```sql
+SELECT COMPANY_NM 회사명, CEO_NM 대표자명 -- AS 생략
+FROM TB_COMPANY_MASTER;
+```
+
+---
+## SELECT 절에서의 간단한 산술 연산
+* `SELECT` 절 내 연산: 숫자 데이터 타입의 열에 대해 기본적인 산술 연산(`+`, `-`, `*`, `/`) 가능
+* 활용: 기존 데이터를 가공하여 새로운 의미의 값 조회 (예: 할인율 적용 금액, 부가세 포함 금액 등)
+
+    ```sql
+    SELECT BIZ_REG_NO, FS_YM, TOTAL_ASSETS, TOTAL_LIABILITIES,
+           (TOTAL_ASSETS - TOTAL_LIABILITIES) AS 순자산 -- 총자산 - 총부채
+    FROM TB_FINANCIAL_STATEMENT;
+    ```
+    
+    ```sql
+    SELECT LOAN_ACCT_NO, LOAN_AMT, LOAN_AMT / 1000000000 AS "대출금액(십억원)"
+    FROM TB_LOAN_ACCOUNT;
+    ```
+
+---
+## WHERE 절 소개: 조건 필터링
+* `WHERE` 절의 역할: `FROM` 절로 지정된 테이블에서 특정 조건을 만족하는 행(레코드)만 선택하여 조회
+* 데이터 필터링: 방대한 데이터 중에서 필요한 정보만 추출 가능
+* 위치: `FROM` 절 다음에 위치
+* 기본 문법:
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition;
+    ```
+* 예시: `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값)이 '대기업'인 회사만 조회
+    ```sql
+    SELECT COMPANY_NM, COMPANY_TYPE_CAT
+    FROM TB_COMPANY_MASTER
+    WHERE COMPANY_TYPE_CAT = '대기업';
+    ```
+* 주의: 문자열 비교 시 대소문자 구분, 날짜 형식 일치 중요
+
+---
+## WHERE 절에서의 기본 비교 연산자 활용
+* 비교 연산자: `WHERE` 절의 조건식에서 값을 비교하는 데 사용
+    * `=` : 같다
+    * `!=`, `<>`, `^=` : 같지 않다
+    * `>` : 크다
+    * `<` : 작다
+    * `>=` : 크거나 같다
+    * `<=` : 작거나 같다
+* `TB_LOAN_ACCOUNT` 테이블에서 `INTEREST_RATE` (금리)가 3.0 미만인 여신 계좌 조회
+    ```sql
+    SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+    FROM TB_LOAN_ACCOUNT
+    WHERE INTEREST_RATE < 3.0;
+    ```
+* `TB_COMPANY_MASTER` 테이블에서 `IS_VENTURE` (벤처기업여부값)가 'Y'가 아닌 회사 조회
+    ```sql
+    SELECT COMPANY_NM, IS_VENTURE
+    FROM TB_COMPANY_MASTER
+    WHERE IS_VENTURE != 'Y';
+    ```
+* `TB_FINANCIAL_STATEMENT` 테이블에서 `REVENUE` (매출액)이 5000억 이상인 재무 정보 조회 (숫자 단위 확인 필요)
+    ```sql
+    SELECT BIZ_REG_NO, FS_YM, REVENUE
+    FROM TB_FINANCIAL_STATEMENT
+    WHERE REVENUE >= 500000000000;
+        ```
+
+---
+## WHERE 절에서의 논리 연산자 (AND, OR, NOT)
+* 논리 연산자: 두 개 이상의 조건을 결합하여 더 복잡한 필터링 수행
+    * `AND`: 모든 조건이 참(TRUE)일 때 결과도 참 (예: 조건1 `AND` 조건2)
+    * `OR`: 조건 중 하나라도 참(TRUE)이면 결과도 참 (예: 조건1 `OR` 조건2)
+    * `NOT`: 조건의 논리 값을 반전 (예: `NOT` 조건)
+* 예시:
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT`이 '중소기업' 이고 `IS_VENTURE`가 'Y'인 회사 조회 (`AND`)
+```sql
+SELECT COMPANY_NM, COMPANY_TYPE_CAT, IS_VENTURE
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_TYPE_CAT = '중소기업' AND IS_VENTURE = 'Y';
+```
+* `TB_LOAN_ACCOUNT` 테이블에서 `LOAN_STATUS_CD` (여신상태코드)가 '연체' 이거나 `LOAN_BALANCE` (여신잔액)이 10억 이상인 계좌 조회 (`OR`) (예시 데이터에 '연체' 상태 추가 가정)
+```sql
+SELECT LOAN_ACCT_NO, LOAN_STATUS_CD, LOAN_BALANCE
+FROM TB_LOAN_ACCOUNT
+WHERE LOAN_STATUS_CD = '연체' OR LOAN_BALANCE >= 1000000000;
+```
+* `TB_CREDIT_INFO` 테이블에서 `CREDIT_GRADE` (신용등급)이 'AAA'가 아닌 신용정보 조회 (`NOT`)
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE NOT CREDIT_GRADE = 'AAA'; -- WHERE CREDIT_GRADE <> 'AAA';
+```
+
+---
+## 논리 연산자 우선순위와 괄호 사용
+* 논리 연산자 우선순위: `NOT` > `AND` > `OR`
+    * `NOT` 연산자가 가장 먼저 평가되고, 그 다음 `AND`, 마지막으로 `OR` 순서로 평가됨.
+* 괄호 `()`의 중요성:
+    * 연산자 우선순위를 명시적으로 변경하고 싶을 때 사용.
+    * 조건의 논리적 그룹을 명확히 하여 쿼리의 가독성을 높이고 의도치 않은 결과 방지.
+    * 괄호 안의 조건이 먼저 평가됨.
+* 예시: `TB_COMPANY_MASTER`에서 (기업구분이 '대기업' 이고 설립일자가 2000년 1월 1일 이전) 이거나 (기업구분이 '중소기업' 이고 벤처기업여부가 'Y')인 회사 조회
+    ```sql
+    SELECT COMPANY_NM, COMPANY_TYPE_CAT, ESTABLISH_DT, IS_VENTURE
+    FROM TB_COMPANY_MASTER
+    WHERE (COMPANY_TYPE_CAT = '대기업' AND ESTABLISH_DT < TO_DATE('2000-01-01', 'YYYY-MM-DD'))
+       OR (COMPANY_TYPE_CAT = '중소기업' AND IS_VENTURE = 'Y');
+    ```
+
+
+---
+## ORDER BY 절을 사용한 결과 데이터 정렬
+* `ORDER BY` 절의 역할: `SELECT` 문으로 조회된 결과를 특정 열(컬럼)의 값을 기준으로 정렬
+* 위치: `SELECT` 문의 가장 마지막에 위치 (일반적으로 `WHERE` 절 다음)
+* 정렬 방식:
+    * 오름차순 (Ascending): `ASC` (기본값, 생략 가능). 작은 값에서 큰 값 순서 (숫자), 알파벳 순 (문자), 과거 날짜에서 최신 날짜 순 (날짜).
+    * 내림차순 (Descending): `DESC`. 큰 값에서 작은 값 순서.
+* 기본 문법:
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition -- (선택 사항)
+    ORDER BY column_to_sort [ASC | DESC];
+    ```
+* 예시:
+* `TB_COMPANY_MASTER` 테이블의 회사들을 `COMPANY_NM` (업체명) 기준으로 오름차순 정렬
+```sql
+SELECT COMPANY_NM, CEO_NM
+FROM TB_COMPANY_MASTER
+ORDER BY COMPANY_NM ASC; -- ASC는 생략 가능
+```
+* `TB_LOAN_ACCOUNT` 테이블의 여신들을 `LOAN_AMT` (여신금액) 기준으로 내림차순 정렬
+```sql
+SELECT LOAN_ACCT_NO, LOAN_AMT, INTEREST_RATE
+FROM TB_LOAN_ACCOUNT
+ORDER BY LOAN_AMT DESC;
+```
+* `TB_FINANCIAL_STATEMENT` 테이블에서 `BIZ_REG_NO` '123-45-67890'인 회사의 재무 정보를 `FS_YM` (결산년월) 기준으로 최신순(내림차순) 정렬
+```sql
+SELECT FS_YM, REVENUE, NET_INCOME
+FROM TB_FINANCIAL_STATEMENT
+WHERE BIZ_REG_NO = '123-45-67890'
+ORDER BY FS_YM DESC;
+```
+
+---
+## 다중 정렬: 두 개 이상의 열 기준 정렬
+* 다중 정렬의 필요성: 첫 번째 정렬 기준의 값이 같을 경우, 두 번째 정렬 기준으로 다시 정렬
+* 사용 방법: `ORDER BY` 절에 여러 개의 열을 콤마(`,`)로 구분하여 나열. 각 열마다 `ASC` 또는 `DESC` 지정 가능.
+* 문법:
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    ORDER BY column1 [ASC|DESC], column2 [ASC|DESC], ...;
+    ```
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값)으로 오름차순 정렬하고, 같은 기업구분 내에서는 `ESTABLISH_DT` (설립일자)를 기준으로 오름차순(오래된 순) 정렬
+```sql
+SELECT COMPANY_NM, COMPANY_TYPE_CAT, ESTABLISH_DT
+FROM TB_COMPANY_MASTER
+ORDER BY COMPANY_TYPE_CAT ASC, ESTABLISH_DT ASC;
+```
+* `TB_LOAN_ACCOUNT` 테이블에서 `INTEREST_RATE` (금리)로 내림차순 정렬하고, 금리가 같은 경우 `LOAN_AMT` (여신금액)으로 내림차순 정렬
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+ORDER BY INTEREST_RATE DESC, LOAN_AMT DESC;
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3xLoxJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2243" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] SELECT"></iframe>

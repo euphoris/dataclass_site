@@ -1,0 +1,183 @@
+
+
+# 조인
+
+---
+## 조인(JOIN)의 개념과 필요성
+* 조인 (JOIN) 이란?: 두 개 이상의 테이블에 분산되어 저장된 데이터를 관계를 기반으로 연결하여 하나의 결과 집합으로 조회하는 방법.
+* 필요성:
+    * 데이터 정규화: 데이터 중복을 최소화하기 위해 정보를 여러 테이블로 나누어 저장.
+    * 정보 통합: 분리된 테이블의 데이터를 연결하여 의미 있는 통합된 정보를 얻기 위함.
+    * 예시: 기업 정보와 해당 기업의 재무 정보를 함께 보거나, 기업 정보와 해당 기업의 여신 정보를 연결하여 분석.
+* 핵심: 테이블 간의 공통된 열(컬럼) 또는 의미적으로 연결되는 열을 기준으로 데이터를 결합.
+
+---
+## 테이블 간 관계 이해
+* 관계형 데이터베이스의 핵심: 테이블 간의 논리적인 연결.
+* 주요 관계 유형:
+    * 일대다 (One-to-Many): 한 테이블의 행 하나가 다른 테이블의 여러 행과 관계를 맺음. (가장 흔한 관계)
+        * 예: `TB_COMPANY_MASTER` (기업정보) 1건 : `TB_LOAN_ACCOUNT` (여신정보) 여러 건
+        * (`TB_COMPANY_MASTER`.`BIZ_REG_NO` (PK) ↔ `TB_LOAN_ACCOUNT`.`BIZ_REG_NO` (FK))
+    * 일대일 (One-to-One): 한 테이블의 행 하나가 다른 테이블의 행 하나와만 관계를 맺음. (자주 사용되지는 않음, 테이블 분리 목적)
+        * 예: 직원 정보 테이블과 직원 상세 정보 테이블 (주민번호로 연결)
+    * 다대다 (Many-to-Many): 양쪽 테이블의 여러 행이 서로 관계를 맺음. (보통 중간에 연결 테이블을 두어 두 개의 일대다 관계로 해결)
+        * 예: 학생 테이블과 과목 테이블 (수강신청 테이블을 중간에 둠)
+* 관계 설정의 기반: 기본 키 (Primary Key)와 외래 키 (Foreign Key).
+
+---
+## INNER JOIN (내부 조인)
+* `INNER JOIN`: 두 테이블을 연결할 때, 양쪽 테이블에 모두 조인 조건이 일치하는 행만 결과에 포함.
+* 가장 기본적이고 널리 사용되는 조인 유형.
+* 문법
+```sql
+SELECT table1.column1, table1.column2, table2.column1, ...
+FROM table1
+INNER JOIN table2 ON table1.join_column = table2.join_column
+WHERE condition; -- (선택 사항)
+```
+* `INNER` 키워드는 생략 가능 (`JOIN`만 써도 내부 조인으로 동작).
+* 예시: `TB_COMPANY_MASTER` (기업정보)와 `TB_FINANCIAL_STATEMENT` (재무정보)를 내부 조인하여, 재무 정보가 있는 기업의 이름과 해당 기업의 2023년도 매출액 조회
+```sql
+SELECT
+    c.COMPANY_NM AS "회사명",
+    f.FS_YM AS "결산년월",
+    f.REVENUE AS "매출액"
+FROM
+    TB_COMPANY_MASTER c
+INNER JOIN
+    TB_FINANCIAL_STATEMENT f ON c.BIZ_REG_NO = f.BIZ_REG_NO
+WHERE
+    f.FS_YM = '202312' AND f.FS_TYPE = 'ANNUAL';
+```
+
+---
+## 조인 시 테이블 별칭(Alias) 사용 및 조인 조건 지정
+* 테이블 별칭 (Table Alias)의 필요성:
+    * 테이블 이름이 길 경우 코드를 간결하게 만듦.
+    * 같은 테이블을 여러 번 조인할 때(예: SELF JOIN) 구분 가능.
+    * 여러 테이블에서 동일한 컬럼명을 사용할 때 어떤 테이블의 컬럼인지 명확히 지정 (`별칭.컬럼명`).
+* 별칭 사용법: `FROM` 절의 테이블명 뒤에 한 칸 띄고 별칭을 지정 ( `AS` 생략 가능).
+* `ON` 키워드를 사용한 명시적 조인 조건 지정 (권장):
+    * 조인할 테이블 간의 연결 조건을 명확하게 기술.
+    * 복잡한 조인 조건이나 여러 조건을 `AND`, `OR`로 연결 가능.
+```sql
+SELECT c.COMPANY_NM, l.LOAN_ACCT_NO, l.LOAN_AMT
+FROM TB_COMPANY_MASTER c -- c를 TB_COMPANY_MASTER의 별칭으로 사용
+INNER JOIN TB_LOAN_ACCOUNT l ON c.BIZ_REG_NO = l.BIZ_REG_NO; -- l을 TB_LOAN_ACCOUNT의 별칭으로 사용
+```
+---
+
+## USING 절을 사용한 조인 조건 지정
+
+* 조인하려는 두 테이블의 연결 컬럼명이 동일할 경우 사용 가능.
+* 괄호 안에 공통 컬럼명을 명시.
+* `USING` 절에 명시된 컬럼은 조회 시 테이블 별칭 없이 사용해야 함 (일부 DBMS).
+```sql
+-- BIZ_REG_NO 컬럼명이 양쪽 테이블에 동일하다고 가정
+SELECT c.COMPANY_NM, l.LOAN_ACCT_NO, BIZ_REG_NO -- USING 절의 컬럼은 별칭 없이
+FROM TB_COMPANY_MASTER c
+INNER JOIN TB_LOAN_ACCOUNT l USING (BIZ_REG_NO);
+```
+
+---
+## LEFT OUTER JOIN (왼쪽 외부 조인)
+* `LEFT OUTER JOIN` (또는 `LEFT JOIN`):
+    * 왼쪽(먼저 명시된) 테이블의 모든 행을 결과에 포함.
+    * 오른쪽 테이블에서는 조인 조건에 일치하는 행의 데이터를 가져옴.
+    * 오른쪽 테이블에 일치하는 데이터가 없으면 해당 컬럼들은 `NULL` 값으로 표시.
+* 문법:
+```sql
+SELECT table1.column1, table2.column1
+FROM table1 -- 왼쪽 테이블
+LEFT OUTER JOIN table2 ON table1.join_column = table2.join_column; -- 오른쪽 테이블
+```
+* `OUTER` 키워드는 생략 가능.
+* 예시: 모든 `TB_COMPANY_MASTER` (기업정보)를 조회하되, 각 기업의 `TB_LOAN_ACCOUNT` (여신정보)가 있다면 함께 표시 (여신이 없는 기업도 결과에 포함, 여신 관련 컬럼은 `NULL`).
+```sql
+SELECT
+    c.COMPANY_NM AS "회사명",
+    l.LOAN_ACCT_NO AS "여신계좌번호",
+    l.LOAN_AMT AS "여신금액"
+FROM
+    TB_COMPANY_MASTER c
+LEFT JOIN
+    TB_LOAN_ACCOUNT l ON c.BIZ_REG_NO = l.BIZ_REG_NO
+ORDER BY
+    c.COMPANY_NM;
+```
+
+---
+## RIGHT OUTER JOIN (오른쪽 외부 조인)
+* `RIGHT OUTER JOIN` (또는 `RIGHT JOIN`):
+    * 오른쪽(두 번째 명시된) 테이블의 모든 행을 결과에 포함.
+    * 왼쪽 테이블에서는 조인 조건에 일치하는 행의 데이터를 가져옴.
+    * 왼쪽 테이블에 일치하는 데이터가 없으면 해당 컬럼들은 `NULL` 값으로 표시.
+* 문법:
+```sql
+SELECT table1.column1, table2.column1
+FROM table1 -- 왼쪽 테이블
+RIGHT OUTER JOIN table2 ON table1.join_column = table2.join_column; -- 오른쪽 테이블
+```
+* `OUTER` 키워드는 생략 가능.
+* 예시: 모든 `TB_LOAN_ACCOUNT` (여신정보)를 조회하되, 각 여신에 해당하는 `TB_COMPANY_MASTER` (기업정보)를 함께 표시 (매칭되는 기업 정보가 없는 여신이 있다면(데이터 이상), 기업 관련 컬럼은 `NULL`).
+* (일반적으로 `LEFT JOIN`을 더 선호하며, 테이블 순서를 바꿔 `LEFT JOIN`으로 표현 가능)
+```sql
+SELECT
+    c.COMPANY_NM AS "회사명",
+    l.LOAN_ACCT_NO AS "여신계좌번호",
+    l.LOAN_AMT AS "여신금액"
+FROM
+    TB_COMPANY_MASTER c
+RIGHT JOIN
+    TB_LOAN_ACCOUNT l ON c.BIZ_REG_NO = l.BIZ_REG_NO
+ORDER BY
+    l.LOAN_ACCT_NO;
+```
+
+---
+## FULL OUTER JOIN (완전 외부 조인)
+* `FULL OUTER JOIN` (또는 `FULL JOIN`):
+    * 양쪽 테이블의 모든 행을 결과에 포함.
+    * 조인 조건에 일치하는 데이터가 있으면 해당 값을, 없으면 `NULL` 값으로 표시.
+    * 즉, 왼쪽 테이블에는 있지만 오른쪽에는 없는 행, 오른쪽 테이블에는 있지만 왼쪽에는 없는 행, 양쪽 모두에 있는 행을 모두 보여줌.
+* 문법:
+```sql
+SELECT table1.column1, table2.column1
+FROM table1
+FULL OUTER JOIN table2 ON table1.join_column = table2.join_column;
+```
+* `OUTER` 키워드는 생략 가능.
+* 예시: `TB_COMPANY_MASTER`와 `TB_LOAN_ACCOUNT` 간의 관계에서, 기업 정보만 있거나, 여신 정보만 있거나, 둘 다 있는 모든 경우를 조회.
+```sql
+SELECT
+    c.COMPANY_NM AS "회사명",
+    l.LOAN_ACCT_NO AS "여신계좌번호"
+FROM
+    TB_COMPANY_MASTER c
+FULL JOIN
+    TB_LOAN_ACCOUNT l ON c.BIZ_REG_NO = l.BIZ_REG_NO
+ORDER BY
+    c.COMPANY_NM, l.LOAN_ACCT_NO;
+```
+* 활용: 두 데이터셋 간의 불일치 항목을 찾거나, 양쪽 데이터를 모두 유지하면서 비교 분석할 때 유용.
+
+---
+## 조인(JOIN)과 집합 연산자(SET Operators) 비교
+* 목표의 차이:
+    * 조인 (JOIN): 여러 테이블의 컬럼들을 옆으로 합쳐서 연관된 데이터를 하나의 행으로 만듦. (데이터를 '넓게' 확장)
+    * 집합 연산자 (SET Operators: `UNION`, `UNION ALL`, `INTERSECT`, `MINUS`): 두 개 이상의 `SELECT` 문의 행들을 위아래로 합치거나 비교. (데이터를 '길게' 확장하거나 비교)
+* 사용 시점:
+    * 조인: 서로 다른 정보를 가진 테이블들에서 관련 있는 데이터를 연결하여 한 번에 보고 싶을 때.
+        * 예: 기업명(기업테이블)과 그 기업의 매출액(재무테이블)을 함께 조회.
+    * 집합 연산자: 유사한 구조의 데이터셋을 합치거나, 두 데이터셋 간의 공통/차이점을 찾고 싶을 때.
+        * 예: 서울 지점 고객 목록과 부산 지점 고객 목록을 합쳐 전체 고객 목록 생성 (`UNION ALL`).
+        * 예: 작년 우수 고객 목록과 올해 우수 고객 목록에서 변동 없는 고객 찾기 (`INTERSECT`).
+* 컬럼 처리:
+    * 조인: 결과에 양쪽 테이블의 컬럼들이 모두 (또는 선택적으로) 포함될 수 있음.
+    * 집합 연산자: 참여하는 `SELECT` 문의 컬럼 개수와 데이터 타입이 일치해야 하며, 결과 컬럼은 첫 번째 `SELECT`문을 따름.
+
+---
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mJZgdz?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1569" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] JOIN"></iframe>

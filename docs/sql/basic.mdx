@@ -1,0 +1,117 @@
+# SQL 기초
+
+---
+
+## 데이터베이스
+* 데이터베이스(database): 체계적으로 저장되고 관리되는 데이터의 집합
+* 데이터베이스 유형:
+    * 관계형 데이터베이스 (Relational DB): 정해진 스키마에 따라 데이터를 표 형태로 저장 (예: Oracle, MySQL, SQL Server)
+    * NoSQL 데이터베이스: 유연한 스키마, 다양한 데이터 모델 지원 (예: MongoDB, Cassandra)
+* 관계형 데이터베이스 관리 시스템 (RDBMS)의 필요성 및 장점:
+    * 데이터 중복 최소화, 데이터 무결성 유지
+    * 데이터 일관성 및 보안성 향상
+    * 효율적인 데이터 검색 및 관리
+
+---
+
+## RDBMS 핵심 구성 요소와 개념
+* 테이블 (Table): 데이터를 행과 열로 구성한 2차원 구조 (표)
+* 행 (Row / Record): 테이블 내 하나의 데이터 항목 (개체)
+* 열 (Column / Field / Attribute): 테이블 내 특정 속성을 나타내는 데이터 집합
+* 데이터 타입 (Data Type): 각 열에 저장될 데이터의 종류 (예: 문자형, 숫자형, 날짜형)
+* 키 (Key): 테이블 간의 관계를 정의하거나 레코드를 식별하는 중요한 열
+    * 기본 키 (Primary Key): 테이블 내 각 행을 고유하게 식별하는 열 (중복X, NULL값 X)
+    * 외래 키 (Foreign Key): 다른 테이블의 기본 키를 참조하여 테이블 간 관계를 맺는 열
+
+---
+## SQL
+* SQL (Structured Query Language) 정의: 관계형 데이터베이스와 소통하기 위한 표준 언어
+* SQL의 역할: 데이터 정의, 조작, 제어
+* 표준 SQL (ANSI SQL): 대부분의 RDBMS에서 공통적으로 사용되는 SQL 표준
+* DBMS별 SQL 특징: 각 RDBMS 제조사별로 표준 SQL 외에 추가적인 기능이나 문법 차이가 있을 수 있음 (Oracle의 PL/SQL, SQL Server의 T-SQL 등)
+* SQL 명령어의 종류:
+    * DQL (Data Query Language) - 데이터 질의어: 데이터 검색 및 조회 (예: `SELECT`)
+    * DML (Data Manipulation Language) - 데이터 조작어: 데이터 삽입, 수정, 삭제 (예: `INSERT`, `UPDATE`, `DELETE`)
+    * DDL (Data Definition Language) - 데이터 정의어: 데이터베이스 객체(테이블, 인덱스 등) 생성, 수정, 삭제 (예: `CREATE`, `ALTER`, `DROP`)
+    * DCL (Data Control Language) - 데이터 제어어: 데이터 접근 권한 부여 및 회수 (예: `GRANT`, `REVOKE`)
+    * TCL (Transaction Control Language) - 트랜잭션 제어어: 데이터 변경 작업의 논리적 단위 관리 (예: `COMMIT`, `ROLLBACK`)
+
+---
+## Oracle
+* Oracle Database: 전 세계적으로 널리 사용되는 대표적인 상용 관계형 데이터베이스 관리 시스템
+* 특징:
+    * 대용량 데이터 처리 능력 우수
+    * 높은 안정성 및 보안성 제공
+    * 다양한 운영체제 지원
+    * PL/SQL이라는 강력한 절차형 언어 확장 제공
+* 금융권에서의 활용: 많은 금융 회사에서 기간계 및 중요 시스템의 DBMS로 채택
+
+---
+## 실습 환경 준비: SQL Developer 및 서버 접속
+* SQL Developer 소개: Oracle에서 제공하는 무료 GUI 기반 데이터베이스 개발 도구
+
+
+---
+## 실습 데이터 준비
+* 오늘 사용할 예제 데이터 소개:
+    * `TB_COMPANY_MASTER` (기업정보)
+    * `TB_CREDIT_INFO` (신용정보)
+    * `TB_FINANCIAL_STATEMENT` (재무정보)
+    * `TB_LOAN_ACCOUNT` (여신정보)
+
+
+---
+## 테이블 구조 확인하기
+* SQL Developer에서 테이블 목록 확인: 좌측 '접속' 창에서 생성된 테이블 확인
+* 테이블 구조(스키마) 확인 방법:
+    * 테이블 선택 후 '열' 탭 확인: 컬럼명, 데이터 타입, 제약 조건 등
+    * 또는 워크시트에서 SQL 명령어 입력 후 ▶️(CTRL+ENTER)
+
+```sql
+DESCRIBE TB_COMPANY_MASTER;
+```
+
+또는 
+
+```sql
+DESC TB_CREDIT_INFO;
+```
+
+---
+
+## Oracle 데이터 타입
+* 데이터 타입: 테이블의 각 열(컬럼)에 저장될 데이터의 종류와 형식
+* 문자
+    * `CHAR(size)`: 고정 길이 문자열 (항상 `size` 바이트). 지정된 크기보다 작은 데이터가 입력되어도 남는 공간은 공백으로 채워짐.
+        * 예: `IS_VENTURE CHAR(1)`
+    * `VARCHAR2(size)`: 가변 길이 문자열 (최대 `size` 바이트). 지정된 크기보다 작은 데이터가 입력되면 실제 데이터 크기만큼만 공간 차지.
+        * 예: `COMPANY_NM VARCHAR2(100)`, `BIZ_REG_NO VARCHAR2(10)`
+* 숫자
+    * `NUMBER(p,s)`: 숫자. `p`는 전체 자릿수(precision), `s`는 소수점 이하 자릿수(scale).
+        * `NUMBER(20)` 또는 `NUMBER(20,0)`: 최대 20자리의 정수
+        * `NUMBER(10,2)`: 전체 10자리 중 소수점 이하 2자리
+        * `NUMBER(5,2)`: 전체 5자리 중 소수점 이하 2자리
+    * `INTEGER`: 정수 타입. Oracle 내부적으로는 `NUMBER(38,0)`으로 처리
+* 날짜/시간
+    * `DATE`: 날짜 및 시간 정보 (세기, 년, 월, 일, 시, 분, 초까지 저장).
+    * `TIMESTAMP`: `DATE` 타입보다 더 정밀한 시간 정보 (초의 소수점 이하 자리수 포함) 및 시간대(Time Zone) 정보 저장 가능.
+
+---
+## 데이터 무결성을 위한 제약조건
+* `NOT NULL`: 해당 열에 `NULL` 값이 입력되는 것을 허용하지 않음. 반드시 값이 있어야 하는 중요한 정보에 사용.
+* `UNIQUE`: 해당 열(또는 여러 열의 조합)의 값이 테이블 내에서 항상 고유해야 함. 중복된 값을 허용하지 않음. 
+    * `NULL` 값은 여러 개 허용될 수 있음 - `NULL`은 값이 아니므로 비교 불가
+* `PRIMARY KEY` (기본 키): 테이블의 각 행을 고유하게 식별하는 대표 키
+    * 자동으로 `NOT NULL`과 `UNIQUE` 제약조건이 결합됨. 테이블 당 하나만 정의 가능.
+* `FOREIGN KEY` (외래 키): 다른 테이블의 `PRIMARY KEY` 또는 `UNIQUE` 키를 참조하여 테이블 간의 관계를 설정
+    * 참조하는 테이블에 존재하는 값만 입력 가능하도록 하여 참조 무결성을 보장.
+    * 참조 동작:
+        * `ON DELETE CASCADE`: 부모 테이블의 행이 삭제되면, 이를 참조하는 자식 테이블의 행도 함께 삭제.
+        * `ON DELETE SET NULL`: 부모 테이블의 행이 삭제되면, 자식 테이블의 해당 외래 키 값을 `NULL`로 설정.
+* `CHECK`: 해당 열에 입력될 수 있는 값의 범위나 특정 조건을 지정. 조건에 맞지 않는 데이터 입력 방지.
+    * 예시: `IS_VENTURE CHAR(1) CHECK (IS_VENTURE IN ('Y', 'N'))`
+    * 예시: `INTEREST_RATE NUMBER(5,2) CHECK (INTEREST_RATE >= 0)`
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/w4DEeb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1546" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] 기초"></iframe>

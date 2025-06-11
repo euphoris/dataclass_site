@@ -4,7 +4,7 @@ import rehypeKatex from 'rehype-katex';
 
 const config = {
   title: '데이터 과학 강의',
-  tagline: '2025',
+  tagline: '',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'pythonSidebar',
+          sidebarId: 'sqlSidebar',
           position: 'left',
-          label: 'Python 데이터 분석 & 자동화',
+          label: 'SQL 프로그래밍', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -93,10 +93,14 @@ const config = {
       links: [
         {
           title: 'Docs',
-          items: [
+          items: [ // 하단 메뉴
             {
               label: 'Python',
               to: '/docs/python',
+            },
+            {
+              label: 'SQL',
+              to: '/docs/sql',
             },
             {
               label: '통계',

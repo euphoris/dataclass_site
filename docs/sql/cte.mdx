@@ -1,0 +1,106 @@
+
+
+# CTE(Common Table Expressions)
+
+---
+## CTE (Common Table Expression)
+* CTE (공통 테이블 표현식): 복잡한 SQL 문 내에서 재사용하거나 가독성을 높이기 위해 사용하는 임시적인, 이름이 지정된 결과 집합(Named Result Set).
+* `WITH` 키워드를 사용하여 정의.
+* 쿼리의 시작 부분에서 정의되며, 해당 `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `MERGE` 문 내에서만 유효.
+* 복잡한 쿼리를 더 작고 관리하기 쉬운 논리적 단위로 분해하는 데 도움.
+* "쿼리를 위한 별칭" 또는 "임시 뷰"와 유사한 개념으로 생각할 수 있음.
+
+---
+## CTE 기본 구문: `WITH` 절
+* `WITH` 절 사용: 하나 이상의 CTE를 정의할 때 사용.
+* 기본 구조:
+```sql
+WITH cte_name1 AS (
+    SELECT ... FROM ... WHERE ... -- CTE 쿼리 정의 1
+),  -- 여러 CTE를 정의할 경우 콤마로 구분
+cte_name2 AS (
+    SELECT ... FROM cte_name1 ... WHERE ... -- 다른 CTE 또는 테이블 참조 가능
+)
+-- 기본 쿼리 (SELECT, INSERT, UPDATE, DELETE 등)
+SELECT ...
+FROM cte_name1  -- 정의된 CTE 사용
+JOIN cte_name2 ON ...;
+```
+* `cte_name`: 해당 CTE의 이름으로, 뒤따르는 기본 쿼리나 다른 CTE에서 이 이름을 참조.
+* 괄호 `()` 안에는 CTE를 구성하는 `SELECT` 문이 위치.
+
+---
+
+## CTE 사용의 장점
+
+* 가독성 향상: 긴 쿼리나 복잡한 로직을 가진 쿼리를 논리적인 단위로 나누어 이름을 부여함으로써 전체적인 구조를 이해하기 쉽게 만듦.
+* 재사용성: 단일 쿼리 내에서 동일한 결과 집합을 여러 번 참조해야 할 경우, CTE를 한 번 정의하고 여러 번 재사용 가능 (서브쿼리를 반복 사용하는 것보다 효율적일 수 있음).
+* 복잡한 로직 분해: 다단계 계산이나 중간 결과가 필요한 경우, 각 단계를 CTE로 정의하여 최종 쿼리를 단순화.
+* 재귀적 쿼리 가능: CTE는 자기 자신을 참조하는 재귀적(Recursive) CTE를 정의할 수 있어 계층적 데이터(조직도, 부품 관계 등) 처리에 유용.
+
+---
+## 간단한 CTE 예시
+* 회사별 총 여신 금액을 계산 후, 그 결과에서 특정 조건의 회사 선택
+
+```sql
+WITH CompanyTotalLoans AS ( -- CTE 정의
+    SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS TOTAL_LOAN_AMOUNT
+    FROM TB_LOAN_ACCOUNT
+    GROUP BY BIZ_REG_NO
+)
+-- 기본 쿼리에서 CTE 사용
+SELECT BIZ_REG_NO, TOTAL_LOAN_AMOUNT
+FROM CompanyTotalLoans
+WHERE TOTAL_LOAN_AMOUNT >= 50000000000;
+```
+    * CTE를 사용함으로써 "회사별 총 여신금액"이라는 논리적 단위를 명확히 표현.
+
+---
+## 여러 CTE 정의 및 사용
+* `WITH` 절 내에서 콤마(`,`)를 사용하여 여러 개의 CTE를 순차적으로 정의 가능.
+* 뒤에 정의되는 CTE는 앞서 정의된 CTE를 참조할 수 있음.
+* 예시:
+    1.  `ActiveLoansCTE`: '정상' 상태의 여신 정보만 필터링.
+    2.  `CompanyLoanSummaryCTE`: `ActiveLoansCTE`를 참조하여 회사별 정상 여신 합계 계산.
+    3.  최종 쿼리: `CompanyLoanSummaryCTE`와 `TB_COMPANY_MASTER`를 조인하여 회사명과 정상 여신 합계 조회.
+```sql
+WITH ActiveLoansCTE AS (
+    SELECT BIZ_REG_NO, LOAN_AMT
+    FROM TB_LOAN_ACCOUNT
+    WHERE LOAN_STATUS_CD = '정상'
+),
+CompanyLoanSummaryCTE AS (
+    SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS TOTAL_ACTIVE_LOAN_AMT
+    FROM ActiveLoansCTE -- 이전 CTE 참조
+    GROUP BY BIZ_REG_NO
+)
+SELECT
+    c.COMPANY_NM,
+    cls.TOTAL_ACTIVE_LOAN_AMT
+FROM TB_COMPANY_MASTER c
+JOIN CompanyLoanSummaryCTE cls ON c.BIZ_REG_NO = cls.BIZ_REG_NO
+WHERE cls.TOTAL_ACTIVE_LOAN_AMT > 10000000000; -- 예시 조건
+```
+
+---
+
+## CTE vs 서브쿼리 vs 임시 테이블
+* 선택 기준: 가독성, 재사용 범위, 성능, 구현 복잡성 등을 고려.
+* 서브쿼리 (Subquery):
+    * 주로 한 번만 사용되는 간단한 하위 질의에 적합.
+    * `SELECT`, `FROM`, `WHERE`, `HAVING` 등 다양한 위치에 사용.
+    * 너무 중첩되면 가독성 저하.
+* CTE (Common Table Expression):
+    * 단일 SQL 문 내에서 여러 번 참조되거나, 복잡한 쿼리를 논리적으로 분해하여 가독성을 높이고 싶을 때 유용.
+    * 재귀적 쿼리 가능.
+    * 해당 SQL 문이 끝나면 사라짐.
+* 임시 테이블 (Temporary Table) (Oracle: Global Temporary Table):
+    * 세션이나 트랜잭션 동안 데이터를 저장하고 여러 SQL 문에서 재사용해야 할 때.
+    * CTE보다 더 넓은 범위에서 재사용 가능.
+    * 물리적인 저장 공간 (temp tablespace) 사용, 통계 정보 생성 가능.
+    * `CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS;`
+* 상황에 맞는 도구 선택이 중요.
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mBVgb5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1092" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] CTE"></iframe>
