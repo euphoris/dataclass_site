@@ -160,3 +160,13 @@ WHERE INTEREST_RATE > ALL (SELECT INTEREST_RATE
 ## 퀴즈
 
 <iframe src="https://tally.so/embed/3q7pOG?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1664" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] 서브쿼리"></iframe>
+
+## 퀴즈의 답
+
+전체 여신 계좌의 여신 금액(LOAN_AMT)의 중간값(MEDIAN)보다 높은 여신금액을 가진 여신 계좌의 개수
+
+```sql
+SELECT COUNT(*) AS LOAN_COUNT_ABOVE_MEDIAN
+FROM TB_LOAN_ACCOUNT
+WHERE LOAN_AMT > (SELECT MEDIAN(LOAN_AMT) FROM TB_LOAN_ACCOUNT);
+```

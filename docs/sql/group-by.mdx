@@ -119,6 +119,20 @@ GROUP BY BIZ_REG_NO
 HAVING AVG(INTEREST_RATE) > 3.0; -- 그룹화 후 집계 결과 필터링
 ```
 ---
+## PARTITION BY
+* `PARTITION BY`: `GROUP BY`와 유사하지만, 전체 데이터 집합을 그룹화하지 않고, 각 행에 대해 집계 함수를 적용할 때 사용.
+
+```sql
+SELECT 
+    BIZ_REG_NO, 
+    INTEREST_RATE,
+    MIN(INTEREST_RATE) 
+        OVER (PARTITION BY BIZ_REG_NO) 
+        AS "회사별 최소 금리"
+FROM TB_LOAN_ACCOUNT;
+```
+
+---
 ## ROLLUP
 * 확장된 `GROUP BY` 기능: 다양한 수준의 소계 및 총계를 한 번의 쿼리로 생성.
 * `ROLLUP`: `GROUP BY` 절에 지정된 열들의 계층 구조를 따라 오른쪽에서 왼쪽으로 소계 및 총계를 생성.

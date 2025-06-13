@@ -104,3 +104,42 @@ WHERE cls.TOTAL_ACTIVE_LOAN_AMT > 10000000000; -- 예시 조건
 ## 퀴즈
 
 <iframe src="https://tally.so/embed/mBVgb5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1092" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] CTE"></iframe>
+
+## 퀴즈의 답
+
+```sql
+
+WITH Filtered_Companies AS (
+    -- 1. 2023년 연간 재무제표가 존재하고, 감사받은('Y') 기업 필터링
+    SELECT
+        BIZ_REG_NO
+    FROM
+        TB_FINANCIAL_STATEMENT
+    WHERE
+        FS_YM = '202312'
+        AND FS_TYPE = 'ANNUAL'
+        AND AUDIT_YN = 'Y'
+),
+Loan_Balances AS (
+    -- 2. '정상' 상태의 여신 계좌 총 잔액 집계
+    SELECT
+        BIZ_REG_NO,
+        SUM(LOAN_BALANCE) AS TOTAL_LOAN_BALANCE
+    FROM
+        TB_LOAN_ACCOUNT
+    WHERE
+        LOAN_STATUS_CD = '정상'
+    GROUP BY
+        BIZ_REG_NO
+    HAVING
+        SUM(LOAN_BALANCE) >= 10000000000 -- 100억 원 이상
+)
+-- 3. 위 두 조건을 모두 만족하는 기업의 정보 조회
+SELECT
+    FC.BIZ_REG_NO,
+    LB.TOTAL_LOAN_BALANCE
+FROM
+    Filtered_Companies FC
+JOIN
+    Loan_Balances LB ON FC.BIZ_REG_NO = LB.BIZ_REG_NO;
+```
