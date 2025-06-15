@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'sqlSidebar',
+          sidebarId: 'dataAnalysisSidebar',
           position: 'left',
-          label: 'SQL 프로그래밍', // 상단 메뉴
+          label: '데이터 분석과 시각화', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -94,6 +94,10 @@ const config = {
         {
           title: 'Docs',
           items: [ // 하단 메뉴
+            {
+              label: '데이터 분석과 시각화',
+              to: '/docs/data-analysis/lab',
+            },
             {
               label: 'Python',
               to: '/docs/python',

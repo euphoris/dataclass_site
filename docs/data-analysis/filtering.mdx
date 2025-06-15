@@ -1,0 +1,142 @@
+# 데이터 필터링과 이상치 찾기
+
+## 조건으로 데이터 필터링
+Boolean 인덱싱: 조건을 만족하는 행만 선택
+```python
+cond = df['my_car_damage'] > 0  # 자차 처리 내역이 있는 경우
+df[cond] # 해당 조건에 맞는 사례
+```
+
+한 줄로
+```python
+df[df['my_car_damage'] > 0]
+```
+
+## query() 메소드
+
+df.query('조건 문자열'): 문자열 형태로 조건식을 작성하여 데이터 필터링
+장점: SQL과 유사한 간결한 문법, 변수 참조 용이 (@변수명)
+
+```python
+df.query('my_car_damage > 0')  # my_car_damage가 0보다 큰 경우
+
+df.query('model == "Avante" and my_car_damage > 0')  
+# 차종이 Avante이고 my_car_damage가 0보다 큰 경우
+
+df.query('my_car_damage == 0 or other_car_damage == 0')  
+# my_car_damage가 0이거나 other_car_damage가 0인 경우
+
+df.query('not (my_car_damage == 0)')  
+# my_car_damage가 0이 아닌 경우
+```
+
+## 변수 사용
+
+`@변수명`을 사용하여 외부 변수를 쿼리 내에서 참조
+
+```python
+last_year = df.year.max()
+df.query('year == @last_year')  # last_year 변수에 저장된 값과 year 열이 같은 행을 선택
+```
+
+## 표준화 (standardization)
+
+$$
+Z = \frac{X - \mu}{\sigma}
+$$
+
+- 원래의 값에서 평균을 빼고, 표준편차로 나누는 것
+- 표준화하면 평균 = 0, 표준편차 = 1이 되므로 서로 범위가 다른 값을 비교하기 쉬움
+
+```python
+평균 = df['mileage'].mean()
+표준편차 = df['mileage'].std()
+df['Z_mileage'] = (df['mileage'] - 평균) / 표준편차
+```
+
+## 이상치 찾기
+
+|Z-score|가 3보다 큰 사례
+```python
+df.query('Z_mileage.abs() > 3')
+```
+
+다음과 같이 표현할 수도 있음 
+```python
+df.query('Z_mileage < -3 or 3 < Z_mileage')
+```
+
+또는 a < b < c 표기법을 사용
+```python
+df.query('not (-3 < Z_mileage < 3)')
+```
+
+## IQR로 이상치 찾기
+IQR의 1.5배를 넘는 사례
+```python
+Q1 = df['mileage'].quantile(0.25)
+Q3 = df['mileage'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+df[(df['mileage'] < lower_bound) | (df['mileage'] > upper_bound)]
+```
+
+## ydata-profiling
+
+python의 탐색적 데이터 분석 라이브러리 
+
+설치
+```bash
+pip install ydata-profiling
+```
+
+보고서 생성
+```python
+from ydata_profiling import ProfileReport
+report = ProfileReport(df, title='My Data')
+report.to_file("my_report.html")
+```
+
+### 설치 문제 해결
+
+다음의 오류가 발생할 경우:
+
+```
+ImportError: cannot import name 'TypeIs' from 'typing_extensions'
+```
+
+- 시작 &rightarrow; Anaconda 3 &rightarrow; Anaconda Prompt 실행 후,
+- 다음 명령으로 `typing_extensions` 패키지 삭제
+
+```bash
+pip uninstall typing_extensions
+```
+
+- 다시 설치
+
+```bash
+pip install typing_extensions
+```
+
+## 퀴즈
+
+{/* 
+(3)
+
+(2)
+
+(3)
+
+(3)
+
+(2)
+
+(3)
+
+(3)
+
+(4) */}
+
+<iframe src="https://tally.so/embed/mJZyGz?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1273" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 데이터 필터링과 이상치 찾기
+"></iframe>

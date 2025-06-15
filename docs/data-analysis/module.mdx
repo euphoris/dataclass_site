@@ -1,0 +1,70 @@
+# 모듈과 패키지
+
+## 모듈 임포트 (Module Import)
+
+*   **모듈(Module):** 관련된 함수들을 모아놓은 것 (일종의 코드 묶음).
+*   모듈 함수 사용하려면 먼저 모듈 **임포트(import)** 필요.
+    ```python
+    import pandas as pd
+    ```
+*   `pandas`: 표 형태 데이터 다루는 대표적 모듈.
+*   `as pd`: `pandas` 모듈을 앞으로 `pd`라는 **약칭(별명)** 으로 부르겠다는 의미 (생략 가능하나 관례적으로 사용).
+
+## 파일 열기
+
+```python
+df = pd.read_excel('car.xlsx')
+```
+
+*   `pd.` : `pd`(pandas 모듈)에 **소속된** 기능을 사용하겠다는 의미 (Python에서 `.`은 소속 나타냄).
+*   `read_excel()` : 엑셀 파일 읽는 함수.
+*   `'car.xlsx'` : 읽어올 파일 이름 (문자열이므로 따옴표 사용).
+*   `df = ...` : 파일 읽은 내용(데이터프레임)을 `df`라는 변수에 할당.
+
+## 데이터 보기
+
+```python
+df.head()
+```
+
+*   **객체 소속 함수(메서드):** Python에서는 특정 변수(객체)에 소속된 함수(메서드) 존재.
+*   `df.head()`: `df` 변수(데이터프레임)에 소속된 `head` 메서드 호출. `df`의 **첫 5행** 보여주는 역할.
+*   **괄호 `()`:** 함수(메서드) 호출 시에는 인자가 없어도 반드시 괄호 붙임.
+*   **행 개수 지정:** `df.head(10)` 과 같이 괄호 안에 숫자를 넣어 보여줄 행 개수 지정 가능.
+
+## 데이터프레임 기본 정보 탐색
+
+- `df.head(n=5)`: 처음 `n`개 행 확인 (기본값 5)
+- `df.tail(n=5)`: 마지막 `n`개 행 확인 (기본값 5)
+- `df.shape`: (행 개수, 열 개수) 튜플 반환
+- `df.info()`: 데이터 타입, 각 열의 non-null 값 개수, 메모리 사용량 등 요약 정보 출력
+- `df.dtypes`: 각 열의 데이터 타입 확인
+
+## 열 선택
+
+- 특정 열 선택 (Series 반환): `df['열이름']` 또는 `df.열이름`
+```python
+df['price']
+df.price  # 열 이름에 공백/특수문자 없을 시
+```
+
+- 여러 열 선택 (DataFrame 반환): `df[['열이름1', '열이름2']]` (리스트 형태로 전달)
+```python
+df[['price', 'mileage']]
+```
+
+## 패키지 설치
+
+* 패키지: 하나 이상의 모듈을 묶은 설치의 단위 ("라이브러리"라고도 함)
+  * 패키지 ≒ 라이브러리 ⊃ 모듈
+* 패키지는 한 컴퓨터에서 한 번 설치하면 됨
+  * 모듈은 사용할 때마다 임포트
+* `pip` 프로그램을 이용해서 설치
+    ```bash
+    pip install pingouin
+    ```
+* pip는 Jupyter Notebook 또는 Anaconda Prompt에서 실행
+* `pingouin`: 통계 분석을 위한 패키지
+
+
+<iframe src="https://tally.so/embed/w4DZzo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1634" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 모듈과 패키지"></iframe>
