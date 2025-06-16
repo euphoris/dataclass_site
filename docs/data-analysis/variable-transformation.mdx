@@ -1,0 +1,131 @@
+# 변수의 변형
+
+
+## 변수의 변형
+- 주요 개념:
+    - 로그 함수
+    - I 함수
+    - 2차항
+    - 절편이 없는 모형
+    - 절편의 이동
+    - 독립변수의 서열을 이용한 회귀분석
+
+
+## 변수의 변형
+- 선형 모형은 독립변수와 종속변수의 선형적 관계를 가정한다는 한계
+- 독립변수를 비선형 변환하면 이 한계를 일부 극복할 수 있음
+
+$$
+z = \log x \\
+\hat{y} = wz + b
+$$
+
+- Python은 관계식에 수학 함수를 사용하면 자동으로 변수 변환
+
+
+## 왜도 skewnesss
+- 데이터가 한쪽 방향으로 치우친 정도(해당 방향으로 극단치가 존재)
+    - negative skew: - 방향으로 치우침
+    - positive skew: + 방향으로 치우침
+- 0이면 좌우대칭,±0.5면 중간 정도 치우침, ±1이 넘으면 극단적 치우침
+
+
+## 중고차 주행거리의 분포
+히스토그램
+```python
+import seaborn as sns
+sns.histplot(x='mileage', data=df)
+```
+- 왜도 > 1.04 (+로 매우 치우침)
+  ```python
+  df['mileage'].skew()
+  ```
+
+
+## 로그 함수
+- 오른쪽 위로 갈 수록 완만해지는 형태
+- 가로축에서 1, 10, 100이 세로축에서 같은 간격(예: 0, 1, 2)
+- 데이터에 적용하면 오른쪽을 왼쪽으로 끌어당기는 효과
+- 독립변수에 오른쪽으로 크게 떨어져 있는 값이 있는 경우(예: 소득), 로그 함수를 적용해주면 간격을 일정하게 만들어 줄 수 있음
+
+
+## Python 회귀분석과 산점도
+- 회귀분석 (R제곱은 0.457)
+  ```python
+  ols('price ~ mileage', df).fit().summary()
+  ```
+- 산점도
+  ```python
+  sns.lmplot(x='mileage', y='price', data=df)
+  ```
+
+
+## Python 로그 함수 적용
+- 회귀분석 (R제곱: 0.479)
+  ```python
+  import numpy as np
+  ols('price ~ np.log(mileage)', df).fit().summary()
+  ```
+- 산점도
+  ```python
+  df['log_mileage'] = np.log(df['mileage'])
+  sns.lmplot(x='log_mileage', y='price', data=df)
+  ```
+
+
+## Box-Cox 변환
+- 로그 변환의 일반화
+  
+$$
+y = \frac{x^{\lambda} - 1}{\lambda}
+$$
+- $\lambda = 0$일 때는 로그 함수와 같음
+  ```python
+  from scipy.stats import boxcox
+  df['mileage_tr'], lambd = boxcox(df.mileage)
+  lambd
+  ```
+- 회귀분석 (R제곱: 0.498)
+  ```python
+  ols('price ~ mileage_tr', df).fit().summary()
+  ```
+
+
+## Box-Cox 변환
+- 히스토그램
+  ```python
+  sns.histplot(x='mileage_tr', data=df)
+  ```
+- 산점도
+  ```python
+  sns.lmplot(x='mileage_tr', y='price', data=df)
+  ```
+
+
+## 변환 함수의 시각화
+```python
+import matplotlib.pyplot as plt
+x = np.linspace(0, 100, 100)
+y1 = boxcox(x, lambd)
+plt.plot(x, y1, label='Box-Cox')
+y2 = np.log(x)
+plt.plot(x, y2, linestyle='dashed', label='Log')
+plt.legend()
+```
+
+
+## 독립변수의 서열을 이용한 회귀분석
+- 독립변수의 서열(등수)이 1 변할 때 종속변수의 변화
+- 스피어만 상관계수와 비슷한 논리
+  `price ~ mileage.rank()`
+- 장점
+    - 표준화처럼 단위가 서로 다른 경우를 비교할 수 있다
+    - 로그 함수처럼 한쪽으로 늘어진 데이터를 고르게 맞춰줄 수 있다
+- 단점
+    - 새로운 데이터는 기존 데이터의 등수에 맞춰서 등수를 산정해야 함(귀찮음)
+    - 예측을 할 때 기존의 관찰 범위를 넘어서면 예측을 못함
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/31RjML?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="3000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 변수의 변형"></iframe>

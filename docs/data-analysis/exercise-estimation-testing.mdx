@@ -1,0 +1,16 @@
+# 종합 실습: 재무 건전성 분석
+
+- 생산 연속성과 회사 경쟁력 확보를 위해 안정적인 공급망 유지 필요 있음
+- 협력 업체가 재무적 어려움을 겪을 경우 부품 및 원자재 공급에 문제가 생길 수 있음
+- 협력 업체의 재무 상태를 감지하고 선제적 대응 필요
+- 재무 건전성에 위험이 있는 협력업체에 어떠한 재무적 특징이 있는지 알아내고자 함
+
+위의 데이터에서 재무적 위험이 높은 집단과 낮은 집단으로 나누어 분석을 진행
+
+```python
+import pandas as pd
+sp = pd.read_excel('supplier.xlsx')
+high_risk = sp.query('risk == 1')
+low_risk = sp.query('risk == 0')
+```
+<iframe src="https://tally.so/embed/w5oXVZ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1538" frameborder="0" marginheight="0" marginwidth="0" title="[데이터분석] 종합실습: 추정~회귀분석"></iframe>

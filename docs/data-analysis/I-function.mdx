@@ -1,0 +1,49 @@
+
+## I 함수
+- 관계식에 덧셈, 곱셈, 거듭제곱 등을 할 경우 적용이 불가
+- I 함수를 사용하여 이러한 계산을 적용 가능
+  `price ~ I(my_car_damage + other_car_damage)`
+- 두 독립변수 x와 z를 더하여 하나의 변수로 변환
+
+
+## 2차항의 추가
+- y = w₂x² + w₁x + b와 같은 모형을 관계식으로 만들 경우
+- 거듭제곱에 **를 사용
+  `y ~ I(x**2) + x`
+- x²: `I(x**2)`
+- x³: `I(x**3)`
+- x⁴: `I(x**4)`
+
+
+## 절편이 없는 모형
+- 절편이 없는 모형(b = 0)을 표시하기 위해서는 관계식에 0 +를 추가
+  `y ~ 0 + x`
+- 절편이 있을 때와 없을 때는 R제곱 계산 방법이 다름
+    - 절편이 있을 때: R제곱 = 1 - 잔차분산 / (평균으로 예측할 때의 잔차분산)
+    - 절편이 없을 때: R제곱 = 1 - 잔차분산 / (0으로 예측할 때의 잔차분산)
+
+
+## 절편이 없는 이차함수 예시: 제동 거리
+- 제동거리 데이터
+  ```python
+  sp = pd.read_excel('speed.xlsx')
+  ```
+- 절편이 없는 일차함수
+  ```python
+  m = ols('dist ~ 0 + speed', sp).fit()
+  ```
+- 절편이 없는 이차함수
+  ```python
+  m = ols('dist ~ 0 + I(speed**2) + speed', sp).fit()
+  ```
+
+
+## 절편의 이동
+- 절편은 x = 0일 때의 예측치
+- 절편을 x = 2010일 때의 예측치로 바꾸려면 x에 일괄적으로 2010을 빼면 됨
+  `price ~ I(year – 2010)`
+- 분석 자체에는 영향이 없으나 절편의 해석이 더 쉬워질 수 있음
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/31RjML?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="3000" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 변수의 변형"></iframe>

@@ -119,47 +119,6 @@ const sidebars: SidebarsConfig = {
     },
     // {
     //   type: 'category',
-    //   label: '2일차 - 추정과 가설 검정',
-    //   items: [
-        // {
-        //     type: 'doc',
-        //     id: 'data-analysis/estimation',
-        //     label: '추정'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/confidence-interval',
-        //   label: '신뢰구간'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/margin-of-error',
-        //   label: '오차 범위에 영향을 주는 요소'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/hypothesis-testing',
-        //   label: '통계적 가설 검정 (1)'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/correlation',
-        //   label: '상관 분석'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/regression',
-        //   label: '회귀 분석'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/exercise-estimation-testing',
-        //   label: '종합 실습: 추정과 가설 검정'
-        // },
-    //   ]
-    // },
-    // {
-    //   type: 'category',
     //   label: '3일차 - 회귀 분석',
     //   items: [
       // {
@@ -194,6 +153,47 @@ const sidebars: SidebarsConfig = {
       //   },
     //   ]
     // },
+    {
+      type: 'category',
+      label: '2일차 - 추정과 가설 검정',
+      items: [
+        {
+            type: 'doc',
+            id: 'data-analysis/estimation',
+            label: '추정'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/confidence-interval',
+          label: '신뢰구간'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/margin-of-error',
+          label: '오차 범위'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/hypothesis-testing',
+          label: '통계적 가설 검정'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/correlation',
+          label: '상관 분석'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/regression',
+          label: '회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/exercise-estimation-testing',
+          label: '종합 실습: 추정과 가설 검정'
+        },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '4일차 - 머신 러닝',
