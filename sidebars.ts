@@ -117,42 +117,6 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 회귀 분석',
-    //   items: [
-      // {
-      //     type: 'doc',
-      //     id: 'data-analysis/multiple-regression',
-      //     label: '다중 회귀 분석'
-      //   },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/model-selection',
-      //     label: '모형 선택'
-      //   },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/cross-validation',
-      //     label: '교차 검증'
-      //   },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/variable-transformation',
-      //     label: '변수의 변형'
-      //   },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/variable-transformation',
-      //     label: 'I 함수'
-      //   },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/exercise-coating',
-      //     label: '종합 실습: 도장 품질 예측'
-      //   },
-    //   ]
-    // },
     {
       type: 'category',
       label: '2일차 - 추정과 가설 검정',
@@ -191,6 +155,57 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'data-analysis/exercise-estimation-testing',
           label: '종합 실습: 추정과 가설 검정'
+        },
+      ]
+    },
+    {
+      type: 'category',
+      label: '3일차 - 회귀 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'data-analysis/check-inf',
+          label: '추론 통계 개념 체크'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/multiple-regression',
+          label: '다중 회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/dummy-coding',
+          label: '범주형 독립변수'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/model-selection',
+          label: '모형 선택'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/cross-validation',
+          label: '교차 검증'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/variable-transformation',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/I-function',
+          label: 'I 함수'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/interaction',
+          label: '상호작용'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/exercise-coating',
+          label: '종합 실습: 도장 품질 예측'
         },
       ]
     },
