@@ -1,0 +1,75 @@
+# 비지도 학습: 클러스터링
+
+
+## 비지도 학습: 클러스터링
+- 주요 개념:
+    - 클러스터링
+    - K-means
+
+
+## 클러스터링 clustering
+- 비슷한 사례들을 하나의 군집(cluster)으로 만드는 비지도 학습
+- 파티션(partition) 알고리즘: 수평적인 군집들로 나눔
+    - K-Means
+    - Mixture of Gaussian
+    - Spectral Clustering
+- 위계적(hierarchical) 알고리즘: 큰 군집 안에 작은 군집들이 포함되는 형태로 나눔
+
+
+## K-Means
+- 대표적인 클러스터링 알고리즘의 하나
+- "K개의 평균"이라는 뜻
+- 각 사례가 다른 군집보다 자신이 속한 군집의 중심점에 가장 가깝게 만듦
+- 각 군집의 중심점은 해당 군집에 속한 사례들의 평균
+- 예시: (다음 장 그림 참고)
+    - 사례들을 두 개의 군집으로 나눌 경우, 무작위로 두 군집의 중심점을 설정(a)
+    - 각 사례들을 두 중심점 중 더 가까운 중심점의 군집으로 분류(b)
+    - 각 군집에 속한 사례들을 평균하여 새로운 중심점을 설정(c)
+    - 더 이상 군집에 변화가 없을 때까지 (b)~(c)의 과정을 반복
+
+
+## old faithful 데이터셋
+- 미국 옐로스톤 국립 공원에 있는 간헐천
+- 데이터셋 불러오기
+  ```python
+  of = pd.read_excel('oldfaithful.xlsx')
+  of.head()
+  ```
+- 시각화
+  ```python
+  plt.scatter(of['waiting'], of['eruption'])
+  plt.xlabel('Waiting time (minutes)')
+  plt.ylabel('Eruption duration (minutes)')
+  ```
+- 짧은 간격으로 잠깐 분출하는 경우와 긴 간격으로 오래 분출하는 경우가 있음
+
+
+## 클러스터링
+- 변수마다 범위가 다르므로 표준화하여 통일
+  ```python
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  X_scaled = scaler.fit_transform(of[['waiting', 'eruption']])
+  ```
+- KMeans를 이용해 2개의 클러스터
+  ```python
+  from sklearn.cluster import KMeans
+  kmeans = KMeans(n_clusters=2, random_state=42)
+  kmeans.fit(X_scaled)
+  ```
+
+
+## 클러스터링 결과
+- 각 클러스터의 중심에 가까운 쪽으로 할당
+  ```python
+  of['cluster'] = kmeans.predict(X_scaled)
+  ```
+- 시각화
+  ```python
+  import matplotlib.pyplot as plt
+  plt.scatter(of['waiting'], of['eruption'], c=of['cluster'], cmap='viridis')
+  ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3qz01g?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1354" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 클러스터링"></iframe>

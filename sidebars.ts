@@ -209,71 +209,67 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '4일차 - 머신 러닝',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/supervised-learning-regression',
-    //       label: '지도학습 - 회귀'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/supervised-learning-classification',
-    //       label: '지도학습 - 분류'
-    //     },
-    //    {
-    //       type: 'doc',
-    //       id: 'data-analysis/confusion-matrix',
-    //       label: '혼동 행렬'
-    //     },
-    
-
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/unsupervised-learning-dimension-reduction',
-    //       label: '비지도학습 - 차원 축소'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/unsupervised-learning-clustering',
-    //       label: '비지도학습 - 클러스터링'
-    //     },
-    
-    //     {
-    //       type: 'doc',
-    //       id: 'nlp/dtm',
-    //       label: '문서 단어 행렬'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'nlp/sentence-embedding',
-    //       label: '임베딩'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'nlp/keyword-extraction',
-    //       label: '키워드 추출'
-    //     },
-    // {
+    {
+      type: 'category',
+      label: '4일차 - 머신 러닝',
+      items: [
+        {
+          type: 'doc',
+          id: 'data-analysis/supervised-learning-regression',
+          label: '지도학습 - 회귀'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/supervised-learning-classification',
+          label: '지도학습 - 분류'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/confusion-matrix',
+          label: '혼동 행렬'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/roc-auc',
+          label: 'ROC 곡선'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/unsupervised-learning-dimension-reduction',
+          label: '비지도학습 - 차원 축소'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/unsupervised-learning-clustering',
+          label: '비지도학습 - 클러스터링'
+        },
+        // {
         //   type: 'doc',
-        //   id: 'data-analysis/reinforcement-learning',
-        //   label: '강화학습'
+        //   id: 'data-analysis/dtm',
+        //   label: '문서 단어 행렬'
         // },
         // {
         //   type: 'doc',
-        //   id: 'data-analysis/deep-learning',
-        //   label: '딥러닝'
+        //   id: 'data-analysis/sentence-embedding',
+        //   label: '임베딩'
         // },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/exercise-classification',
-    //       label: '종합 실습: 재무 건전성 분류' // RandomForest로 분류
-    //     },        
-    //   ]
-    // },
- 
+        // {
+        //   type: 'doc',
+        //   id: 'data-analysis/keyword-extraction',
+        //   label: '키워드 추출'
+        // },
+        {
+          type: 'doc',
+          id: 'data-analysis/rl-dl',
+          label: '강화학습과 딥러닝'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/exercise-classification',
+          label: '종합 실습: 재무 건전성 분류' // RandomForest로 분류
+        },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '5일차 - 시계열 분석',
@@ -287,6 +283,11 @@ const sidebars: SidebarsConfig = {
     //       type: 'doc',
     //       id: 'data-analysis/python-time-series',
     //       label: 'Python으로 시계열 데이터 다루기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/group-by',
+    //       label: 'group by'
     //     },
     //     {
     //       type: 'doc',
@@ -308,17 +309,13 @@ const sidebars: SidebarsConfig = {
     //       id: 'data-analysis/time-series-clustering',
     //       label: '시계열 클러스터링'
     //     },
-        // {
-        //   type: 'doc',
-        //   id: 'data-analysis/survival-analysis',
-        //   label: '생존 분석'
-        // },
-      //   {
-      //     type: 'doc',
-      //     id: 'data-analysis/exercise-greenhouse-forecasting',
-      //     label: '종합 실습: 온실 가스 배출 예측'
-      //   },
-      // ]
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/exercise-greenhouse-forecasting',
+    //       label: '종합 실습: 온실 가스 배출 예측'
+    //     },
+    //   ]
+    // },
   ],
   statSidebar: [
     {

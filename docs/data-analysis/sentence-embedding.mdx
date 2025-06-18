@@ -1,0 +1,117 @@
+# 임베딩
+
+## 임베딩
+
+  * 주요 개념:
+      * 임베딩
+      * BERT
+      * 삼중항 손실
+      * 문서 유사도
+
+## 임베딩 embedding
+
+
+
+  * 유사성을 보존하면서 원래보다 낮은 차원의 벡터로 표현하는 것 또는 그렇게 표현된 벡터
+  * embed: 어떤 좁은 공간에 무언가를 심어넣는 것
+  * 일종의 좌표 또는 디지털 지문과 비슷한 개념
+  * 비슷한 내용의 이미지나 텍스트는 비슷한 임베딩 값을 가짐
+  * 지문만 비교하면 두 사람이 같은 사람인지 확인할 수 있듯이, 임베딩을 비교하면 두 개의 이미지나 텍스트가 비슷한지 빠르게 비교할 수 있음
+
+## 딥러닝 기반 임베딩
+
+  * 딥러닝 모델은 단어의 주변 문맥을 함께 고려하여 단어/문장의 벡터 표현을 동적으로 생성. → 다의어 문제 해결에 효과적
+  * 언어 구조 및 순서 정보 활용: 모델 구조 자체가 순서 정보를 처리하도록 설계 → 어순과 문법적 구조를 임베딩에 반영 가능
+  * 대규모 데이터 사전 학습(Pre-training)
+      * 방대한 텍스트 데이터로 미리 학습
+      * 언어의 복잡하고 미묘한 패턴, 문법, 상식 등을 임베딩에 내포시킴
+  * 특정 과제에 대한 미세 조정(Fine-tuning)
+      * 문장 유사도 측정, 질의응답 등 특정 NLP 과제에 맞춰 모델을 추가 학습
+      * 해당 과제에 대한 성능 극대화 가능
+
+## BERT Bi-directional Encoder Representations from Transformers
+
+  * 양방향 Bi-directional으로 정보를 처리하는 트랜스포머 기반의 언어 모형
+  * 트랜스포머의 인코더를 이용
+  * GPT와 달리 문장 중간의 마스킹된 단어를 예측하도록 학습
+  * 다양한 종류의 자연어 처리 과제에 전이 학습을 쉽게 할 수 있도록 설계
+
+
+## Sentence-BERT
+
+
+  * 문장 임베딩을 위한 BERT 모형
+  * siamese neural network: 두 개의 동일한 BERT에 문장을 입력하고, 그 출력을 바탕으로 학습
+  * 모든 토큰의 출력에 Mean Pooling
+  * 과제의 종류에 따라 다른 목적 함수(손실 함수)를 사용
+      * 분류
+      * 회귀
+      * 삼중항
+
+## 삼중항 손실 triplet loss
+
+
+  * 대조 손실의 확장
+  * 기준(a), 긍정(p), 부정(n) 3개의 텍스트를 사용
+  * p는 a와 같은 내용을 다루는 텍스트
+  * n은 a와 다른 내용을 다루는 텍스트
+  * a의 임베딩이 n보다 p에 가깝게 출력하도록 학습
+  * 적절한 난이도의 삼중항 찾기
+      * a와 n이 너무 다르면 학습이 전혀 안됨
+      * a와 n이 너무 비슷하면 데이터가 잘못되었거나(예: 같은 내용이 다른 내용으로 잘못 레이블링) 특이 사례일 수 있음
+  * 너무 쉽거나 너무 어렵지 않은 정도의 semi-hard data를 찾아 학습
+
+## 설치 및 임포트
+
+  * colab에서 실습 시 런타임 → 런타임 유형 변경 → GPU
+  * 설치
+    ```python
+    !pip install sentence_transformers
+    ```
+  * 임포트
+    ```python
+    from sentence_transformers import SentenceTransformer
+    ```
+
+## 문장 BERT 모델
+
+  * [https://huggingface.co](https://huggingface.co) Models
+      * Task: Natural Language Processing → Sentence Similarity
+      * Languages: Korean
+  * 모델마다 학습된 방식이 다르므로, 받아서 사용해보고 자신의 데이터에 맞는 것으로 사용
+  * 데이터가 충분히 많다면(예: 1만 개 이상) 직접 학습시킬 수도 있음
+  * 모델 로딩
+    ```python
+    sbert = SentenceTransformer('jhgan/ko-sroberta-multitask')
+    ```
+
+## 문장 임베딩
+
+```python
+#파일열기
+import pandas as pd
+df = pd.read_excel('patents.xlsx')
+
+#문장 임베딩
+doc_emb = sbert.encode(df['abstract'])
+```
+
+## 문서 유사도
+
+```python
+from sklearn.metrics.pairwise import cosine_distances
+import numpy as np
+
+doc_idx = 0 #0번 문서와 비슷한 문서 보기
+dists = cosine_distances(doc_emb[[doc_idx]], doc_emb).flatten() #코사인 거리
+rank = np.argsort(dists) #정렬
+top10 = rank[:10] #가장 가까운 10개
+df.iloc[top10] #문서 보기
+```
+
+  * cosine\_distances는 1-cosine\_similarity
+  * 유사도가 높을 수록, 거리가 작음 → 비슷한 문서가 앞쪽으로 정렬
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/w4dy0B?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1013" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 임베딩"></iframe>

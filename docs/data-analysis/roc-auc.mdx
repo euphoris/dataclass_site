@@ -1,0 +1,78 @@
+# ROC 곡선
+
+## 코로나 검사의 경우
+**【 임시선별검사소 코로나19 검사법 3종 안내 】**
+
+| 구분 | 비인두도말 PCR법 | 신속항원검사법 | 타액 PCR법 |
+| :--- | :--- | :--- | :--- |
+| **시간** | 24시간 이내 | 30분 이상  (양성시, 추가 24시간 필요) | 24시간 이내 |
+| **민감도/특이도*** | 민감도 : 98% 이상  특이도 : 100% | 민감도 : 90%  특이도 : 96% | 민감도 : 92%  특이도 : 100% |
+| **검체** | 비인두도말 | 비인두도말 | 타액(침) |
+| **절차** | 검체채취 → PCR → 확진 | 검체채취 → 현장검사 → (양성) → 검체 채취 → PCR → 확진 | 타액 채취 → PCR → 확진 |
+
+* 현재까지 허가 또는 긴급사용승인된 제품에 대한 민감도 및 특이도
+
+
+## 코로나 검사의 경우
+유병률 1%에서 민감도 98%, 특이도 100%인 경우
+
+| | 음성 | 양성 |
+| :--- | :--- | :--- |
+| **미감염** | 9900 | 0 |
+| **감염** | 2 | 98 |
+
+유병률 1%에서 민감도 90%, 특이도 96%인 경우
+
+| | 음성 | 양성 |
+| :--- | :--- | :--- |
+| **미감염** | 9504 | 396 |
+| **감염** | 10 | 90 |
+
+
+## F1
+- 정밀도(p)와 재현도(r)의 조화 평균
+- 조화평균: 역수의 평균의 역수
+    - 비율, 속도 등을 평균낼 때는 산술평균 대신 조화평균을 사용
+
+
+## ROC 곡선 Receiver Operating Characteristic
+- 수신자 특성 곡선: 신호 이론에서 유래한 이름
+  감도를 높이면 노이즈도 같이 올라가는 상황에서 최적의 감도를 결정하는 문제
+- 가로축은 FPR(=1-특이도), 세로축은 TPR(=재현도)
+- 문턱값을 변화시키면서 특이도와 재현도의 변화를 곡선으로 표시
+- 곡선하 면적(Area Under the Curve): ROC 곡선 아래의 면적
+    - 완벽하게 반대로 예측하면 0 ~ 무작위로 예측할 경우 0.5 ~ 완벽하게 예측하면 1
+
+
+## Python ROC 곡선
+- 임포트
+  ```python
+  from sklearn.metrics import roc_auc_score, roc_curve
+  import matplotlib.pyplot as plt
+  ```
+- 시각화
+  ```python
+  prob = model.predict_proba(X_test)[:, 1]
+  fpr, tpr, threshold = roc_curve(y_test, prob)
+  plt.plot(fpr, tpr)
+  ```
+- AUC
+  ```python
+  roc_auc_score(y_test, prob)
+  ```
+
+## 퀴즈
+
+아래와 같이 전처리를 하고 퀴즈를 풀어보세요.
+
+```python
+import pandas as pd
+from sklearn.model_selection import train_test_split
+hi = pd.read_excel('hiring.xlsx')  # 데이터 불러오기
+y = hi['hire'].map({'P': 1, 'F': 0})  # 'P'를 1로, 'F'를 0으로 변환
+X = hi.drop(columns=['hire']) # 'hire' 열을 제외한 나머지 열들
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42) # 데이터 분할
+```
+
+<iframe src="https://tally.so/embed/3xEd6d?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="956" frameborder="0" marginheight="0" marginwidth="0" title="[머신러닝] 혼동행렬 및 ROC 곡선"></iframe>

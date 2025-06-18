@@ -1,0 +1,80 @@
+# 지도학습: 분류
+
+
+## 지도학습: 분류
+- 주요 개념:
+    - LDA
+    - SVM
+    - NN
+
+
+## 분류 알고리즘
+- Linear Discriminant Analysis
+- Support Vector Machine
+- Nearest Neighbors
+- Decision Tree
+- Naive Bayes
+- Artificial Neural Network
+
+
+## Linear Discriminant Analysis
+- 집단 간 분산은 최대화하고 집단 내 분산은 최소화하는 낮은 차원을 찾음
+- 해당 차원에서 집단을 구분
+
+
+## Support Vector Machine
+- 회귀 및 분류
+- 분류의 경우 두 집단 간의 최대 마진을 찾는 초평면을 학습하여 데이터를 분류
+- 커널 트릭(kernel trick)을 사용하여 비선형 데이터도 고차원 공간에서 선형적으로 분류할 수 있음
+    - 저차원 공간에서 분류가 어려운 문제도 고차원 공간에서는 분류가 쉬움
+    - 실제 데이터를 고차원 공간으로 매핑하는 것은 계산이 많음
+    - 커널(쉽게 말하면 두 점의 거리를 측정하는 방식)만을 변경하여 마치 데이터가 고차원 공간에 매핑된 것처럼 계산하는 트릭을 사용할 수 있음
+    - SVM은 커널 트릭을 사용할 수 있는 모형
+
+
+## Nearest Neighbors
+- 회귀 및 분류
+- 새로운 데이터 포인트의 클래스나 값을 예측하기 위해 가장 가까운 K개의 이웃을 참조
+- 다수결 투표나 평균을 통해 예측을 수행
+- K가 작으면 노이즈에 민감해지고, K가 커지면 계산 비용이 증가
+- 훈련 단계가 없고, 모든 계산이 예측 시에 이루어지는 게으른 학습(lazy learning) 방식
+
+
+## 종양 분류 데이터
+- 종양
+  ```python
+  import pandas as pd
+  cc = pd.read_excel('cancer.xlsx')
+  cc.head()
+  ```
+- 예측하고자 하는 diagnosis 변수를 y, 나머지를 X
+  ```python
+  y_orig, X = cc.iloc[:, 0], cc.iloc[:, 1:]
+  ```
+- 악성(M)은 1, 양성(B)은 0으로 변환
+  ```python
+  y = y_orig.map({'M': 1, 'B': 0})
+  ```
+
+
+## 랜덤 포레스트
+- 데이터 분할
+  ```python
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+  random_state=42)
+  ```
+- 훈련
+  ```python
+  from sklearn.ensemble import RandomForestClassifier
+  model = RandomForestClassifier(n_estimators=100, random_state=42)
+  model.fit(X_train, y_train)
+  ```
+- 테스트 데이터에 예측
+  ```python
+  y_pred = model.predict(X_test)
+  ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3jz1VJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1100" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 지도학습 - 분류"></iframe>
