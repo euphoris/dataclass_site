@@ -1,179 +1,179 @@
 # Python으로 시계열 데이터 다루기
 
-## 날짜/시간 데이터 타입 (Pandas)
 
-*   **하나의 날짜/시간 생성:**
-    ```python
-    import pandas as pd
-    date = pd.to_datetime('2022-08-29')
-    ```
-*   **시간 간격 생성:**
-    ```python
-    # 1일, 2일, 3일 간격
-    delta = pd.to_timedelta([1, 2, 3], unit='D')
-    print(date + delta) # 날짜에 간격 더하기
-    ```
-*   **주요 시간 단위 코드:** `Y`(연), `M`(월), `W`(주), `D`(일), `h`(시), `m`(분), `s`(초).
+## Python으로 시계열 데이터 다루기
+- 주요 개념:
+    - datetime
+    - resample
+    - rolling
+    - groupby
+
+
+## 하나의 날짜/시간
+- 날짜/시간 자료형으로 변환
+  ```python
+  import pandas as pd
+  date = pd.to_datetime('2025-06-20')
+  ```
+- `date.year` : 년
+- `date.month` : 월
+- `date.week` : 주
+- `date.day` : 일
+- `date.weekday()` : 요일(0=월, 1=화, 2=수, 3=목, 4=금, 5=토, 6=일)
+- `date.hour` : 시
+- `date.minute` : 분
+- `date.second` : 초
+
+
+## 고정된 간격의 기간 더하기
+```python
+delta = pd.Timedelta(1, 'D')
+date + delta
+```
+
+| W  | D  | h  | m  | s  |
+| :--| :--| :--| :--| :--|
+| 주 | 일 | 시 | 분 | 초 |
+
+- 년(Y)과 월(M)은 간격이 일정하지 않아 지원이 안됨
+
+
+## 달력 기준의 날짜 계산
+```python
+date + pd.DateOffset(years=1) # 1년 후
+date + pd.DateOffset(months=3) # 3개월 후
+date + pd.DateOffset(weekday=0) # 다음 월요일
+```
+
+
+## 알파벳 주가 데이터
+```python
+df = pd.read_excel('GOOG.xlsx')
+df.head()
+```
+- 문자열을 날짜 시간 형식으로 변환
+  ```python
+  df.Date = pd.to_datetime(df.Date)
+  ```
+- Date 컬럼을 인덱스(행 이름)으로 변환
+  ```python
+  df.set_index('Date', inplace=True)
+  ```
+
 
 ## 날짜로 인덱싱
+- 2014년 3월 31일 데이터
+  ```python
+  df.loc['2014-03-31']
+  ```
+- 일정 기간 데이터
+  ```python
+  df.loc['2014-03-31':'2014-04-02']
+  ```
+- 특정 시점의 데이터
+  ```python
+  df.loc['2014-05'] # 2014년 5월
+  df.loc['2016'] # 2016년
+  ```
 
-*   **날짜 인덱스 생성:**
-    ```python
-    index = pd.DatetimeIndex(['2014-07-04', '2014-08-04', '2015-07-04', '2015-08-04'])
-    data = pd.Series([100, 200, 300, 400], index=index)
-    ```
-*   **기간 슬라이싱:**
-    ```python
-    data['2014-07-04':'2015-07-04'] # 시작일부터 종료일까지
-    ```
-*   **특정 기간 조회 (부분 문자열):**
-    ```python
-    data['2015'] # 2015년 데이터만
-    data['2014-08'] # 2014년 8월 데이터만
-    ```
 
-## 시계열 데이터 처리 예시 (알파벳 주가)
+## 정렬 & 시각화
+- 인덱스를 순서대로 정렬
+  ```python
+  df.sort_index(inplace=True)
+  ```
+- 시각화
+  ```python
+  df.Price.plot()
+  ```
 
-*   **데이터 로드 및 확인:**
-    ```python
-    df = pd.read_excel('GOOG.xlsx')
-    df.head()
-    ```
-*   **문자열 -> 날짜 변환:**
-    ```python
-    df['Date'] = pd.to_datetime(df['Date'])
-    ```
-*   **날짜 컬럼 -> 인덱스 설정:**
-    ```python
-    df.set_index('Date', inplace=True) # inplace=True: 원본 DataFrame 변경
-    ```
-*   **인덱스 정렬 (시간 순):**
-    ```python
-    df.sort_index(inplace=True)
-    ```
-*   **시각화:**
-    ```python
-    df['Price'].plot() # Price 컬럼 시각화
-    ```
 
-## 변화량 계산
+## 변화량 구하기
+- 전일과 차이 구하기
+  ```python
+  df.Price.diff()
+  ```
+- 전일과 차이의 비율 구하기
+  ```python
+  df.Price.pct_change()
+  ```
+  시각화 하려면 끝에 `.plot()`
 
-*   **전일 대비 차이:** `.diff()`
-    ```python
-    df['Price'].diff().plot()
-    ```
-*   **전일 대비 변화율 (%):** `.pct_change()`
-    ```python
-    df['Price'].pct_change().plot()
-    ```
 
-## 일정 간격 데이터 추출/보간: `.asfreq()`
+## 일정 간격으로 데이터 뽑기
+- 매월 말일 주가
+  ```python
+  df.Price.asfreq('ME')
+  ```
+- Y(연), Q(분기), M(월), W(주), D(일)
+- B를 붙이면 주말 제외(영업일)
+- S를 붙이면 기초를 뜻함: YS(연초), QS(분기초) 등
+- E를 붙이면 기말을 뜻함: YE(연말), QE(분기말) 등
+- 분기에 기준 월을 붙일 수 있음: QS-FEB(2월 1일부터 3개월 간격)
+- 주에 기준 요일을 붙일 수 있음: W-WED(매주 수요일)
 
-*   **매월 말일 주가:**
-    ```python
-    df.Price.asfreq('M') # 'M': Month End frequency
-    ```
-*   **주요 빈도 코드:** `A`(연말), `Q`(분기말), `M`(월말), `W`(주말), `D`(일). `B`(영업일). `S` 붙이면 시작 시점 (`AS`, `QS` 등). `QS-FEB` (2월 시작 분기초). `W-WED` (매주 수요일).
-*   **빈 데이터 채우기 (결측치 보간):**
-    *   2016-12-31 전후 데이터 확인:
-        ```python
-        df.Price['2016-12-30':'2017-01-03'] # 31일, 1일, 2일 데이터 없음
-        ```
-    *   이전 값으로 채우기 (Forward fill): `method='ffill'`
-        ```python
-        df.Price.asfreq('D', method='ffill') # 매일 데이터로 만들며 이전 값으로 채움
-        ```
-    *   이후 값으로 채우기 (Backward fill): `method='bfill'`
-        ```python
-        df.Price.asfreq('D', method='bfill')
-        ```
 
-## 데이터 재표집 (종합): `.resample()`
+## 그래프 겹쳐 그리기
+- `.plot`을 같은 셀에서 실행하면 그래프가 겹쳐서 그려짐
+  ```python
+  df.Price.plot(alpha=0.3)
+  df.Price.asfreq('BA').plot(color='red', style='o-')
+  ```
+- 그래프 옵션
+    - `alpha`: 불투명도. 0은 완전 투명, 1은 완전 불투명.
+    - `color`: 색상
+    - `style`: 선 모양(o- 굵은 점과 실선, - 실선, -- 대시, : 점선, -. 대시와 점선)
 
-*   특정 시점 간격(rule)으로 데이터 그룹화 후 집계 함수 적용.
-*   **매년 초(AS) 기준 연 평균 가격:**
-    ```python
-    df.Price.resample('AS').mean()
-    ```
-*   **적용 가능 함수:** `sum`, `mean`, `std`, `sem`, `max`, `min`, `median`, `first`, `last`, `ohlc` (시/고/저/종가).
-*   **옵션:** `rule`(빈도), `fill_method`(결측치 채우기), `closed`(구간 경계 포함 방식: `left`/`right`).
 
-## 이동 평균/집계: `.rolling()`
+## 빈 데이터 채우기
+- 2016-12-31의 전후 날짜 데이터
+  ```python
+  df.Price['2016-12-30':'2017-01-03']
+  ```
+- 2016년 12월 31일~2017년 1월 2일까지 비어있음
+- 해당 날짜의 데이터가 비어있을 경우 이전(forward)의 데이터로 채우기
+  ```python
+  df.Price.asfreq('YE', method='ffill')
+  ```
+    - 2016-12-30의 771.82로 2016-12-31을 채움
+- 해당 날짜의 데이터가 비어있을 경우 이후(back)의 데이터로 채우기
+  ```python
+  df.Price.asfreq('YE', method='bfill')
+  ```
+    - 2017-01-03의 786.14로 2016-12-31을 채움
 
-*   일정 크기(window)의 **창(window)**을 이동시키며 데이터 묶음 생성.
-*   **365일 이동 평균:**
-    ```python
-    # window=365: 365개 데이터 묶음, center=True: 현재 날짜 기준 전후로 창 설정
-    rolling = df.Price.rolling(365, center=True)
-    rolling.mean().plot() # 각 묶음(365일) 평균 계산 후 시각화
-    ```
-*   **`.resample()` 과 차이:**
-    *   `resample`: **일정 간격(달력 기준)**으로 그룹화 (예: 2019년 평균, 2020년 평균).
-    *   `rolling`: **모든 시점 기준**으로 **지정된 개수(window)**만큼 데이터 묶음 (예: 1월 1일 기준 365일 평균, 1월 2일 기준 365일 평균...).
 
-## 시계열 데이터 분석 예시 (자전거 대여)
+## 리샘플 resample
+- 특정 시점 간격으로 데이터를 종합
+- 아래는 가격을 매년 초(YS)를 기준으로 잘라, 연 평균 가격을 계산
+  ```python
+  df.Price.resample('YS').mean()
+  ```
+- 적용할 수 있는 함수들:
+    - `sum`, `mean`, `std`, `sem`, `max`, `min`, `median`, `first`, `last`, `ohlc`
+    - `ohlc`: 시초가, 고가, 저가, 종가
+- 옵션
+    - `rule`: 원하는 리샘플링 빈도(예: YS)
+    - `fill_method`: 결측값을 채우는 방법(ffill, bfill).
+        - 기본값: 채우지 않음.
+    - `closed`: 구간의 왼쪽 left과 오른쪽 right 중 어느 쪽을 포함하는가
 
-*   **데이터 로드 (날짜 인덱스 지정, 자동 파싱):**
-    ```python
-    data = pd.read_csv(
-        'bicycle.csv',
-        index_col='Date',    # 'Date' 컬럼을 인덱스로
-        parse_dates=True   # 인덱스를 날짜 타입으로 자동 변환
-    )
-    data.columns = ['Total', 'East', 'West'] # 편의상 컬럼명 변경
-    data.head()
-    ```
-*   **전체 시각화:**
-    ```python
-    data.plot(figsize=(12, 5))
-    ```
-*   **주 단위 합계 시각화:**
-    ```python
-    data.resample('W').sum().plot(figsize=(12, 5)) # 'W': Weekly frequency
-    ```
-*   **30일 이동 평균 시각화 (일 단위 합계 기준):**
-    ```python
-    daily = data.resample('D').sum() # 일단위 합계
-    daily.rolling(30, center=True).mean().plot(figsize=(12, 5))
-    ```
-*   **가우시안 가중 이동 평균:** (가까운 날짜에 가중치)
-    ```python
-    # window=50, win_type='gaussian': 가우시안 분포로 가중치 부여
-    roll = daily.rolling(50, center=True, win_type='gaussian')
-    # 가우시안 표준편차(std) 지정하여 평균 계산
-    roll.mean(std=10).plot(figsize=(12, 5))
-    ```
-*   **시간대별 평균:**
-    ```python
-    # index.time 속성으로 시간대 추출 후 그룹화
-    by_time = data.groupby(data.index.time).mean()
-    by_time.plot()
-    ```
-*   **시간대별 평균 (x축 눈금 조절):**
-    ```python
-    import numpy as np
-    hourly_ticks = 4 * 60 * 60 * np.arange(6) # 4시간 간격 초 단위
-    by_time.plot(xticks=hourly_ticks, style=[':', '--', '-']) # style: 선 모양
-    ```
-*   **요일별 평균:**
-    ```python
-    # index.dayofweek: 월(0) ~ 일(6)
-    by_weekday = data.groupby(data.index.dayofweek).mean()
-    by_weekday.index = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] # 인덱스 이름 변경
-    by_weekday.plot()
-    ```
-*   **주중/주말 및 시간대별 평균 비교:**
-    ```python
-    # 주중(0~4)/주말(5,6) 구분
-    weekend = np.where(data.index.weekday < 5, 'Weekday', 'Weekend')
-    # 주중/주말, 시간대별 그룹화
-    by_time = data.groupby([weekend, data.index.time]).mean()
 
-    # 각각 시각화
-    fig, ax = plt.subplots(1, 2, figsize=(14, 5)) # 1행 2열 그래프 영역 생성
-    by_time.loc['Weekday'].plot(ax=ax[0], title='Weekdays', xticks=hourly_ticks)
-    by_time.loc['Weekend'].plot(ax=ax[1], title='Weekends', xticks=hourly_ticks)
-    ```
+## 이동 평균
+- `rolling`을 이용해서 매 365일 간격의 데이터를 묶음
+  ```python
+  rolling = df.Price.rolling(365, center=True)
+  ```
+- 각 묶음별로 평균
+  ```python
+  rolling.mean().plot()
+  ```
+
+
+## 리샘플과 이동평균의 차이
+- 리샘플 `resample`은 일정 간격으로 구분(2019년 평균, 2020년 평균 등)
+- 이동평균 `rolling`은 모든 날짜를 기준으로 전후 365일의 평균
+
 
 ## 퀴즈
 

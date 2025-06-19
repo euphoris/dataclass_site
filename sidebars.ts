@@ -270,52 +270,52 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '5일차 - 시계열 분석',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/time-series',
-    //       label: '시계열 데이터 분석의 소개'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/python-time-series',
-    //       label: 'Python으로 시계열 데이터 다루기'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/group-by',
-    //       label: 'group by'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'time-series/decomposition',
-    //       label: '시계열 분해'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'time-series/autocorrelation',
-    //       label: '자기 상관'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'time-series/forecasting',
-    //       label: '시계열 예측'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/time-series-clustering',
-    //       label: '시계열 클러스터링'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/exercise-greenhouse-forecasting',
-    //       label: '종합 실습: 온실 가스 배출 예측'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '5일차 - 시계열 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'data-analysis/time-series',
+          label: '시계열 데이터 분석의 소개'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/python-time-series',
+          label: 'Python으로 시계열 데이터 다루기'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/group-by',
+          label: 'group by'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/time-series-decomposition',
+          label: '시계열 분해'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/autocorrelation',
+          label: '자기 상관'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/forecasting',
+          label: '시계열 예측'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/time-series-clustering',
+          label: '시계열 클러스터링'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/exercise-greenhouse-forecasting',
+          label: '종합 실습: 온실 가스 배출 예측'
+        },
+      ]
+    },
   ],
   statSidebar: [
     {

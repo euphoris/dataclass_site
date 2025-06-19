@@ -1,124 +1,171 @@
 # 시계열 클러스터링
 
-## Dynamic Time Warping (DTW)
 
-*   **문제점:** 시계열은 패턴 비슷해도 **타이밍(위상)** 차이 있는 경우 많음. 유클리드 거리 등 일반 거리 척도는 부적합.
-*   **DTW:** 두 시계열 간 **비선형 정렬(warping)** 통해 시간 축 왜곡, **최대한 비슷하게 맞춰** 거리(유사도) 계산.
-    $$ DTW(x, y) = \min_{\pi} \sqrt{\sum_{(i,j) \in \pi} d(x_i, y_j)^2} $$
-    *   $\pi$: 정렬 경로(warping path).
-    *   $d(x_i, y_j)$: 두 시점 값 간 거리.
+## 시계열 클러스터링
+- 주요 개념:
+    - DTW
+    - Soft DTW
+    - 무게 중심
+    - DBA
+    - 시계열 클러스터링
 
-*(슬라이드 331 그림: 유클리드 거리 vs DTW 비교)*
 
-*   **Python DTW (tslearn):**
-    ```python
-    # !pip install tslearn # 설치 필요시
-    from tslearn.metrics import dtw, dtw_path
-    import numpy as np
-    import matplotlib.pyplot as plt
+## Dynamic Time Warping
+- 시계열 데이터는 비슷한 패턴이라도 타이밍에 차이가 있는 경우가 흔함
+- DTW는 서로 다른 시계열을 최대한 비슷하게 맞춰서 비교
 
-    # 예제 데이터
-    x = np.array([1, 1.2, 1.3, 3, 1.6, 1.3])
-    y = np.array([1.2, 2.8, 2, 1.9, 1.7, 1.5])
+<pre>DTW(x, y) = min<sub>π</sub> √∑<sub>(i,j)∈π</sub> d(x, y)²</pre>
 
-    # DTW 거리(유사도)만 계산
-    dtw_score = dtw(x, y)
-    print(f"DTW score: {dtw_score:.4f}")
 
-    # 최적 경로와 거리 계산
-    optimal_path, dtw_score = dtw_path(x, y)
-    print("Optimal path:", optimal_path)
+## 예제
+- 시계열 머신러닝 라이브러리 tslearn 설치
+  ```
+  !pip install tslearn
+  ```
+- 예제 데이터
+  ```python
+  import numpy as np
+  import matplotlib.pyplot as plt
 
-    # 경로 시각화 (슬라이드 334 참고)
-    optimal_path = np.array(optimal_path)
-    plt.plot(x, label='x')
-    plt.plot(y, label='y')
-    for i, j in optimal_path:
-        plt.plot([i, j], [x[i], y[j]], color='gray', linestyle='dotted')
-    plt.legend()
-    plt.show()
-    ```
+  x = np.array([1, 1.2, 1.3, 3, 1.6, 1.3])
+  y = np.array([1.2, 2.8, 2, 1.9, 1.7, 1.5])
 
-## Barycenter (시계열 평균)
+  plt.plot(x)
+  plt.plot(y)
+  ```
 
-*   **정의:** 여러 시계열 집합 D가 있을 때, 집합 내 모든 시계열과의 **DTW 거리 합이 최소**가 되는 **대표 시계열** $\mu$. (시계열 데이터의 '평균' 개념)
-    $$ \min_{\mu} \sum_{x \in D} DTW(\mu, x)^2 $$
-*   **DBA (DTW Barycenter Averaging):** DTW 기반 Barycenter 계산 알고리즘.
-    ```python
-    from tslearn.barycenters import dtw_barycenter_averaging
 
-    dataset = np.array([x, y]) # 평균낼 시계열들
-    b = dtw_barycenter_averaging(dataset) # DBA 계산
+## 경로와 유사도 계산
+- 유사도만 계산
+  ```python
+  from tslearn.metrics import dtw, dtw_path
+  dtw_score = dtw(x, y)
+  ```
+- 경로와 유사도를 모두 계산
+  ```python
+  optimal_path, dtw_score = dtw_path(x, y)
+  ```
+- 발견한 경로에서 x와 y가 일치하는 것을 볼 수 있음
+  ```python
+  optimal_path = np.array(optimal_path)
+  plt.plot(x[optimal_path[:, 0]])
+  plt.plot(y[optimal_path[:, 1]])
+  ```
 
-    plt.plot(x, linestyle='dotted', label='x')
-    plt.plot(y, linestyle='dotted', label='y')
-    plt.plot(b, label='DBA Barycenter')
-    plt.legend()
-    plt.show()
-    ```
-*   **Soft-DTW:** DTW 경로 탐색을 확률적/부드럽게(soft) 수행. 미분 가능하여 딥러닝 등에 활용 용이. Barycenter 계산도 가능.
-    ```python
-    from tslearn.barycenters import softdtw_barycenter
-    b = softdtw_barycenter(dataset, gamma=0.5)
-    plt.plot(x, linestyle='dotted')
-    plt.plot(y, linestyle='dotted')
-    plt.plot(b)
-    ```
 
-## 시계열 K-Means 클러스터링
+## 시각화
+```python
+optimal_path = np.array(optimal_path)
+plt.plot(x)
+plt.plot(y)
+for i in range(len(optimal_path)):
+    plt.plot(
+        optimal_path[i],
+        [x[optimal_path[i, 0]], y[optimal_path[i, 1]]], 
+        color='gray', linestyle='dotted')
+```
 
-*   K-Means 알고리즘에 **거리 척도(metric)**로 DTW 또는 Soft-DTW 사용 가능.
-*   **데이터 준비 (Trace 데이터셋):**
-    ```python
-    from tslearn.clustering import TimeSeriesKMeans
-    from tslearn.datasets import CachedDatasets
-    from tslearn.preprocessing import TimeSeriesScalerMeanVariance, TimeSeriesResampler
-    import numpy as np
-    import matplotlib.pyplot as plt
 
-    seed = 0
-    np.random.seed(seed)
-    X_train, y_train, X_test, y_test = CachedDatasets().load_dataset("Trace")
-    X_train = X_train[y_train < 4] # 3개 클래스만 사용
-    np.random.shuffle(X_train)
-    # 데이터 스케일링 및 길이 맞추기 (리샘플링)
-    X_train = TimeSeriesScalerMeanVariance().fit_transform(X_train[:50])
-    X_train = TimeSeriesResampler(sz=40).fit_transform(X_train)
-    sz = X_train.shape[1]
-    ```
-*   **유클리드 거리 K-Means:** (기본값)
-    ```python
-    km = TimeSeriesKMeans(n_clusters=3, verbose=True, random_state=seed)
-    y_pred = km.fit_predict(X_train)
-    # ... 결과 시각화 (슬라이드 340) ...
-    ```
-*   **DTW 거리 K-Means:** (`metric="dtw"`)
-    ```python
-    dba_km = TimeSeriesKMeans(n_clusters=3, n_init=2, metric="dtw", verbose=True,
-                              max_iter_barycenter=10, random_state=seed)
-    y_pred = dba_km.fit_predict(X_train)
-    # ... 결과 시각화 (슬라이드 341) ...
-    ```
-*   **Soft-DTW 거리 K-Means:** (`metric="softdtw"`)
-    ```python
-    sdtw_km = TimeSeriesKMeans(n_clusters=3, metric="softdtw", metric_params={"gamma": .01},
-                               verbose=True, random_state=seed)
-    y_pred = sdtw_km.fit_predict(X_train)
-    # ... 결과 시각화 (슬라이드 342) ...
-    ```
-*   **결과 시각화 (공통):** 각 클러스터별 시계열들과 해당 클러스터 중심(barycenter) 함께 그리기.
-    ```python
-    plt.figure(figsize=(12, 4))
-    for yi in range(3): # 3개 클러스터
-        plt.subplot(1, 3, yi + 1)
-        for xx in X_train[y_pred == yi]: # 해당 클러스터 데이터
-            plt.plot(xx.ravel(), "k-", alpha=.2) # ravel(): 1차원으로 펴기
-        plt.plot(km.cluster_centers_[yi].ravel(), "r-") # 클러스터 중심 (모델에 따라 km, dba_km, sdtw_km)
-        plt.xlim(0, sz)
-        plt.title(f"Cluster {yi+1}")
-    plt.tight_layout()
-    plt.show()
-    ```
+## 무게 중심 Barycenter
+- 여러 개의 시계열 집합 D가 있을 때, 이 집합에 속하는 모든 시계열과 DTW가 가장 짧은 시계열 μ
+
+<pre>min<sub>μ</sub> ∑<sub>x∈D</sub> DTW(μ, x)²</pre>
+
+
+## DTW Barycenter Averaging (DBA) 알고리즘
+```python
+from tslearn.barycenters import dtw_barycenter_averaging
+dataset = np.array([x, y])
+b = dtw_barycenter_averaging(dataset)
+plt.plot(x, linestyle='dotted')
+plt.plot(y, linestyle='dotted')
+plt.plot(b)
+```
+
+
+## Soft-DTW
+- 하나의 경로만 찾는 것이 아니라 여러 개의 경로를 부드럽게(soft) 합치는 방법
+
+<pre>−γ log ∑<sub>t</sub> exp[−aᵢ/γ]</pre>
+
+- γ가 클 수록 부드러운 형태가 됨. γ = 0이면 DTW와 같음
+  ```python
+  from tslearn.metrics import soft_dtw_alignment
+  alignment, score = soft_dtw_alignment(x, y, gamma=0.5)
+  plt.imshow(alignment, cmap='gray')
+  ```
+
+
+## 시각화
+```python
+from tslearn.barycenters import softdtw_barycenter
+b = softdtw_barycenter(dataset, gamma=0.5)
+plt.plot(x, linestyle='dotted')
+plt.plot(y, linestyle='dotted')
+plt.plot(b)
+```
+
+
+## 클러스터링
+- 예제 데이터 준비
+  ```python
+  from tslearn.clustering import TimeSeriesKMeans
+  from tslearn.datasets import CachedDatasets
+  from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
+                                    TimeSeriesResampler
+  
+  seed = 0
+  np.random.seed(seed)
+  X_train, y_train, X_test, y_test = CachedDatasets().load_dataset("Trace")
+  X_train = X_train[y_train < 4] # Keep first 3 classes
+  np.random.shuffle(X_train)
+  X_train = TimeSeriesScalerMeanVariance().fit_transform(X_train[:50])
+  X_train = TimeSeriesResampler(sz=40).fit_transform(X_train)
+  sz = X_train.shape[1]
+  ```
+
+
+## 유클리드 거리로 유사성 계산
+```python
+km = TimeSeriesKMeans(n_clusters=3, verbose=True, random_state=seed)
+y_pred = km.fit_predict(X_train)
+
+plt.figure()
+for yi in range(3):
+    plt.subplot(1, 3, yi + 1)
+    for xx in X_train[y_pred == yi]:
+        plt.plot(xx.ravel(), "k-", alpha=.2)
+    plt.plot(km.cluster_centers_[yi].ravel(), "r-")
+```
+
+
+## DTW로 유사성 계산
+```python
+dba_km = TimeSeriesKMeans(n_clusters=3, n_init=2, metric="dtw", verbose=True,
+                          max_iter_barycenter=10, random_state=seed)
+y_pred = dba_km.fit_predict(X_train)
+
+for yi in range(3):
+    plt.subplot(1, 3, yi + 1)
+    for xx in X_train[y_pred == yi]:
+        plt.plot(xx.ravel(), "k-", alpha=.2)
+    plt.plot(dba_km.cluster_centers_[yi].ravel(), "r-")
+```
+
+
+## Soft-DTW로 유사성 계산
+```python
+sdtw_km = TimeSeriesKMeans(n_clusters=3, metric="softdtw",
+                           metric_params={"gamma": .01},
+                           verbose=True, random_state=seed)
+y_pred = sdtw_km.fit_predict(X_train)
+
+for yi in range(3):
+    plt.subplot(1, 3, yi + 1)
+    for xx in X_train[y_pred == yi]:
+        plt.plot(xx.ravel(), "k-", alpha=.2)
+    plt.plot(sdtw_km.cluster_centers_[yi].ravel(), "r-")
+```
 
 ## 퀴즈
 

@@ -1,0 +1,198 @@
+# 시계열 분해
+
+
+## 시계열 분해
+- 주요 개념:
+    - 덧셈 분해
+    - 곱셈 분해
+    - 고전적 분해법
+    - STL 분해
+    - 추세와 계절성의 강도
+
+
+## 덧셈 분해 additive decomposition
+yₜ = Sₜ + Tₜ + Rₜ
+
+- yₜ : 종속 변수
+- Sₜ : 계절 성분
+- Tₜ : 추세 성분(주기 성분을 포함)
+- Rₜ : 나머지 성분
+
+
+## 곱셈 분해 multiplicative decomposition
+yₜ = Sₜ × Tₜ × Rₜ
+
+- yₜ : 종속 변수
+- Sₜ : 계절 성분
+- Tₜ : 추세 성분(주기 성분을 포함)
+- Rₜ : 나머지 성분
+
+
+## 전자 장비 주문
+- 전자 장비에 대한 신규 주문 지수 데이터
+- 유럽 지역(16개국)에서 전자 장비(컴퓨터, 전자, 광학 제품)에 대한 신규 주문량
+- 근무일 기준으로 조정
+- 2005년 값이 100이 되도록 조정
+
+
+## 실습 준비
+- 실습 데이터
+  ```python
+  import pandas as pd
+  df = pd.read_excel('elecequip.xlsx')
+  ```
+- 행은 연도, 열은 월 형태로 되어 있는 데이터
+- `pd.melt`로 연-월별 데이터로 변환
+  ```python
+  long_form = pd.melt(
+      df,
+      id_vars=['year'],
+      var_name='month',
+      value_name='demand')
+  ```
+
+
+## 월 순서대로 정렬
+- 월을 정렬된 범주형 데이터로 변환
+  ```python
+  months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  long_form['month'] = pd.Categorical(
+      long_form['month'], categories=months, ordered=True)
+  ```
+- 연월 순으로 정렬하고, 값이 비어있는 행은 삭제, 인덱스(행번호) 재지정하고 원래 인덱스는 드롭
+  ```python
+  ym = long_form.sort_values(['year', 'month']).dropna().reset_index(drop=True)
+  ```
+
+
+## 피봇 테이블
+```python
+wide_form = long_form.pivot_table(
+    index='year',
+    columns='month',
+    values='demand')
+wide_form
+```
+- 행은 year, 열은 month, 값은 demand 값이 되도록 표를 만듦
+
+
+## 고전적 분해법
+- 1920년대에 창안, 단순하지만 다른 시계열 분해 방법의 기초
+- 계절 성분이 매년 일정하다고 가정
+- 덧셈 분해:
+    - 1단계: 이동평균으로 추세 성분 계산
+    - 2단계: 시계열에서 추세 성분을 제거
+    - 3단계: 계절성의 각 주기(분기, 월, 요일 등)를 평균내어 계절 성분 구함
+    - 4단계: 시계열에서 추세 성분과 계절 성분을 제거하여 나머지 성분 계산
+- 곱셈 분해:
+    - 덧셈 분해와 동일하나 성분을 제거할 때 뺄셈 대신 나눗셈
+    - 또는 시계열에 로그를 취한 후, 덧셈 분해를 하고 다시 지수 함수를 적용하면 곱셈 분해와 같음
+
+
+## 덧셈 분해 실습: 추세 성분 제거
+```python
+from statsmodels.tsa.seasonal import seasonal_decompose
+result = seasonal_decompose(ym['demand'], model='additive', period=12) # 1년 주기
+result.plot();
+```
+
+
+## 성분별 보기
+- 추세 성분
+  ```python
+  result.trend
+  ```
+- 계절 성분
+  ```python
+  result.seasonal
+  ```
+- 나머지 성분
+  ```python
+  result.resid
+  ```
+
+
+## 계절적 조정
+- 데이터에서 계절성을 제거하거나
+  ```python
+  adjusted = ym.demand - result.seasonal
+  ```
+- 추세와 나머지 성분을 더함
+  ```python
+  adjusted = result.trend + result.resid
+  ```
+- 시각화
+  ```python
+  adjusted.plot()
+  ```
+
+
+## LOESS
+- locally estimated scatterplot smoothing
+- 국소 회귀 (local regression)
+- 시계열의 각 부분을 t에 대해 회귀 분석하여 얻은 추세선을 이어 붙임
+- 장점:
+    - 어떤 종류의 계절성도 다룰 수 있음
+    - 계절적인 성분이 시간에 따라 변해도 괜찮음
+    - 추세의 매끄러운 정도를 사용자가 조절할 수 있음
+    - 이상값의 영향을 조절
+
+
+## STL 분해
+- LOESS를 사용한 계절성과 추세 분해
+- Seasonal and Trend decomposition using LOESS
+- R. B. Cleveland, Cleveland, McRae, & Terpenning (1990)
+- STL 분해. period에는 계절성 주기
+  ```python
+  from statsmodels.tsa.seasonal import STL
+  result = STL(ym.demand, period=12).fit()
+  result.plot();
+  ```
+
+
+## STL: 이상점의 영향 조절
+- `robust=True`로 설정하면 이상점을 더 허용
+- 일시적으로 크게 이탈한 사건의 영향을 추세와 계절 성분에 적게 반영
+  ```python
+  STL(ym.demand, period=12, robust=True).fit().plot()
+  ```
+
+
+## STL: 추세의 매끄러움
+- `trend`: 클 수록 추세가 매끄러워짐. period보다 큰 홀수여야 함
+  ```python
+  STL(ym.demand, period=12, trend=13).fit().trend.plot()
+  ```
+
+
+## STL: 계절 성분의 매끄러움
+- `seasonal`: 클 수록 추세가 매끄러워짐. 3보다 큰 홀수여야 함(기본값 7)
+  ```python
+  STL(ym.demand, period=12, seasonal=3).fit().seasonal.plot()
+  ```
+
+
+## 추세의 강도 strength
+- 계절성을 조정한 데이터의 분산과 나머지 성분의 분산을 비교
+- 0~1 범위의 값 (0보다 작을 경우는 0으로)
+- 0에 가까울 수록 추세가 거의 없음
+- 1에 가까울 수록 추세가 매우 강함
+  ```python
+  1 - result.resid.var() / (result.trend + result.resid).var()
+  ```
+
+
+## 계절성의 강도
+- 추세를 제거한 데이터의 분산과 나머지 성분의 분산을 비교
+- 0~1 범위의 값 (0보다 작을 경우는 0으로)
+- 0에 가까울 수록 계절성이 거의 없음
+- 1에 가까울 수록 계절성이 매우 강함
+  ```python
+  1 - result.resid.var() / (result.seasonal + result.resid).var()
+  ```
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/w4dRQr?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1990" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 시계열분해"></iframe>
