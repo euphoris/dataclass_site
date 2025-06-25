@@ -1,0 +1,132 @@
+# NULL과 문자열 비교
+
+## NULL 값의 의미와 처리 방식
+* `NULL`의 의미: "알 수 없는 값", "값이 없음", "적용할 수 없는 값"을 나타내는 특별한 마커.
+    * 0(숫자 영)이나 공백 문자(' ')와는 다름.
+* 데이터베이스에서의 `NULL`:
+    * 값이 아직 입력되지 않았거나, 해당 속성이 특정 행에 적용되지 않을 때 사용.
+    * 기본 키(Primary Key) 컬럼은 `NULL` 값을 가질 수 없음.
+* `NULL` 값 연산:
+    * `NULL`이 포함된 산술 연산의 결과는 대부분 `NULL` (예: `10 + NULL` -> `NULL`).
+    * `NULL`이 포함된 비교 연산의 결과는 `UNKNOWN` (대부분 `FALSE`처럼 처리됨).
+* 집계 함수와 `NULL`: `COUNT(*)`, `AVG()`, `SUM()`, `MAX()`, `MIN()` 등 대부분의 집계 함수는 기본적으로 `NULL` 값을 제외하고 계산 
+* 단, `COUNT(*)`는 `NULL` 여부와 관계없이 행의 개수를 셈
+
+---
+## NULL 값 비교: IS NULL
+* `NULL` 값 비교의 특수성: `NULL`은 다른 값과 같거나(`=`) 다르다고(`!=`) 직접 비교할 수 없음 (`WHERE column = NULL`은 의도대로 동작하지 않음).
+    * `NULL = NULL`의 결과는 `UNKNOWN` (참이 아님).
+* `IS NULL` 연산자: 해당 열의 값이 `NULL`인 행을 검색.
+```sql
+SELECT column1, column2
+FROM table_name
+WHERE column_to_check IS NULL;
+```
+* `TB_COMPANY_MASTER` 테이블에서 `LISTING_DT` (상장일자)가 없는(NULL) 회사 조회 (비상장 회사)
+```sql
+SELECT COMPANY_NM, ESTABLISH_DT
+FROM TB_COMPANY_MASTER
+WHERE LISTING_DT IS NULL;
+```
+
+---
+## IS NOT NULL
+* `IS NOT NULL` 연산자: 해당 열의 값이 `NULL`이 아닌 행을 검색.
+    ```sql
+    SELECT column1, column2
+    FROM table_name
+    WHERE column_to_check IS NOT NULL;
+    ```
+
+* `TB_CREDIT_INFO` 테이블에서 `CREDIT_GRADE` (신용등급)이 있는(NULL이 아닌) 정보만 조회
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE CREDIT_GRADE IS NOT NULL;
+```
+
+---
+## LIKE 연산자와 와일드카드를 사용한 패턴 매칭
+* `LIKE` 연산자: 문자열 열에서 특정 패턴과 일치하는 데이터를 검색할 때 사용.
+* 와일드카드 (Wildcards):
+    * `%` (퍼센트 기호): 0개 이상의 임의의 문자를 의미.
+        * `'김%'`: '김'으로 시작하는 모든 문자열 (예: '김한국', '김미래')
+        * `'%전자%'`: '전자'를 포함하는 모든 문자열 (예: '(주)대한전자', '미래전자솔루션')
+        * `'%솔루션'`: '솔루션'으로 끝나는 모든 문자열 (예: '(주)미래솔루션')
+    * `_` (언더스코어): 정확히 1개의 임의의 문자를 의미.
+        * `'박_래'`: '박'으로 시작하고 중간에 한 글자가 오고 '래'로 끝나는 문자열 (예: '박미래', '박찬래')
+* 문법:
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE string_column LIKE 'pattern';
+```
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_NM` (업체명)이 '(주)'로 시작하는 회사 조회
+```sql
+SELECT COMPANY_NM
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_NM LIKE '(주)%';
+```
+* `TB_COMPANY_MASTER` 테이블에서 `CEO_NM` (대표자명)이 '김'씨이고 이름이 두 글자인 사람 조회 (예: 김한국 - X, 김철수 - O)
+```sql
+SELECT CEO_NM, COMPANY_NM
+FROM TB_COMPANY_MASTER
+WHERE CEO_NM LIKE '김_국'; -- 김○국
+```
+
+## NOT LIKE
+* `NOT LIKE`: 패턴과 일치하지 않는 데이터 검색.
+
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_NM` (업체명)이 '(주)'로 시작하지 않는 회사 조회
+```sql
+SELECT COMPANY_NM
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_NM NOT LIKE '(주)%';
+```
+* `TB_COMPANY_MASTER` 테이블에서 `CEO_NM` (대표자명)이 '김'씨이고 이름이 두 글자가 아닌 사람 조회
+```sql
+SELECT CEO_NM, COMPANY_NM
+FROM TB_COMPANY_MASTER
+WHERE CEO_NM NOT LIKE '김_국'; -- 김○국
+```
+
+## ESCAPE
+
+* `ESCAPE` 절: 와일드카드 문자 (`%`, `_`) 자체를 검색하고 싶을 때 사용. (예: `WHERE column LIKE 'AB\%C' ESCAPE '\';`)
+
+ESCAPE 절: 와일드카드 문자 (%, _) 자체를 검색하고 싶을 때 사용. (예: WHERE column LIKE 'AB\%C' ESCAPE '\';)
+
+'%_%'이라고 할 경우 모든 이름이 다 해당됨(중간에 어떤 한 글자가 들어가는 이름이라는 뜻)
+ESCAPE 문자를 지정하면 해당 문자 뒤의 와일드카드(_나 %)는 그 글자 자체로 처리됨
+'%\_%'은 중간에 정확히 _가 들어간다는 뜻
+```sql
+SELECT * FROM TB_COMPANY_MASTER 
+WHERE COMPANY_ENG_NM LIKE '%\_%' ESCAPE '\'; -- 회사 영문명에 밑줄(_)이 들어가는 경우 
+```
+
+- ESCAPE 문자는 바꿀 수 있음
+```sql
+SELECT * FROM TB_COMPANY_MASTER 
+WHERE COMPANY_ENG_NM LIKE '%!_%' ESCAPE '!';
+```
+
+## 정규표현식
+
+- 정규표현식: 문자열의 패턴을 나타내는 표기법
+- LIKE보다 복잡한 패턴을 사용할 수 있음
+
+예: 회사 이름에 '로'나 '루'가 들어가는 경우
+```sql
+SELECT * FROM TB_COMPANY_MASTER 
+WHERE REGEXP_LIKE(COMPANY_NM, '[로루]');
+```
+
+회사 이름에 '가'에서 '기'까지 어떤 글자가 들어가는 경우
+```sql
+SELECT * FROM TB_COMPANY_MASTER 
+WHERE REGEXP_LIKE(COMPANY_NM, '[가-기]');
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mBY417?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1449" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] NULL과 문자열 비교"></iframe>

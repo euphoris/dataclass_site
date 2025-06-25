@@ -1,0 +1,231 @@
+
+# WHERE
+
+## WHERE 절 소개: 조건 필터링
+* `WHERE` 절의 역할: `FROM` 절로 지정된 테이블에서 특정 조건을 만족하는 행(레코드)만 선택하여 조회
+* 데이터 필터링: 방대한 데이터 중에서 필요한 정보만 추출 가능
+* 위치: `FROM` 절 다음에 위치
+* 기본 문법:
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition;
+    ```
+* 예시: `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값)이 '대기업'인 회사만 조회
+    ```sql
+    SELECT COMPANY_NM, COMPANY_TYPE_CAT
+    FROM TB_COMPANY_MASTER
+    WHERE COMPANY_TYPE_CAT = '대기업';
+    ```
+* 주의: 문자열 비교 시 대소문자 구분, 날짜 형식 일치 중요
+
+---
+## WHERE 절에서의 기본 비교 연산자 활용
+* 비교 연산자: `WHERE` 절의 조건식에서 값을 비교하는 데 사용
+    * `=` : 같다
+    * `!=`, `<>`, `^=` : 같지 않다
+    * `>` : 크다
+    * `<` : 작다
+    * `>=` : 크거나 같다
+    * `<=` : 작거나 같다
+* `TB_LOAN_ACCOUNT` 테이블에서 `INTEREST_RATE` (금리)가 3.0 미만인 여신 계좌 조회
+    ```sql
+    SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+    FROM TB_LOAN_ACCOUNT
+    WHERE INTEREST_RATE < 3.0;
+    ```
+* `TB_COMPANY_MASTER` 테이블에서 `IS_VENTURE` (벤처기업여부값)가 'Y'가 아닌 회사 조회
+    ```sql
+    SELECT COMPANY_NM, IS_VENTURE
+    FROM TB_COMPANY_MASTER
+    WHERE IS_VENTURE != 'Y';
+    ```
+* `TB_FINANCIAL_STATEMENT` 테이블에서 `REVENUE` (매출액)이 5000억 이상인 재무 정보 조회 (숫자 단위 확인 필요)
+    ```sql
+    SELECT BIZ_REG_NO, FS_YM, REVENUE
+    FROM TB_FINANCIAL_STATEMENT
+    WHERE REVENUE >= 500000000000;
+        ```
+
+---
+## WHERE 절에서의 논리 연산자 (AND, OR, NOT)
+* 논리 연산자: 두 개 이상의 조건을 결합하여 더 복잡한 필터링 수행
+    * `AND`: 모든 조건이 참(TRUE)일 때 결과도 참 (예: 조건1 `AND` 조건2)
+    * `OR`: 조건 중 하나라도 참(TRUE)이면 결과도 참 (예: 조건1 `OR` 조건2)
+    * `NOT`: 조건의 논리 값을 반전 (예: `NOT` 조건)
+* 예시:
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT`이 '중소기업' 이고 `IS_VENTURE`가 'Y'인 회사 조회 (`AND`)
+```sql
+SELECT COMPANY_NM, COMPANY_TYPE_CAT, IS_VENTURE
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_TYPE_CAT = '중소기업' AND IS_VENTURE = 'Y';
+```
+* `TB_LOAN_ACCOUNT` 테이블에서 `LOAN_STATUS_CD` (여신상태코드)가 '연체' 이거나 `LOAN_BALANCE` (여신잔액)이 10억 이상인 계좌 조회 (`OR`) (예시 데이터에 '연체' 상태 추가 가정)
+```sql
+SELECT LOAN_ACCT_NO, LOAN_STATUS_CD, LOAN_BALANCE
+FROM TB_LOAN_ACCOUNT
+WHERE LOAN_STATUS_CD = '연체' OR LOAN_BALANCE >= 1000000000;
+```
+* `TB_CREDIT_INFO` 테이블에서 `CREDIT_GRADE` (신용등급)이 'AAA'가 아닌 신용정보 조회 (`NOT`)
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE NOT CREDIT_GRADE = 'AAA'; -- WHERE CREDIT_GRADE <> 'AAA';
+```
+
+---
+## 논리 연산자 우선순위와 괄호 사용
+* 논리 연산자 우선순위: `NOT` > `AND` > `OR`
+    * `NOT` 연산자가 가장 먼저 평가되고, 그 다음 `AND`, 마지막으로 `OR` 순서로 평가됨.
+* 괄호 `()`의 중요성:
+    * 연산자 우선순위를 명시적으로 변경하고 싶을 때 사용.
+    * 조건의 논리적 그룹을 명확히 하여 쿼리의 가독성을 높이고 의도치 않은 결과 방지.
+    * 괄호 안의 조건이 먼저 평가됨.
+* 예시: `TB_COMPANY_MASTER`에서 (기업구분이 '대기업' 이고 설립일자가 2000년 1월 1일 이전) 이거나 (기업구분이 '중소기업' 이고 벤처기업여부가 'Y')인 회사 조회
+    ```sql
+    SELECT COMPANY_NM, COMPANY_TYPE_CAT, ESTABLISH_DT, IS_VENTURE
+    FROM TB_COMPANY_MASTER
+    WHERE (COMPANY_TYPE_CAT = '대기업' AND ESTABLISH_DT < TO_DATE('2000-01-01', 'YYYY-MM-DD'))
+       OR (COMPANY_TYPE_CAT = '중소기업' AND IS_VENTURE = 'Y');
+    ```
+
+---
+## BETWEEN 연산자를 사용한 범위 검색
+* `BETWEEN 값1 AND 값2`: 특정 열의 값이 `값1`과 `값2` 사이 (양 끝 값 포함)에 있는 행을 검색.
+* 장점: `>=`와 `<=`를 `AND`로 연결하는 것보다 간결하게 표현 가능.
+* 사용 가능 데이터 타입: 숫자, 날짜, 문자 (문자는 사전 순서 기준).
+* 문법:
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_to_check BETWEEN lower_value AND upper_value;
+```
+
+* `TB_LOAN_ACCOUNT` 테이블에서 `INTEREST_RATE` (금리)가 3.0%에서 4.0% 사이인 여신 조회
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE BETWEEN 3.0 AND 4.0;
+```
+
+* `TB_COMPANY_MASTER` 테이블에서 `ESTABLISH_DT` (설립일자)가 2000년 1월 1일부터 2010년 12월 31일 사이인 회사 조회
+```sql
+SELECT COMPANY_NM, ESTABLISH_DT
+FROM TB_COMPANY_MASTER
+WHERE ESTABLISH_DT BETWEEN '2000-01-01' AND '2010-12-31';
+```
+
+---
+## NOT BETWEEN
+
+* `NOT BETWEEN 값1 AND 값2`: 해당 범위를 벗어나는 행 검색.
+
+* `TB_LOAN_ACCOUNT` 테이블에서 `INTEREST_RATE` (금리)가 3.0%에서 4.0% 사이가 아닌 여신 조회
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE NOT BETWEEN 3.0 AND 4.0;
+```
+
+* `TB_COMPANY_MASTER` 테이블에서 `ESTABLISH_DT` (설립일자)가 2000년 1월 1일부터 2010년 12월 31일 사이가 아닌 회사 조회
+```sql
+SELECT COMPANY_NM, ESTABLISH_DT
+FROM TB_COMPANY_MASTER
+WHERE ESTABLISH_DT NOT BETWEEN '2000-01-01' AND '2010-12-31';
+```
+---
+## IN 연산자를 사용한 목록 내 값 검색
+* `IN (값1, 값2, ...)`: 특정 열의 값이 제공된 목록 중 하나라도 일치하는 행을 검색.
+* 장점: 여러 개의 `OR` 조건을 연결하는 것보다 간결하고 가독성이 좋음.
+* 문법:
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_to_check IN (value1, value2, value3, ...);
+```
+
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값)이 '대기업' 또는 '중소기업'인 회사 조회
+```sql
+SELECT COMPANY_NM, COMPANY_TYPE_CAT
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_TYPE_CAT IN ('대기업', '중소기업');
+```
+* `TB_CREDIT_INFO` 테이블에서 `CREDIT_GRADE` (신용등급)이 'AAA', 'AA+', 'A+' 중 하나인 신용 정보 조회
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE CREDIT_GRADE IN ('AAA', 'AA+', 'A+');
+```
+
+## NOT IN
+
+* `NOT IN (값1, 값2, ...)`: 목록에 없는 값들과 일치하는 행 검색.
+
+
+* `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값)이 '대기업' 또는 '중소기업'가 아닌 회사 조회
+```sql
+SELECT COMPANY_NM, COMPANY_TYPE_CAT
+FROM TB_COMPANY_MASTER
+WHERE COMPANY_TYPE_CAT NOT IN ('대기업', '중소기업');
+```
+* `TB_CREDIT_INFO` 테이블에서 `CREDIT_GRADE` (신용등급)이 'AAA', 'AA+', 'A+' 중 하나가 아닌 신용 정보 조회
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE CREDIT_GRADE NOT IN ('AAA', 'AA+', 'A+');
+```
+
+## ALL
+
+모든 비교를 `AND`로 결합하는 것과 같음
+
+이자율은 3.0, 4.0 모든 값보다 커야 함(결과적으로 최댓값보다 커야 함)
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE > ALL(3.0, 4.0);
+```
+
+이자율은 3.0, 4.0 모든 값보다 작아야 함(결과적으로 최솟값보다 작아야 함)
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE < ALL(3.0, 4.0);
+```
+
+## ANY
+
+모든 비교를 `OR`로 결합하는 것과 같음
+
+이자율은 3.0, 4.0 어떤 값 하나보다는 커야 함(결과적으로 최솟값보다 커야 함)
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE > ANY(3.0, 4.0);
+```
+
+이자율은 3.0, 4.0 어떤 값 하나보다는 작아야 함(결과적으로 최댓값보다 작아야 함)
+```sql
+SELECT LOAN_ACCT_NO, INTEREST_RATE, LOAN_AMT
+FROM TB_LOAN_ACCOUNT
+WHERE INTEREST_RATE < ANY(3.0, 4.0);
+```
+
+## IN과 ALL, ANY
+- IN과 같음
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE CREDIT_GRADE = ANY('AAA', 'AA+', 'A+');
+```
+- NOT IN과 같음
+```sql
+SELECT BIZ_REG_NO, EVAL_DT, CREDIT_GRADE
+FROM TB_CREDIT_INFO
+WHERE CREDIT_GRADE != ALL('AAA', 'AA+', 'A+');
+```
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mZX4q5?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2763" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] WHERE"></iframe>

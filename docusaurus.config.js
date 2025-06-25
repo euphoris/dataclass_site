@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'dataAnalysisSidebar',
+          sidebarId: 'sqlSidebar',
           position: 'left',
-          label: '데이터 분석과 시각화', // 상단 메뉴
+          label: 'SQL', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {

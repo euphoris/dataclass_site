@@ -31,39 +31,59 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'doc',
+      id: 'sql/where',
+      label: 'WHERE'
+    },
+    {
+      type: 'doc',
       id: 'sql/vibe-coding',
       label: '바이브 코딩'
+    },
+    {
+      type: 'doc',
+      id: 'sql/null-string',
+      label: 'NULL과 문자열 비교'
+    },
+    {
+      type: 'doc',
+      id: 'sql/functions',
+      label: '함수'
     },
     {
       type: 'doc',
       id: 'sql/select-expressions',
       label: 'SELECT 표현'
     },
-    {
-      type: 'doc',
-      id: 'sql/group-by',
-      label: 'GROUP BY'
-    },
-    {
-      type: 'doc',
-      id: 'sql/set',
-      label: '집합 연산자'
-    },
-    {
-      type: 'doc',
-      id: 'sql/join',
-      label: 'JOIN'
-    },
-    {
-      type: 'doc',
-      id: 'sql/subquery',
-      label: '서브쿼리'
-    },
-    {
-      type: 'doc',
-      id: 'sql/cte',
-      label: '공통 테이블 표현식'
-    },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/group-by',
+    //   label: 'GROUP BY'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/set',
+    //   label: '집합 연산자'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/inner-join',
+    //   label: 'INNER JOIN'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/outer-join',
+    //   label: 'OUTER JOIN'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/subquery',
+    //   label: '서브쿼리'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'sql/cte',
+    //   label: '공통 테이블 표현식'
+    // },
   ],
   dataAnalysisSidebar: [
     {
