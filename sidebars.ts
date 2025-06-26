@@ -20,70 +20,88 @@ const sidebars: SidebarsConfig = {
       label: 'SQL 프로그래밍'
     },
     {
-      type: 'doc',
-      id: 'sql/basic',
-      label: 'SQL 기초'
+      type: 'category',
+      label: '1일차 - SQL 기초',
+      items: [
+        {
+          type: 'doc',
+          id: 'sql/basic',
+          label: 'SQL 기초'
+        },
+        {
+          type: 'doc',
+          id: 'sql/select',
+          label: 'SELECT'
+        },
+        {
+          type: 'doc',
+          id: 'sql/where',
+          label: 'WHERE'
+        },
+        {
+          type: 'doc',
+          id: 'sql/vibe-coding',
+          label: '바이브 코딩'
+        },
+        {
+          type: 'doc',
+          id: 'sql/null-string',
+          label: 'NULL과 문자열 비교'
+        },
+        {
+          type: 'doc',
+          id: 'sql/functions',
+          label: '함수'
+        },
+        
+      ]
     },
     {
-      type: 'doc',
-      id: 'sql/select',
-      label: 'SELECT'
+      type: 'category',
+      label: '2일차 - 복잡한 SQL',
+      items: [
+        {
+          type: 'doc',
+          id: 'sql/day-1-review',
+          label: '1일차 복습'
+        },
+        {
+          type: 'doc',
+          id: 'sql/select-expressions',
+          label: 'SELECT 표현'
+        },
+        {
+          type: 'doc',
+          id: 'sql/group-by',
+          label: 'GROUP BY'
+        },
+        {
+          type: 'doc',
+          id: 'sql/set',
+          label: '집합 연산자'
+        },
+        {
+          type: 'doc',
+          id: 'sql/inner-join',
+          label: 'INNER JOIN'
+        },
+        {
+          type: 'doc',
+          id: 'sql/outer-join',
+          label: 'OUTER JOIN'
+        },
+        {
+          type: 'doc',
+          id: 'sql/subquery',
+          label: '서브쿼리'
+        },
+        {
+          type: 'doc',
+          id: 'sql/cte',
+          label: '공통 테이블 표현식'
+        },
+      ]
     },
-    {
-      type: 'doc',
-      id: 'sql/where',
-      label: 'WHERE'
-    },
-    {
-      type: 'doc',
-      id: 'sql/vibe-coding',
-      label: '바이브 코딩'
-    },
-    {
-      type: 'doc',
-      id: 'sql/null-string',
-      label: 'NULL과 문자열 비교'
-    },
-    {
-      type: 'doc',
-      id: 'sql/functions',
-      label: '함수'
-    },
-    {
-      type: 'doc',
-      id: 'sql/select-expressions',
-      label: 'SELECT 표현'
-    },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/group-by',
-    //   label: 'GROUP BY'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/set',
-    //   label: '집합 연산자'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/inner-join',
-    //   label: 'INNER JOIN'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/outer-join',
-    //   label: 'OUTER JOIN'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/subquery',
-    //   label: '서브쿼리'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'sql/cte',
-    //   label: '공통 테이블 표현식'
-    // },
   ],
   dataAnalysisSidebar: [
     {
