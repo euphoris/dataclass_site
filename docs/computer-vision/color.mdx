@@ -1,6 +1,162 @@
 # 색 보정
 
 ## 히스토그램
+*   채널별로 밝기의 분포를 시각화
+    ```python
+    import matplotlib.pyplot as plt
+    for i, color in enumerate('bgr'):
+        hist = cv.calcHist([image], [i], mask=None, histSize=[256], ranges=[0, 256])
+        plt.plot(hist, color=color)
+    ```
+*   빨간색은 어두운 영역에 많고, 초록색은 중간, 파란색은 밝은 영역에 많음
+
+## 히스토그램 균일화
+*   밝기 분포를(히스토그램) 고르게 만듦(균일화)
+    ```python
+    src = cv.imread('xray.jpg', cv.IMREAD_GRAYSCALE) # 흑백으로 열기
+    hist1 = cv.calcHist([src], [0], mask=None, histSize=[256], ranges=[0, 256])
+    eqd = cv.equalizeHist(src) # 히스토그램 균일화
+    hist2 = cv.calcHist([eqd], [0], mask=None, histSize=[256], ranges=[0, 256])
+    ```
+*   전반적으로 뿌연 밝기
+*   검은 부분이 없음
+*   하얀 부분도 없음
+*   어두운 곳은 확실히 어둡게
+*   밝은 곳은 확실히 밝게
+
+## CLAHE
+*   히스토그램 균일화는 전반적으로 이미지가 선명해지기는 하지만
+*   어두운 부분은 너무 어두워지고, 밝은 부분은 너무 밝아져서 디테일이 사라짐
+*   CLAHE(Contrast Limited Adaptive Histogram Equalization)는 그림을 고정된 크기의 타일로 나누어, 타일별로 히스토그램 균일화
+*   노이즈가 있을 수 있으므로 제한을 넘는 값은 모든 영역에 균일하게 배분
+    ```python
+    clahe = cv.createCLAHE(
+        clipLimit=2.0, # 밝기 제한을 설정. 보통 2.0-4.0
+        tileGridSize=(8, 8)) # 이미지를 가로 8개, 세로 8개의 타일 -> 총 64개로 나눔
+    clahed = clahe.apply(src)
+    ```
+*   히스토그램 균일화와 달리 갈비뼈가 뚜렷하게 보임
+
+## 컬러 이미지의 히스토그램 균일화
+*   BGR에서 균일화하면 선명해지기는 하지만 색상 간의 비율이 달라져서 색상이 바뀜
+    ```python
+    src = cv.imread('low.jpg')
+    b,g,r = cv.split(src)
+    be = cv.equalizeHist(b) # 파랑의 균일화
+    ge = cv.equalizeHist(g) # 초록의 균일화
+    re = cv.equalizeHist(r) # 빨강의 균일화
+    eqd1 = cv.merge((be,ge,re)) # 결합
+    ```
+*   src: 전반적으로 뿌옇다
+*   eqd1: 선명해졌지만 색상의 비율이 달라졌음
+
+## 컬러 이미지의 히스토그램 균일화
+```python
+hsv = cv.cvtColor(src, cv.COLOR_BGR2HSV) # HSV로 바꿈
+h,s,v = cv.split(hsv) # 색상(H) 채도(S) 명도(V)를 분리
+eqd_v = cv.equalizeHist(v) # 밝기만 균일화(어두운 곳은 어둡게, 밝은 곳은 밝게)
+mgd = cv.merge((h,s,eqd_v)) # 색상과 채도는 그대로, 밝기만 바꿔서 합침
+eqd2 = cv.cvtColor(mgd, cv.COLOR_HSV2BGR) # BGR로 바꿈
+```
+*   src: 전반적으로 뿌옇다
+*   eqd2: 색상과 채도는 유지하면서 밝기만 균일화되어 선명해짐
+
+## 히스토그램을 이용한 이진화
+*   색상을 흑과 백 2가지만으로 바꾸는 것(이진화)
+    ```python
+    # 파일 열기
+    src = cv.imread('newspaper.png', cv.IMREAD_GRAYSCALE)
+    hist = cv.calcHist([src], [0], mask=None, histSize=[256], ranges=[0, 256])
+    ```
+*   190을 문턱값으로 설정하여
+*   0-190 사이는 검은 색, 190-255는 흰색으로 이진화
+    ```python
+    th, bin = cv.threshold(src, 190, 255, cv.THRESH_BINARY)
+    show(bin)
+    ```
+
+## 이진화 방법
+*   cv.THRESH_BINARY: 임계값 이상 = 최댓값, 임계값 이하 = 0
+*   cv.THRESH_BINARY_INV: 위의 반전
+*   cv.THRESH_TOZERO: 임계값 이하만 0으로
+*   cv.THRESH_TOZERO_INV: 위의 반전
+*   cv.THRESH_TRUNC: 임계값 이상만 임계값으로
+
+## 오츠의 이진화 알고리즘
+*   모든 임계값 중에서 명암 분포가 가장 균일한 것을 자동으로 선택하는 알고리즘
+    ```python
+    th, bin = cv.threshold(src, 0, 255, cv.THRESH_BINARY | cv.THRESH_OTSU)
+    show(bin)
+    
+    th # 문턱값(=169)
+    ```
+
+## global thresholding의 문제
+*   조명이 일정하지 않거나 배경색이 여러 개이면 하나의 문턱값으로 구분할 경우 문제가 됨
+    ```python
+    src = cv.imread('sudoku.png', cv.IMREAD_GRAYSCALE)
+    th, bin = cv.threshold(src, 0, 255, cv.THRESH_BINARY | cv.THRESH_OTSU)
+    ```
+*   전반적으로 밝은 부분은 모두 문턱값 위로, 전반적으로 어두운 부분은 모두 문턱값 아래로 처리될 수 있음
+
+## Adaptive Thresholding
+*   이미지를 여러 개의 블록으로 나누어 이진화
+    ```python
+    block_size = 15 # 주변 15픽셀을 참고
+    C = 5 # 가감할 상수
+    # 주변 픽셀의 평균을 이용: 선명하지만 노이즈
+    adap2 = cv.adaptiveThreshold(
+        src, 255, cv.ADAPTIVE_THRESH_MEAN_C, 
+        cv.THRESH_BINARY, block_size, C)
+    # 가우시안 분포를 이용: 노이즈가 적음
+    adap3 = cv.adaptiveThreshold(
+        src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, 
+        cv.THRESH_BINARY, block_size, C)
+    ```
+
+## Look-up Table을 이용한 색 변환
+*   픽셀마다 색상 변환을 계산하려면 그림이 크거나 많을 때 많은 계산이 필요함
+*   미리 픽셀 값별로 변환할 값을 Look-Up Table로 만들어두면 계산을 절약할 수 있음
+    ```python
+    src = cv.imread('balloon.webp') # 예제 파일
+    ones = np.ones(32, dtype=np.uint8) # 1을 32개 만듦
+    lut = np.concatenate((
+        ones * 0, ones * 32, ones * 64, ones * 96, 
+        # 0-31까지 32개는 0, 32-63까지 32개는 32, 64-95까지 32개는 64, …
+        ones * 128, ones * 160, ones * 192, ones * 224),
+    )
+    lut.shape # 0-255까지 총 256개의 픽셀값을 어떻게 계산할지 Look-Up Table로 만듦
+    ```
+
+Look-up Table을 이용한 색 변환
+```python
+dst = cv.LUT(src, lut) 
+show(dst) # 밝기가 8단계(0, 32, 64, … 224)
+```
+
+## 감마 보정
+*   일괄적으로 밝기를 높이면 밝은 영역이 모두 흰색이 되어 디테일이 뭉개 짐(밝기를 낮출 때도 같음)
+*   감마 함수를 이용하여 밝기를 비선형으로 보정할 수 있음
+    *   감마(γ) < 1: 어두운 곳이 더 밝아 짐
+    *   감마(γ) > 1: 밝은 곳이 더 어두워 짐
+    ```python
+    lut = np.zeros(256, dtype=np.uint8)
+    gamma = 0.5 # 어두운 곳을 밝게
+    # 보정 함수를 미리 계산하여 Look-up Table을 채움
+    for i in range(256):
+        lut[i] = np.power(i/255.0, gamma) * 255. 
+    dst = cv.LUT(src, lut) # LUT를 적용하면 픽셀마다 계산할 필요 없음
+    show(dst)
+    ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mRQ1pj?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1510" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 색 보정"></iframe>
+
+{/* 
+# 색 보정
+
+## 히스토그램
 자 그 다음에 질문 또 있으신가 그 다음에 이제 색보정 우리가 색보정을 우리가 아까도 질문하신 질문 중에 그런게 있었는데 조도가 서로 안맞으면 어떻게 되느냐
 
 우리가 사진 찍어보면 사진이 너무 밝게 나오거나 어둡게 나오거나 뿌옇게 나오거나 이런건 늘상 있는 일이란 말이에요
@@ -499,3 +655,4 @@ adap3 = cv2.adaptiveThreshold(
 보시면은 이 알고리즘이 들어가 있습니다
 
 대충 찍어도 밝기를 균일하게 만들어줘요
+ */}

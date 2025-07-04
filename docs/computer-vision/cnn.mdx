@@ -1,4 +1,188 @@
+# 합성곱 신경망
 
+## 다층 신경망의 문제점
+*   이미지는 2차원이지만 다층 신경망의 입력은 1차원
+*   이미지를 2차원 → 1차원으로 flatten하여 입력
+*   2차원 이미지를 1차원으로 flatten하면서 공간적 정보가 사라짐
+*   Dense 레이어는 입력의 크기 × 출력의 크기만큼 파라미터가 필요
+*   이미지의 크기가 커지면 파라미터가 폭증
+
+## 합성곱 신경망 Convolutional Neural Network
+*   합성곱 신경망은 입력 이미지를 작은 단위로 나누어 각각을 처리
+    *   이 작은 단위를 필터(filter) 또는 커널(kernel)이라고 부름
+    *   필터는 이미지의 특징을 추출하는 역할
+*   컴퓨터 비전에서 가장 널리 사용되어 온 방식
+    *   최근에는 비전 트랜스포머라는 모델도 널리 사용
+*   작은 크기의 필터를 반복 적용하여 부분적인 패턴을 인식
+*   필터의 값은 데이터로부터 학습
+
+## 합성곱 레이어
+*   Receptive Field: 이미지에서 필터가 적용되는 영역
+*   Feature Map: 합성곱 레이어의 출력 결과
+    *   이미지에서 발견된 특징을 사상(map)한 것이므로 feature map이라고 함
+
+## 부분에서 전체로
+*   합성곱 신경망은 여러 가지 필터들을 이용해 이미지의 한 작은 부분에서 특징들을 그리고 여러 개의 필터를 사용하여 입력 이미지에서 다양한 특징을 추출
+*   사람의 얼굴을 인식한다면, 처음에는 수직선, 수평선, 대각선 등의 특징을 추출
+*   이렇게 추출한 특징들에 다시 필터를 적용하면 좀 더 큰 특징을 추출할 수 있음
+*   선들이 모여 이루는 눈, 코, 입 같은 부분들이 됨
+*   여기에 다시 필터를 또 적용하면 부분이 모여서 이루는 얼굴 전체를 추출할 수 있음
+
+## 합성곱 적용의 효과
+*   커널 또는 필터의 수만큼 채널이 바뀌는 효과가 있음
+*   피처 맵의 크기는 감소
+*   다양한 필터를 적용하여 하나의 이미지로부터 여러 가지 특징들을 추출
+
+## CNN의 기본 구조
+*   특징 추출 부분과 분류 부분으로 구성
+*   합성곱 신경망의 전반부에는 부분적 특징들을 추출하기 위해 합성곱 레이어를 사용
+*   합성곱 신경망의 후반부에는 추출된 특징을 바탕으로 최종 예측을 하기 위해 Dense 레이어를 사용
+*   두 부분 사이에 Flatten
+
+## CNN 코드 예시
+```python
+class CNN(pl.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3) # 크기가 2만큼 줄어듦: 28 → 26
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3) # 크기가 2만큼 줄어듦: 26 → 24
+        self.fc = nn.Linear(64*24*24, 10)
+        self.accuracy = MulticlassAccuracy(10)
+
+    def forward(self, x):
+        # 입력에는 Flatten이 없음
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x)) 
+        x = x.view(-1, 64*24*24) # 여기서 Flatten
+        x = self.fc(x) # 분류
+        return x
+```
+
+## 패딩 padding
+*   이미지의 테두리에 빈 픽셀을 추가
+*   제로(zero) 패딩:
+    *   패딩 없음
+    *   입력보다 출력 이미지가 작음
+*   하프(half) 패딩 / 세임(same) 패딩:
+    *   필터 크기의 절반만큼 패딩
+    *   입력과 출력의 이미지가 같음
+*   풀(full) 패딩
+    *   필터 크기 - 1만큼 패딩
+    *   모든 픽셀에 필터의 모든 부분이 적용됨
+    *   출력이 입력보다 큼
+
+## 패딩 적용 코드 예시
+```python
+def __init__(self):
+    super().__init__()
+    self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1) # 세임 패딩: 28 → 28
+    self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1) # 세임 패딩: 28 → 28
+    self.fc = nn.Linear(64*28*28, 10)
+    self.accuracy = MulticlassAccuracy(10) 
+
+def forward(self, x):
+    x = F.relu(self.conv1(x))
+    x = F.relu(self.conv2(x))
+    x = x.view(-1, 64*28*28) # Flatten
+    x = self.fc(x)
+    return x
+```
+
+## 풀링 pooling
+*   서브샘플링(subsampling) 또는 다운샘플링(downsampling)이라고도 함
+*   이미지 또는 특징 맵의 크기를 축소
+*   이미지의 세부적인 특징이 전체 이미지를 분류하는데 크게 중요하지 않은 경우가 많으므로 성능에는 영향이 적음
+*   적용할 합성곱 레이어의 수가 줄어듦 → 학습할 파라미터가 줄어듦
+*   최대 풀링(Max Pooling):
+    *   이미지에서 작은 부분(예: 2x2)들에서 최댓값(가장 강한 특징)을 추출
+    *   CNN에 주로 사용
+*   평균 풀링(Average Pooling):
+    *   이미지에서 평균값을 추출
+
+## 풀링 적용 코드 예시
+```python
+def __init__(self):
+    super().__init__()
+    self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
+    self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+    self.fc = nn.Linear(64*7*7, 10)
+    self.accuracy = MulticlassAccuracy(10)
+
+def forward(self, x):
+    x = F.relu(self.conv1(x))
+    x = F.max_pool2d(x, 2) # 28 → 14
+    x = F.relu(self.conv2(x))
+    x = F.max_pool2d(x, 2) # 14 → 7
+    x = x.view(-1, 64*7*7)
+    x = self.fc(x) # 분류
+    return x
+```
+
+## 스트라이드 stride
+*   필터를 적용하는 간격
+*   풀링을 사용하는 대신 필터를 일정 간격으로 띄워서 사용하기도 함
+
+## 스트라이드 적용 코드 예시
+```python
+class CNN(pl.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1, stride=2)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1, stride=2)
+        self.fc = nn.Linear(64*7*7, 10)
+        self.accuracy = MulticlassAccuracy(10)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x)) # 28 → 14
+        x = F.relu(self.conv2(x)) # 14 → 7
+        x = x.view(-1, 64*7*7)
+        x = self.fc(x)
+        return x
+```
+
+## CNN의 다양한 구조
+*   LeNet-5
+*   AlexNet
+*   VGGNet
+*   GoogLeNet
+*   ResNet
+
+## LeNet-5
+
+## AlexNet
+*   2012년 ImageNet Large Scale Visual Recognition Challenge (ILSVRC)에서 1위를 하여 딥러닝 유행을 선도
+*   특징:
+    *   ReLU
+    *   Dropout
+    *   Batch Normalization
+    *   Weight regularization
+
+## VGGNet
+*   합성곱 레이어는 모두 3x3 크기
+*   풀링 레이어는 모두 2x2 크기
+*   3x3 합성곱 2개는 5x5 합성곱와 receptive field 크기가 같으나 파라미터의 수가 더 적고, 1개의 레이어 대신 2개의 레이어를 사용하므로 비선형성을 추가할 수 있음
+
+## GoogLeNet
+*   Inception 모듈이라는 구조를 포함
+*   합성곱 레이어를 직렬이 아닌 병렬로 연결
+
+## 1x1 Conv. Layer
+*   피처맵의 크기는 같음
+*   채널의 수를 줄이는 효과
+*   1x1 합성곱 레이어를 통해 채널의 크기를 줄여 계산량을 감소시킴
+*   인셉션 모듈의 다른 경로에도 1x1 합성곱을 추가하여 출력 채널을 줄임
+
+## ResNet Residual Network
+*   skip connection: 레이어를 건너 뛰는 경로를 만듦
+    *   최소한 이전 레이어에서 학습된 만큼의 성능은 보장
+*   사라지는 경사 문제를 완화하고, 깊은 네트워크에서도 안정적인 학습이 가능
+*   신경망의 깊이를 늘려도 학습이 잘 되므로 성능이 향상
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mOZvPM?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="909" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 합성곱 신경망"></iframe>
+{/* 
 
 # 합성곱 신경망
 
@@ -692,4 +876,4 @@ class CNN(pl.LightningModule):
 
 그래서 이제 최근에는 이제 구조가 굉장히 복잡해졌는데 그래서 제가 계속 얘기 드리지만은 그래서 모델을 직접 안 만든 이유가 이렇게 십 몇 년에 걸쳐서 수십 년에 걸쳐서 계속 구조가 복잡화돼서 사실 이거를 직접 만드는 거는 별로 의미가 없고 그래서 그냥 인터넷에다가 파이토치 레저넷 이렇게 검색을 하시면 다 코드가 있어요
 
-이거는 아니고 그래서 레저넷이 아니라 그래서 레저넷 구현하기 뭐 이런 거 있으면 그냥 복사해서 쓰시면 됩니다
+이거는 아니고 그래서 레저넷이 아니라 그래서 레저넷 구현하기 뭐 이런 거 있으면 그냥 복사해서 쓰시면 됩니다 */}

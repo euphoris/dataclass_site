@@ -1,5 +1,78 @@
+# 이미지 다항 분류
 
+## 다항 분류 모형
+```python
+from torchmetrics.classification import MulticlassAccuracy
 
+class MultiClassModel(pl.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(28*28, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 10)
+        self.accuracy = MulticlassAccuracy(10)
+
+    def forward(self, x):
+        x = x.view(-1, 28*28)
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
+        return optimizer
+
+    def training_step(self, batch, batch_idx):
+        images, labels = batch
+        outputs = self(images)
+        loss = F.cross_entropy(outputs, labels)
+        self.log('loss', loss)
+        accuracy = self.accuracy(outputs, labels)
+        self.log('accuracy', accuracy)
+        return loss
+
+    def test_step(self, batch, batch_idx):
+        return self.training_step(batch, batch_idx)
+```
+
+## 예측
+*   로짓 계산
+    ```python
+    x, y = train_dataset[0]
+    logits = model(x)
+    ```
+*   로짓을 소프트맥스 함수에 통과시켜 확률로 변환
+    ```python
+    probs = F.softmax(logits)
+    ```
+
+## 소프트맥스 함수 softmax
+*   이항분류에서는 로지스틱 함수로 -∞ ~ +∞의 값을 0~1 범위로 변환
+*   다항 분류에서는 소프트맥스 함수를 사용
+*   여러 개의 입력을 받아, 같은 개수를 출력
+*   모든 출력의 합은 1, 각 출력의 범위는 0~1
+```python
+F.softmax(torch.tensor([-1., .5, 2.]), dim=0) == [0.039, 0.175, 0.796]
+```
+
+-   시그모이드는 소프트맥스의 특수한 경우
+    -   둘 중에 하나로 예측할 때: sigmoid
+    -   셋 이상 중에 하나로 예측할 때: softmax
+```python
+x = 1.0
+F.sigmoid(torch.tensor([x]))) == F.softmax(torch.tensor([0.0, x]), dim=0)
+```
+
+$$
+y_j = \frac{e^{x_j}}{\sum_{i} e^{x_i}}
+$$
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mJry4K?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="766" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 다항 분류"></iframe>
+
+{/* 
 # 다항 분류
 
 그 다음에 우리가 지금까지 이미지를 이항으로만 분류를 했는데 실제로 많은 경우에 이항분류만 해도 됩니다
@@ -262,4 +335,4 @@ tensor([[0.1192, 0.8808],
         [0.1192, 0.8808]])
 ```
 
-:::
+::: */}

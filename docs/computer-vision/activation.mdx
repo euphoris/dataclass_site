@@ -1,0 +1,53 @@
+# 활성화 함수
+
+## 활성화 함수 Activation functions
+*   비선형성 도입: 신경망이 복잡한 패턴을 표현할 수 있게 함
+*   출력 값 범위 조절: 활성화 함수는 뉴런의 출력 값을 특정 범위로 조절
+    *   예: 시그모이드 함수는 출력 값 ∈ [0, 1]
+*   미분 가능한 함수여야, 경사하강법을 사용할 수 있음
+*   종류:
+    *   step function
+    *   sigmoid(logistic) function
+    *   softmax
+    *   tanh
+    *   ReLU
+
+## 은닉층에서 sigmoid 함수의 문제점
+*   포화 saturation
+    *   함수의 양쪽 끝에서 경사가 거의 0 → 사라지는 경사
+    *   입력값이 변하더라도 출력값에 거의 차이가 없음
+*   중심이 0이 아님 not zero-centered
+    *   모든 파라미터에 대한 미분값의 부호가 같음
+        → 모든 파라미터가 한 방향으로만 바뀜
+        → 동시에 일부 가중치는 높이고, 다른 일부 가중치는 낮출 수 없음
+        → 학습 속도 느려짐
+
+*   로지스틱 함수는 출력이 0~1 범위 → 다음 레이어의 모든 입력 xᵢ가 양수
+*   xᵢ는 wᵢ로 f를 미분한 값
+*   파라미터 wᵢ에 대해 손실함수 L을 미분하면, 부호가 dL/df 와 같아짐 = 모든 파라미터에 대한 미분값 부호가 같음
+
+## 쌍곡탄젠트 Hyperbolic Tangent
+*   로지스틱 함수와 비슷 하게 생겼지만 출력 범위가 -1 ~ 1
+*   zero-centered
+*   포화 문제는 동일
+
+## Rectified Linear Unit
+
+$$
+f(x) = \max(0, x) = \begin{cases}
+0 & \text{if } x < 0 \\
+x & \text{if } x \geq 0
+\end{cases}
+$$
+
+*   not zero-centered
+*   포화 문제 완화
+*   계산이 간단
+*   은닉층에 흔히 사용
+*   0이하에서는 경사가 완전히 0
+    *   높은 학습률에서 dead ReLU 문제
+*   최근에는 이를 보완한 ELU, GELU, Leaky ReLU 등이 널리 사용됨
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3jrKYY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="938" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 활성화 함수"></iframe>

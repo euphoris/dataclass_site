@@ -1,5 +1,202 @@
+# 데이터 증강
 
+## Dog vs Cat 데이터셋
+*   캐글(데이터 사이언스 경진대회 플랫폼) 데이터
+*   고양이와 강아지를 사진으로 구분하는 문제
+*   대회 1등 정확도가 98.9%
+*   https://storage.googleapis.com/mledu-datasets/cats_and_dogs_filtered.zip
+*   cats_and_dogs_filtered
+    *   train
+        *   cats
+        *   dogs
+    *   validation
+        *   cats
+        *   dogs
 
+## 전처리
+```python
+from torchvision import transforms
+IMAGE_SIZE = 224
+transform = transforms.Compose([
+    transforms.Resize((256, 256)), # 이미지마다 크기가 다르므로 통일
+    transforms.CenterCrop((IMAGE_SIZE, IMAGE_SIZE)), # 가운데만 잘라냄
+    transforms.ToTensor(),
+    transforms.Lambda(lambda x: (x / 127.5) - 1)
+])
+```
+*   이미지 데이터는 0~255로 밝기를 표현
+*   신경망에서 사용하는 시그모이드 등의 함수는 지나치게 큰 값이 들어오면 경사가 0에 가까워져서 학습이 잘 되지 않음
+*   -1~+1 범위로 재조정
+
+## 데이터 로딩
+```python
+# 데이터셋
+from torchvision.datasets import ImageFolder
+train_dataset = ImageFolder(root='cats_and_dogs_filtered/train', transform=transform)
+val_dataset = ImageFolder(root='cats_and_dogs_filtered/validation', transform=transform)
+
+# 로딩
+BATCH_SIZE = 32
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+```
+
+## 모델 정의
+```python
+class CNN(pl.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1, stride=2)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1, stride=2)
+        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, padding=1, stride=2)
+        self.conv4 = nn.Conv2d(64, 64, kernel_size=3, padding=1, stride=2)
+        self.fc1 = nn.Linear(64*14*14, 128)
+        self.fc2 = nn.Linear(128, 2) # sigmoid를 사용하는 대신 softmax 사용
+        self.accuracy = MulticlassAccuracy(2)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x)) # 224 → 112
+        x = F.relu(self.conv2(x)) # 112 → 56
+        x = F.relu(self.conv3(x)) # 56 → 28
+        x = F.relu(self.conv4(x)) # 28 → 14
+        x = x.view(-1, 64*14*14)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+    def training_step(self, batch, batch_idx): # 훈련의 한 단계
+        images, labels = batch
+        outputs = self(images).squeeze() # 이미지를 모형에 입력하여 출력을 얻음
+        loss = F.binary_cross_entropy(outputs, labels.float()) # 손실 계산
+        self.log('loss', loss) # 손실 기록
+        accuracy = self.accuracy(outputs, labels) # 정확도 계산
+        self.log('accuracy', accuracy) # 정확도 기록
+        return loss
+
+    def test_step(self, batch, batch_idx): # 테스트도 훈련과 동일하게
+        return self.training_step(batch, batch_idx)
+
+    def configure_optimizers(self): # 알고리즘 설정
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
+        return optimizer
+```
+
+## 데이터 증강 data augmentation
+*   데이터에 다양한 변환을 가하여 수를 늘리는 것
+
+## 실습 준비
+*   예제 파일 열기
+    ```python
+    from PIL import Image
+    img = Image.open('pump_horse.jpg')
+    ```
+*   여러 이미지 보기
+    ```python
+    def concat_images(images):
+        n = len(images)
+        width, height = 128, 128
+        total_width = n * width
+        new_im = Image.new('RGB', (total_width, height), color='white')
+        for i, im in enumerate(images):
+            new_im.paste(im.resize((width, height)), (width * i, 0))
+        return new_im
+    ```
+
+## RandomPerspective
+*   무작위로 perspective를 바꿈
+    ```python
+    transform = transforms.RandomPerspective(distortion_scale=0.6, p=1.0)
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomRotation
+*   무작위로 회전
+    ```python
+    transform = transforms.RandomRotation(degrees=(0, 180))
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomAffine
+*   무작위 아핀 변환
+    ```python
+    transform = transforms.RandomAffine(
+        degrees=(30, 70), translate=(0.1, 0.3), scale=(0.5, 0.75), shear=(10, 30))
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomCrop
+*   무작위로 주어진 크기의 일부 영역을 잘라냄
+    ```python
+    transform = transforms.RandomCrop(size=(128, 128))
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomResizedCrop
+*   무작위로 잘라낸 후, 정해진 크기로 변경
+    ```python
+    transform = transforms.RandomResizedCrop(size=(512, 512))
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## ColorJitter
+*   무작위로 색을 변경
+*   brightness(밝기), contrast(대조), 채도(saturation), hue(색상)
+    ```python
+    transform = transforms.ColorJitter(brightness=.5, hue=.3)
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomInvert
+*   무작위로 색 반전
+    ```python
+    transform = transforms.RandomInvert()
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomPosterize
+*   무작위로 포스터화(색의 비트 수를 낮춤)
+    ```python
+    transform = transforms.RandomPosterize(bits=2)
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomChoice
+*   무작위로 고르기
+    ```python
+    transform = transforms.RandomChoice([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.RandomRotation(180),
+    ])
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomApply
+*   각각의 변환을 확률 p에 따라 무작위로 적용
+    ```python
+    transform = transforms.RandomApply([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.RandomRotation(180),
+    ], p=0.9)
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## RandomOrder
+*   무작위 순서로 적용
+    ```python
+    transform = transforms.RandomOrder([
+        transforms.RandomRotation(180),
+        transforms.RandomCrop((256, 256)),
+    ])
+    concat_images([transform(img) for _ in range(4)])
+    ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wQqLO8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="712" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 데이터 증강"></iframe>
+
+{/* 
 # 데이터 증강
 
 그다음에 우리가 이제 모델은 어떻게 복사해서 쓸 수 있는데 데이터는 우리가 이제 복사해서 쓸 수가 없어요
@@ -674,4 +871,4 @@ transform = transforms.Compose([
 ])
 ```
 
-
+ */}

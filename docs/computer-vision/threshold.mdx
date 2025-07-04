@@ -1,0 +1,68 @@
+# 문턱값
+
+## 문턱값을 바꿔가면서 지표 계산
+```python
+ths = np.arange(0.1, 0.9, 0.01)
+accuracy, precision, recall, specificity, f1 = [], [], [], [], []
+for threshold in ths:
+    y_pred = np.where(y_prob > threshold, 1, 0)
+    accuracy.append(accuracy_score(y_true, y_pred))
+    precision.append(precision_score(y_true, y_pred))
+    recall.append(recall_score(y_true, y_pred))
+    specificity.append(recall_score(y_true, y_pred, pos_label=0))
+    f1.append(f1_score(y_true, y_pred))
+```
+
+## 시각화
+```python
+import matplotlib.pyplot as plt
+plt.plot(ths, accuracy, label='Accuracy')
+plt.plot(ths, precision, label='Precision')
+plt.plot(ths, recall, label='Recall')
+plt.plot(ths, specificity, label='Specificity')
+plt.plot(ths, f1, label='F1 Score')
+plt.xlabel('Threshold')
+plt.legend()
+```
+*   재현도는 문턱을 낮추면 높아짐
+*   정밀도, 특이도는 문턱을 높이면 높아짐
+
+## F1이 가장 높은 문턱값 찾기
+```python
+i = np.argmax(f1) # 가장 큰 F1 점수의 인덱스
+plt.plot(ths, f1)
+best_threshold = ths[i] # 가장 큰 F1 점수의 임계값
+best_f1 = f1[i] # 가장 큰 F1 점수
+plt.plot((best_threshold, best_threshold), (0, best_f1), color='r', linestyle='--')
+plt.plot(best_threshold, best_f1, 'ro') # 가장 큰 F1 점수 지점 표시
+plt.xlabel('Threshold')
+plt.ylabel('F1 Score')
+
+best_threshold, best_f1
+```
+
+## ROC 곡선 Receiver operating characteristic Curve
+*   신호 이론에서 유래
+*   가로축은 1-특이도(FPR), 세로축은 재현도(TPR)
+*   문턱값을 변화시키면서 특이도와 재현도의 변화를 곡선으로 표시
+*   무작위로 예측할 경우 TPR=FPR인 직선
+*   곡선하 면적(Area Under the Curve; AUC)은 0~1 범위 → 클 수록 높은 성능
+
+## Python ROC 곡선
+*   임포트
+    ```python
+    from sklearn.metrics import roc_auc_score, roc_curve
+    ```
+*   시각화
+    ```python
+    fpr, tpr, threshold = roc_curve(y_true, y_prob)
+    plt.plot(fpr, tpr)
+    ```
+*   AUC
+    ```python
+    roc_auc_score(y_true, y_prob)
+    ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3x7GlG?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1274" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 문턱값"></iframe>

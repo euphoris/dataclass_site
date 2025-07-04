@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'sqlSidebar',
+          sidebarId: 'computerVisionSidebar',
           position: 'left',
-          label: 'SQL', // 상단 메뉴
+          label: '컴퓨터 비전', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {

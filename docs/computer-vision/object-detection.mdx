@@ -1,5 +1,90 @@
+# 물체 탐지
 
+## 물체 탐지 object detection
+*   이미지 분류는 한 이미지에 하나의 레이블이 붙어 있다고 가정
+    *   이미지 하나에 여러 가지 대상이 찍혀 있는 경우가 있음
+*   물체 탐지: 각각의 대상들에 대해서 그 위치와 레이블을 분류
+    *   이미지의 유형과 함께 경계 상자(bounding box)의 좌표를 함께 출력
+    *   이미지 분류보다 어렵고 복잡
+*   물체 탐지의 손실함수: 두 가지 예측의 손실을 모두 최소화 (multitask loss)
+    *   경계 상자의 좌표 (연속 변수)
+    *   물체의 분류 (범주형 변수)
 
+## 다른 task와 비교
+*   Image Classification: 이미지의 물체를 정해진 카테고리로 분류 (한 이미지에 한 레이블)
+*   Semantic Segmentation: 이미지의 픽셀들을 물체의 종류별로 분류(같은 종류는 같은 레이블)
+*   Object Detection: 이미지의 물체들마다 경계 상자로 구분 (각 경계 상자별로 레이블)
+*   Instance Segmentation: 이미지의 픽셀들을 개체별로 분류(같은 개체는 같은 레이블)
+
+## 물체 탐지의 활용
+*   자율 주행, 보안 감시, 의료 영상 분석, 스마트 팩토리 등 수많은 실제 문제 해결에 핵심적인 역할
+*   자율 주행 차량이 도로 위의 다른 차량, 보행자, 신호등을 인식하여 안전하게 운행하는 데 필요
+*   사람 얼굴에 자동으로 초점
+*   무인 상점: 고객이 집은 물건을 기록 → 고객이 매장을 빠져나가면 결제
+*   자율주행이나 로봇: 사람이나 장애물을 피하려면 위치를 알아야 함
+*   CCTV: 화재, 범죄, 사고 등을 자동으로 탐지
+*   의료에서 영상으로부터 병변의 위치를 탐지
+
+## 물체 탐지 기법의 발전
+*   전통적인 물체 탐지 방법
+    *   Viola-Jones (2001): Haar-like 피처와 AdaBoost를 사용, 얼굴 탐지에 사용됨(아래 그림).
+    *   HOG + SVM (2005): 이미지의 방향성 그레디언트(HOG)를 추출하여 SVM으로 분류, 보행자 탐지에 주로 사용
+    *   이러한 방법들은 복잡한 특징 엔지니어링과 파이프라인이 필요
+*   최근에는 딥러닝 기반 물체 탐지 모델을 사용
+    *   복잡한 수작업 특징 추출 없이, 데이터로부터 직접 특징을 학습(End-to-End 학습)
+    *   Two-stage detector와 One-stage detector가 있음
+
+## Two-stage Detector (2단계 탐지기)
+*   "후보 영역 제안(Region Proposal)" -> "영역 분류 및 바운딩 박스 회귀"의 두 단계를 거침
+*   R-CNN (Region-based CNN) 계열이 대표적
+*   Selective Search Algorithm을 이용해 ROI를 추출
+    *   후보 영역을 추출 → 영역끼리 유사도를 계산 → 비슷한 후보 영역을 합침
+    *   유사도를 재계산, 이하 반복
+*   추출된 이미지를 CNN에 입력하여 분류
+
+## R-CNN의 단점
+*   느림
+*   Selective Search Algorithm이 느리고 불필요한 영역을 제안
+*   여러 단계로 나눠진 처리 과정
+*   CNN을 반복 적용 하므로 계산 비용이 높음
+*   Fast R-CNN, Faster R-CNN으로 발전되었으나 한계가 있음
+
+## One-stage Detector (1단계 탐지기)
+*   "단일 네트워크에서 한 번에" 객체의 위치와 클래스를 예측
+*   YOLO (You Only Look Once) 계열과 SSD (Single Shot MultiBox Detector) 가 대표적
+*   매우 빠른 추론 속도, 실시간 응용에 적합.
+*   초기에는 Two-stage 방식보다 정확도가 약간 낮았으나 최근에는 큰 차이 없음
+
+## YOLO You Only Look Once
+*   입력 이미지가 CNN을 통과하여 특징 맵을 생성.
+*   특징 맵을 특정 크기의 그리드 셀로 분할.
+*   예측: 각 그리드 셀은 미리 정의된 수의 바운딩 박스(Anchor Box)를 예측
+*   각 박스에 대해 다음을 예측
+    *   바운딩 박스 좌표: (x, y, width, height) 또는 (center_x, center_y, width, height).
+    *   객체 신뢰도(Objectness Score): 해당 바운딩 박스 안에 객체가 있을 확률.
+    *   클래스 확률: 해당 박스 안의 객체가 각 클래스에 속할 확률.
+
+## SSD Single Shot Detection
+*   영역 제안과 물체 분류를 동시에 처리
+*   VGG16, ResNet 등의 이미지 분류 모형을 전이 학습
+*   중간의 feature map에서 매우 많은 경계 상자를 예측
+*   큰 물체일 수록 후반부의 feature map이 예측
+
+## DETR Detection with Transformer
+*   CNN 백본 + 트랜스포머 + 앞먹임 신경망(FFN)로 구성
+*   이미지를 CNN에 통과시켜 feature map 추출 → 트랜스포머 인코더에 입력
+*   N개의 물체가 있다고 가정하고, 질의(query)를 디코더에 입력
+*   각 물체에 대한 class와 box를 출력
+
+## Non-Maximum Suppression (NMS)
+*   물체 탐지에서 동일 물체가 여러 번 탐지될 수 있음
+*   가장 높은 확률을 가지는 경계 상자를 선택
+*   선택된 상자와 일정 비율 이상 겹치는 경계 상자들을 제거
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/3qq0R2?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="815" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 물체 탐지"></iframe>
+{/* 
 # 물체 탐지
 
 자 그래서 우리가 이제 이렇게 해서 이미지 분류를 하는데 전이학습을 통해서 데이터만 있으면 굉장히 쉽게 좋은 성능을 내는 이런 거를 해 봤고 그래서 이제 뭐 점점 이게 이제 발전하기 때문에 뭐 나중에는 더 쉬워지지 않을까 지금도 뭐 코드를 좀 짜긴 하는데 우리 그 그때 이제 티쳐블 머신 써보시면 알겠지만 사실 이제 모델만 바꿔 끼고 코드가 똑같으면 그냥 코드를 짤 필요도 없겠죠
@@ -881,4 +966,4 @@ model2 = AutoModelForObjectDetection.from_pretrained(
 )
 ```
 
-
+ */}

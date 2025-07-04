@@ -1,0 +1,169 @@
+# 기하학적 변환
+
+## 아핀 변환 Affine transform
+
+$$
+\begin{bmatrix}
+x' \\ y' 
+\end{bmatrix}
+=
+\begin{bmatrix}
+a_{00} & a_{01} & b_0 \\
+a_{10} & a_{11} & b_1 \\
+\end{bmatrix}
+\begin{bmatrix}
+x \\ y \\ 1
+\end{bmatrix}
+$$
+
+*   선형 변환(a)과 평행 이동(b)을 합친 것
+*   변환 후에서 평행과 비율은 보존. 길이와 각도는 X
+*   영상의 이동, 전단, 확대, 회전을 조합
+*   3개의 점이 주어지면 아핀 변환을 결정할 수 있음
+
+## 수평 이동
+```python
+image = cv.imread('balls.png') # 예제 이미지
+image = cv.resize(image, (0, 0), fx=0.25, fy=0.25, interpolation=cv.INTER_AREA)
+height, width, channel = image.shape # 이미지의 높이, 너비, 채널 수
+
+# 수평 이동
+matrix = np.array([[1, 0, 50], [0, 1, 0]], dtype=np.float32) # x축으로 50픽셀 이동
+translated = cv.warpAffine(image, matrix, (width, height)) # 이미지 이동
+show(translated) # 이미지 출력
+
+# 수직 이동
+matrix = np.array([[1, 0, 0], [0, 1, 50]], dtype=np.float32) # y축으로 50픽셀 이동
+translated = cv.warpAffine(image, matrix, (width, height)) # 이미지 이동
+show(translated) # 이미지 출력
+```
+
+## 확대
+```python
+wr = 2 # 가로는 2배
+hr = 3 # 세로는 3배
+matrix = np.array([[wr, 0, 0], [0, hr, 0]], dtype=np.float32)
+resized = cv.warpAffine(
+    image, 
+    matrix, 
+    (width * wr, height * hr), # 새로운 크기
+    flags=cv.INTER_LANCZOS4) # 보간
+```
+
+## 회전
+```python
+matrix = np.array([[0, -1, height], [1, 0, 0]], dtype=np.float32) # 90도 회전 행렬
+resized = cv.warpAffine(
+    image, 
+    matrix, 
+    (height, width)) # 가로, 세로의 크기가 바뀜
+```
+
+## 회전 행렬 계산
+```python
+center = width // 2, height // 2 # 이미지의 중심 좌표
+angle = 45 # 회전 각도
+ratio = 1 # 확대 비율
+matrix = cv.getRotationMatrix2D(center, angle, ratio) # 회전 행렬 계산
+rotated = cv.warpAffine(image, matrix, (width, height)) # 이미지 회전
+show(rotated) # 이미지 출력
+```
+
+## 크기 맞추기 및 배경 채우기
+```python
+cos = abs(matrix [0, 0])
+sin = abs(matrix [0, 1])
+new_width = int((height * sin) + (width * cos)) # 새로운 너비
+new_height = int((height * cos) + (width * sin)) # 새로운 높이
+matrix [0, 2] += (new_width / 2) - image_center [0] # 새로운 x좌표로 이동
+matrix [1, 2] += (new_height / 2) - image_center [1] # 새로운 y좌표로 이동
+
+rotated = cv.warpAffine(
+    image, matrix, 
+    (new_width, new_height), # 새로운 크기
+    borderMode=cv.BORDER_CONSTANT, # 배경 색은 한 가지로
+    borderValue=image[0, 0].tolist()) # 왼쪽 위 (0, 0)의 픽셀 값으로 배경을 채움
+```
+
+## 체스 보드
+```python
+src = cv.imread('chessboard.jpg')
+
+pts1 = np.array([[60, 500],[900, 100], [900,1100],[1700, 500]], dtype=int)
+pts2 = np.float32([[0,0],[1000,0],[0,1000], [1000, 1000]])
+
+cv.circle(src, tuple(pts1[0]), 20, (255,0,0),-1)
+cv.circle(src, tuple(pts1[1]), 20, (0,255,0),-1)
+cv.circle(src, tuple(pts1[2]), 20, (0,0,255),-1)
+cv.circle(src, tuple(pts1[3]), 20, (255,255,0),-1)
+show(src)
+```
+
+
+*   3개의 점이 주어지면 아핀 변환 행렬을 결정할 수 있음
+    ```python
+    src_pts = pts1[:3].astype(np.float32) # 원본의 점 3개
+    dst_pts = pts2[:3] # 에 해당하는 변환된 점 3개
+    matrix = cv.getAffineTransform(src_pts, dst_pts)
+    dst = cv.warpAffine(src, matrix, (1000,1000))
+    show(dst)
+    ```
+*   아핀 변환은 2차원에서 회전하거나 기울이는 것만 가능
+*   체스 보드를 복원하려면 3차원에서 회전이 필요
+
+## 투시 변환 Perspective transform
+
+$$
+\begin{bmatrix}
+w_i x' \\ w_i y' \\ w_i
+\end{bmatrix}
+=
+\begin{bmatrix}
+a_{00} & a_{01} & b_0 \\
+a_{10} & a_{11} & b_1 \\
+c_0 & c_1 & 1
+\end{bmatrix}
+\begin{bmatrix}
+x \\ y \\ 1
+\end{bmatrix}
+$$
+
+*   아핀 변환에 투시(c)를 추가(반대로 말하면 c0 = c1 = 0이면 아핀변환)
+*   아핀변환보다 자유도가 높음
+*   4개의 점이 주어지면 투시 변환 행렬을 결정할 수 있음
+
+
+```python
+matrix = cv.getPerspectiveTransform(pts1.astype(np.float32), pts2)
+dst = cv.warpPerspective(src, matrix, (1000,1000))
+show(dst)
+```
+
+## 마우스로 좌표 찍기
+
+```python
+image = src
+dup = image.copy()
+def click(event, x, y, *args):
+    global dup
+    if event == cv.EVENT_MOUSEMOVE: # 마우스가 움직일 때마다
+        dup = image.copy()
+        height, _, _ = dup.shape
+        cv.putText( # 마우스 위치 좌표 출력
+            dup, f'{x},{y}', 
+            org=(0, height - 10), # 좌표
+            fontFace=cv.FONT_HERSHEY_SIMPLEX, # 폰트 종류
+            fontScale=1, # 폰트 크기
+            color=(0, 0, 255), # 빨간색
+            thickness=2) # 두께 2
+while True:
+    cv.imshow('image', dup) # 이미지 출력
+    cv.setMouseCallback('image', click) # 마우스 클릭 이벤트 설정
+    if cv.waitKey(100) == ord('q'): # q키를 누르면 종료
+        break
+cv.destroyAllWindows()
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wva5EQ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1647" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 기하학적 변환"></iframe>

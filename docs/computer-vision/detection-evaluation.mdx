@@ -1,0 +1,77 @@
+# 물체 탐지의 평가
+
+## 물체 탐지의 평가: 경계 상자의 정확도
+*   IOU = 교집합 / 합집합 (Intersection Over Union)
+*   두 경계 상자가 이루는 전체 면적 중에 겹치는 면적의 비율
+*   자카드 유사도(Jaccard similarity)라고도 함
+
+## 물체 탐지의 평가: 클래스의 정확도
+*   Precision-Recall Curve
+    *   가로축을 Recall, 세로축을 Precision으로 그린 그래프
+*   Average Precision: PR 곡선 아래의 면적, 모든 Recall에서 Precision의 평균과 같음
+*   Mean Average Precision (mAP):
+    *   모든 종류의 물체의 AP 평균
+    *   물체 탐지에서 가장 많이 사용하는 평가 지표
+*   map 50: IOU 임계값 0.5 이상일 때 mAP
+*   mAP 50-95: IOU 임계값을 0.5부터, 0.95까지 0.05씩 높이면서 mAP를 구한 후 평균 낸 것
+
+## 성능 측정
+*   coco128 데이터셋으로 성능 검증
+*   (자체 데이터셋으로 성능 검증하는 방법은 뒤에서 다룸)
+    ```python
+    metrics = model.val(data="coco128.yaml", plots=True)
+    ```
+*   화면에 출력되는지표
+    *   P: 정밀도(Precision)
+    *   R: 재현도(Recall)
+    *   mAP50
+    *   mAP50-95
+*   클래스별 mAP50-95 보기
+    ```python
+    for class_id, map_val in enumerate(metrics.box.maps):
+        class_name = model.names[class_id] # 클래스 이름
+        print(f"{class_id:<10} {class_name:<20} {map_val:.4f}")
+    ```
+
+## 혼동 행렬
+```python
+cm = metrics.confusion_matrix.to_df()
+ncm = metrics.confusion_matrix.to_df(normalize=True) # 비율로 표시
+```
+*   곰 인형이 어떤 물체로 분류되는지 보기
+    ```python
+    column = 'teddy_bear'
+    ncm[['Predicted', column]].sort_values(column, ascending=False)
+    ```
+
+## 정밀도(Precision) 곡선
+*   confidence 수준에 따른 정밀도 곡선
+    ```python
+    from PIL import Image
+    Image.open('runs/detect/val/P_curve.png')
+    ```
+
+## 재현도(Recall) 곡선
+*   confidence 수준에 따른 재현도 곡선
+    ```python
+    Image.open('runs/detect/val/R_curve.png')
+    ```
+
+## F1 곡선
+*   confidence 수준에 따른 F1 곡선
+*   F1 = 정밀도와 재현도의 조화평균
+    ```python
+    Image.open('runs/detect/val/F1_curve.png')
+    ```
+
+## PR 곡선
+*   재현도에 따른 정밀도 곡선
+*   이 곡선의 곡선하 면적 = mAP
+    ```python
+    Image.open('runs/detect/val/PR_curve.png')
+    ```
+
+## 퀴즈
+
+
+<iframe src="https://tally.so/embed/wk4MJo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1105" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 물체 탐지의 평가"></iframe>

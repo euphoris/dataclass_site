@@ -1,0 +1,196 @@
+# 정칙화
+
+## 딥러닝 정칙화
+*   정칙화(regularization): 모델의 과대적합을 막기 위한 방법들
+*   Weight decay: 파라미터를 업데이트할 때마다 줄임
+*   Early stopping: 파라미터 업데이트를 일찍 멈춤
+*   Dropout: 일부 파라미터를 훈련에서 배제
+*   Batch/Layer Normalization: 레이어의 출력값을 정규화
+*   Label Smoothing: 모형 출력의 목표값을 줄임
+
+## weight decay
+*   원래의 경사하강법:
+    w ← w - η(∂L/∂w)
+*   weight decay: 파라미터를 업데이트를 할 때 가중치를 줄이는 것
+    w ← w(1 - ηλ) - η(∂L/∂w)
+*   손실 함수에 L2 노름을 추가하고, SGD로 파라미터를 업데이트 한 것과 동일
+*   경사하강법 알고리즘에 weight_decay 인자
+    *   위 수식의 λ와 같음(클 수록 더 많이 줄임)
+    ```python
+    optimizier = torch.optim.Adam(model.parameters(), weight_decay=0.9)
+    ```
+
+## 노름 Norm
+*   노름(norm): 길이 또는 크기를 일반화한 개념
+*   Lp 노름
+
+$$
+L_p = \left( \sum_{i=1}^{N} |w_i|^p \right)^{1/p}
+$$
+
+
+## 손실 함수에 노름을 추가하면
+*   L1 정칙화(LASSO): 파라미터를 0으로
+$$
+L_1 = \sum_{i=1}^{N} |w_i|^1
+$$    
+*   L2 정칙화(Ridge): 파라미터를 전반적으로 작게
+$$
+L_2 = \sum_{i=1}^{N} |w_i|^2
+$$    
+
+## 얼리스톱핑 Early Stopping
+*   적합 중에 검증 데이터로 검증하여 성능이 향상되지 않으면 진행을 중단
+*   미리 정한 에포크보다 일찍(early) 멈춤(stop)
+*   과대적합을 방지하기 위한 정칙화 방법
+*   파라미터는 0 근처의 초기값에서 시작 → 에포크를 거듭하면서 수정
+*   에포크를 줄여주면 파라미터를 작게(0에 가깝게) 만드는 효과가 있음
+
+## 얼리스톱핑을 이용한 훈련
+```python
+class MultiClassValModel(MultiClassModel): # 기존 모델을 상속. 다른 부분은 동일하게 유지
+    def validation_step(self, batch): # 검증 단계 정의
+        images, labels = batch
+        outputs = self(images)
+        loss = F.cross_entropy(outputs, labels)
+        self.log('val_loss', loss)
+        return loss
+```
+
+
+## 얼리스톱핑을 이용한 훈련
+```python
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+model = MultiClassValModel()
+trainer = Trainer(max_epochs=100, callbacks=[# 최대 100에포크 진행
+    EarlyStopping(monitor='val_loss', mode="min", verbose=True)]) 
+# 검증 손실이 최소일 때 중단
+trainer.fit(model, train_loader, test_loader)
+```
+
+## 자동 저장
+*   얼리스톱핑은 성능이 일시적으로 하락해도 정지
+*   patience라는 인자로 몇 번은 넘어가게 할 수 있으나 적절한 설정 값을 알기 어려움
+*   ModelCheckpoint 콜백을 이용해서 검증 성능이 가장 좋은 모델의 파라미터를 자동 저장할 수 있음
+*   정해진 에포크의 훈련이 모두 끝난 후 가장 성능이 좋았던 에포크의 파라미터를 다시 불러올 수 있음
+
+```python
+from pytorch_lightning.callbacks import ModelCheckpoint
+model = MultiClassValModel()
+# 검증 손실이 가장 작은 상위 1개의 모델만 저장
+checkpoint = ModelCheckpoint(monitor='val_loss', mode="min", save_top_k=1, verbose=True)
+trainer = Trainer(max_epochs=30, default_root_dir=log_dir, callbacks=[checkpoint])
+trainer.fit(model, train_loader, val_loader)
+
+# 저장된 파라미터 불러오기
+best_model = MultiClassValModel.load_from_checkpoint(checkpoint.best_model_path)
+```
+
+## 드롭아웃 dropout
+*   학습 과정에서 배치마다 입력층과 은닉층의 출력값을 무작위로 0으로 대체
+*   특정한 특징에 과적합되는 것을 방지하기 위한 정칙화 방법
+*   드롭아웃의 비율은 0-1 사이에서 조정
+*   예측시에는 드롭아웃 대신, 출력이 비율로 조정(훈련시에 출력 중 50%를 드롭아웃 했으면, 예측시에는 모든 출력의 크기를 50%로 줄임)
+
+```python
+class MLPClassifierDropout(MultiClassValModel):
+    def forward(self, x):
+        x = x.view(-1, 784)
+        x = F.dropout(x, p=0.5) # 입력 드롭아웃(50%의 입력을 무작위로 0으로 만듦)
+        x = F.relu(self.linear1(x))
+        x = F.dropout(x, p=0.5) # 드롭아웃(50%의 뉴런을 무작위로 끔)
+        x = F.sigmoid(self.linear2(x))
+        return x
+```
+
+## Normalization
+*   넓은 의미로 통계학에서 변수값의 크기를 일정하게 만들어 주는 것
+*   대표적인 예로 표준화(standardization):
+    (x-μ)/σ
+    *   X: 값, μ: 평균, σ: 표준편차
+*   평균 = 0, 표준편차 = 1이 됨
+*   서로 다른 평균과 표준편차를 가진 변수를 비교하기 쉽게 해줌
+*   Normalization은 "정규화"로 많이 번역하나, regularization과 혼동
+*   좁은 의미로 0-1 범위로 변환하는 min-max scaling만을 normalization이라고 쓰는 사람들도 있음
+    *   이 경우에는 표준화 ≠ normalization
+
+## 입력 Normalization
+*   이미지 입력도 Normalization을 해주면 성능에 도움
+*   보통 0-255 범위의 픽셀 값을 -1 - +1 또는 0-1 범위로 normalize
+*   특징(feature, 이미지의 경우 픽셀값)에 따라 값의 크기가 매우 다른 경우, 특징들의 값의 범위를 비슷하도록 normalize하면 경사하강법에서 진동이 줄어들어 수렴이 더 빨라짐
+
+## Batch Normalization
+*   각 레이어의 입력도 normalize하면 성능이 향상될 수 있음
+*   모형의 입력과 달리 각 레이어의 입력은 학습 과정에서 매번 해줘야 하므로 계산 비용이 높음
+*   batch 단위로 normalize 하여 효율을 향상
+*   종류:
+    *   Batch Norm: 미니배치 전체에 걸쳐 채널별로 normalize
+    *   Layer Norm : 각 사례의 모든 채널을 normalize
+    *   Instance Norm : 각 사례를 채널별로 normalize
+    *   Group Norm : 각 사례의 채널들을 그룹으로 묶어 normalize
+
+## Covariance Shift
+*   다층신경망에서는 한 은닉층의 출력이 다른 은닉층의 입력이 됨
+*   학습 과정에서 각 층의 출력이 변화 → 다음 층의 입력이 변화
+*   각 층이 받는 입력이 지속적으로 변화하므로 문제가 됨(covariance shift)
+*   BN은 이를 방지하여 학습 효율을 높인다는 지적(아니라는 의견도 있음)
+
+## BN의 효과
+*   포화를 억제
+    *   신경망의 활성화 함수는 기울기가 0에 가까운 영역이 존재
+    *   신경망의 출력을 일정 범위로 제한하여 포화를 억제
+*   학습 속도 향상
+    *   높은 학습률에도 학습이 안정적으로 이뤄짐
+    *   활성화 함수에서 포화되는 영역에 빠지는 문제를 피할 수 있음
+    *   경사가 사라지거나 폭발하는 문제를 완화
+*   정칙화 효과
+    *   배치에 따라 평균과 표준편차가 달라지므로 출력값에 일정한 오차가 생김
+    *   Dropout과 비슷한 효과 → Dropout을 안 써도 된다 → 학습 속도도 빨라짐
+
+```python
+class MLPClassifierBatchNorm(MultiClassValModel):
+    def __init__(self, input_size=784):
+        super().__init__()
+        self.linear1 = nn.Linear(input_size, 16)
+        self.bn1 = nn.BatchNorm1d(16) # 이전 레이어의 출력 뉴런 수와 같게
+                                      # LayerNorm으로 바꾸면 layer normalizatiojn
+        self.linear2 = nn.Linear(16, 1)
+
+    def forward(self, x):
+        x = x.view(-1, 784) 
+        x = self.linear1(x) 
+        x = self.bn1(x) # BatchNorm 적용
+        x = F.relu(x)
+        x = F.sigmoid(self.linear2(x))
+        return x
+```
+
+## one-hot encoding
+*   머신러닝에서 범주형 변수를 표현하는 방법
+*   사례마다 변수의 값을 범주의 개수와 같은 길이의 벡터로 표현
+*   벡터의 다른 모든 원소는 0(cold)
+*   사례의 범주에 해당하는 원소 하나만 1(hot)
+*   예: 신문 기사를 정치, 사회, 경제, 문화 네 가지 범주로 분류하는 경우
+    *   정치 → (1, 0, 0, 0)
+    *   사회 → (0, 1, 0, 0)
+    *   경제 → (0, 0, 1, 0)
+    *   문화 → (0, 0, 0, 1)
+*   범주 하나를 제외해서 벡터의 길이를 -1 한 것은 더미 코딩(dummy coding)이라고 함
+    *   예) 사회 → (1, 0, 0) # 정치는 표시 제외
+*   머신러닝에서는 잘 사용하지 않고, 주로 통계에서 사용
+
+## label smoothing
+*   레이블은 부정확하게 붙어있을 수 있거나 예외적인 사례일 수 있음
+*   이러한 데이터에 과적합될 경우 모형의 예측력이 떨어짐
+*   원 핫 인코딩에서 1을 조금 줄이고 그만큼 0을 키워줌
+*   데이터에 있는 레이블에 100%보다 낮은 확률을 부여(없는 레이블도 0%보다 높은 확률을 부여)
+*   예) (1, 0, 0, 0) → (0.85, 0.05, 0.05, 0.05)
+    ```python
+    loss = F.cross_entropy(outputs, labels, label_smoothing=0.15)
+    ```
+*   BCELoss는 지원X
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/w7YQAR?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="702" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 정칙화"></iframe>

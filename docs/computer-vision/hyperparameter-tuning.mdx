@@ -1,4 +1,179 @@
+# 하이퍼파라미터 튜닝
 
+## 파라미터 vs. 하이퍼파라미터
+*   파라미터
+    *   데이터로부터 학습되는 변수
+    *   신경망에서 가중치
+    *   경사하강법을 통해 찾음 → 점진적 개선
+*   하이퍼파라미터
+    *   모형 또는 학습의 특성을 정의하는 변수
+    *   학습 전에 결정 → 시행착오를 통해 개선
+    *   종류:
+        *   신경망의 구조: 은닉층의 수, 각 층의 폭, 활성화 함수
+        *   학습 및 최적화: 학습률, 배치의 크기, 최적화 알고리즘, 에포크 수, 학습 중단 방식
+        *   정칙화: 드롭아웃 방식, 데이터 증강 등
+
+## 학습률 찾기
+*   경사하강법에는 적절한 학습률이 필요
+    *   학습률이 너무 낮으면 → 손실이 느리게 줄어듦
+    *   학습률이 너무 높으면 → 손실이 늘어남
+*   학습률을 서서히 변화시키면서 적절한 학습률을 찾음
+*   기존 모형을 상속받아 학습률을 바꿀 수 있게 재정의(처음부터 이렇게 만들어도 됨)
+    ```python
+    class MLPClassifierAutoLR(MLPClassifier):
+        def __init__(self, learning_rate):
+            super().__init__()
+            self.learning_rate = learning_rate
+
+        def configure_optimizers(self):
+            return torch.optim.Adam(self.parameters(), lr=(self.learning_rate))
+    ```
+
+## 학습률 찾기
+```python
+from lightning.pytorch.tuner import Tuner
+trainer = Trainer(max_epochs=3, default_root_dir=log_dir)
+tuner = Tuner(trainer)
+model = MLPClassifierAutoLR(learning_rate=0)
+tuner.lr_find(model, train_loader) # 최적 학습률을 찾으면 예외 발생
+lr_finder = trainer.callbacks[0].optimal_lr
+lr_finder.plot(suggest=True); # 학습률 찾기 과정 시각화
+# 제안된 학습률 확인
+lr_finder.suggestion()
+# 제안된 학습률로 설정되어 있음
+model.learning_rate
+```
+*   손실이 가장 빠르게 감소하는 학습률로 결정
+
+## 미니배치 크기 찾기
+*   미니 배치도 적절한 크기가 필요
+    *   너무 작으면 → 학습 불안정
+    *   너무 크면 → 학습 느림, 메모리 용량 문제(메모리에 올리는 데이터가 많아짐)
+*   메모리가 허용하는 최대 배치 크기를 자동으로 찾아줌
+*   성능에 최적인 배치 크기는 따로 찾아야 함
+```python
+class MLPClassifierAutoBatchSize(MLPClassifier):
+    def __init__(self, batch_size):
+        super().__init__()
+        self.batch_size = batch_size
+
+    def train_dataloader(self):
+        return DataLoader(binary_train_dataset, batch_size=self.batch_size)
+```
+
+## 미니배치 크기 찾기
+```python
+model = MLPClassifierAutoBatchSize(batch_size=32)
+trainer = Trainer(max_epochs=3, default_root_dir=log_dir)
+tuner = Tuner(trainer)
+tuner.scale_batch_size(model) # 메모리에 올릴 수 있을 때까지 미니 배치 크기를 자동으로 키움
+model.batch_size # 최대 크기로 설정되어 있음
+```
+
+## 하이퍼파라미터 튜닝
+(하이퍼파라미터 튜닝 과정을 나타내는 순서도)
+
+## Validation 또는 Development set
+*   테스트 데이터셋를 이용해서 하이퍼파라미터를 결정하면 특정 테스트셋에 과적합될 수 있음
+*   별도의 Validataion 또는 Development set을 이용해서 하이퍼파라미터를 결정
+*   테스트 데이터셋은 최종 평가에 마지막으로 한 번만 사용
+
+## 교차 검증 cross-validation
+*   하나의 검증셋만 사용할 경우, 하이퍼파라미터가 정확하지 않을 수 있음
+*   다양한 검증셋을 이용하여 검증
+*   K-fold
+    *   가장 많이 사용하는 방법
+    *   훈련 데이터를 k개의 겹치지 않는 부분으로 나눔
+    *   k-1개로 훈련하고 나머지 하나로 검증하는 것을 k번 반복
+*   Hold-out
+    *   훈련 데이터와 검증 데이터로 1번만 분할해서 사용
+    *   딥러닝에서는 훈련에 시간이 오래 걸리므로 자주 사용
+    *   데이터가 적을 때는 신뢰성에 문제
+
+## 데이터 분할
+```python
+from sklearn.model_selection import train_test_split
+train_indices, val_indices = train_test_split(
+    range(len(binary_train_dataset)), # 데이터 번호를
+    test_size=0.2) # 80:20으로 나눔
+
+# 훈련 데이터 번호에 해당하는 부분집합
+train_subset = torch.utils.data.Subset(binary_train_dataset, train_indices)
+train_loader = DataLoader(train_subset, batch_size=32, shuffle=True)
+
+# 검증 데이터 번호에 해당하는 부분집합
+val_subset = torch.utils.data.Subset(binary_train_dataset, val_indices)
+val_loader = DataLoader(val_subset, batch_size=32, shuffle=False)
+```
+
+## 은닉층 크기를 바꿀 수 있게 수정
+```python
+class MLPClassifierHiddenSize(MLPClassifier):
+    def __init__(self, hidden_size, input_size=784): # 은닉층 크기를 인자로 받음
+        super().__init__()
+        self.linear1 = nn.Linear(input_size, hidden_size) # 은닉층
+        self.linear2 = nn.Linear(hidden_size, 1) # 한 개의 출력 뉴런
+```
+
+## 은닉층 크기를 다양하게 시도
+```python
+results = []
+for hidden_size in [16, 64, 128]: # 은닉층 크기를 다양하게 시도
+    model = MLPClassifierHiddenSize(hidden_size)
+    trainer = Trainer(max_epochs=3, default_root_dir=log_dir)
+    trainer.fit(model, train_loader)
+    result = trainer.test(model, val_loader)
+    result[0]['hidden_size'] = hidden_size
+    results.append(result[0])
+```
+
+## 격자 탐색과 무작위 탐색
+*   격자 탐색 grid search: 각 하이퍼파라미터의 설정값을 정하고, 이들을 조합하여 하나씩 시도
+*   무작위 탐색 random search: 하이퍼파라미터를 무작위로 조합하여 하나씩 시도
+*   하이퍼파라미터를 더 다양하고 촘촘하게 탐색하여 격자 탐색보다 더 높은 성능을 내는 경향
+
+## 난수 생성을 이용한 무작위 탐색
+```python
+import scipy
+hp = scipy.stats.randint.rvs(low=1, high=8, size=3) # 1에서 8까지 무작위 정수 3개
+# 은닉층의 크기 등 배수로 사용해야 할 경우는 다음과 같이
+hidden_size = 2 ** hp
+```
+
+## 실수 난수 생성
+```python
+# -8에서 -1(+7)까지 무작위 실수 3개
+hp = scipy.stats.uniform.rvs(loc=-8, scale=7, size=3)
+# 학습률 등 배수로 사용해야 할 경우는 다음과 같이
+learning_rate = 10 ** hp
+
+# 10⁻⁸에서 10⁻¹까지 로그 균등 분포를 사용해도 똑같음
+learning_rate = scipy.stats.loguniform.rvs(a=1e-8, b=1e-1, size=1000)
+```
+
+## Sequential Model-Based Optimization
+*   무작위 탐색의 문제점:
+    *   하이퍼파라미터의 종류가 많아질 수록 더 많은 탐색이 필요
+    *   하이퍼파라미터는 학습 전체가 끝나야 성능을 알 수 있음 (비쌈)
+    *   무작위 탐색은 이전의 학습 결과를 활용하지 않음
+*   SMBO: 하이퍼파라미터와 성능의 관계를 모형화
+    *   모형을 바탕으로 최적의 하이퍼파라미터를 선택하여 학습
+    *   학습 결과를 바탕으로 모형을 업데이트하는 과정을 반복
+    *   적은 데이터에서 높은 성능을 내는 모형을 사용
+    *   기본적으로 어느 정도의 데이터를 요구하므로 다양한 하이퍼파라미터를 선제적으로 시도해야 함 → 효율성이 떨어짐
+
+## 베이즈 오차 Bayes Error
+*   오차 0%는 다양한 이유로 실현 불가능(예: 테스트 이미지의 레이블이 잘못 붙어 있음. 식별 불가능한 이미지 등)
+*   베이즈 오차: 데이터로부터 도달할 수 있는 이론적으로 최소의 오차
+*   베이즈 오차를 실제로 추정하기는 불가능
+*   보통 사람의 오차를 베이즈 오차 대용으로 사용
+    *   예: MNIST의 경우 사람의 오차 0.2% 수준
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/nrQX8o?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1109" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 하이퍼파라미터 튜닝"></iframe>
+{/* 
 
 # 하이퍼파라미터 튜닝
 
@@ -735,4 +910,4 @@ hp
 array([-3.69164746, -7.13689574, -4.08140053])
 ```
 
-:::
+::: */}

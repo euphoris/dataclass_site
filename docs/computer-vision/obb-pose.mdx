@@ -1,0 +1,104 @@
+# OBB와 자세 인식
+
+## Axis-Aligned Bounding Box
+*   일반적인 물체 탐지에서 사용하는 직사각형 박스. 항상 이미지 축에 평행
+*   회전된 객체: 객체가 기울어져 있으면 AABB가 필요 이상으로 커짐
+    *   불필요한 배경 영역 포함
+*   주변 객체와 과도하게 겹침
+    *   객체들이 서로 바싹 붙어 있거나 겹쳐 있을 때, 여러 객체가 하나의 상자 안에 포함될 수 있음
+    *   객체별 정확한 분리 어려움
+*   정확한 위치 파악 어려움: 객체의 실제 방향성 정보 손실
+
+## Oriented Bounding Box
+*   객체의 방향에 맞춰 회전 가능한 직사각형 박스.
+*   일반적으로 중심점, 너비, 높이, 회전 각도로 표현.
+*   OBB의 필요성:
+    *   항공 사진의 건물, 차량, 선박 등 회전된 객체 탐지.
+    *   제조 공정에서 부품의 정확한 위치 및 방향 파악.
+    *   문서 이미지에서 텍스트 블록 탐지.
+*   장점:
+    *   정확한 객체 영역 표현: 불필요한 배경 포함 감소.
+    *   겹치는 객체 분리 용이: 박스 간 IoU를 더 정확히 계산.
+    *   객체 방향 정보 제공: 후속 처리(예: 로봇 팔 제어)에 유용.
+
+## OBB 탐지
+* 모델
+    ```python
+    from ultralytics import YOLO
+    model = YOLO('yolo11n-obb.pt')
+    ```
+* 이미지 불러오기
+    ```python
+    import cv2 as cv
+    img = cv.imread('boats.jpg')
+    ```
+* 탐지
+    ```python
+    results = model(img)
+    ```
+*   미세조정을 할 때는 Label Studio에서 내보내기 할 때 YOLOv8 OBB with Images 로
+
+## 탐지 결과 시각화
+
+```python
+# 글꼴 설정: 같은 폴더에 ttf 글꼴 파일이 있어야 함. 없으면 기본 글꼴 사용.
+try:
+    font = ImageFont.truetype("NanumGothic.ttf", 20)
+except IOError:
+    font = ImageFont.load_default()
+
+# 결과를 그릴 새 이미지 만듦
+
+img_bbox = Image.fromarray(cv.cvtColor(img, cv.COLOR_BGR2RGB))
+draw = ImageDraw.Draw(img_bbox)
+
+# 결과
+
+result = results[0] # 이미지가 하나이므로 결과도 하나
+
+
+positions = result.obb.xyxyxyxy.cpu().numpy()
+clss = result.obb.cls.int().cpu().numpy()
+confs = result.obb.conf.cpu().numpy()
+
+for pos, cls, conf in zip(positions, clss, confs): # 모든 경계 상자에 다음의 작업을 수행
+    draw.polygon(pos, outline="#00FF00", width=3) # 초록색 경계 상자
+    name = result.names[cls] # 클래스 이름
+    label = f"{name}({conf:.2f})" # 클래스 이름 및 신뢰도
+    draw.text(pos[0], label, fill="#00FF00", font=font) # 레이블 쓰기
+
+img_bbox # 이미지 보기
+```
+
+## 자세 추정
+* 모델
+    ```python
+    from ultralytics import YOLO
+    model = YOLO('yolo11n-pose.pt')
+    ```
+* 이미지 불러오기
+    ```python
+    import cv2 as cv
+    img = cv.imread('bus_stop.jpg')
+    ```
+* 자세 추정
+    ```python
+    results = model(img)
+    ```
+
+## 자세 추정 결과 시각화
+```python
+result = results[0]
+kpts = result.keypoints.data.cpu().numpy() # 사람별, 키포인트별, 좌표
+img_bbox = Image.fromarray(cv.cvtColor(img, cv.COLOR_BGR2RGB))
+draw = ImageDraw.Draw(img_bbox)
+
+for kpt in kpts:
+    for j in range(17): # 17개 키포인트에 대해
+        x, y, conf = kpt[j]
+        if conf > 0.1:
+            draw.circle((x, y), radius=3, fill="#00FF00") # 원
+            draw.text((x, y), f'{j}', font=font, fill="#00FF00") # 키포인트 번호
+
+img_bbox
+```

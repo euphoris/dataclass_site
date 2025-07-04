@@ -1,6 +1,181 @@
 # 이미지 연산
 
 ## 이미지 덧셈
+*   일괄적으로 모든 픽셀에 100을 더하기 (결과가 255보다 크면 255)
+    ```python
+    cv.add(image, 100)
+    ```
+*   덧셈의 결과 보기(이하의 코드에서도 결과를 보려면 show()를 추가)
+    ```python
+    show(cv.add(image, 100))
+    ```
+*   두 개의 이미지 더하기
+    ```python
+    chair = cv.imread('chair.webp')
+    explosion = cv.imread('explosion.webp')
+    cv.add(chair, explosion)
+    ```
+*   가중치를 곱하여 더하기(2:8로 더하고 일괄적으로 10 더함)
+    ```python
+    cv.addWeighted(chair, 0.2, explosion, 0.8, 0)
+    ```
+
+## 이미지 뺄셈
+*   일괄적으로 모든 픽셀에 100을 빼기(결과가 0보다 작으면 0)
+    ```python
+    cv.subtract(image, 100)
+    ```
+*   두 개의 이미지 빼기
+    ```python
+    black_circle = cv.imread('black_circle.png')
+    cv.subtract(chair, black_circle)
+    ```
+*   두 개의 이미지 차이의 절대값(순서에 영향 X)
+    ```python
+    cv.absdiff(chair, explosion)
+    cv.absdiff(explosion, chair)
+    ```
+
+## 이미지 곱셈과 나눗셈
+*   곱셈
+    ```python
+    cv.multiply(image, 3.0) # 3.0을 곱하면 모든 픽셀의 밝기가 3배 밝아짐
+    ```
+*   나눗셈
+    ```python
+    cv.divide(image, 3.0) # 3.0으로 나누면 모든 픽셀의 밝기가 1/3으로 어두워짐
+    ```
+*   색 반전
+    ```python
+    255 - image
+    ```
+
+## 컬러 스페이스
+*   색을 표현하는 방법
+*   RGB: 빛의 삼원색인 빨강(R), 초록(G), 파랑(B)을 사용
+    *   과거에는 BGR이 널리 쓰이다, 현재는 RGB로 주류가 바뀜
+    *   OpenCV는 BGR이 주로 쓰이던 시절에 개발되어 BGR이 기본
+*   HSV:
+    *   색상(Hue): 빨강, 파랑, 노랑 등
+    *   채도(Saturation): 진하다, 흐리다
+    *   명도(Value): 밝다, 어둡다
+*   Gray: 흑백
+
+## 컬러 스페이스 바꾸기
+*   BGR에서 흑백으로
+    ```python
+    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    ```
+*   흑백 이미지는 PIL 형식으로 바꿀 때 show 대신 Image.fromarray만으로도 됨 (채널이 1개 뿐임)
+    *   show(gray)도 됨
+    ```python
+    Image.fromarray(gray)
+    ```
+*   흑백에서 BGR로(눈에 보이는 색은 바뀌지 않음)
+    ```python
+    cv.cvtColor(gray, cv.COLOR_GRAY2BGR)
+    ```
+*   BGR에서 HSV로
+    ```python
+    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
+    ```
+
+## 채널 분리
+*   BGR 채널을 분리
+    ```python
+    b, g, r = cv.split(image)
+    ```
+*   B 채널만 보기(흑백으로 보임)
+    ```python
+    Image.fromarray(b)
+    ```
+*   GR 채널을 0으로 채우면 파란색으로 볼 수 있음
+    ```python
+    z = np.zeros_like(b) # b와 같은 모양의 0으로 가득찬 배열
+    show(cv.merge((b, z, z))) # 초록과 빨강은 0으로 채워서 합침
+    ```
+
+## 특정 색상만 추출
+*   HSV에서 H가 40-80 사이, SV는 50-255 사이인 부분만 추출
+    ```python
+    lower_blue = np.array([40, 50, 50])
+    upper_blue = np.array([80, 255, 255])
+    mask = cv.inRange(hsv, lower_blue, upper_blue)
+    Image.fromarray(mask)
+    ```
+*   원래 이미지에서 mask 부분만 보기
+    ```python
+    cv.bitwise_and(image, image, mask=mask)
+    ```
+
+## 비트와이즈 AND
+*   각각의 비트를 비교하여 비트 단위로 AND 연산
+    ```python
+    a = 10
+    bin(a) # 이진수 1010
+    aa = np.array(a) # 배열로 바꿈
+
+    b = 12
+    bin(b) # 이진수 1100
+    bb = np.array(b)
+
+    cc = cv.bitwise_and(aa, bb)
+    c = cc.item() # cc == 8
+    bin(c) # 이진수 1000
+    ```
+| 자리 | a | b | AND |
+| :--- | :-: | :-: | :--: |
+| 8의 자리 | 1 | 1 | 1 |
+| 4의 자리 | 0 | 1 | 0 |
+| 2의 자리 | 1 | 0 | 0 |
+| 1의 자리 | 0 | 0 | 0 |
+
+## 비트와이즈 OR과 XOR
+*   각각의 비트를 비교하여 비트 단위로 OR 연산
+    ```python
+    dd = cv.bitwise_or(aa, bb)
+    d = dd.item() # dd == 14
+    bin(d) # 이진수 1110
+    ```
+| 자리 | a | b | OR |
+| :--- | :-: | :-: | :--: |
+| 8의 자리 | 1 | 1 | 1 |
+| 4의 자리 | 0 | 1 | 1 |
+| 2의 자리 | 1 | 0 | 1 |
+| 1의 자리 | 0 | 0 | 0 |
+
+*   각각의 비트를 비교하여 비트 단위로 XOR 연산
+    ```python
+    ee = cv.bitwise_xor(aa, bb)
+    e = ee.item() # dd == 6
+    bin(e) # 이진수 0110
+    ```
+| 자리 | a | b | XOR |
+| :--- | :-: | :-: | :--: |
+| 8의 자리 | 1 | 1 | 0 |
+| 4의 자리 | 0 | 1 | 1 |
+| 2의 자리 | 1 | 0 | 1 |
+| 1의 자리 | 0 | 0 | 0 |
+
+## 마스크
+*   마스크를 적용할 경우, 마스크에 색이 존재하는(1보다 큰) 영역에서만 비트와이즈 연산을 적용
+    ```python
+    src = np.array([[10, 12]])
+    mask = np.array([[1, 0]], dtype=np.uint8)
+
+    # mask가 없으면 10과 10, 12와 12의 비트와이즈 AND 연산
+    cv.bitwise_and(src, src)
+
+    # mask가 있으면, mask 값이 0보다 큰 10과 10만 비트와이즈 AND 연산
+    cv.bitwise_and(src, src, mask=mask)
+    ```
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mYbX1W?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1801" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 이미지 연산"></iframe>
+{/* 
+# 이미지 연산
+
+## 이미지 덧셈
 
 
 
@@ -618,3 +793,4 @@ show(cv2.bitwise_and(dup, dup, mask=diff))
 
 이렇게 해서 diff에 조금이라도 색이 있는 부분만 이렇게 해서 보기 이렇게 하시면 이제 두 개의 차이를 구해가지고 두 개에서 1비트라도 뭔가 다른 부분을 원본 색상 그대로 이렇게 볼 수가 있습니다.
 
+ */}
