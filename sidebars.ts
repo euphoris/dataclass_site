@@ -884,22 +884,31 @@ const sidebars: SidebarsConfig = {
           id: 'computer-vision/color',
           label: '색 보정'
         },
-        {
-          type: 'doc',
-          id: 'computer-vision/image-transform',
-          label: '이미지 변형'
-        },
       ]
     },
     {
       type: 'category',
       label: '2일차 - 정보 추출',
-      className: 'hidden',
       items: [
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/day1-review',
+        //   label: '1일차 복습'
+        // },
         {
           type: 'doc',
-          id: 'computer-vision/day1-review',
-          label: '1일차 복습'
+          id: 'computer-vision/binarization',
+          label: '이미지 이진화'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/lut',
+          label: 'Look-Up Table'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/image-transform',
+          label: '이미지 변형'
         },
         {
           type: 'doc',
@@ -931,165 +940,161 @@ const sidebars: SidebarsConfig = {
           id: 'computer-vision/match',
           label: '이미지 매칭'
         },
-        {
-          type: 'doc',
-          id: 'computer-vision/deep-learning',
-          label: '컴퓨터 비전과 딥러닝'
-        },
       ]
     },
-    {
-      type: 'category',
-      label: '3일차 - 딥러닝과 컴퓨터 비전',
-      className: 'hidden',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day2-review',
-          label: '2일차 복습'
-        },
-        
-        {
-          type: 'doc',
-          id: 'computer-vision/frameworks',
-          label: '딥러닝 프레임워크'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/binary-classification',
-          label: '이미지 이항 분류'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/loss-function',
-          label: '손실 함수'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/gradient-descent',
-          label: '경사 하강법'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/test-set',
-          label: '테스트'
-        },
-        {
-            type: 'doc',
-            id: 'computer-vision/confusion-matrix',
-            label: '혼동 행렬'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/threshold',
-          label: '문턱값'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 다양한 모형',
-      className: 'hidden',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day3-review',
-          label: '3일차 복습'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/MLP',
-          label: '다층 신경망'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/activation',
-          label: '활성화 함수'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/hyperparameter-tuning',
-          label: '하이퍼파라미터 튜닝'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/multiclass',
-          label: '다항 분류'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/regularization',
-          label: '정칙화'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/cnn',
-          label: '합성곱 신경망'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/augmentation',
-          label: '데이터 증강'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/vit',
-          label: '비전 트랜스포머'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/transfer-learning',
-          label: '전이 학습'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '5일차 - 물체 탐지',
-      className: 'hidden',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day4-review',
-          label: '4일차 복습'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/object-detection',
-          label: '물체 탐지'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/ultralytics',
-          label: 'Ultralytics'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/detection-evaluation',
-          label: '물체 탐지 평가'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/annotation',
-          label: '데이터 만들기'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/obb-pose',
-          label: 'OBB와 자세 추정'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/adversarial',
-          label: '적대적 사례'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/generation',
-          label: '이미지 생성'
-        },
-      ]
-    },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 딥러닝과 컴퓨터 비전',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/day2-review',
+    //       label: '2일차 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/deep-learning',
+    //       label: '컴퓨터 비전과 딥러닝'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/frameworks',
+    //       label: '딥러닝 프레임워크'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/binary-classification',
+    //       label: '이미지 이항 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/loss-function',
+    //       label: '손실 함수'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/gradient-descent',
+    //       label: '경사 하강법'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/test-set',
+    //       label: '테스트'
+    //     },
+    //     {
+    //         type: 'doc',
+    //         id: 'computer-vision/confusion-matrix',
+    //         label: '혼동 행렬'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/threshold',
+    //       label: '문턱값'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 다양한 모형',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/day3-review',
+    //       label: '3일차 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/MLP',
+    //       label: '다층 신경망'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/activation',
+    //       label: '활성화 함수'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/hyperparameter-tuning',
+    //       label: '하이퍼파라미터 튜닝'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/multiclass',
+    //       label: '다항 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/regularization',
+    //       label: '정칙화'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/cnn',
+    //       label: '합성곱 신경망'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/augmentation',
+    //       label: '데이터 증강'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/vit',
+    //       label: '비전 트랜스포머'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/transfer-learning',
+    //       label: '전이 학습'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '5일차 - 물체 탐지',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/day4-review',
+    //       label: '4일차 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/object-detection',
+    //       label: '물체 탐지'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/ultralytics',
+    //       label: 'Ultralytics'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/detection-evaluation',
+    //       label: '물체 탐지 평가'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/annotation',
+    //       label: '데이터 만들기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/obb-pose',
+    //       label: 'OBB와 자세 추정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/adversarial',
+    //       label: '적대적 사례'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/generation',
+    //       label: '이미지 생성'
+    //     },
+    //   ]
+    // },
 
 
     // {
@@ -1097,11 +1102,6 @@ const sidebars: SidebarsConfig = {
     //   id: 'computer-vision/feature-detector',
     //   label: '특징 검출'
     // },
-
-
-
-
-
     // {
     //   type: 'doc',
     //   id: 'computer-vision/autoencoder',
