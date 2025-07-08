@@ -75,6 +75,7 @@ cos = abs(matrix [0, 0])
 sin = abs(matrix [0, 1])
 new_width = int((height * sin) + (width * cos)) # 새로운 너비
 new_height = int((height * cos) + (width * sin)) # 새로운 높이
+image_center = (width // 2, height // 2) # 원본 이미지의 중심 좌표
 matrix [0, 2] += (new_width / 2) - image_center [0] # 새로운 x좌표로 이동
 matrix [1, 2] += (new_height / 2) - image_center [1] # 새로운 y좌표로 이동
 

@@ -7,10 +7,10 @@ image_path = 'shapes.webp'
 image = cv.imread(image_path)
 # 흑백 이미지로 변환
 gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-# 5x5 커널로 가우시안 블러링
+# 7x7 커널로 가우시안 블러링
 blurred = cv.GaussianBlur(gray, (7, 7), 0)
-# 60 이하의 값은 0으로, 그 이상의 값은 255로 이진화(THRESH_BINARY_INV는 흑백 반전)
-th, bin = cv.threshold(blurred, 0, 255, cv.THRESH_BINARY)[1] 
+# 이진화
+th, bin = cv.threshold(blurred, 0, 255, cv.THRESH_BINARY | cv.THRESH_OTSU) 
 # 보기
 Image.fromarray(bin)
 ```
@@ -95,3 +95,46 @@ n
 ## 퀴즈
 
 <iframe src="https://tally.so/embed/nPNJ7e?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1500" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 모양 감지"></iframe>
+
+## 풀이
+
+도형 개수
+
+```python
+image = cv.imread('5shapes.jpg')
+src = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+th, bin = cv.threshold(src, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
+contours, hierarchy = cv.findContours(
+    bin.copy(), # 이미지, non-zero 픽셀을 객체로 간주
+    cv.RETR_EXTERNAL, # 윤곽선 검출 모드
+    cv.CHAIN_APPROX_SIMPLE) # 윤곽선 근사화 방법
+                            # (SIMPLE: 꼭지점만, NONE: 모든 점)
+len(contours)
+```
+
+도형 그리기
+
+```python
+contoured_image = image.copy() # 이미지 복사
+i = 1 # 2번 도형
+color = 0, 255, 0 # green
+thickness = 3 # 두께
+show(cv.drawContours(contoured_image, contours, i, color, thickness))
+```
+
+면적 계산
+
+```python
+for i in range(5):
+    length = cv.contourArea(contours[i])
+    print(i, length)
+```
+
+무게 중심 계산
+
+```python
+M = cv.moments(contours[i]) # 모멘트 계산
+cX = int(M["m10"] / M["m00"]) # x좌표의 무게 중심
+cY = int(M["m01"] / M["m00"]) # y좌표의 무게 중심
+cX, cY
+```

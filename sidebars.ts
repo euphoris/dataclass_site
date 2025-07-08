@@ -890,11 +890,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '2일차 - 정보 추출',
       items: [
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/day1-review',
-        //   label: '1일차 복습'
-        // },
+
         {
           type: 'doc',
           id: 'computer-vision/binarization',
@@ -930,69 +926,74 @@ const sidebars: SidebarsConfig = {
           id: 'computer-vision/shape',
           label: '모양 감지'
         },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/hough-transform',
+        //   label: '도형 검출'
+        // },
+      ]
+    },
+    {
+      type: 'category',
+      label: '3일차 - 딥러닝과 컴퓨터 비전',
+      items: [
         {
           type: 'doc',
-          id: 'computer-vision/hough-transform',
-          label: '도형 검출'
+          id: 'computer-vision/day1-review',
+          label: '복습'
         },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/day2-review',
+        //   label: '2일차 복습'
+        // },
         {
           type: 'doc',
           id: 'computer-vision/match',
           label: '이미지 매칭'
         },
+        {
+          type: 'doc',
+          id: 'computer-vision/deep-learning',
+          label: '컴퓨터 비전과 딥러닝'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/frameworks',
+          label: '딥러닝 프레임워크'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/binary-classification',
+          label: '이미지 이항 분류'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/loss-function',
+          label: '손실 함수'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/gradient-descent',
+          label: '경사 하강법'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/test-set',
+          label: '테스트'
+        },
+        {
+            type: 'doc',
+            id: 'computer-vision/confusion-matrix',
+            label: '혼동 행렬'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/threshold',
+          label: '문턱값'
+        },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '3일차 - 딥러닝과 컴퓨터 비전',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/day2-review',
-    //       label: '2일차 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/deep-learning',
-    //       label: '컴퓨터 비전과 딥러닝'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/frameworks',
-    //       label: '딥러닝 프레임워크'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/binary-classification',
-    //       label: '이미지 이항 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/loss-function',
-    //       label: '손실 함수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/gradient-descent',
-    //       label: '경사 하강법'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/test-set',
-    //       label: '테스트'
-    //     },
-    //     {
-    //         type: 'doc',
-    //         id: 'computer-vision/confusion-matrix',
-    //         label: '혼동 행렬'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/threshold',
-    //       label: '문턱값'
-    //     },
-    //   ]
-    // },
     // {
     //   type: 'category',
     //   label: '4일차 - 다양한 모형',
