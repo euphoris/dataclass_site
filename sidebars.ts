@@ -994,62 +994,62 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '4일차 - 다양한 모형',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/day3-review',
-    //       label: '3일차 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/MLP',
-    //       label: '다층 신경망'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/activation',
-    //       label: '활성화 함수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/hyperparameter-tuning',
-    //       label: '하이퍼파라미터 튜닝'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/multiclass',
-    //       label: '다항 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/regularization',
-    //       label: '정칙화'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/cnn',
-    //       label: '합성곱 신경망'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/augmentation',
-    //       label: '데이터 증강'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/vit',
-    //       label: '비전 트랜스포머'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/transfer-learning',
-    //       label: '전이 학습'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '4일차 - 다양한 모형',
+      items: [
+        {
+          type: 'doc',
+          id: 'computer-vision/day3-review',
+          label: '3일차 복습'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/MLP',
+          label: '다층 신경망'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/activation',
+          label: '활성화 함수'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/hyperparameter-tuning',
+          label: '하이퍼파라미터 튜닝'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/multiclass',
+          label: '다항 분류'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/regularization',
+          label: '정칙화'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/cnn',
+          label: '합성곱 신경망'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/augmentation',
+          label: '데이터 증강'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/vit',
+          label: '비전 트랜스포머'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/transfer-learning',
+          label: '전이 학습'
+        },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '5일차 - 물체 탐지',

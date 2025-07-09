@@ -98,9 +98,9 @@
 ## 특정 색상만 추출
 *   HSV에서 H가 40-80 사이, SV는 50-255 사이인 부분만 추출
     ```python
-    lower_blue = np.array([40, 50, 50])
-    upper_blue = np.array([80, 255, 255])
-    mask = cv.inRange(hsv, lower_blue, upper_blue)
+    lower = np.array([40, 50, 50])
+    upper = np.array([80, 255, 255])
+    mask = cv.inRange(hsv, lower, upper)
     Image.fromarray(mask)
     ```
 *   원래 이미지에서 mask 부분만 보기
