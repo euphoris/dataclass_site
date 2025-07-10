@@ -1050,52 +1050,52 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '5일차 - 물체 탐지',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/day4-review',
-    //       label: '4일차 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/object-detection',
-    //       label: '물체 탐지'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/ultralytics',
-    //       label: 'Ultralytics'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/detection-evaluation',
-    //       label: '물체 탐지 평가'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/annotation',
-    //       label: '데이터 만들기'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/obb-pose',
-    //       label: 'OBB와 자세 추정'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/adversarial',
-    //       label: '적대적 사례'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/generation',
-    //       label: '이미지 생성'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '5일차 - 물체 탐지',
+      items: [
+        {
+          type: 'doc',
+          id: 'computer-vision/day4-review',
+          label: '4일차 복습'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/object-detection',
+          label: '물체 탐지'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/ultralytics',
+          label: 'Ultralytics'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/detection-evaluation',
+          label: '물체 탐지 평가'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/annotation',
+          label: '데이터 만들기'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/obb-pose',
+          label: 'OBB와 자세 추정'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/adversarial',
+          label: '적대적 사례'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/generation',
+          label: '이미지 생성'
+        },
+      ]
+    },
 
 
     // {
