@@ -1,0 +1,101 @@
+# 교호작용
+
+## 교호작용
+
+  - 단순히 여러 요인을 동시에 실험한다고 해서 각 요인의 개별적인 효과만 알 수 있는 것은 아님
+  - 교호작용(Interaction): 한 요인의 효과가 다른 요인의 수준(level)에 따라 달라지는 현상
+    - 상호작용이라고도 함
+
+
+
+## 예시: 온도와 시간
+
+  - 열처리 공정의 '온도'와 '시간'
+  - 주 효과만 고려 시:
+      - 온도 상승 → 강도 증가
+      - 처리 시간 증가 → 강도 증가
+  - 교호작용의 예:
+      - 낮은 온도에서는 처리 시간 늘려도 강도 변화 미미
+      - 높은 온도에서는 처리 시간 늘리면 강도 급격히 향상
+  - '시간' 요인의 효과가 '온도' 요인의 수준에 따라 달라지는 관계 → '온도와 시간의 교호작용' 존재
+
+
+
+## 교호작용의 시각화: 교호작용 그림
+
+교호작용이 없는 경우
+
+```python
+import seaborn as sns
+d1 = pd.read_excel('diff_intercept.xlsx')
+sns.scatterplot(x='x', y='y', hue='m', data=d1)
+ols('y ~ x + m', d1).fit().summary()
+```
+
+기울기가 달라지는 경우
+```python
+d2 = pd.read_excel('diff_slope.xlsx')
+sns.scatterplot(x='x', y='y', hue='m', data=d2)
+ols('y ~ x + x:m', d2).fit().summary()
+```
+
+기울기와 절편이 모두 달라지는 경우
+```python
+d3 = pd.read_excel('interaction.xlsx')
+sns.scatterplot(x='x', y='y', hue='m', data=d3)
+ols('y ~ x + m + x:m', d3).fit().summary()
+```
+
+```python
+import seaborn as sns
+d1 = pd.read_excel('diff_intercept.xlsx')
+sns.scatterplot(x='x', y='y', hue='m', data=d1)
+ols('y ~ x + m', d1).fit().summary()
+```
+
+
+## Python을 이용한 교호작용 분석
+
+- 특이하게도 `:`가 곱셈을 나타냄
+  - 관계식 문법이 다른 프로그래밍 언어에서 가져온 것임
+
+```python
+DATA = pd.read_excel('strength_alloy.xlsx')
+FORMULA = 'strength ~ C(temp) + C(alloy) + C(temp):C(alloy)'
+model = ols(FORMULA, DATA).fit()
+model.summary()
+```
+
+- 위의 관계식은 다음과 같이 표현할 수도 있음
+  - `*`는 주효과와 교호작용을 모두 포함하라는 뜻(일반적인 수식과 같이 곱셈이 아님)
+```python
+FORMULA = 'strength ~ C(temp) * C(alloy)'
+```
+
+
+## 분석 결과 해석 및 주의점
+
+  - 유의수준(예: 0.05)보다 작으면 교호작용이 통계적으로 유의미
+  - 교호작용이 유의미할 경우, 주 효과를 독립적으로 해석하면 안 됨
+  - 교호작용이 존재할 때는 반드시 교호작용 그림을 그려 함께 해석
+  - 교호작용의 발견은 특정 조건에서만 발현되는 최적의 공정 조건을 찾는 중요한 단서이며, 요인 배치법의 핵심 개념으로 연결
+
+## 교호작용을 가정할 때 VIF
+
+VIF가 1.0인 경우
+```python
+cm = pd.read_excel('chemical.xlsx')
+DATA = cm
+FORMULA = 'Yield ~ Ethanol + Propanol'
+doeutils.vif(FORMULA, DATA)
+```
+
+교호작용항이 추가되면 VIF가 증가할 수 있음
+```python
+FORMULA = 'Yield ~ Ethanol + Propanol + Ethanol:Propanol'
+doeutils.vif(FORMULA, DATA)
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wkPWRZ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2200" frameborder="0" marginheight="0" marginwidth="0" title="[DOE] 교호작용"></iframe>

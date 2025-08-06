@@ -1,0 +1,80 @@
+# 스크리닝
+
+## 성공적인 스크리닝의 원칙
+
+- 희소성(Sparsity)
+    - 파레토 원칙: 대부분의 변동은 소수의 입력 요인에 기인
+    - 스크리닝 실험은 이 원칙에 의존해 적은 실행으로 많은 요인 탐색
+    - 80-20 규칙: 요인 20%로 변동성의 80% 설명 가능
+- 계층구조(Hierarchy)
+    - 1차 효과(주효과)가 2차 효과(교호작용, 이차항)보다 일반적으로 큼
+    - 모델 선택 시 주효과부터 추가한 후 2차 효과 고려 권장
+- 유전성(Heredity)
+    - 강한 유전성: 교호작용이 모델에 포함되면 관련 두 주효과도 모두 포함
+    - 약한 유전성: 교호작용이 모델에 포함되면 관련 주효과 중 하나 이상 포함
+    - 강한 유전성 모델은 요인 척도 변경 시에도 예측 결과 불변
+
+## Plackett-Burman 설계
+
+  * Plackett-Burman 설계: 수많은 잠재적 요인들 중에서 결과에 가장 큰 영향을 미치는 핵심 인자를 가려내기(screening) 위한 효율적인 설계 방법
+  * 최소한의 실험으로 최대의 정보
+      * N번의 실험으로 최대 N-1개의 요인을 스크리닝할 수 있음
+      * N은 4의 배수
+      * 예: 12번의 실험으로 최대 11개 요인의 주 효과를 빠르게 평가
+  * 연구 초기 단계에서 어떤 요인이 중요한지 전혀 모를 때 사용
+      * 주 효과와 교호작용이 복잡하게 섞여(교락) 있으므로, 교호작용 분석에는 적합하지 않음
+
+```python
+doe.pb(3) # 3개의 요인에 대한 설계
+```
+
+
+
+## D-최적성
+
+- $\text{var}(\hat{\beta}) = \sigma_e^2 (X'X)^{-1}$의 관계가 있음
+- $X'X$를 정보 행렬(information matrix)이라고 함
+- D-최적성은 정보 행렬의 행렬식(determinant)을 최대화 하는 설계
+- 직교 설계는 D-최적성을 만족함
+- 수학적 의미:
+    - 행렬은 어떠한 선형 변환(linear transformation)을 나타냄
+    - 행렬식은 그 선형 변환이 얼마나 공간을 확장하는지를 나타냄
+    - 역행렬은 해당 변환의 역을 나타냄
+    - 정보 행렬의 행렬식이 크면, 그 역행렬에 의한 변환이 작아짐 → 표준 오차가 작아짐
+    - 행렬식이 0이면, 역행렬이 존재하지 않음 → 표준 오차가 무한대가 됨
+
+## 설계들의 D 최적성
+
+완전 요인 설계
+```python
+NUM_FACTORS = 3
+ff_design = doe.ff2n(NUM_FACTORS)
+doeutils.compute_d_optimality(ff_design)
+```
+
+Plackett-Burman 설계
+```python
+pb_design = doe.pbdesign(NUM_FACTORS)
+doeutils.compute_d_optimality(pb_design)
+```
+
+## 좌표 교환 알고리즘
+
+ - D-최적성 기준을 만족하는 설계를 찾는 알고리즘
+ - 순서:
+    - 초기 설계 행렬을 무작위로 생성
+    - 행렬식을 계산 → 행렬식 = 0이면 처음부터 다시 시작
+    - 각 요소를 -1 또는 +1로 바꿔보고 D-최적성 기준 개선 여부 평가
+    - 더 이상 개선이 없을 때까지 반복
+  - 국소 최적(locally optimal) 설계 생성
+  - 전역 최적(globally optimal) 설계를 찾기 위해 여러 시작점 필요
+```python
+import doeutils
+design, det = doeutils.coordinate_exchange(4, 'a + b + a:b')
+```
+
+
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/wMxYd8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1366" frameborder="0" marginheight="0" marginwidth="0" title="[DOE] 스크리닝"></iframe>

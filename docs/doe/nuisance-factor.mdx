@@ -1,0 +1,79 @@
+# 방해 요인
+
+## 방해 요인
+
+  * 완전 임의화 설계(CRD)는 모든 실험 단위가 균일(homogeneous)하다고 가정
+  * 실제 실험 환경에서는 결과에 영향을 주지만 우리의 주된 관심사는 아닌 요인들이 존재
+    * 예: 원료의 로트(batch), 실험일, 작업자, 장비의 위치 등
+  * 방해 요인 (Nuisance Factor)
+      * 실험 결과의 변동성을 높여 우리가 보고자 하는 주 요인의 효과를 파악하기 어렵게 만드는 요인
+
+
+
+## 알려져 있고 통제 가능한 요인 (Known & Controllable)
+
+  * 예: 여러 공급사에서 받은 원료 로트, 오전/오후 근무조
+  * 블록화 (Blocking)
+      * 방해 요인의 영향을 줄이기 위한 가장 효과적인 방법 중 하나
+      * 특성이 비슷한 실험 단위들을 하나의 블록(block)으로 묶는 것
+      * 예: 원료 로트가 다르면 결과가 달라질 것을 안다면, '같은 로트'를 하나의 블록으로 설정
+  * 랜덤화 완전 블록 설계 (Randomized Complete Block Design, RCBD)
+      * 각 블록 안에서 모든 처리(조건)를 한 번씩 랜덤한 순서로 실험하는 설계
+      * "완전(Complete)"이라는 말은 하나의 블록 안에 모든 처리가 다 포함되어 있다는 의미
+      * 블록화를 통해 방해 요인에 의한 변동을 통계적으로 분리하여 제거할 수 있으므로 실험의 정밀도가 크게 향상
+
+## 블록화 실습
+
+  * 시나리오: 3가지 첨가제(A, B, C)가 강재 강도에 미치는 영향을 보려함
+    * 4개의 서로 다른 원료 로트(Lot 1-4)가 강도에 영향
+  * 설계 (RCBD): 각 로트(블록) 내에서 3가지 첨가제를 모두 랜덤하게 실험
+  * OLS 분석: `강도 ~ C(첨가제) + C(로트)` 형태로 모델을 만듭니다. `C()`는 해당 변수를 범주형으로 다루라는 의미
+    * 로트의 효과를 통계적으로 분리하고 첨가제의 순수한 효과를 볼 수 있음
+
+```python
+block_df = pd.read_excel('strength_block.xlsx')  # 엑셀 파일에서 데이터 읽기
+DATA = block_df
+FORMULA = 'strength ~ C(additive) + C(batch)'  # 관계식 
+model = ols(FORMULA, data=DATA).fit()
+model.summary()
+```
+
+
+
+## 알려져 있지만 통제 불가능한 요인 (Known & Uncontrollable)
+
+  * 예: 매일 조금씩 변하는 공장 내부의 온도나 습도
+      * 공장 내부의 습도는 우리가 제어할 수는 없지만, 측정하여 기록할 수는 있음
+    * 이처럼 통제는 불가능하지만 측정 가능한 방해 요인을 공변량(covariate)이라고 함
+  * 회귀 분석을 이용한 보정
+      * 공변량이 결과에 미친 영향을 회귀분석을 통해 통계적으로 제거(보정)한 후, 처리(조건) 간의 순수한 차이를 비교
+
+
+
+## 통계적 통제 실습
+
+  * 시나리오: 2가지 코팅 방식(Old, New)이 제품 수명에 미치는 영향을 보려함
+  * 공정 중의 미세한 온도 변화는 통제할 수 없지만, 측정은 가능
+  * 실험 시 코팅 방식과 함께 온도(공변량)를 기록합니다.
+  * OLS 분석: `수명 ~ C(코팅방식) + 온도` 형태로 모델을 만듭니다. 온도의 효과를 회귀 계수로 추정하여 통계적으로 통제
+
+```python
+coat_life = pd.read_excel('coat_life.xlsx')  # 엑셀 파일에서 데이터 읽기
+DATA = coat_life
+FORMULA = 'lifespan ~ C(coating) + temp'  # 관계식
+model = ols(FORMULA, data=DATA).fit()
+model.summary()  # 모델 요약 출력
+```
+
+
+
+## 알려져 있지 않고 통제도 불가능한 요인 (Unknown & Uncontrollable)
+
+  * 예: 측정 장비의 미세한 노후화, 아무도 인지하지 못한 작업자의 미묘한 습관 차이
+  * 잠복 변수(Lurking Variable): 존재조차 모르는 방해 요인
+  * 실험 순서나 샘플 배정을 무작위로 하면, 이러한 잠복 변수의 영향이 모든 처리 그룹에 공평하게 분산될 확률이 높아짐
+  * 무작위화는 잠복 변수의 영향을 없애주지는 못하지만, 그 영향이 특정 그룹에 치우치지 않게 하여 실험의 타당성을 지켜줌
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mYAZQq?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2184" frameborder="0" marginheight="0" marginwidth="0" title="[DOE] 방해 요인"></iframe>

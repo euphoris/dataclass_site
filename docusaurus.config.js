@@ -76,9 +76,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'computerVisionSidebar',
+          sidebarId: 'doeSidebar', // 사이드바 ID
           position: 'left',
-          label: '컴퓨터 비전', // 상단 메뉴
+          label: '실험 계획법', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -118,10 +118,10 @@ const config = {
             //   label: '머신 러닝',
             //   to: '/docs/machine-learning/lab',
             // },
-            // {
-            //   label: '컴퓨터 비전',
-            //   to: '/docs/computer-vision/lab',
-            // },
+            {
+              label: '컴퓨터 비전',
+              to: '/docs/computer-vision/lab',
+            },
             // {
             //   label: '시계열 데이터 분석',
             //   to: '/docs/time-series/intro',

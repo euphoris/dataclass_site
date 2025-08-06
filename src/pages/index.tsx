@@ -19,9 +19,9 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/computer-vision/lab">
+            to="/docs/doe/lab">
             {/* 히어로 */}
-            컴퓨터 비전
+            실험 계획법
           </Link>
         </div>
       </div>

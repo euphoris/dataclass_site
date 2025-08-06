@@ -79,7 +79,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 model = MultiClassValModel()
 # 검증 손실이 가장 작은 상위 1개의 모델만 저장
 checkpoint = ModelCheckpoint(monitor='val_loss', mode="min", save_top_k=1, verbose=True)
-trainer = Trainer(max_epochs=30, default_root_dir=log_dir, callbacks=[checkpoint])
+trainer = Trainer(max_epochs=30, callbacks=[checkpoint])
 trainer.fit(model, train_loader, val_loader)
 
 # 저장된 파라미터 불러오기
