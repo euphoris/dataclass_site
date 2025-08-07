@@ -59,31 +59,31 @@ const sidebars: SidebarsConfig = {
     //   id: 'doe/review1',
     //   label: '1일차 복습'
     // },
-    // {
-    //   type: 'doc',
-    //   id: 'doe/interaction',
-    //   label: '교호 작용'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'doe/factorial-design',
-    //   label: '요인 배치법'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'doe/screening',
-    //   label: '스크리닝'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'doe/nonlinearity',
-    //   label: '변수의 변형'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'doe/response-surface',
-    //   label: '반응 표면 설계'
-    // },
+    {
+      type: 'doc',
+      id: 'doe/interaction',
+      label: '교호 작용'
+    },
+    {
+      type: 'doc',
+      id: 'doe/factorial-design',
+      label: '요인 배치법'
+    },
+    {
+      type: 'doc',
+      id: 'doe/screening',
+      label: '스크리닝'
+    },
+    {
+      type: 'doc',
+      id: 'doe/nonlinearity',
+      label: '변수의 변형'
+    },
+    {
+      type: 'doc',
+      id: 'doe/response-surface',
+      label: '반응 표면 설계'
+    },
   ],
   sqlSidebar: [
     {
