@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+const path = require('path');
 
 const config = {
   title: '데이터 과학 강의',
@@ -135,7 +136,33 @@ const config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
-  }
+  },
+  plugins: [
+    function (context, options) {
+      return {
+        name: 'docusaurus-tailwindcss',
+        configureWebpack(config, isServer, utils) {
+          return {
+            mergeStrategy: {
+              'resolve.alias': 'PREPEND', // 별칭 설정을 병합하도록 전략 설정
+            },
+            resolve: {
+              alias: {
+                '@': path.resolve(__dirname, 'src/'),
+              },
+            },
+          };
+        },
+        // 2. TailwindCSS를 위한 PostCSS 설정 (스타일 적용을 위해 필요)
+        configurePostCss(postcssOptions) {
+          postcssOptions.plugins.push(require('@tailwindcss/postcss'));
+          postcssOptions.plugins.push(require('autoprefixer'));
+          return postcssOptions;
+        },
+      };
+    },
+
+  ],
 };
 
 export default config;
