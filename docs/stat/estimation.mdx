@@ -36,14 +36,49 @@
 모집단 → (표집) → 표본 → (계산) → 통계량 → (추정) → 모수
 (모집단 특성 = 모수)
 
-## 표집 오차 (Sampling Error)
-
-*   **모집단과 표본 다르기 때문**에 생기는, 표본 추정값과 실제 모수와의 **차이**.
-*   **예시:**
-    *   모집단 (6면체 주사위) 평균 = 3.5
-    *   표본 (주사위 10개 굴림, 합 26) 평균 = 2.6
-    *   표집 오차 = 2.6 - 3.5 = -0.9
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wvbOlg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 추정"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="estimation" quizItems={[
+    {
+        item_type: 'short',
+        question: '연구 관심 대상이 되는 집단 전체를 무엇이라고 합니까?',
+        hint: '강의자료 참고',
+        solution: ['모집단', 'population']
+    },
+    {
+        item_type: 'short',
+        question: '특정 연구에서 선택된 모집단의 부분 집합은?',
+        hint: '강의자료 참고',
+        solution: ['표본', 'sample'],
+    },
+    {
+        item_type: 'short',
+        question: '모집단에서 표본 추출하는 절차는?',
+        hint: '강의자료 참고',
+        solution: ['표집', '표본 추출', 'sampling'],
+    },
+    {
+        item_type: 'short',
+        question: '모집단 특성 나타내는 값은?',
+        hint: '강의자료 참고',
+        solution: ['모수', 'parameter'],
+    },
+    {
+        item_type: 'short',
+        question: '표본에서 얻어진 수로 계산한 값은?',
+        hint: '강의자료 참고',
+        solution: ['통계량', 'statistic'],
+    },
+    {
+        item_type: 'short',
+        question: '통계량으로부터 모수를 추측하는 절차는?',
+        hint: '강의자료 참고',
+        solution: ['추정', 'estimation'],
+    },
+]} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

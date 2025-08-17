@@ -1,0 +1,123 @@
+# 분포의 시각화
+
+## 히스토그램 (histogram)
+
+데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것
+
+```python
+import seaborn as sns # 시본 임포트
+sns.histplot(
+    x='price', # x축(가로) 변수
+    data=df)  # 데이터
+```
+
+
+막대기 수는 bins로 설정
+```python
+sns.histplot(x='price', data=df, bins=30)
+```
+
+seaborn을 포함해 Python의 대다수 시각화 라이브러리는 matplotlib에 의존
+
+```python
+import matplotlib.pyplot as plt
+
+# 가로축 눈금을 100에서 2100까지 200 간격으로 설정
+xs = list(range(100, 2100, 200))
+sns.histplot(x='price', data=df, bins=xs)
+plt.xticks(xs)
+```
+
+## 커널 밀도 추정 (kernel density estimation)
+
+데이터 밀도 추정 기법
+kde=True로 설정하면 데이터의 밀도를 추정하여 표시
+
+```python
+sns.histplot(x='price', data=df, kde=True)
+```
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="histogram" quizItems={[
+    {
+        item_type: 'radio',
+        question: '히스토그램에서 막대의 높이는 무엇을 나타냅니까?',
+        options: [
+            '각 구간의 데이터 수',
+            '전체 데이터의 평균',
+            '전체 데이터의 표준편차',
+            '각 구간의 데이터 밀도',
+        ],
+        hint: '히스토그램은 데이터의 분포를 시각화하는 도구입니다',
+        solution: '각 구간의 데이터 수',
+    },
+    {
+        item_type: 'radio',
+        question: '히스토그램에서 막대의 너비는 무엇을 나타냅니까?',
+        options: [
+            '각 구간의 범위',
+            '각 구간의 데이터 수',
+            '각 구간의 데이터 밀도',
+            '전체 데이터의 평균',
+        ],
+        hint: '히스토그램은 데이터의 막대는 각 구간의 빈도를 나타냅니다',
+        solution: '각 구간의 범위',
+    },
+    {
+        item_type: 'short',
+        question: 'seaborn에서 히스토그램의 막대 개수를 지정하는 옵션은 무엇입니까? (영어 4글자)',
+        hint: "강의 자료에서 히스토그램 막대의 개수 부분을 읽어보세요",
+        solution: 'bins',
+    },
+    {
+        item_type: 'radio',
+        question: 'list(range(100, 2100, 200))의 결과는?',
+        options: [
+            '100에서 1900까지 200 간격의 숫자 리스트',
+            '100에서 2100까지 200 간격의 숫자 리스트',
+            '100에서 2100까지 200 간격의 숫자 리스트',
+            '100에서 2200까지 200 간격의 숫자 리스트',
+        ],
+        hint: "range 함수는 끝값을 포함하지 않습니다",
+        solution: '100에서 1900까지 200 간격의 숫자 리스트',
+    },
+    {
+        item_type: 'radio',
+        question: "plt.xticks 함수의 역할은?",
+        options: [
+            'x축 눈금을 설정하는 것',
+            'y축 눈금을 설정하는 것',
+            '그래프의 제목을 설정하는 것',
+            '그래프의 범례를 설정하는 것',
+        ],
+        hint: "tick은 눈금을 의미합니다",
+        solution: 'x축 눈금을 설정하는 것',
+    },
+    {
+        item_type: 'radio',
+        question: "커널 밀도 추정이란?",
+        options: [
+            '데이터의 분포를 부드럽게 나타내는 것',
+            '데이터의 평균을 구하는 것',
+            '데이터의 중앙값을 구하는 것',
+            '데이터의 범위를 구하는 것',
+        ],
+        hint: "커널 밀도 추정은 각 점에서 데이터의 확률밀도를 추정하는 것입니다.",
+        solution: '데이터의 분포를 부드럽게 나타내는 것',
+    },
+    {
+        item_type: 'number',
+        question: "beer.xlsx에서 production의 히스토그램을 그려보세요. 기본 옵션을 사용했을 때, 막대의 개수는 몇 개입니까?",
+        hint: "```\nimport seaborn as sns\nimport pandas as pd\nbr = pd.read_excel('beer.xlsx')\nsns.histplot(br['production'])\n```",
+        solution: 14,
+    },
+]} />
+
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

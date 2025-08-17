@@ -29,7 +29,10 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
-
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
   presets: [
     [
       'classic',
@@ -77,9 +80,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'doeSidebar', // 사이드바 ID
+          sidebarId: 'statSidebar', // 사이드바 ID
           position: 'left',
-          label: '실험 계획법', // 상단 메뉴
+          label: '통계', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -110,6 +113,10 @@ const config = {
             {
               label: '통계',
               to: '/docs/stat/lab',
+            },
+            {
+              label: '실험계획법',
+              to: '/docs/doe/lab',
             },
             // {
             //   label: '강화 학습',

@@ -98,5 +98,72 @@
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w25kLe?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1200" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 기술 통계: 중심경향치"></iframe>
 
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="central-tendency" quizItems={[
+    {
+        item_type: 'radio',
+        question: '변수에 대한 설명으로 올바른 것은?',
+        options: [
+            '데이터를 표로 정리할 때 보통 한 행(row)에 한 변수를 넣는다',
+            '범주형 변수는 덧셈, 뺄셈 등의 계산이 의미가 있다',
+            '범주형 변수는 결코 순서가 없다',
+            '연속형 변수는 간격이 일정하다',
+        ],
+        hint: '',
+        solution: '연속형 변수는 간격이 일정하다',
+    },
+    {
+        item_type: 'radio',
+        question: '다음 중 기술 통계에 대한 설명으로 올바른 것은?',
+        options: [
+            '데이터를 바탕으로 더 큰 집단(모집단)에 대해 추론, 예측하는 것이다',
+            '알려지지 않은 데이터를 예측하는 것이다',
+            '주어진 데이터를 묘사, 설명하는 것이다',
+            '과거의 추세를 바탕으로 미래를 예측하는 것이다',
+        ],
+        hint: '',
+        solution: '주어진 데이터를 묘사, 설명하는 것이다',
+    },
+    {
+        item_type: 'number',
+        question: '10, 20, 30, 40, 500의 평균을 손으로 계산해 보세요',
+        hint: '평균은 모든 값을 더한 후 개수로 나눈다',
+        solution: 120,
+    },
+    {
+        item_type: 'number',
+        question: '10, 20, 30, 40, 500의 중간값을 손으로 계산해 보세요',
+        hint: '중간값은 순서대로 정렬한 후 가운데 값',
+        solution: 30,
+    },
+    {
+        item_type: 'number',
+        question: 'hr.xlsx에서 overtime의 평균을 구해보세요',
+        hint: "```\nimport pandas as pd\nhr = pd.read_excel('hr.xlsx')\nhr['overtime'].mean()\n```",
+        solution: 9.153061224489797,
+    },
+    {
+        item_type: 'number',
+        question: 'hr.xlsx에서 overtime의 중간값을 구해보세요',
+        hint: "```\nimport pandas as pd\nhr = pd.read_excel('hr.xlsx')\nhr['overtime'].median()\n```",
+        solution: 6.0,
+    },
+    {
+        item_type: 'radio',
+        question: 'hr.xlsx에서 인원이 가장 많은 부서(department)는 어디입니까?',
+        options: [
+            'Finance',
+            'Engineering',
+            'Sales',
+        ],
+        hint: "`hr['department'].mode()` 또는 `hr['department'].value_counts()`를 사용해보세요.",
+        solution: 'Engineering',
+    },                        
+]} />
+
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

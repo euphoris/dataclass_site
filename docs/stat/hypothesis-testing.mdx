@@ -1,0 +1,174 @@
+# 통계적 가설검정
+
+## 통계적 가설 검정
+
+- 통계적 가설 검정 (Statistical Hypothesis Testing)
+    - 관찰된 차이가 우연히 발생한 것인지, 아니면 통계적으로 의미 있는 차이인지를 확률적으로 판단하는 과정
+    - "두 공정 간에 차이가 없다"는 귀무가설(H₀)을 세우고, 이 가설이 틀렸다는 강력한 증거가 있는지를 데이터로 확인
+- 귀(歸: 돌아가다), 무(無: 없음) → 무로 돌아가다, 즉 없어질 가설(nullify: 무효화하다, 취소하다)
+    - 귀무가설을 기각함으로써 원래 주장하고자 하던 가설(대립가설)을 채택
+- 귀무가설을 세우는 이유
+    - 가설이 있어야 확률을 계산할 수 있음
+    - 예: 앞뒷면이 나올 확률이 같다고 가정해야 10번 던졌을 때 앞면이 10번 나올 확률을 계산할 수 있음
+
+## 두 집단의 평균 비교
+
+- 두 집단의 평균을 비교하려는 경우, 독립표본 t-검정을 사용
+    - 귀무가설: "두 집단의 평균이 같다($\bar{X}_1-\bar{X}_2=0$)"
+
+$\bar{X}_1-\bar{X}_2$의 신뢰구간을 계산($\bar{X}_1$: 대조군 평균, $\bar{X}_2$: 실험군 평균)
+
+```python
+avante = df.query('model == "Avante"') # df 중에서 model이 Avante인 건만
+k3 = df.query('model == "K3"') # df의 중에서 model이 K3인 건만
+pg.ttest(avante.price, k3.price)
+```
+
+- Avante 집단이 K3 집단에 비해 평균 가격이 -152 - -8만원 (→ 평균이 더 낮음)
+
+
+## p-value
+
+- 일단 귀무가설이 참이라고 가정
+- 현재 관찰된 차이 또는 그 이상이 발생할 확률을 계산(p-value)
+- p < 유의수준(0.05) → 귀무가설이 신뢰구간을 벗어남 → 귀무가설 기각 → 대립가설 채택
+    - "두 집단의 평균에 통계적으로 유의한 차이가 있다"
+- p > 유의수준(0.05) → 귀무가설이 신뢰구간을 벗어남 → 귀무가설 기각 못함 → 결론 유보
+    - "두 집단의 평균에 통계적으로 유의한 차이가 없다"
+
+
+## 통계적 유의함 (Statistical Significance)
+
+*   **의미:** 통계적 가설검정에서 **귀무가설 기각**하는 경우 ("통계적으로 유의하다").
+*   **해석:** 관찰된 관계/차이가 **단순 우연(표집 오차)만으로 설명되기 어렵다**는 의미. (표본 크기 고려 시, 뭔가 의미 있는 차이가 있을 가능성 시사)
+*   **주의: 통계적 유의함 ≠ 현실적 유의함 (Practical Significance)**
+    *   통계적 유의함은 **표본 크기 영향** 받음. 표본 크 매우 크면, 현실적으로 **아주 작은 차이도 통계적으로 유의**하게 나옴.
+    *   현실적 유의함은 결과의 **실제 중요성, 의미, 가치**에 대한 **주관적 판단** 필요.
+    *   **예:** 평균 수명 하루 연장 치료제 (통계적 유의 O), 단 가격 10억원 (현실적 유의 X).
+
+## 일표본 t 검정 (One Sample t-test)
+
+*   **목적:** **한 집단**의 **평균**에 대한 가설 검정.
+*   **귀무가설:** 모평균 = 특정 값 (예: H₀: 모평균 = 900).
+*   **Python 예시:**
+    ```python
+    import pingouin as pg
+
+    # df.price의 모평균이 900인지 검정 (95% 신뢰수준)
+    pg.ttest(df.price, 900, confidence=0.95)
+    ```
+*   **해석:**
+    *   결과 표의 `p-val` 확인. `p < 0.05` 이면 귀무가설(모평균=900) 기각.
+    *   **유의수준 5% 검정 결과 = 95% 신뢰구간 결과와 동일:**
+        *   p < 0.05 (귀무가설 기각) ↔ 95% 신뢰구간이 900 포함 안 함.
+        *   p ≥ 0.05 (기각 실패) ↔ 95% 신뢰구간이 900 포함 함.
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent hypothesis-testing="module" quizItems={[
+    {
+        item_type: 'radio',
+        question: '다음 중 귀무가설을 기각하기 위한 조건은?',
+        options: [
+            'p-value가 유의수준보다 클 때',
+            'p-value가 유의수준보다 작을 때',
+            'p-value가 신뢰수준보다 클 때',
+            'p-value가 신뢰수준보다 작을 때',
+        ],
+        hint: 'p < 유의수준(0.05) → 귀무가설이 신뢰구간을 벗어남 → 귀무가설 기각 → 대립가설 채택',
+        solution: 'p-value가 유의수준보다 작을 때',
+    },
+    {
+        item_type: 'radio',
+        question: '귀무가설을 기각하면 어떻게 됩니까?',
+        options: [
+            '귀무가설을 채택한다',
+            '대립가설을 채택한다',
+            '결론을 유보한다',
+        ],
+        hint: 'p < 유의수준(0.05) → 귀무가설이 신뢰구간을 벗어남 → 귀무가설 기각 → 대립가설 채택',
+        solution: '대립가설을 채택한다',
+    },
+    {
+        item_type: 'radio',
+        question: '귀무가설을 기각하지 못하면 어떻게 됩니까?',
+        options: [
+            '귀무가설을 채택한다',
+            '대립가설을 채택한다',
+            '결론을 유보한다',
+        ],
+        hint: 'p > 유의수준(0.05) → 귀무가설이 신뢰구간을 벗어남 → 귀무가설 기각 못함 → 결론 유보',
+        solution: '결론을 유보한다',
+    },
+    {
+        item_type: 'radio',
+        question: 'hr.xlsx에서 marriage가 미혼자(marriage == "single")와 기혼자(marriage == "married") 들 사이의 overtime의 평균을 비교하는 독립표본 t 검정을 수행해보세요. 귀무가설은 무엇입니까?',
+        options: [
+            '미혼자의 평균이 높다',
+            '미혼자와 기혼자의 평균이 같다',
+            '기혼자의 평균이 높다',
+        ],
+        hint: '독립표본 t 검정에서 귀무가설은 "두 집단의 평균이 같다"입니다.',
+        solution: '미혼자와 기혼자의 평균이 같다',
+    },
+    {
+        item_type: 'radio',
+        question: '위 분석의 p-value는 얼마입니까?',
+        options: [
+            'p > 0.05',
+            'p < 0.05',
+        ],
+        hint: '```\nimport pandas as pd\nimport pingouin as pg\nhr = pd.read_excel(\'hr.xlsx\')\nm = hr.query(\'marriage == "married"\')\nf = hr.query(\'marriage == "single"\')\npg.ttest(m.overtime, f.overtime)  \n```',
+        solution: 'p > 0.05',
+    },
+    {
+        item_type: 'radio',
+        question: '위 분석의 결과를 해석해보세요.',
+        options: [
+            '미혼자의 평균이 통계적으로 유의하게 높다',
+            '미혼자와 기혼자의 평균에는 통계적으로 유의한 차이가 없다',
+            '기혼자의 평균이 통계적으로 유의하게 높다',
+        ],
+        hint: '두 집단의 평균 차이가 없다는 귀무가설을 기각하지 못했음',
+        solution: '미혼자와 기혼자의 평균에는 통계적으로 유의한 차이가 없다',
+    },
+    {
+        item_type: 'radio',
+        question: '미혼자와 기혼자의 rating의 평균을 비교하는 독립표본 t 검정을 수행해보세요. 귀무가설은 무엇입니까?',
+        options: [
+            '미혼자의 평균이 높다',
+            '미혼자와 기혼자의 평균이 같다',
+            '기혼자의 평균이 높다',
+        ],
+        hint: '독립표본 t 검정에서 귀무가설은 "두 집단의 평균이 같다"입니다.',
+        solution: '미혼자와 기혼자의 평균이 같다',
+    },
+    {
+        item_type: 'radio',
+        question: '위 분석의 p-value는 얼마입니까?',
+        options: [
+            'p > 0.05',
+            'p < 0.05',
+        ],
+        hint: '```\nimport pandas as pd\nimport pingouin as pg\nhr = pd.read_excel(\'hr.xlsx\')\nm = hr.query(\'marriage == "married"\')\nf = hr.query(\'marriage == "single"\')\npg.ttest(m.rating, f.rating)\n```',
+        solution: 'p < 0.05',
+    },
+    {
+        item_type: 'radio',
+        question: '위 분석의 결과를 해석해보세요.',
+        options: [
+            '미혼자의 평균이 통계적으로 유의하게 높다',
+            '미혼자와 기혼자의 평균에는 통계적으로 유의한 차이가 없다',
+            '기혼자의 평균이 통계적으로 유의하게 높다',
+        ],
+        hint: '(기혼자의 평균 - 미혼자의 평균)의 신뢰구간이 [0.07, 0.28]입니다',
+        solution: '기혼자의 평균이 통계적으로 유의하게 높다',
+    },
+]} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

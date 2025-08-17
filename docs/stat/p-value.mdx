@@ -1,0 +1,108 @@
+# p-value
+
+
+## p-value에 영향을 주는 요소
+*   모집단의 변산성이 커지면 p-value는 커짐 → 귀무가설 기각 어려워짐
+    → 통계적으로 유의한 차이를 발견하기 어려움
+*   표본의 크기가 커지면 p-value는 작아짐 (다음 장)
+*   신뢰수준 vs. 유의수준:
+    *   신뢰구간은 신뢰수준에 영향을 받음
+    *   p-value는 유의수준에 영향을 받지 않음 → 계산 후에 유의수준과 비교
+*   귀무가설과 통계량의 차이
+    *   p-value는 둘 사이의 차이가 크면 작아짐
+        → 귀무가설 기각 쉬워짐
+        → 통계적으로 유의한 차이를 발견하기 쉬움
+    *   신뢰구간은 모수에 대한 가설이 없음 → 그 자체가 모수에 대한 구간 추정(귀무가설에 영향 X)
+
+
+## 표본의 크기
+*   표본의 크기가 커지면
+    *   신뢰구간 작아짐 (같은 귀무가설이라도 신뢰구간에 배제되기 쉬움)
+    *   p-value는 작아짐 → 귀무가설 기각 쉬워짐
+    *   통계적으로 유의한 차이를 발견하기 쉬움
+    *   검정력 높아짐
+*   표본이 작아지면 반대
+* 원래 표본으로 가설검정을 하면 통계적으로 유의
+```python
+import pandas as pd
+import pingouin as pg
+df = pd.read_excel('car.xlsx')
+avante = df.query('model == "Avante"').price
+k3 = df.query('model == "K3"').price
+pg.ttest(avante, k3)
+```
+*   표본 크기를 50개로 줄이면 통계적으로 유의하지 않게 됨
+```python
+avs = avante.sample(50, random_state=1234)
+k3s = k3.sample(50, random_state=1234)
+pg.ttest(avs, k3s)
+```
+- 주의: 위는 표본의 크기가 변할 때 예시를 위한 것
+- 실제 분석에서 데이터를 임의로 줄이거나 늘리면 절대 안됩니다!
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent hypothesis-testing="p-value" quizItems={[
+    {
+        "item_type": "radio",
+        "question": "귀무가설 값과 통계량(표본 값) 차이가 커지면 p-value는 어떻게 됩니까?",
+        "options": [
+            "작아진다",
+            "변하지 않는다",
+            "커진다"
+        ],
+        "hint": "귀무가설 값과 통계량(표본 값) 차이가 커지면 p-value는 작아집니다.",
+        "solution": "작아진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "표본의 크기가 커지면 p-value는 어떻게 됩니까?",
+        "options": [
+            "작아진다",
+            "변하지 않는다",
+            "커진다"
+        ],
+        "hint": "표본의 크기가 커지면 p-value는 작아집니다.",
+        "solution": "작아진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "모집단의 변산성이 커지면 p-value는 어떻게 됩니까?",
+        "options": [
+            "작아진다",
+            "변하지 않는다",
+            "커진다"
+        ],
+        "hint": "모집단의 변산성이 커지면 p-value는 커집니다.",
+        "solution": "커진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "유의수준(α)이 커지면 p-value는 어떻게 됩니까?",
+        "options": [
+            "작아진다",
+            "변하지 않는다",
+            "커진다"
+        ],
+        "hint": "p-value는 유의수준(α)에 영향을 받지 않습니다. p-value 계산 후에 유의수준과 비교합니다.",
+        "solution": "변하지 않는다"
+    },
+    {
+        "item_type": "radio",
+        "question": "실습 코드에서 .sample(50, random_state=1234)을 .sample(**1000, replace=True**, random_state=1234)으로 바꾸면 1000회 무작위 복원 추출을 합니다. 이렇게 해서 독립표본 t-검정을 수행하면 어떤 결과가 나올까요?",
+        "options": [
+            "p-value가 작아진다",
+            "p-value가 변하지 않는다",
+            "p-value가 커진다"
+        ],
+        "hint": "표본의 크기가 커지면 p-value는 작아집니다.",
+        "solution": "p-value가 작아진다"
+    }
+]} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

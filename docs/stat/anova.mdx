@@ -1,51 +1,144 @@
 # 여러 집단의 평균 비교
 
 ## 분산 분석 Analysis of Variance
-* 집단 간 차이가 크다면 집단 내 분산에 비해 집단 간 분산이 커질 것 
-* 모집단이 정규분포를 따르거나, 각 집단의 표본 크기가 충분히 크면 집단 간 분산/집단 내 분산의 비율은 F 분포를 따름 
-* 이를 통해 "모든 집단들의 평균이 같다"는 귀무가설을 검정할 수 있음 
-* 귀무가설을 기각할 경우, "적어도 한 집단의 평균은 다르다"라는 대립가설을 채택 
+*   집단 간 차이가 크다면 집단 내 분산에 비해 집단 간 분산이 커질 것
+*   모집단이 정규분포를 따르거나, 각 집단의 표본 크기가 충분히 크면
+    집단 간 분산/집단 내 분산의 비율은 F 분포를 따름
+*   이를 통해 "모든 집단들의 평균이 같다"는 귀무가설을 검정할 수 있음
+*   귀무가설을 기각할 경우, "적어도 한 집단의 평균은 다르다"라는 대립가설을 채택
 
 ## 등분산성 homoscedasticity
-* 분산분석은 집단간 분산이 같아야 함 
-* 등분산성은 Levene 검정으로 확인할 수 있음 
-* 귀무가설: 집단 간 분산이 같다 
-* p < 유의수준 → 귀무가설 기각 → 집단 간 분산이 다름 
-* 집단간 분산이 다를 경우(이분산), 별도의 보정이 필요 
+*   분산분석은 집단간 분산이 같아야 함
+*   등분산성은 Levene 검정으로 확인할 수 있음
+    *   귀무가설: 집단 간 분산이 같다
+    *   p < 유의수준 → 귀무가설 기각 → 집단 간 분산이 다름
+*   집단간 분산이 다를 경우(이분산), 별도의 보정이 필요
 
 ## 등분산성 검정
 ```python
 pg.homoscedasticity(dv='price', group='model', data=df)
 ```
-* 귀무가설: 모든 집단의 분산이 같다 
+*   귀무가설: 모든 집단의 분산이 같다
 
 | equal_var | 분산분석 | 사후검정 |
-|---|---|---|
+| --- | --- | --- |
 | True | pg.anova | pairwise_tukeyhsd |
 | False | pg.welch_anova | pg.pairwise_gameshowell |
 
-
 ## Python 분산 분석
-* 분산분석(등분산이면 `anova`, 이분산이면 `welch_anova` 사용) 
+*   분산분석(등분산이면 anova, 이분산이면 welch\_anova 사용)
 ```python
 pg.anova(dv='price', between='model', data=df)
 ```
 
+| Source | SS | DF | MS | F | p-unc | np2 |
+| --- | --- | --- | --- | --- | --- | --- |
+| **집단 간** `model` | 3.336811e+05 | 1 | 333681.127484 | 3.038673 | 0.082432 | 0.011048 |
+| **집단 내** `Within` | 2.986872e+07 | 272 | 109811.457010 | NaN | NaN | NaN |
+| | **편차제곱합** | **자유도** | **편차제곱평균** | **검정통계량** | **p-value** | **에타제곱** |
 
 ## Python 분산 분석 (3집단 이상 비교)
-* 데이터 
-    ```python
-    hr = pd.read_excel('hr.xlsx')
-    ```
-* 등분산성 검정 
-    ```python
-    pg.homoscedasticity(dv= 'rating', group='job_level', data=hr)
-    ```
-* 분산 분석(등분산이 아닐 경우 `welch_anova`를 사용) 
-    ```python
-    pg.welch_anova(dv='rating', between='job_level', data=hr)
-    ```
+*   데이터
+```python
+hr = pd.read_excel('hr.xlsx')
+```
+*   등분산성 검정
+```python
+pg.homoscedasticity(dv= 'rating', group='job_level', data=hr)
+```
+*   분산 분석(등분산이 아닐 경우 welch\_anova를 사용)
+```python
+pg.welch_anova(dv='rating', between='job_level', data=hr)
+```
+
+| | Source | SS | DF | MS | F | p-unc | np2 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **0** | job_level | 309.156693 | 2 | 154.578347 | 164.523041 | 3.424682e-65 | 0.183206 |
+| **1** | Within | 1378.326300 | 1467 | 0.939554 | NaN | NaN | NaN |
+
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/meB5BJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="992" frameborder="0" marginheight="0" marginwidth="0" title="[통계]  분산분석"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="anova" quizItems={[
+    {
+        "item_type": "radio",
+        "question": "분산 분석(analysis of variance)의 귀무가설은 무엇입니까?",
+        "options": [
+            "모든 집단의 평균은 같다",
+            "모든 집단의 평균은 다르다",
+            "적어도 한 집단의 평균은 다르다",
+            "모든 집단의 분산은 같다",
+            "모든 집단의 분산은 다르다",
+            "적어도 한 집단의 분산은 다르다",
+        ],
+        "hint": "분산 분석은 집단 간 평균의 차이를 검정하는 방법입니다.",
+        "solution": "모든 집단의 평균은 같다"
+    },
+    {
+        "item_type": "radio",
+        "question": "분산 분석에서 귀무가설을 기각했을 경우, 결론은 무엇입니까?",
+        "options": [
+            "모든 집단의 평균은 같다",
+            "모든 집단의 평균은 다르다",
+            "적어도 한 집단의 평균은 다르다",
+            "모든 집단의 분산은 같다",
+            "모든 집단의 분산은 다르다",
+            "적어도 한 집단의 분산은 다르다",
+        ],
+        "hint": "\"모두가 같다\"의 논리적 부정은 \"적어도 하나는 다르다\"입니다.",
+        "solution": "적어도 한 집단의 평균은 다르다",
+    },
+    {
+        "item_type": "number",
+        "question": "safety.xlsx 파일에서 wheels에 따라 horsepower에 차이가 있는지 분석하려고 합니다. wheels에는 모두 몇 개의 집단이 있습니까?",
+        "hint": "```\nimport pandas as pd\nsf = pd.read_excel(\'safety.xlsx\')\nsf.wheels.unique()\n```",
+        "solution": 3
+    },
+    {
+        "item_type": "radio",
+        "question": "wheels 사이에 horsepower의 분산이 같은지, 등분산성 검정을 해보세요. 등분산성 검정 결과는 무엇입니까?",
+        "options": [
+            "분산이 같은 것으로 가정한다(등분산)",
+            "분산이 다른 것으로 가정한다(이분산)"
+        ],
+        "hint": "```\nimport pingouin as pg\npg.homoscedasticity(dv=\'horsepower\', group=\'wheels\', data=sf)\n```",
+        "solution": "분산이 같은 것으로 가정한다(등분산)",
+    },    
+    {
+        "item_type": "radio",
+        "question": "위의 등분산성 검정 결과를 바탕으로 분산 분석을 하려고 합니다. 어떤 함수를 써야합니까?",
+        "options": [
+            "pg.anova",
+            "pg.welch_anova"
+        ],
+        "hint": "등분산일 때는 pg.anova, 이분산일 때는 pg.welch_anova를 사용합니다.",
+        "solution": "pg.anova",
+    },        
+    {
+        "item_type": "radio",
+        "question": "wheels에 따라 horsepower의 차이가 있는지 분산 분석을 해보세요. p-value는 얼마입니까?",
+        "options": [
+            "0.05보다 작다",
+            "0.05보다 크다"
+        ],
+        "hint": "```\npg.anova(dv='horsepower', between='wheels', data=sf)\n```",
+        "solution": "0.05보다 작다"
+    },
+    {
+        "item_type": "radio",
+        "question": "유의수준 5%에서 위 결과를 해석해보세요.",
+        "options": [
+            "집단들 사이에 horsepower의 평균에 통계적으로 유의한 차이가 있다",
+            "집단들 사이에 horsepower의 평균에 통계적으로 유의한 차이가 없다"
+        ],
+        "hint": "분산 분석에서 귀무가설을 기각할 경우, 적어도 한 집단의 평균이 다르다는 결론을 내립니다.",
+        "solution": "집단들 사이에 horsepower의 평균에 통계적으로 유의한 차이가 있다",
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

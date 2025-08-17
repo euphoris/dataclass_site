@@ -396,7 +396,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
               className="mt-4"
             >
               <AlertTitle>
-                {currentStatus === 'correct' || currentStatus === 'hint-correct' ? '정답입니다!' : '오답입니다.'}
+                {currentStatus === 'correct' || currentStatus === 'hint-correct' ? '맞았습니다!' : '틀렸습니다.'}
               </AlertTitle>
               <AlertDescription>
                 정답: {Array.isArray(currentItem.solution) ? currentItem.solution.join(', ') : currentItem.solution}

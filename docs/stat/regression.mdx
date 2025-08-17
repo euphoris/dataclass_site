@@ -17,12 +17,13 @@
 
 *   가장 기본적인 회귀 모형. 독립변수와 종속변수 간 직선 관계 가정.
 *   **수식:**
-    $$ \hat{y} = wx + b $$
+    $$ y = wx + b + e$$
 *   **구성:**
     *   $\hat{y}$: $y$의 **예측치**.
     *   $x$: **독립변수**.
     *   $w$: **가중치(weight)** 또는 **기울기(slope)**. $x$가 1단위 변할 때 $\hat{y}$의 변화량. 회귀계수(regression coefficient).
-    *   $b$: **절편(intercept)**. $x = 0$ 일 때 $\hat{y}$의 예측치.
+    *   $b$: **절편(intercept)**. $x = 0$ 일 때 $y$의 예측치.
+    *   $e$: 예측 오차
 
 ## 회귀분석 예시: 피부암 사망률
 
@@ -94,32 +95,181 @@ m.summary()
 import pandas as pd
 
 # 1. 예측할 새로운 독립변수 데이터 만들기 (DataFrame 형태)
-new_df = pd.DataFrame({'mileage': [10000, 20000]})
+new_df = pd.read_excel('new_car.xlsx')
 
 # 2. 학습된 모형(m)으로 예측 수행
 m.predict(new_df)
 ```
 
-## R 제곱 (R-squared / 결정계수)
-
-*   회귀 분석에서 모형의 **설명력(예측 정확성)** 나타내는 대표 지표 (0 ~ 1 범위).
-*   **계산:**
-$$ 
-R^2 = 1 - \frac{\text{잔차 분산 (Residual Variance, RSS/n)}}{\text{종속변수 총 분산 (Total Variance, TSS/n)}} = 1 - \frac{SSR}{TSS} 
-$$
-    *   SSR (Sum of Squared Residuals): 잔차 제곱합. 모형으로 설명 안 되는 변동.
-    *   TSS (Total Sum of Squares): 종속변수 총 변동 (평균 대비).
-*   **해석:**
-    *   $R^2 = 0$: 모형이 종속변수 예측/설명 도움 안 됨 (평균 예측과 동일).
-    *   $R^2 = 1$: 모형이 종속변수 완벽하게 예측/설명함 (잔차 없음).
-*   **단순회귀분석 (독립변수 1개):** $R^2$ = (피어슨 상관계수)² 와 같음.
-
-## R 제곱 읽는 법
-
-*   "모형이 종속변수($y$) 분산(총 변동)의 **약 R² %를 설명한다**" 라고 해석.
-*   예: $R^2 = 0.3$ → "모형이 종속변수 분산의 30%를 설명한다".
-*   **의미:** 모형 사용 통해 종속변수 예측 불확실성(분산)이 얼마나 줄었는지 나타냄. (분산 감소 = 불확실성 감소 = 설명됨).
-
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/3E62yl?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2800" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 회귀분석"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent hypothesis-testing="regression" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "회귀분석의 주된 목적은 무엇인가요?",
+        "options": [
+            "데이터를 여러 그룹으로 분류하는 것",
+            "데이터의 차원을 축소하는 것",
+            "독립변수를 이용하여 연속형 종속변수를 예측하거나 설명하는 것",
+            "변수들 간의 단순한 연관성 정도를 파악하는 것"
+        ],
+        "hint": "회귀분석의 목적은 독립변수를 이용하여 연속형 종속변수를 예측하거나 설명하는 것입니다",
+        "solution": "독립변수를 이용하여 연속형 종속변수를 예측하거나 설명하는 것",
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 선형 모형 y = wx + b + e에서 y가 의미하는 것은 무엇입니까?",
+        "options": [
+            "종속변수",
+            "독립변수",
+            "기울기",
+            "절편",
+            "예측 오차",
+            "모형 이름"
+        ],
+        "hint": "선형 모형에서 y는 예측하고자 하는 종속변수를 의미합니다.",
+        "solution": "종속변수"
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 선형 모형 y = wx + b + e에서 w가 의미하는 것은 무엇입니까?",
+        "options": [
+            "종속변수",
+            "독립변수",
+            "기울기",
+            "절편",
+            "예측 오차",
+            "모형 이름"
+        ],
+        "hint": "회귀 모형에서 w는 독립변수의 기울기를 의미합니다.",
+        "solution": "기울기"
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 선형 모형 y = wx + b + e에서 x가 의미하는 것은 무엇입니까?",
+        "options": [
+            "종속변수",
+            "독립변수",
+            "기울기",
+            "절편",
+            "예측 오차",
+            "모형 이름"
+        ],
+        "hint": "회귀 모형에서 x는 독립변수를 의미합니다.",
+        "solution": "독립변수"
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 선형 모형 y = wx + b + e에서 b가 의미하는 것은 무엇입니까?",
+        "options": [
+            "종속변수",
+            "독립변수",
+            "기울기",
+            "절편",
+            "예측 오차",
+            "모형 이름"
+        ],
+        "hint": "회귀 모형에서 b는 절편을 의미합니다.",
+        "solution": "절편"
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 선형 모형 y = wx + b + e에서 e가 의미하는 것은 무엇입니까?",
+        "options": [
+            "종속변수",
+            "독립변수",
+            "기울기",
+            "절편",
+            "예측 오차",
+            "모형 이름"
+        ],
+        "hint": "회귀 모형에서 e는 예측 오차를 의미합니다.",
+        "solution": "예측 오차"
+    },
+    {
+        "item_type": "radio",
+        "question": "최소제곱법(Ordinary Least Squares, OLS)은 회귀 모델의 계수를 추정하기 위해 무엇을 최소화하는 것을 목표로 하나요?",
+        "options": [
+            "결정계수",
+            "잔차 분산",
+            "사용된 독립변수의 개수",
+            "독립변수와 종속변수 간의 상관계수"
+        ],
+        "hint": "회귀 모형에서 최소제곱법은 잔차의 제곱합을 최소화하는 방법입니다.",
+        "solution": "잔차 분산"
+    },
+    {
+        "item_type": "radio",
+        "question": "statsmodels 라이브러리에서 ols(\"Mortality ~ Latitude\", data=df)와 같이 모형을 설정할 때, ~ 기호 왼쪽에 오는 변수(Mortality)는 무엇을 의미하나요?",
+        "options": [
+            "독립변수",
+            "종속변수",
+            "절편 항",
+            "모형 이름"
+        ],
+        "hint": "관계식은 y ~ f(x)의 형태입니다",
+        "solution": "종속변수"
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀계수에 대한 가설 검정 결과, 특정 독립변수의 p-value가 0.002 (유의수준 α = 0.05)로 나왔습니다. 이에 대한 올바른 해석은 무엇인가요?",
+        "options": [
+            "귀무가설(해당 계수=0)을 기각할 수 없다.",
+            "해당 독립변수는 종속변수를 설명하는 데 통계적으로 유의미하지 않다.",
+            "해당 회귀계수는 0과 통계적으로 유의하게 다르다고 볼 수 있다.",
+            "모형의 설명력(R 제곱)이 매우 낮다."
+        ],
+        "hint": "p-value가 유의수준보다 작으므로 귀무가설을 기각할 수 있습니다.",
+        "solution": "해당 회귀계수는 0과 통계적으로 유의하게 다르다고 볼 수 있다."
+    },
+
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 실제 관측값과 회귀 모형에 의해 예측된 값 사이의 차이를 무엇이라고 하나요?",
+        "options": [
+            "잔차",
+            "오차",
+            "편차",
+            "차이"
+        ],
+        "hint": "잔차는 실제값과 예측값의 차이를 의미합니다.",
+        "solution": "잔차"
+    },
+
+    {
+        "item_type": "radio",
+        "question": "safety.xlsx에서 length를 독립변수(x)로, risk를 종속변수(y)로 회귀분석을 하려고 합니다. 관계식은 어떻게 세워야 합니까? (힌트: y = f(x))",
+        "options": [
+            "risk ~ length",
+            "length ~ risk"
+        ],
+        "hint": "관계식은 종속변수 ~ 독립변수의 형태로 세워야 합니다.",
+        "solution": "risk ~ length"
+    },
+    {
+        "item_type": "short",
+        "question": "length의 기울기(또는 가중치)는 얼마입니까?",
+        "options": [],
+        "hint": "```\nimport pandas as pd\nfrom statsmodels.formula.api import ols\nsf = pd.read_excel(\'safety.xlsx\')\nols(\'risk ~ length\', data=sf).fit().summary()\n```",
+        "solution": "-0.0348"
+    },
+    {
+        "item_type": "radio",
+        "question": "위의 기울기에 대한 p-value를 해석해보세요",
+        "options": [
+            "length는 risk에 통계적으로 유의한 영향이 있다",
+            "length는 risk에 통계적으로 유의한 영향이 없다"
+        ],
+        "hint": "p-value가 유의수준보다 작으면 귀무가설을 기각할 수 있습니다.",
+        "solution": "length는 risk에 통계적으로 유의한 영향이 있다"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+

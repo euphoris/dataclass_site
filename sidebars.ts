@@ -437,11 +437,11 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '1일차 - 통계 기초',
       items: [
-        {
-          type: 'doc',
-          id: 'stat/why-learn-statistics',
-          label: '통계를 배워야 하는 이유'
-        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/why-learn-statistics',
+        //   label: '통계를 배워야 하는 이유'
+        // },
         // {
         //   type: 'doc',
         //   id: 'stat/data',
@@ -450,14 +450,24 @@ const sidebars: SidebarsConfig = {
         {
           type: 'doc',
           id: 'stat/python',
-          label: 'Python'
+          label: 'Python 소개와 기초'
+        },
+        {
+          type: 'doc',
+          id: 'stat/module',
+          label: '모듈과 파일'
         },
         {
           type: 'doc',
           id: 'stat/central-tendency',
           label: '기술 통계: 중심경향치'
         },
-         {
+        {
+          type: 'doc',
+          id: 'stat/quantile',
+          label: '기술 통계: 분위수'
+        },
+        {
           type: 'doc',
           id: 'stat/variability',
           label: '기술 통계: 변산성 측정치'
@@ -469,6 +479,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'stat/histogram',
+          label: '분포의 시각화'
+        },
+        {
+          type: 'doc',
           id: 'stat/day1-exercise',
           label: '1일차 종합 실습'
         },
@@ -476,7 +491,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '2일차 - 집단 비교 I',
+      label: '2일차 - 추론 통계',
       items: [
         {
             type: 'doc',
@@ -495,28 +510,18 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'stat/confidence-level',
+          label: '신뢰수준'
+        },
+        {
+          type: 'doc',
           id: 'stat/margin-of-error',
           label: '오차 범위에 영향을 주는 요소'
         },
         {
           type: 'doc',
           id: 'stat/hypothesis-testing',
-          label: '통계적 가설 검정 (1)'
-        },
-        {
-          type: 'doc',
-          id: 'stat/hypothesis-testing-2',
-          label: '통계적 가설 검정 (2)'
-        },
-        {
-          type: 'doc',
-          id: 'stat/group-differences',
-          label: '집단 비교'
-        },
-        {
-          type: 'doc',
-          id: 'stat/effect-size',
-          label: '효과 크기'
+          label: '통계적 가설 검정'
         },
         {
           type: 'doc',
@@ -528,23 +533,28 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '3일차 - 집단 비교 II',
+      label: '3일차 - 집단 비교',
       items: [
         {
           type: 'doc',
-          id: 'stat/paired-samples',
-          label: '대응 표본'
+          id: 'stat/type-of-errors',
+          label: '1종 오류와 2종 오류'
         },
         {
           type: 'doc',
-          id: 'stat/chi-square-tests',
-          label: '비율의 비교'
+          id: 'stat/p-value',
+          label: 'p-value'
         },
-        {
-          type: 'doc',
-          id: 'stat/mcnemar-test',
-          label: '대응표본의 비율 비교'
-        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/group-differences',
+        //   label: '집단 비교'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/effect-size',
+        //   label: '효과 크기'
+        // },
         {
           type: 'doc',
           id: 'stat/anova',
@@ -555,15 +565,35 @@ const sidebars: SidebarsConfig = {
           id: 'stat/post-hoc-tests',
           label: '사후 검정'
         },
-        {
-          type: 'doc',
-          id: 'stat/planned-comparison',
-          label: '계획 비교'
-        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/planned-comparison',
+        //   label: '계획 비교'
+        // },        
+        // {
+        //   type: 'doc',
+        //   id: 'stat/paired-samples',
+        //   label: '대응 표본'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/chi-square-tests',
+        //   label: '비율의 비교'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/mcnemar-test',
+        //   label: '대응표본의 비율 비교'
+        // },
         {
           type: 'doc',
           id: 'stat/correlation',
           label: '상관 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/regression',
+          label: '회귀 분석'
         },
       ]
     },
@@ -571,11 +601,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '4일차 - 회귀 분석',
       items: [
-        {
-          type: 'doc',
-          id: 'stat/regression',
-          label: '회귀 분석'
-        },
         {
           type: 'doc',
           id: 'stat/multiple-regression',

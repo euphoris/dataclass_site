@@ -1,5 +1,21 @@
 # 분포의 특성과 기술 통계
 
+
+## 표준화 (standardization)
+
+$$
+Z = \frac{X - \mu}{\sigma}
+$$
+
+- 원래의 값에서 평균을 빼고, 표준편차로 나누는 것
+- 표준화하면 평균 = 0, 표준편차 = 1이 되므로 서로 범위가 다른 값을 비교하기 쉬움
+
+```python
+평균 = df['mileage'].mean()
+표준편차 = df['mileage'].std()
+df['Z_mileage'] = (df['mileage'] - 평균) / 표준편차
+```
+
 ## 왜도(skewness)
 
 $$
@@ -33,63 +49,27 @@ from scipy.stats import kurtosis
 kurtosis(df.price)
 ```
 
-## 히스토그램 (histogram)
-
-데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것
-
-```python
-import seaborn as sns # 시본 임포트
-sns.histplot(
-    x='price', # x축(가로) 변수
-    data=df)  # 데이터
-```
-
-
-막대기 수는 bins로 설정
-```python
-sns.histplot(x='price', data=df, bins=30)
-```
-
-seaborn을 포함해 Python의 대다수 시각화 라이브러리는 matplotlib에 의존
-
-```python
-import matplotlib.pyplot as plt
-
-# 가로축 눈금을 100에서 2100까지 200 간격으로 설정
-xs = list(range(100, 2100, 200))
-sns.histplot(x='price', data=df, bins=xs)
-plt.xticks(xs)
-```
-
-## 커널 밀도 추정 (kernel density estimation)
-
-데이터 밀도 추정 기법
-kde=True로 설정하면 데이터의 밀도를 추정하여 표시
-
-```python
-sns.histplot(x='price', data=df, kde=True)
-```
-
-## 표준화 (standardization)
-
-$$
-Z = \frac{X - \mu}{\sigma}
-$$
-
-- 원래의 값에서 평균을 빼고, 표준편차로 나누는 것
-- 표준화하면 평균 = 0, 표준편차 = 1이 되므로 서로 범위가 다른 값을 비교하기 쉬움
-
-```python
-평균 = df['mileage'].mean()
-표준편차 = df['mileage'].std()
-df['Z_mileage'] = (df['mileage'] - 평균) / 표준편차
-```
 
 ## 이상치 찾기
 
 |Z-score|가 3보다 큰 사례
 ```python
-df[df['Z_mileage'].abs() > 3]
+df.query('Z_mileage.abs() > 3')
+```
+
+또는(or)
+```python
+df.query('Z_mileage < -3 or Z_mileage > 3')
+```
+
+아니다(not), 그리고(and)
+```python
+df.query('not (-3 < Z_mileage and Z_mileage < 3)')
+```
+
+연쇄 비교(chaining comparison)
+```python
+df.query('not (-3 < Z_mileage < 3)')
 ```
 
 IQR의 1.5배를 넘는 사례
@@ -99,9 +79,9 @@ Q3 = df['mileage'].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
-df[(df['mileage'] < lower_bound) | (df['mileage'] > upper_bound)]
+df.query('mileage < @lower_bound or @upper_bound < mileage')
 ```
-
+{/* 
 ## ydata-profiling
 
 python의 탐색적 데이터 분석 라이브러리 
@@ -137,25 +117,58 @@ pip uninstall typing_extensions
 
 ```bash
 pip install typing_extensions
-```
+``` */}
 
 ## 퀴즈
 
-{/* 
-(3)
+import { QuizComponent } from "@/components/QuizComponent";
 
-(2)
+<QuizComponent quizId="distribution" quizItems={[
+    {
+        item_type: 'radio',
+        question: '데이터 분포의 왜도(skewness) 값이 0에 가까울 때, 이는 무엇을 의미하는가?',
+        options: [
+            '분포가 오른쪽으로 길게 늘어져 있다.',
+            '분포가 왼쪽으로 길게 늘어져 있다.',
+            '분포가 좌우 대칭에 가깝다.',
+            '분포의 뾰족한 정도가 매우 높다.',
+        ],
+        hint: '왜도는 분포의 비대칭성을 나타냅니다',
+        solution: '분포가 좌우 대칭에 가깝다.',
+    },
+    {
+        item_type: 'radio',
+        question: '초과 첨도(excess kurtosis)가 0보다 크다는 것은 데이터 분포에 대해 무엇을 시사하는가?',
+        options: [
+            '정규분포보다 꼬리가 얇다.',
+            '정규분포보다 꼬리가 두껍거나 이상치가 존재할 가능성이 높다.',
+            '분포가 완벽한 좌우 대칭이다.',
+            '데이터의 평균이 0이다.',
+        ],
+        hint: '초과 첨도는 정규 분포에 비해 꼬리의 두터움을 나타냅니다',
+        solution: '정규분포보다 꼬리가 두껍거나 이상치가 존재할 가능성이 높다.',
+    },
+    {
+        item_type: 'number',
+        question: 'hr.xlsx에서 overtime의 값이 20일 때 이를 표준화한 값(Z-score)을 구해보세요',
+        hint: "```\nimport pandas as pd\nhr = pd.read_excel('hr.xlsx')\nm = hr['overtime'].mean()\ns = hr['overtime'].std()\n(20 - m) / s\n```",
+        solution: 1.1464826699351527,
+    },
+    {
+        item_type: 'number',
+        question: 'hr.xlsx에서 overtime을 표준화하여 Z-score를 구하고, 그 절댓값이 3을 초과하는 사례의 개수를 구해보세요(.shape을 붙이면 행과 열의 개수가 표시됩니다)',
+        hint: "```\nm = hr['overtime'].mean()\ns = hr['overtime'].std()\nhr['Z_overtime'] = (hr['overtime'] - m) / s\nhr.query('Z_overtime.abs() > 3').shape\n```",
+        solution: 29,
+    },
+    {
+        item_type: 'number',
+        question: "hr.xlsx에서 overtime을 상자-수염 그림으로 그렸을 때, 수염 바깥에 그려지는(IQR의 1.5배 이상) 사례의 개수를 구해보세요",
+        hint: "```\nQ1 = hr['overtime'].quantile(0.25)\nQ3 = hr['overtime'].quantile(0.75)\nIQR = Q3 - Q1\nlower_bound = Q1 - 1.5 * IQR\nupper_bound = Q3 + 1.5 * IQR\nhr.query('overtime < @lower_bound or @upper_bound < overtime').shape\n```",
+        solution: 74,
+    },
+]} />
 
-(3)
 
-(3)
 
-(2)
-
-(3)
-
-(3)
-
-(4) */}
-
-<iframe src="https://tally.so/embed/w85ker?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2400" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 분포"></iframe>
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
