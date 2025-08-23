@@ -103,6 +103,13 @@ interface ChartData {
   incorrect: number;      // 틀림
 }
 
+interface ItemChartData {
+  itemId: number;
+  correct: number;
+  hintCorrect: number;
+  incorrect: number;
+}
+
 export function QuizResultVisualizer() {
   const [supabaseUrl, setSupabaseUrl] = useState("");
   const [supabaseKey, setSupabaseKey] = useState("");
@@ -110,6 +117,7 @@ export function QuizResultVisualizer() {
   const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | null>(null);
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [itemChartData, setItemChartData] = useState<ItemChartData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -151,6 +159,7 @@ export function QuizResultVisualizer() {
       const filteredData = Array.from(uniqueSubmissions.values());
 
       const userResults = new Map<string, ChartData>();
+      const itemResults = new Map<number, { correct: number; hintCorrect: number; incorrect: number }>();
 
       filteredData.forEach((row: Answer) => {
         const identifier = `${row.name} (${row.affiliation})`;
@@ -164,13 +173,25 @@ export function QuizResultVisualizer() {
             incorrect: 0,
           });
         }
+
+        if(!itemResults.has(row.item_id!)){
+          itemResults.set(row.item_id!, {correct:0, hintCorrect:0, incorrect:0});
+        }
         
         const userStat = userResults.get(identifier)!;
+        const itemStat = itemResults.get(row.item_id!)!;
         if (row.correct === true) {
-          if (row.hint === true) userStat.hintCorrect += 1;
-          else userStat.correct += 1;
+          if (row.hint === true){
+             userStat.hintCorrect += 1;
+             itemStat.hintCorrect += 1;
+          }
+          else{
+             userStat.correct += 1;
+            itemStat.correct += 1;
+          }
         } else {
           userStat.incorrect += 1;
+          itemStat.incorrect += 1;
         }
       });
       
@@ -184,6 +205,14 @@ export function QuizResultVisualizer() {
         return b.hintCorrect - a.hintCorrect;
       });
       setChartData(processedData);
+
+      // 문제 번호 순으로 정렬
+      const processedItemData = Array.from(itemResults.entries())
+      processedItemData.sort((a, b) => a[0] - b[0]);
+      setItemChartData(processedItemData.map(([itemId, stats]) => ({
+        itemId,
+        ...stats
+      })));
 
     } catch (err: any) {
       setError(`데이터 처리 중 오류가 발생했습니다: ${err.message}`);
@@ -302,6 +331,36 @@ export function QuizResultVisualizer() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+      )}
+
+      {itemChartData.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>문제별 정답 현황</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={40 * itemChartData.length + 60}>
+              <BarChart
+                data={itemChartData}
+                layout="vertical"
+                margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" allowDecimals={false} />
+                <YAxis 
+                  dataKey="itemId" 
+                  type="category" 
+                  width={150} 
+                />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="correct" stackId="a" name="정답 (힌트X)" fill="#4ade80" />
+                <Bar dataKey="hintCorrect" stackId="a" name="정답 (힌트O)" fill="#facc15" />
+                <Bar dataKey="incorrect" stackId="a" name="오답" fill="#f87171" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>        
       )}
     </div>
   );
