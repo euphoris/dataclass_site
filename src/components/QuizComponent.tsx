@@ -161,6 +161,7 @@ export interface QuizItem {
   item_type: QuizItemType;
   question: string;
   options?: string[];
+  tolerance?: number; // number 형에서 오차 허용 범위
   hint?: string;
   solution: string | string[]; // checkbox의 경우 string 배열
 }
@@ -213,7 +214,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
       if (!Array.isArray(answer) || !Array.isArray(solution)) return false;
       return answer.length === solution.length && [...answer].sort().toString() === [...solution].sort().toString();
     } else if (currentItem.item_type === 'number') {
-      return Number(answer) === Number(solution);
+      return Math.abs(Number(answer) - Number(solution)) <= (currentItem.tolerance || 0);
     } else if (currentItem.item_type === 'short') {
       if (typeof solution === 'string'){
         return answer === solution;

@@ -150,20 +150,21 @@ import { QuizComponent } from "@/components/QuizComponent";
     },
     {
         item_type: 'number',
-        question: 'hr.xlsx에서 overtime의 값이 20일 때 이를 표준화한 값(Z-score)을 구해보세요',
+        question: 'hr.xlsx에서 overtime의 값이 20일 때 이를 표준화한 값(Z-score)을 구해보세요 (소수점 아래 3자리까지)',
+        tolerance: 0.001,
         hint: "```\nimport pandas as pd\nhr = pd.read_excel('hr.xlsx')\nm = hr['overtime'].mean()\ns = hr['overtime'].std()\n(20 - m) / s\n```",
         solution: 1.1464826699351527,
     },
     {
         item_type: 'number',
         question: 'hr.xlsx에서 overtime을 표준화하여 Z-score를 구하고, 그 절댓값이 3을 초과하는 사례의 개수를 구해보세요(.shape을 붙이면 행과 열의 개수가 표시됩니다)',
-        hint: "```\nm = hr['overtime'].mean()\ns = hr['overtime'].std()\nhr['Z_overtime'] = (hr['overtime'] - m) / s\nhr.query('Z_overtime.abs() > 3').shape\n```",
+        hint: "```\nm = hr['overtime'].mean()\ns = hr['overtime'].std()\nhr['Z_overtime'] = (hr['overtime'] - m) / s\nhr.query('Z_overtime.abs() > 3').shape[0]\n```",
         solution: 29,
     },
     {
         item_type: 'number',
         question: "hr.xlsx에서 overtime을 상자-수염 그림으로 그렸을 때, 수염 바깥에 그려지는(IQR의 1.5배 이상) 사례의 개수를 구해보세요",
-        hint: "```\nQ1 = hr['overtime'].quantile(0.25)\nQ3 = hr['overtime'].quantile(0.75)\nIQR = Q3 - Q1\nlower_bound = Q1 - 1.5 * IQR\nupper_bound = Q3 + 1.5 * IQR\nhr.query('overtime < @lower_bound or @upper_bound < overtime').shape\n```",
+        hint: "```\nQ1 = hr['overtime'].quantile(0.25)\nQ3 = hr['overtime'].quantile(0.75)\nIQR = Q3 - Q1\nlower_bound = Q1 - 1.5 * IQR\nupper_bound = Q3 + 1.5 * IQR\nhr.query('overtime < @lower_bound or @upper_bound < overtime').shape[0]\n```",
         solution: 74,
     },
 ]} />

@@ -489,181 +489,181 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    {
-      type: 'category',
-      label: '2일차 - 추론 통계',
-      items: [
-        {
-            type: 'doc',
-            id: 'stat/review-descriptive-statistics',
-            label: '기술 통계 복습'
-        },
-        {
-            type: 'doc',
-            id: 'stat/estimation',
-            label: '추정'
-        },
-        {
-          type: 'doc',
-          id: 'stat/confidence-interval',
-          label: '신뢰구간'
-        },
-        {
-          type: 'doc',
-          id: 'stat/confidence-level',
-          label: '신뢰수준'
-        },
-        {
-          type: 'doc',
-          id: 'stat/margin-of-error',
-          label: '오차 범위에 영향을 주는 요소'
-        },
-        {
-          type: 'doc',
-          id: 'stat/hypothesis-testing',
-          label: '통계적 가설 검정'
-        },
-        {
-          type: 'doc',
-          id: 'stat/exercise-estimation-testing',
-          label: '종합 실습: 추정과 가설 검정'
-        },
+    // {
+    //   type: 'category',
+    //   label: '2일차 - 추론 통계',
+    //   items: [
+    //     {
+    //         type: 'doc',
+    //         id: 'stat/review-descriptive-statistics',
+    //         label: '기술 통계 복습'
+    //     },
+    //     {
+    //         type: 'doc',
+    //         id: 'stat/estimation',
+    //         label: '추정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/confidence-interval',
+    //       label: '신뢰구간'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/confidence-level',
+    //       label: '신뢰수준'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/margin-of-error',
+    //       label: '오차 범위에 영향을 주는 요소'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/hypothesis-testing',
+    //       label: '통계적 가설 검정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/exercise-estimation-testing',
+    //       label: '종합 실습: 추정과 가설 검정'
+    //     },
 
-      ]
-    },
-    {
-      type: 'category',
-      label: '3일차 - 집단 비교',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/type-of-errors',
-          label: '1종 오류와 2종 오류'
-        },
-        {
-          type: 'doc',
-          id: 'stat/p-value',
-          label: 'p-value'
-        },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/group-differences',
-        //   label: '집단 비교'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/effect-size',
-        //   label: '효과 크기'
-        // },
-        {
-          type: 'doc',
-          id: 'stat/anova',
-          label: '여러 집단의 평균 비교'
-        },
-        {
-          type: 'doc',
-          id: 'stat/post-hoc-tests',
-          label: '사후 검정'
-        },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/planned-comparison',
-        //   label: '계획 비교'
-        // },        
-        // {
-        //   type: 'doc',
-        //   id: 'stat/paired-samples',
-        //   label: '대응 표본'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/chi-square-tests',
-        //   label: '비율의 비교'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'stat/mcnemar-test',
-        //   label: '대응표본의 비율 비교'
-        // },
-        {
-          type: 'doc',
-          id: 'stat/correlation',
-          label: '상관 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/regression',
-          label: '회귀 분석'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 회귀 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/multiple-regression',
-          label: '다중 회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/model-selection',
-          label: '모형 선택'
-        },
-        {
-          type: 'doc',
-          id: 'stat/cross-validation',
-          label: '교차 검증'
-        },
-        {
-          type: 'doc',
-          id: 'stat/variable-transformation',
-          label: '변수의 변형'
-        },
-        {
-          type: 'doc',
-          id: 'stat/exercise-coating',
-          label: '종합 실습: 도장 품질 예측'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '5일차 - 고급 회귀 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'stat/interaction',
-          label: '상호작용'
-        },
-        {
-          type: 'doc',
-          id: 'stat/did',
-          label: '인과 효과'
-        },
-        {
-          type: 'doc',
-          id: 'stat/logistic-regression',
-          label: '로지스틱 회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'stat/confusion-matrix',
-          label: '혼동 행렬'
-        },
-        {
-          type: 'doc',
-          id: 'stat/roc-auc',
-          label: 'ROC 곡선'
-        },
-        {
-          type: 'doc',
-          id: 'stat/exercise-logistic-regression',
-          label: '종합 실습: 재무 건전성 분류'
-        },
-      ]
-    },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 집단 비교',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/type-of-errors',
+    //       label: '1종 오류와 2종 오류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/p-value',
+    //       label: 'p-value'
+    //     },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/group-differences',
+    //     //   label: '집단 비교'
+    //     // },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/effect-size',
+    //     //   label: '효과 크기'
+    //     // },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/anova',
+    //       label: '여러 집단의 평균 비교'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/post-hoc-tests',
+    //       label: '사후 검정'
+    //     },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/planned-comparison',
+    //     //   label: '계획 비교'
+    //     // },        
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/paired-samples',
+    //     //   label: '대응 표본'
+    //     // },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/chi-square-tests',
+    //     //   label: '비율의 비교'
+    //     // },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/mcnemar-test',
+    //     //   label: '대응표본의 비율 비교'
+    //     // },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/correlation',
+    //       label: '상관 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/regression',
+    //       label: '회귀 분석'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 회귀 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/multiple-regression',
+    //       label: '다중 회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/model-selection',
+    //       label: '모형 선택'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/cross-validation',
+    //       label: '교차 검증'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/variable-transformation',
+    //       label: '변수의 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/exercise-coating',
+    //       label: '종합 실습: 도장 품질 예측'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '5일차 - 고급 회귀 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/interaction',
+    //       label: '상호작용'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/did',
+    //       label: '인과 효과'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/logistic-regression',
+    //       label: '로지스틱 회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/confusion-matrix',
+    //       label: '혼동 행렬'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/roc-auc',
+    //       label: 'ROC 곡선'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'stat/exercise-logistic-regression',
+    //       label: '종합 실습: 재무 건전성 분류'
+    //     },
+    //   ]
+    // },
     // {
     //   type: 'category',
     //   label: '5일차 - 텍스트 분석',

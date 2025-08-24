@@ -115,8 +115,8 @@ import { QuizComponent } from "@/components/QuizComponent";
         item_type: 'radio',
         question: 'IQR을 구하는 방법은?',
         options: [
-                '제3사분위수 - 제1사분위수',
                 '제2사분위수 - 제1사분위수',
+                '제3사분위수 - 제1사분위수',
                 '제4사분위수 - 제1사분위수',
                 '제3사분위수 - 제2사분위수',
                 '제4사분위수 - 제2사분위수',
@@ -133,14 +133,15 @@ import { QuizComponent } from "@/components/QuizComponent";
     },
     {
         item_type: 'number',
-        question: 'hr.xlsx에서 overtime의 분산을 구해보세요',
+        question: 'hr.xlsx에서 overtime의 분산을 구해보세요 (소수점 아래 2자리까지)',
+        tolerance: 0.01,
         hint: '```\nimport pandas as pd\nhr = pd.read_excel("hr.xlsx")\nhr["overtime"].var()\n```',
         solution: 89.51161417596366
-,
     },
     {
         item_type: 'number',
-        question: 'hr.xlsx에서 overtime의 표준편차를 구해보세요',
+        question: 'hr.xlsx에서 overtime의 표준편차를 구해보세요 (소수점 아래 2자리까지)',
+        tolerance: 0.01,
         hint: '```\nimport pandas as pd\nhr = pd.read_excel("hr.xlsx")\nhr["overtime"].std()\n```',
         solution: 9.461057772572984,
     },

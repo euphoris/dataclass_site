@@ -15,85 +15,79 @@
 | thickness | 측정된 커넥터 두께(mm) |
 
 
-<iframe src="https://tally.so/embed/nrYeYl?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1500" frameborder="0" marginheight="0" marginwidth="0" title="[통계] day 1 종합 실습"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
 
-## 풀이
+<QuizComponent quizId="day1-exercise" quizItems={[
+    {
+        "item_type": "number",
+        "question": "라인 3에서 생산된 TX-100 커넥터 두께의 평균 (소숫점 이하 3자리까지)",
+        "options": [],
+        "tolerance": 0.001,
+        "hint": "```\nimport pandas as pd\ndf = pd.read_excel(\'TX100.xlsx\')\ndf.head()\ndf.thickness.mean()\n```",
+        "solution": 5.003608571428571
+    },
+    {
+        "item_type": "number",
+        "question": "중간값 (소숫점 이하 3자리까지)",
+        "tolerance": 0.001,
+        "hint": "```\ndf.thickness.median()\n```",
+        "solution": 5.004
+    },
+    {
+        "item_type": "number",
+        "question": "범위 (소숫점 이하 3자리까지)",
+        "tolerance": 0.001,
+        "hint": "```\ndf.thickness.max() - df.thickness.min()\n```",
+        "solution": 0.1899999999999995
+    },
+    {
+        "item_type": "number",
+        "question": "IQR (소숫점 이하 3자리까지)",
+        "tolerance": 0.001,
+        "hint": "```\nQ1 = df.thickness.quantile(0.25)\nQ3 = df.thickness.quantile(0.75)\nIQR = Q3 - Q1\n```",
+        "solution": 0.019000000000000128
+    },
+    {
+        "item_type": "number",
+        "question": "표준편차 (소숫점 이하 3자리까지)",
+        "tolerance": 0.001,
+        "hint": "```\ndf.thickness.std()\n```",
+        "solution": 0.01749362342162191
+    },
+    {
+        "item_type": "radio",
+        "question": "bins=10으로 히스토그램을 그렸을 때 가장 빈도가 높은 구간",
+        "options": [
+            "(4.904, 4.924]",
+            "(4.924, 4.943]",
+            "(4.943, 4.962]",
+            "(4.962, 4.981]",
+            "(4.981, 5.0]",
+            "(5.0, 5.019]",
+            "(5.019, 5.038]",
+            "(5.038, 5.057]",
+            "(5.057, 5.076]",
+            "(5.076, 5.095]"
+        ],
+        "hint": "```\nimport seaborn as sns\nsns.histplot(df.thickness, bins=10)\n```",
+        "solution": "(5.0, 5.019]"
+    },
+    {
+        "item_type": "number",
+        "question": "Z-score를 이용해 탐지한 이상치의 개수",
+        "options": [],
+        "hint": "```\nm = df.thickness.mean()\ns = df.thickness.std()\ndf[\'Z_thickness\'] = (df.thickness - m) / s\ndf.query(\'Z_thickness.abs() > 3\').shape[0]\n```",
+        "solution": 6
+    },
+    {
+        "item_type": "number",
+        "question": "IQR을 이용해 탐지한 이상치의 개수",
+        "options": [],
+        "hint": "```\nupper_bound = Q3 + 1.5 * IQR\nlower_bound = Q1 - 1.5 * IQR\ndf.query(\'thickness < @lower_bound or thickness > @upper_bound\').shape[0]\n```",
+        "solution": 9
+    },
+]} />
 
-파일 열기
 
-```python
-df = pd.read_excel('TX100.xlsx')
-df.head()
-```
-
-평균
-
-```python
-df.thickness.mean()
-```
-
-평균의 95% 신뢰구간
-
-```python
-import pingouin as pg
-pg.ttest(df.thickness, 5.000, confidence=0.95)
-```
-
-중간값
-
-```python
-df.thickness.median()
-```
-
-두께의 중간값의 95% 신뢰구간(부트스트랩)
-
-```python
-import scipy.stats as sp
-import numpy as np
-sp.bootstrap(
-    [df.thickness], 
-    np.median, 
-    confidence_level=0.95, 
-    n_resamples=10000)
-```
-
-범위
-```python
-df.thickness.max() - df.thickness.min()
-```
-
-IQR
-
-```python
-Q1 = df.thickness.quantile(0.25)
-Q3 = df.thickness.quantile(0.75)
-IQR = Q3 - Q1
-```
-
-표준편차
-
-```python
-df.thickness.std()
-```
-
-히스토그램
-
-```python
-import seaborn as sns
-sns.histplot(df.thickness, bins=10)
-```
-
-Z-score를 이용해 탐지한 이상치의 개수
-
-```python
-df['Z_thickness'] = (df.thickness - df.thickness.mean()) / df.thickness.std()
-df[df['Z_thickness'].abs() > 3]
-```
-
-IQR을 이용해 탐지한 이상치의 개수
-
-```python
-upper_bound = Q3 + 1.5 * IQR
-lower_bound = Q1 - 1.5 * IQR
-df[(df.thickness < lower_bound) | (df.thickness > upper_bound)]
-```
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
