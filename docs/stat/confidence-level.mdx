@@ -87,17 +87,32 @@ import { QuizComponent } from "@/components/QuizComponent";
         hint: '신뢰구간 = 추정치 ± 오차범위',
         solution: '넓어진다',
     },
-        {
-        item_type: 'short',
-        question: 'hiring.xlsx에서 gpa의 평균의 **99%** 신뢰구간을 구해보세요.\n\n※ [하한, 상한] 형식으로 표기',
+    {
+        item_type: 'number',
+        question: 'hiring.xlsx에서 gpa의 평균의 **99%** 신뢰구간을 구해보세요.\n\n하한은 얼마입니까? (소수점 둘째 자리까지)',
         hint: '```\nimport pandas as pd\nimport pingouin as pg\nhi = pd.read_excel(\'hiring.xlsx\')\npg.ttest(hi.gpa, 0, confidence=0.99)\n```',
-        solution: '[2.964132678248926, 3.0426873217510733]'
+        tolerance: 0.01,
+        solution: 2.964132678248926
     },
     {
-        item_type: 'short',
-        question: 'hiring.xlsx에서 gpa의 중간값의 **80%** 신뢰구간을 부트스트래핑으로 구해보세요.\n\n※ [하한, 상한] 형식으로 표기',
+        item_type: 'number',
+        question: '앞의 문제에서 상한은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 3.0426873217510733
+    },
+    {
+        item_type: 'number',
+        question: 'hiring.xlsx에서 gpa의 중간값의 **80%** 신뢰구간을 부트스트래핑으로 구해보세요.\n\n하한은 얼마입니까? (소수점 둘째 자리까지)',
         hint: '```\nimport numpy as np\nimport scipy as sp \nnp.random.seed(1234)\nresult = sp.stats.bootstrap(\n    [hi.gpa],\n    np.median,\n    n_resamples=10000,\n    confidence_level=0.80\n)\nresult.confidence_interval\n```',
-        solution: '[2.97, 3.02]'
+        solution: 2.97
+    },
+    {
+        item_type: 'number',
+        question: '앞의 문제에서 상한은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 3.02
     },
 ]} />
 

@@ -1,0 +1,157 @@
+# 적합도 지수
+
+## R 제곱 (R-squared / 결정계수)
+
+*   회귀 분석에서 모형의 **설명력(예측 정확성)** 나타내는 대표 지표 (0 ~ 1 범위).
+*   **계산:**
+$$ 
+R^2 = 1 - \frac{\text{잔차 분산 (Residual Variance, RSS/n)}}{\text{종속변수 총 분산 (Total Variance, TSS/n)}} = 1 - \frac{SSR}{TSS} 
+$$
+    *   SSR (Sum of Squared Residuals): 잔차 제곱합. 모형으로 설명 안 되는 변동.
+    *   TSS (Total Sum of Squares): 종속변수 총 변동 (평균 대비).
+*   **해석:**
+    *   $R^2 = 0$: 모형이 종속변수 예측/설명 도움 안 됨 (평균 예측과 동일).
+    *   $R^2 = 1$: 모형이 종속변수 완벽하게 예측/설명함 (잔차 없음).
+*   **단순회귀분석 (독립변수 1개):** $R^2$ = (피어슨 상관계수)² 와 같음.
+
+## R 제곱 읽는 법
+
+*   "모형이 종속변수($y$) 분산(총 변동)의 **약 R² %를 설명한다**" 라고 해석.
+*   예: $R^2 = 0.3$ → "모형이 종속변수 분산의 30%를 설명한다".
+*   **의미:** 모형 사용 통해 종속변수 예측 불확실성(분산)이 얼마나 줄었는지 나타냄. (분산 감소 = 불확실성 감소 = 설명됨).
+
+
+## 과대적합 (Overfitting)
+
+*   **원인:** 최소제곱법은 **주어진 표본**에서 잔차 분산 가장 작게 하는 계수 찾음.
+*   **문제점:** 표본에는 실제 모집단 패턴 외 **표집 오차(noise)** 포함됨. 표본 데이터에만 지나치게 맞춰진 모형은 새로운 데이터(모집단) 예측 성능 떨어짐.
+
+## 독립변수 개수와 과적합
+
+*   **최소제곱법 특성:** 종속변수와 아무 관련 없는 독립변수 추가해도 표본 잔차 분산 **거의 항상 작아짐** (우연한 관계 때문).
+*   **결과:** 독립변수 **많을수록** 표본 데이터 대한 $R^2$ 값은 **무조건 높아지는 경향**. → **과적합 위험 증가**.
+
+```python
+import numpy as np
+np.random.seed(0)
+random_data = pd.DataFrame({
+    'x1': np.random.randn(5),  # 모든 변수를 무작위로 생성
+    'x2': np.random.randn(5),
+    'x3': np.random.randn(5),
+    'x4': np.random.randn(5),
+    'y': np.random.randn(5)
+})
+# 회귀분석을 하면 R제곱이 100%
+ols('y ~ x1 + x2 + x3 + x4', data=random_data).fit().summary()
+```
+
+## 수정 R제곱, AIC, BIC
+
+*   $R^2$ 단점 보완 위해 등장한 모형 비교 지표. 모형 복잡도(**독립변수 개수**)에 **페널티** 부여.
+*   **수정 R제곱 (Adjusted R-squared):** $R^2$ 보정. **클수록** 좋음.
+*   **AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion):** 잔차 분산 보정. **작을수록** 좋음.
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent hypothesis-testing="fit-indices" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 결정계수(R-squared) 값이 0.7이라면, 이는 무엇을 의미하는 것으로 해석하는 것이 가장 적절한가요?",
+        "options": [
+            "독립변수가 종속변수 값의 70%를 정확히 맞춘다.",
+            "독립변수와 종속변수 간의 상관계수가 0.7이다.",
+            "회귀 모형이 종속변수의 분산 중 70%를 설명한다.",
+            "예측 오차(잔차)의 평균 크기가 0.7이다."
+        ],
+        "hint": "결정계수는 회귀 모형이 종속변수의 분산을 얼마나 설명하는지를 나타내는 지표입니다.",
+        "solution": "회귀 모형이 종속변수의 분산 중 70%를 설명한다."
+    },
+    {
+        "item_type": "radio",
+        "question": "단순 회귀분석에서 회귀 모형의 설명력을 나타내는 R 제곱 값은 어떤 통계량의 제곱과 동일한 값을 가지나요?",
+        "options": [
+            "피어슨 상관계수",
+            "기울기",
+            "절편",
+            "독립변수"
+        ],
+        "hint": "단순 회귀분석에서 R 제곱은 피어슨 상관계수의 제곱과 같습니다.",
+        "solution": "피어슨 상관계수"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "다음 중 올바른 설명을 모두 고르세요",
+        "options": [
+            "최소제곱법은 잔차분산이 가장 작은 계수를 추정한다",
+            "종속변수와 아무 관련이 없는 독립변수를 추가하면 잔차분산이 커진다",
+            "표본에 가장 잘 맞는 계수 추정치는 모수와 동일하다",
+            "독립변수가 많으면 많을 수록 R제곱은 높아지므로 좋은 모형이다",
+            "잔차분산이 작으면 R제곱이 크다"
+        ],
+        "hint": "독립변수를 추가하면 잔차분산은 같거나 작아집니다. 표본에 가장 잘 맞는 계정치는 표집 오차 때문에 모수와 다를 수 있습니다. 독립변수가 많을수록 R제곱은 높아지지만 반드시 좋은 모형은 아닙니다.",
+        "solution": [
+            "최소제곱법은 잔차분산이 가장 작은 계수를 추정한다",
+            "잔차분산이 작으면 R제곱이 크다"
+        ],
+    },
+    {
+        "item_type": "checkbox",
+        "question": "다음 중 낮을 수록 더 좋은 지수를 고르세요",
+        "options": [
+            "수정R제곱",
+            "AIC",
+            "BIC"
+        ],
+        "hint": "수정R제곱은 클수록 좋고, AIC와 BIC는 작을수록 좋습니다",
+        "solution": [
+            "AIC",
+            "BIC"
+        ],
+    },
+    {
+        "item_type": "number",
+        "question": "iqsize.xlsx에서 `PIQ ~ Brain + Height + Weight`으로 회귀분석을 실시해보세요. 이를 모형 1이라고 할 때, 모형 1의 R제곱은 얼마입니까? (소수점 셋째 자리까지)",
+        "hint": "```\nimport pandas as pd\niq = pd.read_excel(\"iqsize.xlsx\")\nols(\'PIQ ~ Brain + Height + Weight\', data=iq).fit().summary()\n```",
+        "tolerance": 0.001,
+        "solution": 0.295
+    },
+    {
+        "item_type": "number",
+        "question": "모형 1의 AIC는 얼마입니까?",
+        "hint": "이전 문제 힌트 참고",
+        "solution": 338.5
+    },
+    {
+        "item_type": "number",
+        "question": "iqsize.xlsx에서 `PIQ ~ Brain + Height`으로 회귀분석을 실시해보세요. 이를 모형 2이라고 할 때, 모형 2의 R제곱은 얼마입니까? (소수점 셋째 자리까지)",
+        "hint": "```\nimport pandas as pd\niq = pd.read_excel(\"iqsize.xlsx\")\nols(\'PIQ ~ Brain + Height\', data=iq).fit().summary()\n```",
+        "tolerance": 0.001,
+        "solution": 0.295
+    },
+    {
+        "item_type": "number",
+        "question": "모형 2의 AIC는 얼마입니까?",
+        "hint": "이전 문제 힌트 참고",
+        "solution": 336.5
+    },
+    {
+        "item_type": "radio",
+        "question": "AIC로 판단할 때 모형 1과 모형 2 중 더 좋은 모형은 무엇입니까?",
+        "options": [
+            "모형 1",
+            "모형 2",
+            "똑같다"
+        ],
+        "hint": "AIC가 낮을 수록 더 좋은 모형입니다",
+        "solution": "모형 2"
+    },
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+

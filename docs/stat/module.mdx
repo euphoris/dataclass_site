@@ -87,13 +87,8 @@ import { QuizComponent } from "@/components/QuizComponent";
     {
         item_type: 'short',
         question: "TX100.xlsx 파일을 열어보세요. 첫 열의 이름은 무엇인가요?",
-        hint: '```\ntx = pd.read_excel("TX100.xlsx")\ntx.head()\n```\n를 사용해보세요.',
-        solution: [
-            'read_excel은 pandas 모듈에 소속된 함수이다',
-            'car.xlsx 파일을 읽어온다',
-            '파일 이름은 반드시 따옴표로 묶어야 한다',
-            '파일 내용은 df 변수에 저장된다',
-        ],
+        hint: '```\nimport pandas as pd\ntx = pd.read_excel("TX100.xlsx")\ntx.head()\n```\n를 사용해보세요.',
+        solution: 'day',
     },
 ]} />
 

@@ -1,0 +1,150 @@
+# 범주형 독립변수
+
+## 독립변수가 범주형인 경우
+
+*   **문제:** 범주형 변수(예: 'Avante', 'K3')에는 기울기 직접 곱할 수 없음.
+*   **해결:** **연속 변수(숫자) 형태로 변환**하여 모형 투입 필요.
+*   **방법:** 여러 방법 중 **더미 코딩(Dummy Coding)** 가장 많이 사용됨.
+*   **자동 처리:** Jamovi, R, Python(`statsmodels`, `scikit-learn` 등)은 대부분 자동 더미 코딩 지원.
+
+## 더미 코딩 (Dummy Coding)
+
+*   **원리:** 범주가 $k$개인 변수를 **$k-1$개의 더미 변수(dummy variable)**로 변환.
+*   **기준 범주 (Reference Category):** 범주 중 하나를 기준으로 지정 (보통 첫번째 범주. 변경 가능).
+*   **더미 변수 생성:** 기준 제외한 나머지 각 범주별로 더미 변수 1개씩 생성.
+    *   더미 변수 값: 해당 범주면 1, 아니면 0.
+*   **기울기 해석:** 더미 변수의 회귀계수 = 해당 범주의 종속변수 평균값 - **기준 범주**의 종속변수 평균값 차이.
+
+## 범주가 2개인 경우 (예: model - Avante, K3)
+
+*   ABC 순 `Avante` 기준 설정됨.
+*   `K3`에 대한 더미 변수 1개(`model[T.K3]`) 생성.
+    *   `Avante`면 `model[T.K3] = 0`
+    *   `K3`면 `model[T.K3] = 1`
+*   **Python 결과 (`ols('price ~ model', df).fit().summary()`):**
+    *   `Intercept`: 기준(`Avante`)의 평균 `price` (예: 833).
+    *   `model[T.K3]`: `K3`의 평균 `price` - `Avante`의 평균 `price` 차이 (예: 80).
+    *   **K3 예상 가격:** Intercept + model[T.K3] 계수 = 833 + 80 = 913.
+
+## 더미 변수 이름 확인
+
+*   **`statsmodels` 결과표 이름:** `원본변수명[T.범주명]` 형식.
+*   **범주 목록 확인:**
+    ```python
+    df.model.unique()
+    ```
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="dummy-coding" quizItems={[
+    {
+        "item_type": "radio",
+        "question": "범주형 변수를 더미 코딩하는 이유는?",
+        "options": [
+            "회귀 분석의 정확도를 높이기 위해",
+            "모형에 포함되는 독립변수의 개수를 줄이기 위해",
+            "범주형 변수를 연속형 변수로 변환하여 회귀분석에 사용할 수 있게 하기 위해",
+            "회귀 분석의 예측력을 높이기 위해",
+
+        ],
+        "hint": "범주형 변수는 기울기를 직접 곱할 수 없기 때문에 더미 코딩이 필요합니다.",
+        "solution": "범주형 변수를 연속형 변수로 변환하여 회귀분석에 사용할 수 있게 하기 위해",
+    },
+    {
+        "item_type": "radio",
+        "question": "더미 코딩에서 기준 범주를 정하는 기준은?",
+        "options": [
+            "빈도가 가장 높은 범주",
+            "평균값이 가장 높은 범주",
+            "알파벳 순서로 가장 먼저 나오는 범주",
+            "계수가 가장 높은 범주"
+        ],
+        "hint": "기준 범주는 일반적으로 알파벳 순서로 가장 먼저 나오는 범주로 설정됩니다.",
+        "solution": "알파벳 순서로 가장 먼저 나오는 범주",
+    },
+    {
+        "item_type": "number",
+        "question": "범주가 2개인 경우, 기준 범주일 때 더미변수의 값은 얼마가 됩니까?",
+        "hint": "범주가 2개인 경우, 기준 범주는 더미변수 값이 0이 됩니다.",
+        "solution": 0,
+    },
+    {
+        "item_type": "number",
+        "question": "범주가 2개인 경우, 더미 변수 범주일 때 더미변수의 값은 얼마가 됩니까?",
+        "hint": "범주가 2개인 경우, 더미 변수 범주는 더미변수 값이 1이 됩니다.",
+        "solution": 1,
+    },
+    {
+        "item_type": "radio",
+        "question": "범주가 2개인 경우, 절편은 무엇을 의미합니까?",
+        "options": [
+            "기준 범주의 종속변수 평균값",
+            "더미 변수 범주의 종속변수 평균값",
+            "더미 변수 범주와 기준 범주의 종속변수 평균값 차이",
+            "기준 범주의 독립변수 평균값",
+            "더미 변수 범주의 독립변수 평균값",
+            "더미 변수 범주와 기준 범주의 독립변수 평균값 차이"
+        ],
+        "hint": "y = w * 0 + b",
+        "solution": "기준 범주의 종속변수 평균값",
+    },    
+    {
+        "item_type": "radio",
+        "question": "범주가 2개인 경우, 기울기는 무엇을 의미합니까?",
+        "options": [
+            "기준 범주의 종속변수 평균값",
+            "더미 변수 범주의 종속변수 평균값",
+            "더미 변수 범주와 기준 범주의 종속변수 평균값 차이",
+            "기준 범주의 독립변수 평균값",
+            "더미 변수 범주의 독립변수 평균값",
+            "더미 변수 범주와 기준 범주의 독립변수 평균값 차이"
+        ],
+        "hint": "기준 범주의 종속변수 평균값은 b이고, 더미 변수 범주의 종속변수 평균값은 w + b입니다",
+        "solution": "더미 변수 범주와 기준 범주의 종속변수 평균값 차이",
+    },
+    {
+        "item_type": "radio",
+        "question": "hiring.xlsx에서 test ~ gpa + hire로 회귀분석을 해보세요. 이때 hire의 기준 범주는 무엇입니까? (P는 합격, F는 불합격)",
+        "options": [
+            "합격자(P)",
+            "불합격자(F)",
+        ],
+        "hint": "기준 범주는 일반적으로 알파벳 순서로 가장 먼저 나오는 범주로 설정됩니다.",
+        "solution": "불합격자(F)",
+    },
+    {
+        "item_type": "radio",
+        "question": "hiring.xlsx에서 test ~ gpa + hire로 회귀분석을 해보세요. 이때 hire의 계수는 무엇을 의미합니까? (P는 합격, F는 불합격)",
+        "options": [
+            "합격자의 시험 점수 평균값",
+            "불합격자의 시험 점수 평균값",
+            "합격자와 불합격자의 시험 점수 값 차이",
+        ],
+        "hint": "더미 변수의 계수는 더미 변수 범주와 기준 범주의 종속변수 평균값 차이를 나타냅니다",
+        "solution": "합격자와 불합격자의 시험 점수 값 차이",
+    },
+    {
+        "item_type": "number",
+        "question": "hiring.xlsx에서 test ~ gpa + hire로 회귀분석을 해보세요. 이때 hire의 계수는 얼마입니까? (소수점 둘째자리까지)",
+        "hint": "```\nimport pandas as pd\nfrom statsmodels.formula.api import ols\nhi = pd.read_excel(\'hiring.xlsx\')\nols(\'test ~ gpa + hire\', data=hi).fit().summary()\n```",
+        "tolerance": 0.01,
+        "solution": 21.8506
+    },
+        {
+        "item_type": "radio",
+        "question": "위의 분석 결과로 볼 때 합격자와 불합격자 중 어느 쪽이 시험 점수가 더 높습니까? (유의수준 5%)",
+        "options": [
+            "합격자의 시험 점수가 통계적으로 유의하게 더 높다",
+            "불합격자의 시험 점수가 통계적으로 유의하게 더 높다",
+            "합격자와 불합격자의 시험 점수에는 통계적으로 유의한 차이가 없다",
+        ],
+        "hint": "기울기가 +이고, p-value가 0.05보다 작으므로 합격자의 시험 점수가 통계적으로 유의하게 더 높습니다",
+        "solution": "합격자의 시험 점수가 통계적으로 유의하게 더 높다",
+    },
+]} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

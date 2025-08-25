@@ -3,35 +3,6 @@
 
 *   여러 예측 모형 중 어떤 모형이 가장 좋은지 선택하는 과정.
 
-## 과대적합 (Overfitting)
-
-*   **원인:** 최소제곱법은 **주어진 표본**에서 잔차 분산 가장 작게 하는 계수 찾음.
-*   **문제점:** 표본에는 실제 모집단 패턴 외 **표집 오차(noise)** 포함됨. 표본 데이터에만 지나치게 맞춰진 모형은 새로운 데이터(모집단) 예측 성능 떨어짐.
-
-## 독립변수 개수와 과적합
-
-*   **최소제곱법 특성:** 종속변수와 아무 관련 없는 독립변수 추가해도 표본 잔차 분산 **거의 항상 작아짐** (우연한 관계 때문).
-*   **결과:** 독립변수 **많을수록** 표본 데이터 대한 $R^2$ 값은 **무조건 높아지는 경향**. → **과적합 위험 증가**.
-
-```python
-import numpy as np
-np.random.seed(0)
-random_data = pd.DataFrame({
-    'x1': np.random.randn(5),  # 모든 변수를 무작위로 생성
-    'x2': np.random.randn(5),
-    'x3': np.random.randn(5),
-    'x4': np.random.randn(5),
-    'y': np.random.randn(5)
-})
-# 회귀분석을 하면 R제곱이 100%
-ols('y ~ x1 + x2 + x3 + x4', data=random_data).fit().summary()
-```
-
-## 수정 R제곱, AIC, BIC
-
-*   $R^2$ 단점 보완 위해 등장한 모형 비교 지표. 모형 복잡도(**독립변수 개수**)에 **페널티** 부여.
-*   **수정 R제곱 (Adjusted R-squared):** $R^2$ 보정. **클수록** 좋음.
-*   **AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion):** 잔차 분산 보정. **작을수록** 좋음.
 
 
 ## 단계적 회귀분석 (Stepwise Regression)

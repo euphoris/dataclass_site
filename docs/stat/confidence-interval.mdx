@@ -30,34 +30,6 @@
     *   결과 표에서 `CI95%` 항목 확인 (예: `[814.1, 893.22]`)
     *   해석: df.price의 모평균은 95% 신뢰수준에서 814.1 ~ 893.22 사이에 있을 것으로 추정됨.
 
-## 부트스트래핑 (Bootstrapping)
-
-*   평균과 달리 중간값, 최빈값 등의  통계량은 오차 범위 이론적 유도 어려움.
-* 표본이 충분히 크면 부트스트래핑이라는 시뮬레이션 기법을 사용해서 신뢰구간을 추정
-* 오차 범위는 모집단에서 서로 다른 표본이 확률적으로 표집됨 → 표집 오차의 확률 분포를 추정하는 것
-* 부트스트래핑: 표본에서 다른 표본을 재표집(resampling)
-    * "pull yourself up by your own bootstrap"
-* 가정:
-    * 표본이 모집단을 어느 정도 반영한다면
-    * 이러한 재표집 또한 모집단에서 표본이 표집되는 과정을 반영할 것 
-    * → 오차 범위도 비슷하게 추정될 것
-
-*   **예시: 중간값의 95% 신뢰구간 계산 (scipy 활용)**
-```python
-import numpy as np
-import scipy as sp 
-
-np.random.seed(1234) # 재현성 있는 결과를 위해 시드 설정
-# 부트스트래핑 실행
-result = sp.stats.bootstrap(
-    [df.price],              # 데이터
-    np.median,               # 계산할 통계량 (중간값)
-    n_resamples=10000,       # 시뮬레이션(재표집) 횟수
-    confidence_level=0.95    # 신뢰수준
-)
-result.confidence_interval   # 신뢰구간
-```
-
 ## 퀴즈
 
 import { QuizComponent } from "@/components/QuizComponent";
@@ -71,7 +43,7 @@ import { QuizComponent } from "@/components/QuizComponent";
             '표집 오차는 측정을 정확하게 하면 없어진다',    
             '오차범위는 표집 오차가 발생하는 범위를 말한다',
         ],
-        hint: '강의자료 참고',
+        hint: '표집 오차는 모집단과 표본이 다르기 때문에 생기는 추정값과 모수와의 차이로, 측정을 정확하게 해도 없어지지 않는다. 오차범위는 표집 오차가 발생하는 범위를 말한다',
         solution: [
             '모집단과 표본 다르기 때문에 생기는 추정값과 모수와의 차이이다',
             '오차범위는 표집 오차가 발생하는 범위를 말한다',
@@ -86,36 +58,22 @@ import { QuizComponent } from "@/components/QuizComponent";
             '신뢰구간 = 통계량 ± 오차범위',
             '신뢰구간 = 통계량 ± 표집오차',
         ],
-        hint: '강의자료 참고',
+        hint: '신뢰구간은 통계량에 오차범위를 더하고 빼서 구한다',
         solution: '신뢰구간 = 통계량 ± 오차범위',
     },
-    
     {
-        item_type: 'checkbox',
-        question: '부트스트래핑에 대한 설명으로 올바른 것을 **모두** 고르세요',
-        options: [
-            '오차 범위를 이론적으로 유도하기 어려울 때 사용한다',
-            '컴퓨터 시뮬레이션을 통해 추정한다',
-            '항상 동일한 결과를 준다',
-        ],
-        hint: '강의자료 참고',
-        solution: [
-            '오차 범위를 이론적으로 유도하기 어려울 때 사용한다',
-            '컴퓨터 시뮬레이션을 통해 추정한다',
-        ]
-    },
-    {
-        item_type: 'short',
-        question: 'hiring.xlsx에서 gpa의 평균의 95% 신뢰구간을 구해보세요.\n\n※ [하한, 상한] 형식으로 표기',
+        item_type: 'number',
+        question: 'hiring.xlsx에서 gpa의 평균의 95% 신뢰구간을 구해보세요.\n\n하한은 얼마입니까? (소수점 둘째 자리까지)',
         hint: '```\nimport pandas as pd\nimport pingouin as pg\nhi = pd.read_excel(\'hiring.xlsx\')\npg.ttest(hi.gpa, 0, confidence=0.95)\n```',
-        solution: '[2.97, 3.03]'
+        solution: 2.97
     },
     {
-        item_type: 'short',
-        question: 'hiring.xlsx에서 gpa의 중간값의 95% 신뢰구간을 부트스트래핑으로 구해보세요.\n\n※ [하한, 상한] 형식으로 표기',
-        hint: '```\nimport numpy as np\nimport scipy as sp \nnp.random.seed(1234)\nresult = sp.stats.bootstrap(\n    [hi.gpa],\n    np.median,\n    n_resamples=10000,\n    confidence_level=0.95\n)\nresult.confidence_interval\n```',
-        solution: '[2.95, 3.04]'
-    },
+        item_type: 'number',
+        question: '앞의 문제에서 상한은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 3.03
+    },    
 ]} />
 
 ## Q&A

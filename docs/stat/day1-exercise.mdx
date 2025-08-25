@@ -19,6 +19,42 @@ import { QuizComponent } from "@/components/QuizComponent";
 
 <QuizComponent quizId="day1-exercise" quizItems={[
     {
+        item_type: "checkbox",
+        question: "다음 순서대로 Jupyter Notebook을 실행하세요",
+        options: [
+            "바탕화면에서 Jupyter Notebook 아이콘을 더블 클릭",
+            "Desktop -> 현대제철 Python -> 실습 데이터 순으로 선택",
+            "우상단 New -> Notebook 클릭",
+            "커널 선택에서 Select 클릭"
+        ],
+        hint: "Jupyter Notebook에서 위의 순서대로 실행하세요.",
+        solution: [
+            "바탕화면에서 Jupyter Notebook 아이콘을 더블 클릭",
+            "Desktop -> 현대제철 Python -> 실습 데이터 순으로 선택",
+            "우상단 New -> Notebook 클릭",
+            "커널 선택에서 Select 클릭"
+        ],
+    },
+    {
+        item_type: "checkbox",
+        question: "다음 중 중심경향치를 모두 고르세요",
+        options: [
+            "평균",
+            "중앙값",
+            "최빈값",
+            "범위",
+            "IQR",
+            "분산",
+            "표준편차",
+        ],
+        hint: "중심 경향치는 데이터가 몰려있는 위치를 의미합니다.",
+        solution: [
+            "평균",
+            "중앙값",
+            "최빈값"
+        ],
+    },
+    {
         "item_type": "number",
         "question": "라인 3에서 생산된 TX-100 커넥터 두께의 평균 (소숫점 이하 3자리까지)",
         "options": [],
@@ -33,6 +69,26 @@ import { QuizComponent } from "@/components/QuizComponent";
         "hint": "```\ndf.thickness.median()\n```",
         "solution": 5.004
     },
+    {
+        item_type: "checkbox",
+        question: "다음 중 변산성 측정치를 모두 고르세요",
+        options: [
+            "평균",
+            "중앙값",
+            "최빈값",
+            "범위",
+            "IQR",
+            "분산",
+            "표준편차",
+        ],
+        hint: "변산성 측정치는 데이터가 퍼져있는 정도를 의미합니다.",
+        solution: [
+            "범위",
+            "IQR",
+            "분산",
+            "표준편차"
+        ],
+    },    
     {
         "item_type": "number",
         "question": "범위 (소숫점 이하 3자리까지)",
@@ -54,24 +110,24 @@ import { QuizComponent } from "@/components/QuizComponent";
         "hint": "```\ndf.thickness.std()\n```",
         "solution": 0.01749362342162191
     },
-    {
-        "item_type": "radio",
-        "question": "bins=10으로 히스토그램을 그렸을 때 가장 빈도가 높은 구간",
-        "options": [
-            "(4.904, 4.924]",
-            "(4.924, 4.943]",
-            "(4.943, 4.962]",
-            "(4.962, 4.981]",
-            "(4.981, 5.0]",
-            "(5.0, 5.019]",
-            "(5.019, 5.038]",
-            "(5.038, 5.057]",
-            "(5.057, 5.076]",
-            "(5.076, 5.095]"
-        ],
-        "hint": "```\nimport seaborn as sns\nsns.histplot(df.thickness, bins=10)\n```",
-        "solution": "(5.0, 5.019]"
-    },
+    // {
+    //    "item_type": "radio",
+    //    "question": "bins=10으로 히스토그램을 그렸을 때 가장 빈도가 높은 구간",
+    //    "options": [
+    //        "(4.904, 4.924]",
+    //        "(4.924, 4.943]",
+    //        "(4.943, 4.962]",
+    //        "(4.962, 4.981]",
+    //        "(4.981, 5.0]",
+    //        "(5.0, 5.019]",
+    //        "(5.019, 5.038]",
+    //        "(5.038, 5.057]",
+    //        "(5.057, 5.076]",
+    //        "(5.076, 5.095]"
+    //    ],
+    //    "hint": "```\nimport seaborn as sns\nsns.histplot(df.thickness, bins=10)\n```",
+    //    "solution": "(5.0, 5.019]"
+    //},
     {
         "item_type": "number",
         "question": "Z-score를 이용해 탐지한 이상치의 개수",
