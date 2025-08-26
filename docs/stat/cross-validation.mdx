@@ -110,6 +110,87 @@ while changed:
 best_model.summary()  # 최종 모형 요약 출력        
 ```
 
+
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w75poL?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1518" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 교차 검증"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="cross-validation" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "교차 검증(Cross Validation)을 수행하는 주된 목적은 무엇인가요?",
+        "options": [
+            "회귀계수의 신뢰구간을 더 좁게 추정하기 위해",
+            "독립변수들 간의 다중공선성 문제를 해결하기 위해",
+            "모형이 새로운 데이터에 대해 얼마나 잘 예측할지(일반화 성능)를 평가하기 위해",
+            "종속변수의 분포를 정규분포에 가깝게 변환하기 위해"
+        ],
+        "hint": "교차 검증은 추정된 모형을 새로운 데이터에 적용하여 예측 성능을 평가하는 방법입니다.",
+        "solution": "모형이 새로운 데이터에 대해 얼마나 잘 예측할지(일반화 성능)를 평가하기 위해",
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터를 같은 크기의 여러 부분으로 나누어, 각 부분을 한 번씩 테스트셋으로 사용하고 나머지를 훈련셋으로 사용하는 교차 검증 방법은 무엇인가요?",
+        "options": [
+            "Holdout 교차 검증",
+            "Leave-One-Out 교차 검증 (LOOCV)",
+            "k-폴드 교차 검증 (k-fold CV)",
+            "Leave-p-Out 교차 검증 (LpO CV)"
+        ],
+        "hint": "k-폴드 교차 검증은 데이터를 k개의 부분으로 나누어, 각 부분을 한 번씩 테스트셋으로 사용하는 방법입니다.",
+        "solution": "k-폴드 교차 검증 (k-fold CV)"
+    },
+    {
+        "item_type": "radio",
+        "question": "교차 검증 결과, 훈련 데이터에 대한 오차는 매우 낮았지만 테스트 데이터에 대한 오차는 매우 높게 나왔습니다. 이 모형의 상태를 가장 잘 설명하는 것은 무엇인가요?",
+        "options": [
+            "과소적합 (Underfitting) 상태이며, 모형을 더 복잡하게 만들어야 한다.",
+            "과대적합 (Overfitting) 상태이며, 모형을 더 단순하게 만들어야 한다.",
+            "적절한 상태이며, 이 모형을 사용하는 것이 바람직하다.",
+            "훈련 데이터와 테스트 데이터가 잘못 분리되었으므로 데이터를 다시 분할해야 한다.",
+        ],
+        "hint": "훈련 데이터에 대한 오차가 낮고 테스트 데이터에 대한 오차가 높다는 것은 모형이 훈련 데이터에 너무 과하게 적합되어 새로운 데이터에 대한 예측 성능이 떨어지는 과대적합 상태를 의미합니다.",
+        "solution": "과대적합 (Overfitting) 상태이며, 모형을 더 단순하게 만들어야 한다."
+    },
+    {
+        "item_type": "checkbox",
+        "question": "call_center.xlsx 에서 sales를 종속변수로 회귀분석을 수행하세요. 교차 검증과 전진선택을 통해 모형을 선택하세요. 이때 전진선택에서 추가된 변수들을 **모두** 고르세요",
+        "options": [
+            "kind",
+            "active",
+            "talk",
+            "career",
+            "gender"
+        ],
+        "hint": "```\nimport pandas as pd\nimport varsel\nfrom sklearn.model_selection import train_test_split\ncc = pd.read_excel(\'call_center.xlsx\')\n\ntrain_df, test_df = train_test_split(\n    cc,               # 원본 데이터\n    test_size=0.2,    # 테스트 데이터 비율\n    random_state=42   # 난수 시드 고정 (재현성 위함)\n)\nm = varsel.forward_selection_with_cv(\'sales ~ kind + active + talk + career + gender\', train_df, test_df)\nm.summary()\n```",
+        "solution": [
+            "active",
+            "talk",
+        ],
+    },
+    {
+        "item_type": "number",
+        "question": "위에서 선택된 모형의 테스트 MSE는 얼마입니까? (소수점 둘째 자리까지)",
+        "tolerance": 0.01,
+        "hint": "위의 문제 힌트 참고",
+        "solution": 388.0131371861462
+    },
+    {
+        "item_type": "radio",
+        "question": "call_center.xlsx 에서 sales를 종속변수로 회귀분석을 수행하세요. 교차 검증과 후진선택을 통해 모형을 선택하세요. 이때 **제일 먼저** 제거된 독립변수를 고르세요",
+        "options": [
+            "kind",
+            "active",
+            "talk",
+            "career",
+            "gender"
+        ],
+        "hint": "```\nm = varsel.backward_selection_with_cv(\'sales ~ kind + active + talk + career + gender\', train_df, test_df)\nm.summary()\n```",
+        "solution": "kind"
+    }
+]
+} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

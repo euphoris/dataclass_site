@@ -114,6 +114,7 @@ export function QuizResultVisualizer() {
   const [supabaseUrl, setSupabaseUrl] = useState("");
   const [supabaseKey, setSupabaseKey] = useState("");
   const [quizId, setQuizId] = useState("");
+  const [hours, setHours] = useState(2);
   const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | null>(null);
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -122,19 +123,19 @@ export function QuizResultVisualizer() {
   const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchData = useCallback(async (client: SupabaseClient | null, id: string) => {
+  const fetchData = useCallback(async (client: SupabaseClient | null, id: string, hours: number) => {
     if (!client || !id) return;
 
     setIsLoading(true);
     setError(null);
     
     try {
-      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+      const hoursAgo = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
       const { data, error: fetchError } = await client
         .from("answers")
         .select("item_id, name, nickname, affiliation, correct, hint, created_at") // nickname 조회
         .eq("quiz_id", id)
-        .gte("created_at", twoHoursAgo);
+        .gte("created_at", hoursAgo);
 
       if (fetchError) throw fetchError;
       if (!data) throw new Error("데이터를 불러오지 못했습니다.");
@@ -229,7 +230,7 @@ export function QuizResultVisualizer() {
     }
     const client = createClient(supabaseUrl, supabaseKey);
     setSupabaseClient(client);
-    fetchData(client, quizId);
+    fetchData(client, quizId, hours);
   };
   
   // 자동 새로고침 설정
@@ -244,7 +245,7 @@ export function QuizResultVisualizer() {
       // 1분(60000ms)마다 fetchData 실행
       intervalRef.current = setInterval(() => {
         console.log("Auto-refreshing data...");
-        fetchData(supabaseClient, quizId);
+        fetchData(supabaseClient, quizId, hours);
       }, 60000);
 
       // 컴포넌트가 언마운트되거나, client/quizId가 변경될 때 interval 정리
@@ -262,7 +263,7 @@ export function QuizResultVisualizer() {
         <CardHeader>
           <CardTitle>퀴즈 결과 시각화</CardTitle>
           <CardDescription>
-            Supabase 프로젝트 정보를 입력하여 최근 2시간 동안의 퀴즈 결과를 확인하세요.
+            Supabase 프로젝트 정보를 입력하여 최근 퀴즈 결과를 확인하세요.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -292,6 +293,16 @@ export function QuizResultVisualizer() {
               placeholder="결과를 조회할 퀴즈의 ID"
               value={quizId}
               onChange={(e) => setQuizId(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="hours">최근 몇 시간</Label>
+            <Input
+              id="hours"
+              type="number"
+              placeholder="최근 몇 시간 내 결과를 조회"
+              value={hours}
+              onChange={(e) => setHours(Number(e.target.value))}
             />
           </div>
           <Button onClick={handleInitialFetch} disabled={isLoading} className="w-full">

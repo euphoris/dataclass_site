@@ -45,7 +45,7 @@ pg.ttest(avs, k3s)
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent hypothesis-testing="p-value" quizItems={[
+<QuizComponent quizId="p-value" quizItems={[
     {
         "item_type": "radio",
         "question": "귀무가설 값과 통계량(표본 값) 차이가 커지면 p-value는 어떻게 됩니까?",
@@ -61,12 +61,12 @@ import { QuizComponent } from "@/components/QuizComponent";
         "item_type": "radio",
         "question": "표본의 크기가 커지면 p-value는 어떻게 됩니까?",
         "options": [
-            "작아진다",
-            "변하지 않는다",
-            "커진다"
+            "작아진다.",
+            "변하지 않는다.",
+            "커진다."
         ],
         "hint": "표본의 크기가 커지면 p-value는 작아집니다.",
-        "solution": "작아진다"
+        "solution": "작아진다."
     },
     {
         "item_type": "radio",
@@ -83,12 +83,12 @@ import { QuizComponent } from "@/components/QuizComponent";
         "item_type": "radio",
         "question": "유의수준(α)이 커지면 p-value는 어떻게 됩니까?",
         "options": [
-            "작아진다",
-            "변하지 않는다",
-            "커진다"
+            "작아진다.",
+            "변하지 않는다.",
+            "커진다."
         ],
         "hint": "p-value는 유의수준(α)에 영향을 받지 않습니다. p-value 계산 후에 유의수준과 비교합니다.",
-        "solution": "변하지 않는다"
+        "solution": "변하지 않는다."
     },
     {
         "item_type": "radio",

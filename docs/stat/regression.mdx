@@ -105,7 +105,7 @@ m.predict(new_df)
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent hypothesis-testing="regression" quizItems={
+<QuizComponent quizId="regression" quizItems={
 [
     {
         "item_type": "radio",
@@ -250,10 +250,11 @@ import { QuizComponent } from "@/components/QuizComponent";
         "solution": "risk ~ length"
     },
     {
-        "item_type": "short",
-        "question": "length의 기울기(또는 가중치)는 얼마입니까?",
+        "item_type": "number",
+        "question": "length의 기울기(또는 가중치)는 얼마입니까? (소수점 셋째 자리까지)",
         "options": [],
         "hint": "```\nimport pandas as pd\nfrom statsmodels.formula.api import ols\nsf = pd.read_excel(\'safety.xlsx\')\nols(\'risk ~ length\', data=sf).fit().summary()\n```",
+        "tolerance": 0.001,
         "solution": "-0.0348"
     },
     {

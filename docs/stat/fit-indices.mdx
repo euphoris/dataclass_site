@@ -55,7 +55,7 @@ ols('y ~ x1 + x2 + x3 + x4', data=random_data).fit().summary()
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent hypothesis-testing="fit-indices" quizItems={
+<QuizComponent quizId="fit-indices" quizItems={
 [
     {
         "item_type": "radio",
@@ -110,6 +110,42 @@ import { QuizComponent } from "@/components/QuizComponent";
             "AIC",
             "BIC"
         ],
+    },
+    {
+        "item_type": "radio",
+        "question": "회귀분석에서 '과대적합(Overfitting)'이 발생했을 때 나타나는 가장 주된 문제점은 무엇인가요?",
+        "options": [
+            "모형이 너무 단순해져서 데이터의 패턴을 제대로 학습하지 못한다.",
+            "독립변수들 간의 상관관계가 너무 높아져서 회귀계수 추정이 불안정해진다.",
+            "학습에 사용된 표본 데이터는 잘 설명하지만, 새로운 데이터에 대한 예측 성능이 떨어진다.",
+            "모형의 결정계수(R-squared) 값이 0에 가까워져 설명력이 거의 없게 된다."
+        ],
+        "hint": "과대적합이 발생하면 모형이 너무 복잡해지고 결정계수가 1에 가까워집니다.",
+        "solution": "학습에 사용된 표본 데이터는 잘 설명하지만, 새로운 데이터에 대한 예측 성능이 떨어진다.",
+    },
+    {
+        "item_type": "radio",
+        "question": "다중 회귀분석에서 독립변수의 개수를 늘릴 때 일반적으로 나타나는 현상으로 옳은 것은 무엇인가요?",
+        "options": [
+            "독립변수가 추가될수록 수정 R제곱(Adjusted R-squared)은 항상 증가한다.",
+            "독립변수가 추가될수록 AIC와 BIC 값은 항상 감소한다.",
+            "종속변수와 관련 없는 변수를 추가해도 표본 데이터에 대한 R제곱 값은 감소하지 않거나 오히려 증가하는 경향이 있다.",
+            "독립변수가 많아질수록 과소적합(Underfitting)의 위험이 커진다."
+        ],
+        "hint": "수정R제곱, AIC, BIC는 독립변수 개수를 고려하여 페널티를 부과합니다. 독립변수가 많아질 수록 과대적합의 위험이 커집니다.",
+        "solution": "종속변수와 관련 없는 변수를 추가해도 표본 데이터에 대한 R제곱 값은 감소하지 않거나 오히려 증가하는 경향이 있다.",
+    },
+    {
+        "item_type": "radio",
+        "question": "모형 선택 지표인 수정 R제곱, AIC, BIC에 대한 설명으로 가장 적절한 것은 무엇인가요?",
+        "options": [
+            "세 지표 모두 값이 클수록 더 좋은 모형으로 평가한다.",
+            "세 지표 모두 값이 작을수록 더 좋은 모형으로 평가한다.",
+            "이 지표들은 R제곱과 달리 모형의 복잡도(독립변수 개수)를 고려하여 페널티를 부과한다.",
+            "AIC와 BIC는 주로 모형의 설명력을 백분율로 해석하는 데 사용된다."
+        ],
+        "hint": "수정 R제곱, AIC, BIC는 독립변수 개수를 고려하여 페널티를 부과합니다.",
+        "solution": "이 지표들은 R제곱과 달리 모형의 복잡도(독립변수 개수)를 고려하여 페널티를 부과한다.",
     },
     {
         "item_type": "number",

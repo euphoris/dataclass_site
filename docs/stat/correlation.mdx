@@ -128,7 +128,7 @@ sns.scatterplot(x='mileage', y='price', data=df)
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent hypothesis-testing="correlation" quizItems={
+<QuizComponent quizId="correlation" quizItems={
 [
     {
         "item_type": "radio",
@@ -175,7 +175,7 @@ import { QuizComponent } from "@/components/QuizComponent";
     },
     {
         "item_type": "radio",
-        "question": "공분산(Covariance)과 피어슨 상관계수(Pearson Correlation Coefficient)에 대한 설명으로 가장 적절한 것은 무엇입니까?",
+        "question": "공분산(Covariance)과 피어슨 상관계수에 대한 설명으로 가장 적절한 것은 무엇입니까?",
         "options": [
             "공분산은 단위의 영향을 받지 않아 해석이 용이하다.",
             "피어슨 상관계수는 공분산과 달리 항상 0보다 큰 값을 가진다.",
@@ -210,16 +210,18 @@ import { QuizComponent } from "@/components/QuizComponent";
     },
     {
         "item_type": "number",
-        "question": "주가 데이터 price.xlsx에서 S&P 500 지수의 변화율(sp500_change)과 금 가격의 변화율(gold_change)의 피어슨 상관계수를 구하세요.",
+        "question": "주가 데이터 price.xlsx에서 S&P 500 지수의 변화율(sp500_change)과 금 가격의 변화율(gold_change)의 피어슨 상관계수를 구하세요. (소수점 셋째 자리까지)",
         "options": [],
         "hint": "```\nimport pandas as pd\npr = pd.read_excel(\'price.xlsx\')\npg.corr(pr[\'sp500_change\'], pr[\'gold_change\'])\n```\n\n실행 결과에서 r이 상관계수입니다",
+        "tolerance": 0.001,
         "solution": 0.026435
     },
     {
         "item_type": "number",
-        "question": "위의 상관분석의 p-value는 얼마입니까?",
+        "question": "위의 상관분석의 p-value는 얼마입니까? (소수점 셋째 자리까지)",
         "options": [],
         "hint": "```\nimport pandas as pd\npr = pd.read_excel(\'price.xlsx\')\npg.corr(pr[\'sp500_change\'], pr[\'gold_change\'])\n```\n\n실행 결과에서 p-val이 p-value입니다",
+        "tolerance": 0.001,
         "solution": 0.598094
     },
     {

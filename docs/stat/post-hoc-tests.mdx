@@ -45,9 +45,8 @@ pg.pairwise_gameshowell(dv='rating', between='job_level', data=hr)
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent hypothesis-testing="post-hoc-tests" quizItems={
+<QuizComponent quizId="post-hoc-tests" quizItems={
 [
-    
     {
         "item_type": "radio",
         "question": "FWER에 대해 올바른 설명은?",
@@ -91,8 +90,8 @@ import { QuizComponent } from "@/components/QuizComponent";
         "solution": "Tukey의 HSD 검정",
     },
     {
-        "item_type": "radio",
-        "question": "위와 같이 사후 검정을 했을 때 유의수준 5%에서 통계적으로 유의미한 차이가 있는 경우를 골라보세요.",
+        "item_type": "checkbox",
+        "question": "위와 같이 사후 검정을 했을 때 유의수준 5%에서 통계적으로 유의미한 차이가 있는 경우를 **모두** 골라보세요.",
         "options": [
             "4wd - fwd",
             "4wd - rwd",

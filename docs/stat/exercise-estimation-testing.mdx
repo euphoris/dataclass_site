@@ -14,4 +14,57 @@ high_risk = sp[sp.risk == 1]
 low_risk = sp[sp.risk == 0]
 ```
 
-<iframe src="https://tally.so/embed/wo191V?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1232" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 종합실습: 추정과 가설검정"></iframe>
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="exercise-estimation-testing" quizItems={
+[
+    {
+        "item_type": "number",
+        "question": "high_risk 집단의 liquidity의 평균의 95% 신뢰구간을 구하세요. 하한은 얼마입니까? (소수점 둘째 자리까지)",
+        "tolerance": 0.01,
+        "hint": "```\nimport pingouin as pg\npg.ttest(high_risk.liquidity, 0, confidence=0.95)\n```",
+        "solution": 0.94
+    },
+    {
+        item_type: 'number',
+        question: '앞의 문제에서 상한은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 1.01
+    },   
+    {
+        "item_type": "number",
+        "question": "low_risk 집단의 cash_flow의 중간값의 95% 신뢰구간을 부트스트래핑으로 구하세요. 하한은 얼마입니까? (소수점 둘째 자리까지)",
+        "tolerance": 0.01,
+        "hint": "```\nimport numpy as np\nimport scipy as sp\nnp.random.seed(1234)\nresult = sp.stats.bootstrap(\n    [low_risk.cash_flow],\n    np.median,\n    n_resamples=10000,\n    confidence_level=0.95\n)\nresult.confidence_interval\n```",
+        "tolerance": 0.01,
+        "solution": 0.09744949118825932
+    },
+    {
+        item_type: 'number',
+        question: '앞의 문제에서 상한은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 0.1090878409136728
+    },  
+    {
+        "item_type": "radio",
+        "question": "high_risk 집단과 low_risk 집단의 profit의 평균을 독립표본 t-검정으로 분석해보세요. 이때의 p-value와 그 결론은 무엇입니까? (참고: 3e-2는 3×(10**-2) == 0.03이라는 뜻입니다)",
+        "options": [
+            "p < 0.05, 두 집단의 평균에는 통계적으로 유의한 차이가 *있다*",
+            "p < 0.05, 두 집단의 평균에는 통계적으로 유의한 차이가 *없다*",
+            "p > 0.05, 두 집단의 평균에는 통계적으로 유의한 차이가 *있다*",
+            "p > 0.05,두 집단의 평균에는 통계적으로 유의한 차이가 *없다*"
+        ],
+        "hint": "```\nimport pingouin as pg\npg.ttest(high_risk.profit, low_risk.profit)\n```",
+        "solution": "p < 0.05, 두 집단의 평균에는 통계적으로 유의한 차이가 *있다*",
+    },
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+
