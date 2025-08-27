@@ -1,0 +1,98 @@
+# 종합 실습: 상관과 회귀
+
+```python
+import pandas as pd
+cc = pd.read_excel('call_center.xlsx')
+```
+
+`call_center.xlsx`는 콜센터 직원의 근무 성과와 관련된 데이터를 담고 있습니다. 각 컬럼의 의미는 다음과 같습니다.
+
+- `kind`: 친절도
+- `active`: 적극적 태도
+- `talk`: 대화 시간
+- `career`: 경력
+- `gender`: 성별
+- `sales`: 매출 실적
+
+다음 퀴즈를 풀어보세요.
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="exercise-regression" quizItems={
+[
+    {
+        "item_type": "number",
+        "question": "친절도와 매출 실적의 상관 관계를 분석해보세요. 상관 계수는 얼마입니까? (소수점 둘째 자리까지)",
+        "tolerance": 0.01,
+        "hint": "```\nimport pingouin as pg\npg.corr(cc.kind, cc.sales)\n```",
+        "solution": -0.041006	
+    },
+    {
+        item_type: 'number',
+        question: '앞의 문제에서 p value는 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '앞의 문제 힌트 참고',
+        tolerance: 0.01,
+        solution: 0.195093
+    },
+    {
+        "item_type": "radio",
+        "question": "친절도와 매출 실적의 상관 관계를 분석해보세요. 올바른 결론은 무엇입니까? (유의수준 5%)",
+        "options": [
+            "친절도와 매출 실적 사이에는 통계적으로 유의한 음의 상관관계가 있다",
+            "친절도와 매출 실적 사이에는 통계적으로 유의한 양의 상관관계가 있다",
+            "친절도와 매출 실적 사이에는 통계적으로 유의한 상관관계가 없다"
+        ],
+        "hint": "통계적으로 유의한 관계가 있으려면 p < 유의수준이어야 합니다.",
+        "solution": "친절도와 매출 실적 사이에는 통계적으로 유의한 상관관계가 없다"
+    },
+    {
+        "item_type": "radio",
+        "question": "sales를 종속변수로, talk를 독립변수로 회귀분석을 하려고 합니다. 이때 적합한 관계식은 무엇입니까?",
+        options: [
+            "sales ~ talk",
+            "talk ~ sales"
+        ],
+        "hint": "종속변수 ~ 독립변수",
+        "solution": "sales ~ talk",
+    },
+    {
+        item_type: 'number',
+        question: 'sales를 종속변수로, talk를 독립변수로 회귀분석을 실시해보세요. talk 시간이 1 단위 증가할 때마다 sales는 얼마나 증가합니까? (소수점 둘째 자리까지)',
+        hint: '```\nfrom statsmodels.formula.api import ols\nm = ols(\'sales ~ talk\', data=cc).fit()\nm.summary()\n```\n\n결과표에서 `coef`가 추정된 계수입니다.',
+        tolerance: 0.01,
+        solution: 3.3883
+    },
+    {
+        "item_type": "radio",
+        "question": "위 계수의 p value는 어떻습니까?",
+        "options": [
+            "p < 0.05",
+            "p > 0.05",
+        ],
+        "hint": "결과표에서 `P>|t|`가 p value입니다.",
+        "solution": "p < 0.05",
+    },
+    {
+        item_type: 'number',
+        question: '위의 회귀분석에서 절편을 얼마입니까?(소수점 둘째 자리까지)',
+        hint: '`Intercept`가 절편입니다',
+        tolerance: 0.01,
+        solution: 21.3510
+    },
+    {
+        item_type: 'number',
+        question: 'talk 시간이 1.5인 상담사의 예상 매출(sales)은 얼마입니까? (소수점 둘째 자리까지)',
+        hint: '새로운 엑셀 파일 `new_data.xlsx`을 만들어 talk열을 만들고 1.5를 추가하세요\n\n```\nnn = pd.read_excel(\'new_data.xlsx\')\nm.predict(nn)\n```',
+        tolerance: 0.01,
+        solution: 26.433444
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+

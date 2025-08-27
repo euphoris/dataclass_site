@@ -23,7 +23,9 @@
 | 낮음      | 낮음        | **적절**    | 바람직              |
 | 낮음      | 높음        | **과적합** (Overfitting)  | 모형 단순하게 수정  |
 
-## Python 교차 검증 코드 (Holdout 예시)
+[💾 varsel.py 다운로드](https://drive.google.com/file/d/1qSg1QlJKErsROH3w7-ueS0MbYxWCL3eq/view?usp=drive_link)
+
+## Python 교차 검증 코드
 
 ```python
 from sklearn.model_selection import train_test_split
@@ -49,65 +51,22 @@ mean_squared_error(test_df.price, y_pred)
 ## 전진 선택
 
 ```python
-depvar = 'price'
-features = ['year', 'mileage', 'model', 'my_car_damage', 'other_car_damage']
-included = []
-
-threshold = 0.01
-changed = True
-best_formula = depvar + ' ~ 1'  # 절편만 있는 모형
-best_model = ols(best_formula, data=train_df).fit()
-best_mse = mean_squared_error(test_df[depvar], best_model.predict(test_df))
-print(f'{best_formula} (MSE: {best_mse})')  # 절편만 있는 모형 출력
-
-while changed:
-    excluded = list(set(features) - set(included))
-    best_feature = None
-    for new_column in excluded:
-        formula = depvar + ' ~ ' + ' + '.join(included + [new_column])
-        model = ols(formula, data=train_df).fit()
-        mse = mean_squared_error(test_df[depvar], model.predict(test_df))
-        if mse < best_mse - threshold:
-            best_feature = new_column
-            best_mse = mse
-            best_model = model
-            best_formula = formula
-    changed = best_feature is not None
-    if changed:
-        included.append(best_feature)
-        print(f'{best_formula} (MSE: {best_mse})')
-best_model.summary()  # 최종 모형 요약 출력        
+전진 선택
+m = varsel.forward_selection_with_cv(
+    'price ~ year + mileage + model + my_car_damage + other_car_damage', 
+    train_df, test_df)
+m.summary()      
 ```
 
 ## 후진 선택
 
 ```python
-depvar = 'price'
-features = ['year', 'mileage', 'model', 'my_car_damage', 'other_car_damage']
-included = features.copy()
-threshold = 0.01
-changed = True
-best_formula = depvar + ' ~ ' + ' + '.join(included)  # 초기 모형
-best_model = ols(best_formula, data=train_df).fit()
-best_mse = mean_squared_error(test_df[depvar], best_model.predict(test_df))
-print(f'{best_formula} (MSE: {best_mse})')  # 초기 모형 출력
-while changed:
-    excluded = list(set(features) - set(included))
-    best_feature = None
-    for remove_feature in included:
-        formula = depvar + ' ~ ' + ' + '.join(list(set(included) - set([remove_feature])))
-        model = ols(formula, data=train_df).fit()
-        mse = mean_squared_error(test_df[depvar], model.predict(test_df))
-        if mse < best_mse - threshold:
-            best_feature = remove_feature
-            best_model = model
-            best_mse = mse
-            best_formula = formula
-    changed = best_feature is not None
-    if changed:
-        included.remove(best_feature)
-        print(f'{best_formula} (MSE: {best_mse})')
-best_model.summary()  # 최종 모형 요약 출력        
+
+후진 선택
+m = varsel.backward_selection_with_cv(
+    'price ~ year + mileage + model + my_car_damage + other_car_damage', 
+    train_df, test_df)
+m.summary()    
 ```
 
 

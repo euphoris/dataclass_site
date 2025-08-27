@@ -139,4 +139,44 @@ hi = pd.read_excel('hiring.xlsx')  # 데이터 불러오기
 hi['y'] = hi.hire.map({'P': 1, 'F': 0}) # P는 1, F는 0으로 변환
 ```
 
-<iframe src="https://tally.so/embed/3XkBEY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1028" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 로지스틱 회귀분석"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="logistic-regression" quizItems={
+[
+    {
+        "item_type": "number",
+        "question": "hiring.xlsx 파일을 열어서 위에 있는 코드를 이용하여 전처리를 하세요. 그리고 `y ~ gpa + test + major`의 관계식으로 로지스틱 회귀분석을 하세요. 유사 R제곱은 얼마입니까? (소수점 둘째 자리까지)",
+        "hint": "```\nfrom statsmodels.formula.api import logit\nm = logit(\'y ~ gpa + test + major\', hi).fit()\nm.summary()\n```",
+        "tolerance": 0.01,
+        "solution": 0.2727
+    },
+    {
+        "item_type": "number",
+        "question": "위 분석의 AIC는 얼마입니까? (정수로 입력)",
+        "hint": "```\nm.aic\n```",
+        "tolerance": 1,
+        "solution": 1016.137215725382
+    },
+    {
+        "item_type": "number",
+        "question": "학점(gpa)이 1점 증가할 때, 합격의 로그승산은 얼마나 증가합니까? (소수점 둘째 자리까지)",
+        "tolerance": 0.01,
+        "hint": "gpa의 계수(coef)",
+        "solution": 1.5973
+    },
+    {
+        "item_type": "radio",
+        "question": "학점(gpa)의 p-value를 해석해보세요 (유의수준 5%)",
+        "options": [
+            "학점이 높을 수록 합격 합률이 높아지는 통계적으로 유의한 영향이 있다",
+            "학점이 높을 수록 합격 합률이 낮아지는 통계적으로 유의한 영향이 있다",
+            "학점은 합격 합률에 통계적으로 유의한 영향이 없다",
+        ],
+        "hint": "p < 0.05이면 통계적으로 유의하다",
+        "solution": "학점이 높을 수록 합격 합률이 높아지는 통계적으로 유의한 영향이 있다",
+    }
+]
+} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

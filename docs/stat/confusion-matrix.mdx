@@ -101,4 +101,57 @@ hi['y'] = hi.hire.map({'P': 1, 'F': 0}) # P는 1, F는 0으로 변환
 m = logit('y ~ gpa + test + major', hi).fit() # 분석
 ```
 
-<iframe src="https://tally.so/embed/w2yxJj?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1400" frameborder="0" marginheight="0" marginwidth="0" title="[통계] 혼동행렬"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="confusion-matrix" quizItems={
+[
+    {
+        "item_type": "number",
+        "question": "hiring.xlsx로 로지스틱 회귀분석을 하고, 그 결과로 혼동행렬을 만들어보세요. 진양성은 몇 건입니까?",
+        "hint": "```\nfrom sklearn.metrics import confusion_matrix\ny_test = hi.y\nprob = m.predict(hi)\ny_pred = np.where(prob > 0.5, 1, 0)\nconfusion_matrix(y_test, y_pred)\n```",
+        "solution": 356
+    },
+    {
+        "item_type": "number",
+        "question": "위양성",
+        "hint": "앞의 힌트 참고",
+        "solution": 124
+    },
+    {
+        "item_type": "number",
+        "question": "진음성",
+        "hint": "앞의 힌트 참고",
+        "solution": 383
+    },
+    {
+        "item_type": "number",
+        "question": "위음성",
+        "hint": "앞의 힌트 참고",
+        "solution": 137
+    },
+    {
+        "item_type": "number",
+        "question": "정확도(accuracy). 소수점 둘째 자리까지",
+        "tolerance": 0.01,
+        "hint": "```\nfrom sklearn.metrics import accuracy_score\naccuracy_score(y_test, y_pred)\n```",
+        "solution": 0.739
+    },
+    {
+        "item_type": "number",
+        "question": "정밀도(precision). 소수점 둘째 자리까지",
+        "tolerance": 0.01,
+        "hint": "```\nfrom sklearn.metrics import precision_score\nprecision_score(y_test, y_pred)\n```",
+        "solution": 0.7416666666666667
+    },
+    {
+        "item_type": "number",
+        "question": "재현도(recall). 소수점 둘째 자리까지",
+        "tolerance": 0.01,
+        "hint": "```\nfrom sklearn.metrics import recall_score\nrecall_score(y_test, y_pred)\n```",
+        "solution": 0.7221095334685599
+    },
+]
+} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

@@ -602,42 +602,47 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '4일차 - 회귀 분석',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/multiple-regression',
-    //       label: '다중 회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/dummy-coding',
-    //       label: '범주형 독립변수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/dummy-coding-3-levels',
-    //       label: '범주가 3개인 경우'
-    //     },        
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/fit-indices',
-    //       label: '적합도 지수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/stepwise-regression',
-    //       label: '단계적 회귀분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/cross-validation',
-    //       label: '교차 검증'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '4일차 - 회귀 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/exercise-regression',
+          label: '종합 실습: 상관과 회귀'
+        },
+        {
+          type: 'doc',
+          id: 'stat/multiple-regression',
+          label: '다중 회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/dummy-coding',
+          label: '범주형 독립변수'
+        },
+        {
+          type: 'doc',
+          id: 'stat/dummy-coding-3-levels',
+          label: '범주가 3개인 경우'
+        },        
+        {
+          type: 'doc',
+          id: 'stat/fit-indices',
+          label: '적합도 지수'
+        },
+        {
+          type: 'doc',
+          id: 'stat/stepwise-regression',
+          label: '단계적 회귀분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/cross-validation',
+          label: '교차 검증'
+        },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '5일차 - 고급 회귀 분석',
@@ -649,18 +654,13 @@ const sidebars: SidebarsConfig = {
     //     },
     //     {
     //       type: 'doc',
-    //       id: 'stat/exercise-coating',
-    //       label: '종합 실습: 도장 품질 예측'
+    //       id: 'stat/I-function',
+    //       label: 'I() 함수'
     //     },
     //     {
     //       type: 'doc',
     //       id: 'stat/interaction',
     //       label: '상호작용'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/did',
-    //       label: '인과 효과'
     //     },
     //     {
     //       type: 'doc',
@@ -675,13 +675,13 @@ const sidebars: SidebarsConfig = {
     //     {
     //       type: 'doc',
     //       id: 'stat/roc-auc',
-    //       label: 'ROC 곡선'
+    //       label: '문턱값'
     //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/exercise-logistic-regression',
-    //       label: '종합 실습: 재무 건전성 분류'
-    //     },
+    //     // {
+    //     //   type: 'doc',
+    //     //   id: 'stat/exercise-logistic-regression',
+    //     //   label: '종합 실습: 재무 건전성 분류'
+    //     // },
     //   ]
     // },
     // {

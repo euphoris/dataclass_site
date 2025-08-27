@@ -1,0 +1,134 @@
+# I() 함수
+
+*   `statsmodels` 관계식 내에서 **산술 연산자(+, *, **, / 등) 그대로 사용**하고 싶을 때 사용. (`+`는 변수 추가 의미이므로)
+*   **예시:** `x`와 `z`를 더한 변수를 독립변수로 사용:
+    ```
+    price ~ I(my_car_damage + other_car_damage)
+    ```
+
+## 2차항(제곱항) 추가
+
+*   **목적:** 곡선(비선형) 관계 모델링.
+*   **관계식:** `**` (거듭제곱 연산자)와 `I()` 함수 사용.
+    ```python
+    # y = w2*x^2 + w1*x + b 모형
+    y ~ I(x**2) + x
+    ```
+
+## 절편 없는 모형
+
+*   **목적:** 이론적으로 $x=0$ 일 때 $y=0$ 이어야 하는 경우 (예: 속도 0일 때 제동거리 0).
+*   **관계식:** `0 +` 추가.
+    ```python
+    y ~ 0 + x
+    ```
+*   **주의:** 절편 유무에 따라 $R^2$ 계산 방식 달라짐 (TSS 기준 다름). 직접 비교 어려움.
+
+## 절편 없는 이차함수 예시: 제동 거리
+
+```python
+# 제동거리(dist) ~ 속도(speed)
+# 데이터 로드
+sp = pd.read_excel('speed.xlsx')
+
+# 절편 없는 일차함수
+m1 = ols('dist ~ 0 + speed', data=sp).fit()
+
+# 절편 없는 이차함수 (speed^2 항 추가)
+m2 = ols('dist ~ 0 + I(speed**2) + speed', data=sp).fit()
+```
+
+## 절편의 이동 (Centering)
+
+*   **절편 의미:** 모든 독립변수 = 0 일 때 종속변수 예측치.
+*   **이동:** 독립변수 값에서 특정 상수(예: 평균, 기준 시점) 빼주면 절편 의미 바뀜.
+    *   `price ~ I(year - 2010)` → 절편은 `year = 2010` 일 때 `price` 예측치 의미.
+*   **효과:** 분석 결과 자체 영향 없으나, **절편 해석 용이**해질 수 있음.
+
+## 퀴즈
+
+
+- 외장 패널의 도막 밀착력 (adhesion)은 공정에서 건조 온도 (temperature), 라인 속도 (line_speed), 스프레이 압력 (spray_pressure)에 영향.
+
+|컬럼|설명|
+|---|---|
+|temperature|건조 온도(°C)|
+|line_speed|라인 속도(m/min)|
+|spray_pressure|스프레이 압력(bar)|
+|thickness|도막 두께(µm)|
+|adhesion|밀착력(MPa)|
+
+{/* 도막 두께와  */}
+
+다음 수식을 따르는 모형을 만들어보세요.
+
+$$
+\begin{align*}
+\text{adhesion} = & \text{temperature}^2 + \text{line\_speed}^2 + \text{spray\_pressure}^2 \\
+& + \text{temperature} + \text{line\_speed} + \text{spray\_pressure}
+\end{align*}
+$$
+
+{/* 도막 두께를 예측하는 모형 `thickness_model`과  */}
+그리고 이를 다음의 실험 데이터에 적용하여 계수를 추정하세요.
+
+- [생산 실험 데이터(coating_exp.xlsx)](https://github.com/euphoris/datasets/raw/refs/heads/master/coating_exp.xlsx)
+
+추정한 모형을 아래 조건에 적용하여 밀착력을 예측하세요.
+
+- [생산 조건 데이터(coating_cond.xlsx)](https://github.com/euphoris/datasets/raw/refs/heads/master/coating_cond.xlsx)
+
+다음 질문에 답하세요.
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="I-function" quizItems={
+[
+    {
+        "item_type": "checkbox",
+        "question": "밀착력 예측 모델의 관계식에 포함되는 표현을 모두 고르세요.",
+        "options": [
+            "I(temperature ** 2)",
+            "I(line_speed ** 2)",
+            "I(spray_pressure ** 2)",
+            "I(thickness ** 2)",
+            "I(adhesion ** 2)",
+            "temperature",
+            "line_speed",
+            "spray_pressure",
+            "thickness",
+            "adhesion"
+        ],
+        "hint": "위의 수식을 관계식으로 표현하세요",
+        "solution": [
+            "I(temperature ** 2)",
+            "I(line_speed ** 2)",
+            "I(spray_pressure ** 2)",
+            "temperature",
+            "line_speed",
+            "spray_pressure",
+        ],
+    },
+    {
+        "item_type": "number",
+        "question": "위의 관계식으로 회귀분석 했을 때 R제곱은 얼마입니까? (소수점 셋째 자리까지)",
+        "tolerance": 0.001,
+        "hint": "```\nexp = pd.read_excel(\'coating_exp.xlsx\')\nm = ols(\'adhesion ~ I(temperature ** 2) + I(line_speed ** 2) + I(spray_pressure ** 2) + temperature + line_speed + spray_pressure\', data=exp).fit()\nm.summary()\n```",
+        "solution": 0.992
+    },
+    {
+        "item_type": "radio",
+        "question": "위의 분석 결과를 coating_cond.xlsx 에 적용해보세요. 어떤 조건에서 밀착력이 가장 높게 예측됩니까?",
+        "options": [
+            "조건 0",
+            "조건 1",
+            "차이 없다"
+        ],
+        "hint": "```\ncond = pd.read_excel(\'coating_cond.xlsx\')\nm.predict(cond)\n```",
+        "solution": "조건 1",
+    },
+]
+} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
