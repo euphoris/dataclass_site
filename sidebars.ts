@@ -643,47 +643,52 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '5일차 - 고급 회귀 분석',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/variable-transformation',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/I-function',
-    //       label: 'I() 함수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/interaction',
-    //       label: '상호작용'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/logistic-regression',
-    //       label: '로지스틱 회귀 분석'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/confusion-matrix',
-    //       label: '혼동 행렬'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'stat/roc-auc',
-    //       label: '문턱값'
-    //     },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'stat/exercise-logistic-regression',
-    //     //   label: '종합 실습: 재무 건전성 분류'
-    //     // },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '5일차 - 고급 회귀 분석',
+      items: [
+        {
+          type: 'doc',
+          id: 'stat/variable-transformation',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'stat/I-function',
+          label: 'I() 함수'
+        },
+        {
+          type: 'doc',
+          id: 'stat/interaction',
+          label: '상호작용'
+        },
+        {
+          type: 'doc',
+          id: 'stat/logistic-regression',
+          label: '로지스틱 회귀 분석'
+        },
+        {
+          type: 'doc',
+          id: 'stat/confusion-matrix',
+          label: '혼동 행렬'
+        },
+        {
+          type: 'doc',
+          id: 'stat/roc-auc',
+          label: '문턱값'
+        },
+        {
+          type: 'doc',
+          id: 'stat/discussion',
+          label: '토론'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'stat/exercise-logistic-regression',
+        //   label: '종합 실습: 재무 건전성 분류'
+        // },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '5일차 - 텍스트 분석',
