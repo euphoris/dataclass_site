@@ -80,9 +80,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'statSidebar', // 사이드바 ID
+          sidebarId: 'doeSidebar', // 사이드바 ID
           position: 'left',
-          label: '통계', // 상단 메뉴
+          label: '실험계획법', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {

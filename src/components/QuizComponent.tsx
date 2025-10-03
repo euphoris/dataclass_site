@@ -477,7 +477,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
               <div tabIndex={0} className={cn(!isAnswered && "cursor-not-allowed")}>
                 <Button
                     onClick={handleNext}
-                    disabled={!isAnswered || currentIndex === totalQuestions - 1}
+                    // disabled={!isAnswered || currentIndex === totalQuestions - 1}
                     className={cn(isAnswered && currentIndex !== totalQuestions - 1 && "animate-pulse")}
                 >
                     다음

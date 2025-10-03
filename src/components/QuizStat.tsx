@@ -111,9 +111,9 @@ interface ItemChartData {
 }
 
 export function QuizResultVisualizer() {
-  const [supabaseUrl, setSupabaseUrl] = useState("");
-  const [supabaseKey, setSupabaseKey] = useState("");
-  const [quizId, setQuizId] = useState("");
+  const [supabaseUrl, setSupabaseUrl] = useState("https://xcwnivbdpliylnbmiust.supabase.co");
+  const [supabaseKey, setSupabaseKey] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhjd25pdmJkcGxpeWxuYm1pdXN0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM5MjI3NSwiZXhwIjoyMDcwOTY4Mjc1fQ.hnh9pURhacXgfWinuBTGvYMsglppt1IcKe8MzbWzHvI");
+  const [quizId, setQuizId] = useState("hypothesis-testing");
   const [hours, setHours] = useState(2);
   const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | null>(null);
 

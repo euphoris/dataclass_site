@@ -41,6 +41,26 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'doc',
+      id: 'doe/sampling',
+      label: '모집단과 표본'
+    },
+    {
+      type: 'doc',
+      id: 'doe/hypothesis-testing',
+      label: '통계적 가설 검정'
+    },
+    {
+      type: 'doc',
+      id: 'doe/types-of-error',
+      label: '오류의 종류'
+    },
+    {
+      type: 'doc',
+      id: 'doe/review1',
+      label: '1일차 복습'
+    },
+    {
+      type: 'doc',
       id: 'doe/sample-size',
       label: '표본 크기 결정'
     },
@@ -49,25 +69,25 @@ const sidebars: SidebarsConfig = {
       id: 'doe/nuisance-factor',
       label: '방해 요인'
     },
-    {
-      type: 'doc',
-      id: 'doe/model-selection',
-      label: '모형 선택'
-    },
     // {
     //   type: 'doc',
-    //   id: 'doe/review1',
-    //   label: '1일차 복습'
+    //   id: 'doe/model-selection',
+    //   label: '모형 선택'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'doe/interaction',
+    //   label: '교호 작용'
     // },
     {
       type: 'doc',
-      id: 'doe/interaction',
-      label: '교호 작용'
+      id: 'doe/full-factorial-design',
+      label: '완전 요인 배치법'
     },
     {
       type: 'doc',
-      id: 'doe/factorial-design',
-      label: '요인 배치법'
+      id: 'doe/fractional-factorial-design',
+      label: '부분 요인 배치법'
     },
     {
       type: 'doc',

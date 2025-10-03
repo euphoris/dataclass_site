@@ -60,9 +60,9 @@
 
 ```python
 import pyDOE3 as doe
-ccd_design = doe.ccdesign(3, center=(3, 3), alpha='r')
-# 3개의 연속형 요인(온도, 압력, 속도)에 대한 중심 합성 설계 생성
-# center=(3, 3) -> 요인점 3회, 축점 3회 중심점 반복
+doe.ccdesign(2, center=(3, 3), alpha='r')
+# 2개의 연속형 요인에 대한 중심 합성 설계 생성
+# center=(3, 3) -> 요인점 3회, 축점 3회 중심점 반복(보통 3~5회 반복)
 ```
 
 ## 박스-벤켄 설계 (Box-Behnken Design, BBD)
