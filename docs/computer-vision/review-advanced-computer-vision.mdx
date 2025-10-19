@@ -1,0 +1,117 @@
+# 컴퓨터 비전 심화 복습
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="review-advanced-computer-vision" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "아래에서 정밀도(precision) 공식을 골라보세요",
+        "options": [
+            "(TP + TN) / (TP + TN + FP + FN)",
+            "TP / (TP + FP)",
+            "TP / (TP + FN)",
+            "TN / (TN + FP)"
+        ],
+        "hint": "모델이 Positive라고 예측한 것들 중에서 실제로 Positive인 것의 비율입니다.",
+        "solution": "TP / (TP + FP)"
+    },
+    {
+        "item_type": "radio",
+        "question": "아래에서 재현도(recall) 공식을 골라보세요",
+        "options": [
+            "(TP + TN) / (TP + TN + FP + FN)",
+            "TP / (TP + FP)",
+            "TP / (TP + FN)",
+            "TN / (TN + FP)"
+        ],
+        "hint": "실제 Positive인 것들 중에서 모델이 Positive라고 예측한 것의 비율입니다. 민감도(Sensitivity)라고도 합니다.",
+        "solution": "TP / (TP + FN)"
+    },
+   {
+        "item_type": "checkbox",
+        "question": "문턱값을 높이면 높아지는 지표를 모두 고르세요",
+        "options": [
+            "정확도(accuracy)",
+            "정밀도(precision)",
+            "재현도(recall)",
+            "특이도(specificity)",
+            "F1"
+        ],
+        "hint": "문턱값을 높이면 모델이 Positive로 예측하는 기준이 더 엄격해집니다.",
+        "solution": [
+            "정밀도(precision)",
+            "특이도(specificity)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "이항 분류에서 단층신경망은 기하학적으로 무엇을 수행하는 것과 같습니까?",
+        "options": [
+            "데이터 공간을 하나의 직선 또는 평면으로 나누는 것",
+            "데이터 공간을 여러 개의 직선 또는 평면으로 나누는 것",
+            "데이터 공간을 하나의 곡선 또는 곡면으로 나누는 것",
+            "데이터 공간을 여러 개의 곡선 또는 곡면으로 나누는 것"
+        ],
+        "hint": "단층 신경망은 선형(linear) 경계면밖에 만들 수 없습니다.",
+        "solution": "데이터 공간을 하나의 직선 또는 평면으로 나누는 것"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "인공신경망에서 활성화 함수의 역할로 올바른 것을 모두 고르세요",
+        "options": [
+            "신경망이 복잡한 패턴을 표현할 수 있게 함",
+            "출력 값을 특정 범위로 조절",
+            "신경망을 포화시켜 성능을 높임"
+        ],
+        "hint": "활성화 함수는 선형 변환만으로는 표현할 수 없는 비선형성을 모델에 추가합니다.",
+        "solution": [
+            "신경망이 복잡한 패턴을 표현할 수 있게 함",
+            "출력 값을 특정 범위로 조절"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "다음 중 다항 분류의 출력에 사용하는 활성화 함수는?",
+        "options": [
+            "softmax",
+            "sigmoid",
+            "tanh",
+            "relu"
+        ],
+        "hint": " sigmoid 함수는 이진 분류에 주로 사용되며, softmax 함수는 다항 분류에 사용됩니다. thanh와 relu는 주로 은닉층에 사용됩니다.",
+        "solution": "softmax"
+    },
+    {
+        "item_type": "radio",
+        "question": "모형의 과대적합(overfitting)을 방지하기 위한 방법을 무엇이라고 합니까?",
+        "options": [
+            "정칙화(Regularization)",
+            "다층 신경망(Deep Neural Network)",
+            "활성화 함수(Activation Function)",
+            "경사하강법(Gradient Descent)"
+        ],
+        "hint": "정칙화는 모델의 복잡성을 줄여 과대적합을 방지합니다.",
+        "solution": "정칙화(Regularization)"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "합성곱 신경망의 특징으로 올바른 것을 모두 고르세요",
+        "options": [
+            "이미지의 크기가 커지면 파라미터가 폭증한다",
+            "작은 크기의 필터를 반복 적용하여 부분적인 패턴을 인식한다",
+            "사용하는 필터는 미리 설계한 것을 사용한다",
+            "필터를 적용하더라도 채널의 수는 유지된다",
+            "한 레이어에서는 한 가지의 필터만 사용한다"
+        ],
+        "hint": "합성곱 신경망은 이미지의 지역적인 특징을 효과적으로 학습하기 위해 가중치를 공유하는 방식을 사용합니다.",
+        "solution": [
+            "작은 크기의 필터를 반복 적용하여 부분적인 패턴을 인식한다"
+        ]
+    },
+]    
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

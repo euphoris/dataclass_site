@@ -1,0 +1,79 @@
+# OCR
+
+## 광학 문자 인식 Optical Character Recognition
+
+- 과정
+    - 이미지 전처리
+    - 텍스트 위치 추정
+    - 문자 분리 / 텍스트 추출
+    - 문자 인식
+    - 후처리
+- 텍스트 추출의 어려움
+    - 다양한 크기, 색상, 방향 등
+    - 여러 개의 글자를 하나의 단어로 인식하는 문제
+    - 하나의 단어를 여러 개의 글자로 인식하는 문제
+- 다른 이미지 인식 과제와 달리 문자의 종류는 제한되어 있음
+- 별도로 개발할 필요 없이 오픈소스 라이브러리만으로 해결할 수 있음
+
+## PaddleOCR
+
+- 중국 Baidu에서 개발한 딥러닝 기반 OCR 라이브러리
+- 한국어 포함 80개 언어 지원
+- 2025 현재 기준 가장 성능이 높음(PaddleOCRVL)
+
+설치
+```sh
+!pip install paddlepaddle paddleocr
+```
+
+불러오기
+```python
+from paddleocr import PaddleOCR
+ocr = PaddleOCR(
+    use_doc_orientation_classify=False, # 문서 방향 분류 사용 안 함
+    use_doc_unwarping=False, # 문서 왜곡 보정 사용 안 함
+    use_textline_orientation=False, # 텍스트 라인 방향 분류 사용 안 함
+    lang='korean') # 언어: 한국어 (영어는 'en')
+```
+이미지 처리
+```python
+result = ocr.predict(input="blueprint.jpg")
+```
+
+결과
+```python
+res = result[0] # 첫 번째 이미지 결과
+res['rec_texts'] # 인식된 텍스트
+res['rec_polys'] # 텍스트별 폴리곤(다각형)의 꼭지점 좌표
+res['rec_boxes'] # 텍스트별 박스의 왼쪽 위, 오른쪽 아래 꼭지점 좌표
+```
+
+시각화
+```python
+res.save_to_img("output")
+```
+
+수동 시각화
+```python
+from PIL import Image, ImageDraw, ImageFont
+try:
+    # 한글 출력을 위해 나눔고딕과 같은 한글 폰트가 필요합니다.
+    font = ImageFont.truetype("NanumGothic.ttf", 20)
+except IOError:
+    print("NanumGothic.ttf 폰트를 찾을 수 없습니다. 기본 폰트를 사용합니다.")
+    font = ImageFont.load_default()
+
+img = Image.open('blueprint.jpg').convert("RGB")
+draw = ImageDraw.Draw(img)
+
+for text, poly in zip(res['rec_texts'], res['rec_polys']):
+    # 텍스트를 감싸는 다각형(폴리곤)을 파란색으로 그립니다.
+    # PIL의 polygon은 (x1,y1), (x2,y2)... 형태의 튜플 리스트를 인자로 받습니다.
+    draw.polygon([tuple(p) for p in poly], outline="#0000FF", width=2)
+    
+    # 인식된 텍스트를 폴리곤의 첫 번째 꼭짓점 위치에 빨간색으로 씁니다.
+    # 텍스트가 박스 안쪽에 그려지도록 위치를 약간 조정할 수 있습니다.
+    text_position = tuple(poly[0])
+    draw.text((text_position[0] + 5, text_position[1] + 5), text, fill="#FF0000", font=font)
+img
+```

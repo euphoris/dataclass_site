@@ -1,0 +1,194 @@
+# 이미지 로딩
+
+
+## Dog vs Cat 데이터셋
+*   캐글(데이터 사이언스 경진대회 플랫폼) 데이터
+*   고양이와 강아지를 사진으로 구분하는 문제
+*   대회 1등 정확도가 98.9%
+*   https://storage.googleapis.com/mledu-datasets/cats_and_dogs_filtered.zip
+*   cats_and_dogs_filtered
+    *   train
+        *   cats
+        *   dogs
+    *   validation
+        *   cats
+        *   dogs
+
+## 전처리
+```python
+from torchvision import transforms
+IMAGE_SIZE = 224
+transform = transforms.Compose([
+    transforms.Resize((256, 256)), # 이미지마다 크기가 다르므로 통일
+    transforms.CenterCrop((IMAGE_SIZE, IMAGE_SIZE)), # 가운데만 잘라냄
+    transforms.ToTensor(),
+    transforms.Lambda(lambda x: (x / 127.5) - 1)
+])
+```
+*   이미지 데이터는 0~255로 밝기를 표현
+*   신경망에서 사용하는 시그모이드 등의 함수는 지나치게 큰 값이 들어오면 경사가 0에 가까워져서 학습이 잘 되지 않음
+*   -1~+1 범위로 재조정
+
+## 데이터 로딩
+```python
+# 데이터셋
+from torchvision.datasets import ImageFolder
+train_dataset = ImageFolder(root='cats_and_dogs_filtered/train', transform=transform)
+val_dataset = ImageFolder(root='cats_and_dogs_filtered/validation', transform=transform)
+
+# 로딩
+from torch.utils.data import DataLoader
+BATCH_SIZE = 32
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+```
+
+## 모델 정의
+```python
+model = keras.Sequential([
+    keras.Input(shape=(3, IMAGE_SIZE, IMAGE_SIZE)), # (Channels, Height, Width)
+    keras.layers.Conv2D(32, (3, 3), activation='relu', data_format='channels_first'),
+    keras.layers.MaxPooling2D((2, 2), data_format='channels_first'),
+    keras.layers.Flatten(),
+    keras.layers.Dense(512, activation='relu'),
+    keras.layers.Dense(1, activation='sigmoid')
+])
+```
+
+Keras는 기본적으로 Height, Width, Channels 순으로 입력
+PyTorch는 Channels가 먼저 나오므로 데이터 포맷을 그에 맞춰줌
+
+## 훈련
+
+```python
+model.compile(
+    optimizer=keras.optimizers.SGD(learning_rate=0.001),
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+model.fit(
+    train_loader,
+    epochs=1,
+    validation_data=val_loader
+)
+```
+
+## 이미지 한 장 입력
+
+이미지 한 장 불러오기
+```python
+from PIL import Image
+image = Image.open('cats_and_dogs_filtered/validation/cats/cat.2000.jpg')
+image # 이미지 보기
+```
+
+변환
+```python
+x = transform(image)
+x.shape # 채널, 높이, 폭
+```
+
+모델에 입력
+```python
+batch = x.unsqueeze(0) # 차원을 추가 (expand_dims와 같음)
+model.predict(batch)
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="image-loading" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "이미지 픽셀 값을 0~255에서 -1~+1 범위로 재조정하는 주된 이유는 무엇입니까?",
+        "options": [
+            "이미지 처리 속도를 높이기 위해",
+            "신경망 학습이 잘 되도록 경사가 0에 가까워지는 것을 방지하기 위해",
+            "이미지의 색상을 흑백으로 바꾸기 위해",
+            "모델의 파라미터 개수를 줄이기 위해"
+        ],
+        "hint": "시그모이드와 같은 활성화 함수는 입력값이 너무 크거나 작으면 기울기가 거의 0이 됩니다.",
+        "solution": "신경망 학습이 잘 되도록 경사가 0에 가까워지는 것을 방지하기 위해"
+    },
+    {
+        "item_type": "radio",
+        "question": "0~255 범위의 픽셀 값 x를 x / 127.5 - 1을 하면 어떤 범위가 되나요?",
+        "options": [
+            "0 ~ 2",
+            "0 ~ 1",
+            "-1 ~ 0",
+            "-1 ~ 1"
+        ],
+        "hint": "x에 0과 255를 각각 대입해서 계산해보세요.",
+        "solution": "-1 ~ 1"
+    },
+    {
+        "item_type": "radio",
+        "question": "PyTorch에서 'cats', 'dogs'와 같이 클래스별로 폴더가 나뉜 이미지 데이터셋을 불러올 때 가장 적합한 클래스는 무엇입니까?",
+        "options": [
+            "DataLoader",
+            "ImageLoader",
+            "Dataset",
+            "ImageFolder"
+        ],
+        "hint": "폴더 구조 자체를 데이터셋으로 인식하여 레이블을 자동으로 생성해주는 편리한 클래스가 있습니다.",
+        "solution": "ImageFolder"
+    },
+    {
+        "item_type": "radio",
+        "question": "PyTorch 데이터 로더가 (채널, 높이, 너비) 순서의 데이터를 반환할 때, Keras Conv2D 레이어에서 설정해야 하는 인자는 무엇입니까?",
+        "options": [
+            "data_format='channels_last'",
+            "data_format='channels_first'",
+            "input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3)",
+            "padding='same'"
+        ],
+        "hint": "Keras의 기본값과 다른 PyTorch의 데이터 순서를 맞춰주어야 합니다.",
+        "solution": "data_format='channels_first'"
+    },
+    
+    {
+        "item_type": "short",
+        "question": "torchvision.transforms에서 이미지 크기를 변경하는 함수는?",
+        "options": [
+            "Resize",
+            "Crop",
+            "Scale",
+            "Transform"
+        ],
+        "hint": "이미지 크기를 재조정한다는 의미의 영어 단어를 생각해보세요.",
+        "solution": "Resize"
+    },
+    {
+        "item_type": "radio",
+        "question": "고양이와 강아지를 분류하는 이항 분류 문제에 가장 적합한 손실 함수는 무엇입니까?",
+        "options": [
+            "categorical_crossentropy",
+            "mse",
+            "binary_crossentropy",
+            "sparse_categorical_crossentropy"
+        ],
+        "hint": "두 개의 클래스 중 하나를 맞추는 문제에 사용되는 손실 함수입니다.",
+        "solution": "binary_crossentropy"
+    },
+    {
+        "item_type": "radio",
+        "question": "학습된 모델에 이미지 한 장을 입력하여 예측할 때, `x.unsqueeze(0)`를 사용하는 이유는 무엇입니까?",
+        "options": [
+            "이미지 해상도를 높이기 위해",
+            "모델이 처리할 수 있도록 배치(batch) 차원을 추가하기 위해",
+            "채널의 순서를 바꾸기 위해",
+            "예측 속도를 빠르게 하기 위해"
+        ],
+        "hint": "딥러닝 모델은 일반적으로 (배치 크기, 채널, 높이, 너비) 형태의 입력을 기대합니다.",
+        "solution": "모델이 처리할 수 있도록 배치(batch) 차원을 추가하기 위해"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

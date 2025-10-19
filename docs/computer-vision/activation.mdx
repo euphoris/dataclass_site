@@ -50,4 +50,68 @@ $$
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/3jrKYY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="938" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 활성화 함수"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="activation" quizItems={
+    [
+    {
+        "item_type": "checkbox",
+        "question": "인공신경망에서 활성화 함수의 역할로 올바른 것을 모두 고르세요",
+        "options": [
+            "신경망이 복잡한 패턴을 표현할 수 있게 함",
+            "출력 값을 특정 범위로 조절",
+            "신경망을 포화시켜 성능을 높임"
+        ],
+        "hint": "활성화 함수는 선형 변환만으로는 표현할 수 없는 비선형성을 모델에 추가합니다.",
+        "solution": [
+            "신경망이 복잡한 패턴을 표현할 수 있게 함",
+            "출력 값을 특정 범위로 조절"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "은닉층에서 sigmoid 함수의 특징을 모두 고르세요",
+        "options": [
+            "사라지는 경사 문제가 심함",
+            "모든 파라미터가 한 방향으로만 바뀜",
+            "출력값이 -1에서 +1 범위임"
+        ],
+        "hint": "시그모이드 함수의 출력값은 항상 0보다 크고, 양 극단에서는 기울기가 0에 가깝습니다.",
+        "solution": [
+            "사라지는 경사 문제가 심함",
+            "모든 파라미터가 한 방향으로만 바뀜"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "은닉층에서 tanh 함수의 특징을 모두 고르세요",
+        "options": [
+            "사라지는 경사 문제가 심함",
+            "모든 파라미터가 한 방향으로만 바뀜",
+            "출력값이 -1에서 +1 범위임"
+        ],
+        "hint": "tanh 함수는 시그모이드 함수를 변형하여 출력값의 중심을 0으로 맞춘 형태입니다.",
+        "solution": [
+            "사라지는 경사 문제가 심함",
+            "출력값이 -1에서 +1 범위임"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "은닉층에서 ReLU 함수의 특징을 모두 고르세요",
+        "options": [
+            "사라지는 경사 문제가 심함",
+            "모든 파라미터가 한 방향으로만 바뀜",
+            "출력값이 -1에서 +1 범위임"
+        ],
+        "hint": "ReLU 함수는 입력값이 0보다 작으면 0을, 0보다 크면 입력값을 그대로 출력합니다.",
+        "solution": [
+            "모든 파라미터가 한 방향으로만 바뀜"
+        ]
+    }
+    ]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

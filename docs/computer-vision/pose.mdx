@@ -1,0 +1,107 @@
+# 자세 추정
+
+## 자세 추정
+* 모델
+```python
+from ultralytics import YOLO
+model = YOLO('yolo11n-pose.pt')
+```
+* 이미지 불러오기
+```python
+import cv2 as cv
+img = cv.imread('bus_stop.jpg')
+```
+* 자세 추정
+```python
+results = model(img)
+```
+
+## 키포인트 (Keypoints)
+```python
+keypoint_names = [                                              
+    "Nose", "Left Eye", "Right Eye", "Left Ear", "Right Ear",
+    "Left Shoulder", "Right Shoulder", "Left Elbow", "Right Elbow",
+    "Left Wrist", "Right Wrist", "Left Hip", "Right Hip",
+    "Left Knee", "Right Knee", "Left Ankle", "Right Ankle"
+]
+```
+
+## 자세 추정 결과 시각화
+```python
+result = results[0]
+kpts = result.keypoints.data.cpu().numpy() # 사람별, 키포인트별, 좌표
+img_bbox = Image.fromarray(cv.cvtColor(img, cv.COLOR_BGR2RGB))
+draw = ImageDraw.Draw(img_bbox)
+
+for kpt in kpts:
+    for j in range(len(kpt)): # 17개 키포인트에 대해
+        x, y, conf = kpt[j]
+        if conf > 0.5:
+            draw.circle((x, y), radius=3, fill="#00FF00") # 원
+            draw.text((x, y), f'{keypoint_names[j]}', font=font, fill="#00FF00") # 키포인트 이름
+
+img_bbox
+```
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="pose" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "Ultralytics 라이브러리에서 자세 추정(pose estimation)을 위해 사용하는 사전 학습된 YOLO 모델 파일명은 무엇입니까?",
+        "options": [
+            "yolo11n.pt",
+            "yolo11n-obb.pt",
+            "yolo11n-pose.pt",
+            "yolo11n-seg.pt"
+        ],
+        "hint": "자세를 의미하는 영어 단어 'pose'가 파일명에 포함되어 있습니다.",
+        "solution": "yolo11n-pose.pt"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "YOLO 자세 추정 모델의 결과에서 각 키포인트(keypoint)가 가지고 있는 정보는 무엇입니까? (모두 고르세요)",
+        "options": [
+            "x 좌표",
+            "y 좌표",
+            "신뢰도 점수(confidence)",
+            "키포인트 이름"
+        ],
+        "hint": "코드에서 `x, y, conf = kpt[j]` 부분을 참고하세요. 키포인트 이름은 별도의 리스트로 관리됩니다.",
+        "solution": [
+            "x 좌표",
+            "y 좌표",
+            "신뢰도 점수(confidence)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "자세 추정 결과를 시각화할 때 `if conf > 0.5:`와 같이 신뢰도(confidence) 임계값을 사용하는 주된 이유는 무엇입니까?",
+        "options": [
+            "탐지 속도를 높이기 위해",
+            "모델이 불확실하게 예측한 키포인트는 제외하고 신뢰할 수 있는 것만 표시하기 위해",
+            "이미지의 해상도를 높이기 위해",
+            "모든 키포인트의 색상을 바꾸기 위해"
+        ],
+        "hint": "신뢰도 점수가 낮은 키포인트는 잘못된 위치일 가능성이 높습니다.",
+        "solution": "모델이 불확실하게 예측한 키포인트는 제외하고 신뢰할 수 있는 것만 표시하기 위해"
+    },
+    {
+        "item_type": "radio",
+        "question": "YOLO 자세 추정 결과에서 `result.keypoints.data`의 데이터 구조에 대한 설명으로 가장 올바른 것은 무엇입니까?",
+        "options": [
+            "이미지에 있는 모든 키포인트의 목록",
+            "탐지된 사람별로, 각 사람의 키포인트(17개) 목록",
+            "가장 신뢰도가 높은 키포인트 하나",
+            "이미지의 전체적인 밝기 정보"
+        ],
+        "hint": "시각화 코드에서 `for kpt in kpts:` 와 `for j in range(len(kpt)):` 처럼 이중 반복문을 사용하는 이유를 생각해보세요.",
+        "solution": "탐지된 사람별로, 각 사람의 키포인트(17개) 목록"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

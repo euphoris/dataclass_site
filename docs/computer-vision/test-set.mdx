@@ -19,36 +19,17 @@
     *   → underfitting이 되었을 가능성이 높음
     *   → 모형의 복잡도를 높이는 방향으로 구조/하이퍼파라미터를 조정
 
-## 테스트 데이터 다운로드
+## 테스트
+테스트 데이터 뽑기
 ```python
-test_dataset = datasets.MNIST(
-    root='./data',
-    train=False, # 테스트용 데이터셋(이 부분만 달라짐)
-    download=True,
-    transform=transforms.ToTensor()
-)
-
-binary_test_dataset = torchutils.BinarySubset(test_dataset, 0, 1)
+x_test_binary, y_test_binary = filter_binary(x_test, y_test, 0, 1)
 ```
 
-## 테스트 데이터 평가
+평가
 ```python
-test_loader = DataLoader(
-    binary_test_dataset, # 테스트 데이터
-    batch_size=BATCH_SIZE, # 32개씩
-    shuffle=False) # 섞지 말고
-
-trainer.test(model, test_loader)
+model.evaluate(x_test_binary, y_test_binary)
 ```
 
-## 파라미터
-```python
-weight = model.linear.weight.data # Linear 레이어의 가중치
-w = weight.reshape(28, 28).detach().cpu().numpy() # 가중치를 28x28 이미지 형태로
-plt.imshow(w, cmap='gray') # 시각화
-```
-*   흰색: 1로 판단하는 데 영향을 주는 픽셀
-*   검은색: 0으로 판단하는 데 영향을 주는 픽셀
 
 ## 직접 손글씨 입력해보기
 *   그림판에서 직접 손글씨 입력
@@ -62,14 +43,9 @@ plt.imshow(w, cmap='gray') # 시각화
 ## 손글씨 이미지 불러오기
 ```python
 import cv2 as cv
-x = cv.imread('hand.png', cv.IMREAD_GRAYSCALE) # 이미지 불러오기
-
-# 모형에 입력할 때는 (이미지 장수, 세로 길이, 가로 길이) 형태여야 함
-# 한 장 짜리 이미지의 경우 0번 차원을 추가해야 함
-x = np.expand_dims(x, 0) # 차원 추가 (28, 28) → (1, 28, 28)
-x = torch.from_numpy(x).float() # 텐서로 변환
-x = x / 255.0 # 정규화 [0~255] → [0~1]
-model(x) # 모형 예측
+x = cv.imread('data/hand.png', cv.IMREAD_GRAYSCALE) # 이미지 불러오기
+x = np.expand_dims(x, axis=0) # 배치 차원 추가
+model.predict(x) # 예측
 ```
 
 ## 차원의 추가 방법들
@@ -88,6 +64,56 @@ model(x) # 모형 예측
     x.reshape(1, 28, 28) # 모양을 1, 28, 28로 변경
     ```
 
+
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mYb2YB?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="892" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 테스트"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="test-set" quizItems={
+[
+    {
+        "item_type": "checkbox",
+        "question": "과대적합에 대한 설명으로 올바른 것을 모두 고르세요",
+        "options": [
+            "실제 패턴보다 모형이 복잡할 때 생긴다",
+            "training set에서만 성능이 높게 나온다",
+            "test set에서 성능이 높게 나온다",
+            "모형의 복잡도를 낮추는 방향으로 구조나 파라미터를 조정한다"
+        ],
+        "hint": "모델이 학습 데이터의 노이즈까지 암기하여 새로운 데이터에 대한 일반화 성능이 떨어지는 현상입니다.",
+        "solution": [
+            "실제 패턴보다 모형이 복잡할 때 생긴다",
+            "training set에서만 성능이 높게 나온다"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "파일에서 불러온 단일 이미지를 모형에 입력하기 전에 배치(batch) 차원을 추가해주는 이유는 무엇입니까?",
+        "options": [
+            "이미지의 해상도를 높이기 위해",
+            "모델이 처리할 수 있는 입력 형태를 맞추기 위해",
+            "이미지를 흑백으로 변환하기 위해",
+            "모델의 학습 속도를 높이기 위해"
+        ],
+        "hint": "딥러닝 모델은 일반적으로 한 번에 한 장이 아닌 여러 장의 이미지를 묶음(batch)으로 처리하도록 설계되었습니다.",
+        "solution": "모델이 처리할 수 있는 입력 형태를 맞추기 위해"
+    },
+    {
+        "item_type": "radio",
+        "question": "분류 모델에서 model.predict()의 결과값이 의미하는 것은 무엇입니까?",
+        "options": [
+            "모델의 최종 학습 정확도",
+            "입력된 데이터가 클래스 0에 속할 확률값",
+            "입력된 데이터가 클래스 1에 속할 확률값",
+            "모델 학습이 완료되었음을 알리는 신호",
+            "가장 확률이 높은 단 하나의 클래스 이름"
+        ],
+        "hint": "모델은 예측 결과를 확률의 형태로 출력하며, 가장 높은 확률을 가진 클래스를 최종 예측으로 선택합니다.",
+        "solution": "입력된 데이터가 클래스 1에 속할 확률값"
+    }
+]    
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

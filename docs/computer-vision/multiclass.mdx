@@ -2,50 +2,25 @@
 
 ## 다항 분류 모형
 ```python
-from torchmetrics.classification import MulticlassAccuracy
-
-class MultiClassModel(pl.LightningModule):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(28*28, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 10)
-        self.accuracy = MulticlassAccuracy(10)
-
-    def forward(self, x):
-        x = x.view(-1, 28*28)
-        x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
-
-    def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
-        return optimizer
-
-    def training_step(self, batch, batch_idx):
-        images, labels = batch
-        outputs = self(images)
-        loss = F.cross_entropy(outputs, labels)
-        self.log('loss', loss)
-        accuracy = self.accuracy(outputs, labels)
-        self.log('accuracy', accuracy)
-        return loss
-
-    def test_step(self, batch, batch_idx):
-        return self.training_step(batch, batch_idx)
+model = keras.models.Sequential([
+    keras.layers.Rescaling(1/255),
+    keras.layers.Flatten(),
+    keras.layers.Dense(16, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
+model.compile(optimizer=keras.optimizers.SGD(
+    learning_rate=0.001), 
+    loss='sparse_categorical_crossentropy', 
+    metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=5, batch_size=32)
 ```
 
 ## 예측
-*   로짓 계산
-    ```python
-    x, y = train_dataset[0]
-    logits = model(x)
-    ```
-*   로짓을 소프트맥스 함수에 통과시켜 확률로 변환
-    ```python
-    probs = F.softmax(logits)
-    ```
+*  확률 계산
+```python
+y_prob = model.predict(x_test)
+y_prob.shape
+```
 
 ## 소프트맥스 함수 softmax
 *   이항분류에서는 로지스틱 함수로 -∞ ~ +∞의 값을 0~1 범위로 변환
@@ -53,7 +28,7 @@ class MultiClassModel(pl.LightningModule):
 *   여러 개의 입력을 받아, 같은 개수를 출력
 *   모든 출력의 합은 1, 각 출력의 범위는 0~1
 ```python
-F.softmax(torch.tensor([-1., .5, 2.]), dim=0) == [0.039, 0.175, 0.796]
+keras.activations.softmax(np.array([-1, 0.5, 2.0])) == [0.039, 0.175, 0.796]
 ```
 
 -   시그모이드는 소프트맥스의 특수한 경우
@@ -61,278 +36,81 @@ F.softmax(torch.tensor([-1., .5, 2.]), dim=0) == [0.039, 0.175, 0.796]
     -   셋 이상 중에 하나로 예측할 때: softmax
 ```python
 x = 1.0
-F.sigmoid(torch.tensor([x]))) == F.softmax(torch.tensor([0.0, x]), dim=0)
+keras.activations.sigmoid(x)
+keras.activations.softmax(np.array([0.0, 1.0]))
 ```
 
 $$
 y_j = \frac{e^{x_j}}{\sum_{i} e^{x_i}}
 $$
 
+## 소프트맥스 함수가 없는 모형
+```python
+model = keras.models.Sequential([
+    keras.layers.Rescaling(1/255),
+    keras.layers.Flatten(),
+    keras.layers.Dense(16, activation='relu'),
+    keras.layers.Dense(10) # activation='softmax'가 없음
+])
+model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.001), 
+              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=1, batch_size=32)
+```
+
+로짓 계산
+
+```python
+logits = model.predict(x_test)
+logits.shape  # 10000, 10
+logits[0] # 0번째 샘플의 로짓
+keras.activations.softmax(logits[0]) # 0번째 샘플의 확률
+```
+
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mJry4K?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="766" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 다항 분류"></iframe>
 
-{/* 
-# 다항 분류
-
-그 다음에 우리가 지금까지 이미지를 이항으로만 분류를 했는데 실제로 많은 경우에 이항분류만 해도 됩니다
-
-예를 들면 부품이다
-
-그럼 정상이거나 분량이거나 둘 중에 하나지 10개 20개 이렇게 분류해야 되는 경우는 잘 없는데 분류를 해야 되는 경우도 있죠
-
-예를 들어 한 개 라인에서 여러 개 부품을 생산을 한다던가 그래서 마지막에 부품을 종류별로 나사는 이쪽으로 볼트는 저쪽으로 이렇게 보낸다던가 이러면 다항분류가 필요하게 됩니다
-
-여러 개로 분류하는 거는 사실 굉장히 간단한데 평가하는 기준을 Accuracy를 바꿔 주시면 되고 그다음에 출력을 맨 마지막 출력을 여기에 10개 이렇게 돼 있는데 카테고리 개수만큼 하시면 돼요
-
-그래서 약간 헷갈리는 부분인데 이항분류에서는 한 개만 출력하거든요
-
-그런데 다항분류에서는 한 개만 출력하거든요
-
-그런데 다항분류에서는 우리가 10개를 구분하고 싶다
-
-그러면 10개를 출력합니다
-
-그러면 아니 확률이니까 9개만 출력해도 나머지 하나는 100%에서 나머지 9개의 합계를 빼면 자동으로 나오는 거니까 수학적으로는 9개만 있으면 되는 거 아니에요?
-
-맞습니다
-
-맞는데 그렇게 굳이 하지 않고 그냥 10개를 다 계산을 합니다
-
-그래서 사실은 이항분류도 그냥 다항분류로 풀면 돼요
-
-어떻게 하면 되냐면 다항분류에서 2개를 출력하게 하면 됩니다
-
-그래서 이항분류도 그냥 다항분류로 풀면 돼요
-
-결과가 실제로 똑같아요 굳이 그렇게 하지 않는 이유는 대단한 건 아니고 그냥 계산을 굳이 그렇게 할 필요가 없어서 그럼
-
-다항분류에서는 왜 굳이 10개를 합니까?
-
-10개를 계산하는 게 더 쉬워요
-
-한 방에 계산이 됩니다
-
-10개는 9개 계산한 다음에 다시 더해서 1에서 빼려면 그게 더 번잡하거든요
-
-그래서 다항분류에서는 카테고리 수만큼 다 출력하게 맨 끝에 숫자를 우리가 출력하려는 카테고리 개수에다가 맞춰주시면 됩니다
-
-그래서 다항분류에서는 카테고리 수만큼 다 출력하게 그래서 다항분류에서는 카테고리 수만큼 다 출력하게 맞춰주시면 돼요
-
-그것만 신경 쓰시면 나머지는 특별히 어려운 게 없고 그다음에 우리가 계속 지금까지 손실을 BC를 쓰고 있었는데 이거를 CE로 크로스 엔트로피로 바꿔주시면 됩니다
-
-그래서 그 정도만 신경을 쓰시면 나머지는 똑같아요
-
-이런 데 코드 보시면 이거 앞에 했던 거랑 다 똑같거든요
-
-다 똑같고 보시면 바뀌는 부분은 두 개밖에 없다 출력의 사이즈랑 그다음에 손실함수 종류 이것만 바뀌게 됩니다
-
-난리나다 그래서 이것도 코드 주의하셔야 되는 게 여기 슬라이드 보시면 1, 2, 3 이렇게 돼 있는데 이거 한 셀에다가 다 합쳐서 해주셔야 돼요
-
-이거를 한 셀에다가 다 합쳐서 해주셔야 돼요
-
-이거를 따로따로 하시는 게 아닙니다
-
-무슨 말이냐면 아이고 시끄러워라 요거를 페이지가 나눠져 있다고 따로따로 이렇게 하시면 안 되고 다 한 셀에다가 이렇게 합쳐주세요 이렇게 한 셀에다 합쳐주시면 되고 그 다음에 이제 우리가 이제 파이너리 데이터가 아니라 그냥 트레인 데이터셋 전체를 다 넣어주면 됩니다
-
-그래서 이제 코드가 더 간단해졌는데 우리가 이때까지는 원래 다항으로 돼 있는 데이터를 억지로 이항으로 만들었기 때문에 코드가 되게 지저분했는데 사실은 원래 다항 데이터기 때문에 그냥 데이터 로더에다가 그냥 통째로 넣으면 됩니다
-
-무슨 바이너리 어쩌고 이런 거 이제 필요 없어요
-
-그래서 데이터 로더에다가 우리 데이터셋 넣어주고 32개씩 넣어라 섞어서 이렇게 해가지고 트레이너 핏 하시면 됩니다
-
-그래서 여기 훈련 4줄 복사해서 돌리시면 되겠죠
-
-
-
-```python copy
-from torchmetrics.classification import MulticlassAccuracy
-
-class MultiClassModel(pl.LightningModule):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(28*28, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 10)
-        self.accuracy = MulticlassAccuracy(10)
-    def forward(self, x):
-        x = x.view(-1, 28*28)
-        x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        x = self.fc3(x)  # 활성화 함수 없음
-        return x
-
-    def process_batch(self, batch):
-        images, labels = batch
-        outputs = self(images)  # 모형은 확률이 아닌 로짓(logit)을 출력
-        loss = F.cross_entropy(outputs, labels)
-        return outputs, loss
-    def training_step(self, batch):
-        outputs, loss = self.process_batch(batch)
-        self.log('train_loss', loss)
-        return loss
-
-    def test_step(self, batch):
-        outputs, loss = self.process_batch(batch)
-        _, labels = batch
-        accuracy = self.accuracy(outputs, labels)
-        self.log('test_accuracy', accuracy)
-        return loss
-    
-    def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
-        return optimizer
-
-
-```
-
-
-
-```python copy
-# 훈련
-model = MultiClassModel()
-trainer = Trainer(max_epochs=3, default_root_dir=log_dir)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-trainer.fit(model, train_loader)
-
-```
-
-:::info[output]
-```
-GPU available: False, used: False
-TPU available: False, using: 0 TPU cores
-HPU available: False, using: 0 HPUs
-
-  | Name     | Type               | Params | Mode 
---------------------------------------------------------
-0 | fc1      | Linear             | 100 K  | train
-1 | fc2      | Linear             | 8.3 K  | train
-2 | fc3      | Linear             | 650    | train
-3 | accuracy | MulticlassAccuracy | 0      | train
---------------------------------------------------------
-109 K     Trainable params
-0         Non-trainable params
-109 K     Total params
-0.438     Total estimated model params size (MB)
-4         Modules in train mode
-0         Modules in eval mode
-
-```
-
-```
-Training: |                                                                                      | 0/? [00:00<…
-```
-
-```
-`Trainer.fit` stopped: `max_epochs=3` reached.
-
-```
-
-:::
-
-
-
-```python copy
-# 테스트
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-trainer.test(model, test_loader)
-
-```
-
-:::info[output]
-```
-Testing: |                                                                                       | 0/? [00:00<…
-```
-
-```
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃[1m [0m[1m       Test metric       [0m[1m [0m┃[1m [0m[1m      DataLoader 0       [0m[1m [0m┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│[36m [0m[36m      test_accuracy      [0m[36m [0m│[35m [0m[35m   0.8683642745018005    [0m[35m [0m│
-└───────────────────────────┴───────────────────────────┘
-
-```
-
-```
-[{'test_accuracy': 0.8683642745018005}]
-```
-
-:::
-
-
-
-```python copy
-x, y = train_dataset[0]
-y
-```
-
-:::info[output]
-```
-9
-```
-
-:::
-
-
-
-```python copy
-logits = model(x)
-```
-
-
-
-```python copy
-probs = F.softmax(logits)
-```
-
-:::info[output]
-```
-C:\Users\user\AppData\Local\Temp\ipykernel_3960\620413588.py:1: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
-  probs = F.softmax(logits)
-
-```
-
-:::
-
-
-
-```python copy
-probs
-```
-
-:::info[output]
-```
-tensor([[1.0032e-08, 2.7575e-09, 4.6378e-09, 6.3175e-08, 2.8672e-08, 1.0074e-04,
-         1.0353e-08, 2.2905e-03, 9.0654e-08, 9.9761e-01]],
-       grad_fn=<SoftmaxBackward0>)
-```
-
-:::
-
-
-
-```python copy
-import numpy as np
-F.sigmoid(torch.tensor([2]))
-```
-
-:::info[output]
-```
-tensor([0.8808])
-```
-
-:::
-
-
-
-```python copy
-F.softmax(torch.tensor([0.0, 2.0]), dim=0)
-```
-
-:::info[output]
-```
-tensor([[0.1192, 0.8808],
-        [0.1192, 0.8808]])
-```
-
-::: */}
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="multiclass" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "소프트맥스 함수에 입력하면 확률이 되는 값을 무엇이라고 합니까?",
+        "options": [
+            "logit",
+            "odds",
+            "likelihood",
+            "score"
+        ],
+        "hint": "신경망의 출력층에서 계산된, 정규화되지 않은 점수입니다.",
+        "solution": "logit"
+    },
+    {
+        "item_type": "radio",
+        "question": "1, 2, 3을 소프트맥스 함수에 입력했을 때 3에 해당하는 확률은 얼마입니까?",
+        "options": [
+            "약 9%",
+            "약 24%",
+            "약 67%",
+            "약 90%"
+        ],
+        "hint": "keras.activations.softmax(np.array([1.0,2.0,3.0]))",
+        "solution": "약 67%"
+    },
+    {
+        "item_type": "radio",
+        "question": "출력이 1개이고 시그모이드를 활성화 함수로 사용하는 이항 분류 모델을 소프트맥스 함수를 활성화 함수로 사용하는 다항 분류 모델로 바꾸려면 출력의 개수를 몇 개로 해야합니까?",
+        "options": [
+            "1개",
+            "2개",
+            "3개"
+        ],
+        "hint": "이항 분류는 'A인가, 아닌가'의 문제이지만, 소프트맥스를 사용하면 'A인가, B인가'의 문제로 바뀝니다.",
+        "solution": "2개"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

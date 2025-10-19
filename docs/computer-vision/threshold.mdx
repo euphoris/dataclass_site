@@ -49,20 +49,84 @@ best_threshold, best_f1
 *   곡선하 면적(Area Under the Curve; AUC)은 0~1 범위 → 클 수록 높은 성능
 
 ## Python ROC 곡선
-*   임포트
-    ```python
-    from sklearn.metrics import roc_auc_score, roc_curve
-    ```
-*   시각화
-    ```python
-    fpr, tpr, threshold = roc_curve(y_true, y_prob)
-    plt.plot(fpr, tpr)
-    ```
+*   ROC 곡선
+```python
+from sklearn.metrics import roc_auc_score, roc_curve
+fpr, tpr, threshold = roc_curve(y_true, y_prob)
+plt.plot(fpr, tpr)
+```
 *   AUC
-    ```python
-    roc_auc_score(y_true, y_prob)
-    ```
+```python
+roc_auc_score(y_true, y_prob)
+```
+
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/3x7GlG?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1274" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 문턱값"></iframe>
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="threshold" quizItems={
+    [
+    {
+        "item_type": "checkbox",
+        "question": "문턱값을 높이면 높아지는 지표를 모두 고르세요",
+        "options": [
+            "정확도(accuracy)",
+            "정밀도(precision)",
+            "재현도(recall)",
+            "특이도(specificity)",
+            "F1"
+        ],
+        "hint": "문턱값을 높이면 모델이 Positive로 예측하는 기준이 더 엄격해집니다.",
+        "solution": [
+            "정밀도(precision)",
+            "특이도(specificity)"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "문턱값을 높이면 낮아지는 지표를 모두 고르세요",
+        "options": [
+            "정확도(accuracy)",
+            "정밀도(precision)",
+            "재현도(recall)",
+            "특이도(specificity)",
+            "F1"
+        ],
+        "hint": "모델이 Positive로 예측하는 데 더 신중해지면, 실제 Positive인 샘플을 놓칠(Negative로 잘못 판단할) 가능성이 커집니다.",
+        "solution": [
+            "재현도(recall)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "모형의 성능이 높아질 수록 ROC 곡선은 어떤 모양으로 변화합니까?",
+        "options": [
+            "왼쪽 위로 볼록해진다",
+            "오른쪽 위로 볼록해진다",
+            "왼쪽 아래로 오목해진다",
+            "오른쪽 아래로 오목해진다",
+            "직선 형태로 평평해진다"
+        ],
+        "hint": "이상적인 모델은 재현율(TPR)은 1에 가깝고, 위양성 비율(FPR)은 0에 가까워야 합니다.",
+        "solution": "왼쪽 위로 볼록해진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "ROC 곡선의 곡선하 면적(AUC)은 얼마일 때 모형의 성능이 가장 높습니까?",
+        "options": [
+            "-1.0",
+            "0.0",
+            "0.5",
+            "1.0"
+        ],
+        "hint": "AUC 면적은 1에 가까울수록 완벽한 분류기에 가깝습니다. 0.5는 무작위로 추측하는 수준을 의미합니다.",
+        "solution": "1.0"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

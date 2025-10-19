@@ -17,23 +17,12 @@
     *   부품 사진(x) → 불량 여부(y)
     *   사고 차량 사진(x) → 예상 수리비(y)
 
-## 지도 학습의 원리
-*   http://playground.tensorflow.org ← 딥러닝을 이용한 지도학습의 원리를 체험할 수 있는 사이트
-*   ▷ 버튼을 누르면 입력값을 조합하여 경계선을 찾아냄
-*   (-) 버튼을 눌러 은닉층을 0으로 만듦
-*   각 점들의 좌표(x1, x2)를 입력으로 사용
-*   파란색 점과 주황색 점들을 구분하는 경계선을 찾음
-*   손실(loss): 일종의 오차 학습이 진행되면서 감소함
-
-## 더 복잡한 모양
-*   아무리 학습 시켜도 경계선을 찾지 못함 (하나의 경계선으로 구분할 수 없기 때문)
-*   은닉층을 1개 추가하고 뉴런을 3개 추가하면 입력이 3개의 경계선으로 조합되어 구분할 수 있음
-
 ## 이미지 분류의 원리
-*   앞의 예에서는 하나의 점이 2개의 입력(x1, x2)으로 이뤄짐
-*   이미지는 여러 개의 값으로 이뤄짐
-    *   예: 가로 100 &times; 세로 100인 컬러(RGB) 이미지는 3만 개의 값으로 구성
-*   이미지를 분류한다고 할 때, 이미지를 구성하는 값들을 조합하여 경계선의 어느 쪽에 있는가로 분류
+* 이미지는 이미지를 구성하는 n개의 점으로 이뤄짐
+    * 예: 가로 100 &times; 세로 100인 컬러(RGB) 이미지는 3만 개의 값으로 구성
+* 이미지는 n 차원 공간 상의 한 좌표로 생각할 수 있음
+* 이미지의 종류(클래스)를 구분하는 경계를 수학적으로 찾으면 특정 좌표가 경계의 어느 쪽에 있는지 분류할 수 있음
+
 
 ## 티처블 머신 teachable machine
 *   구글이 제공하는 무료 No-Code 머신러닝 플랫폼
@@ -52,6 +41,49 @@
 *   웹캠이나 파일로 새로운 이미지 업로드
 *   분류된 결과
 
+
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w2YzZb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="867" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 머신러닝"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="machine-learning" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "x와 y가 짝지어진 형태의 데이터에서 관계를 학습하는 머신 러닝의 형태를 무엇이라고 합니까?",
+        "options": [
+            "지도 학습",
+            "비지도 학습",
+            "강화 학습"
+        ],
+        "hint": "정답(label)이 있는 데이터를 사용하여 학습하는 방식입니다.",
+        "solution": "지도 학습"
+    },
+    {
+        "item_type": "radio",
+        "question": "얼굴을 보고 나이를 추측하는 머신러닝 모델을 만들려고 합니다. 여기서 x와 y에 해당하는 것은?",
+        "options": [
+            "x=얼굴, y=나이",
+            "x=나이, y=얼굴"
+        ],
+        "hint": "입력 데이터가 x이고, 모델이 예측해야 하는 정답이 y입니다.",
+        "solution": "x=얼굴, y=나이"
+    },
+    {
+        "item_type": "radio",
+        "question": "이미지 분류 문제는 결국 무엇을 하는 것입니까?",
+        "options": [
+            "이미지의 경계선을 구분하는 클래스(종류)를 찾는 문제",
+            "이미지의 점들을 구성하는 클래스(종류)를 찾는 문제",
+            "이미지의 점들이 구성하는 경계선을 찾는 문제",
+            "이미지의 종류(클래스)를 구분하는 경계선을 찾는 문제"
+        ],
+        "hint": "분류 모델은 데이터를 잘 나눌 수 있는 결정 경계(decision boundary)를 학습합니다.",
+        "solution": "이미지의 종류(클래스)를 구분하는 경계선을 찾는 문제"
+    }
+    ]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

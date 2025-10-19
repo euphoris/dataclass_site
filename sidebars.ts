@@ -997,7 +997,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '1일차 - 컴퓨터 비전 기초',
+      label: '컴퓨터 비전 기초',
       items: [
         {
           type: 'doc',
@@ -1011,93 +1011,13 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'computer-vision/PIL',
-          label: '이미지 파일의 형식'
-        },
-        { type: 'doc',
-          id: 'computer-vision/opencv',
-          label: 'OpenCV 기초'
-        },
-        { type: 'doc',
-          id: 'computer-vision/image-operation',
-          label: '이미지 연산'
-        },
-        { type: 'doc',
-          id: 'computer-vision/color',
-          label: '색 보정'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '2일차 - 정보 추출',
-      items: [
-
-        {
-          type: 'doc',
-          id: 'computer-vision/binarization',
-          label: '이미지 이진화'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/lut',
-          label: 'Look-Up Table'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/image-transform',
-          label: '이미지 변형'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/geometric-transform',
-          label: '기하학적 변환'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/camera-calibration',
-          label: '카메라 교정'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/filter',
-          label: '필터링'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/shape',
-          label: '모양 감지'
-        },
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/hough-transform',
-        //   label: '도형 검출'
-        // },
-      ]
-    },
-    {
-      type: 'category',
-      label: '3일차 - 딥러닝과 컴퓨터 비전',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day1-review',
-          label: '복습'
-        },
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/day2-review',
-        //   label: '2일차 복습'
-        // },
-        {
-          type: 'doc',
-          id: 'computer-vision/match',
-          label: '이미지 매칭'
-        },
-        {
-          type: 'doc',
           id: 'computer-vision/deep-learning',
           label: '컴퓨터 비전과 딥러닝'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/python',
+          label: 'Python 소개와 기초'
         },
         {
           type: 'doc',
@@ -1111,13 +1031,8 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'computer-vision/loss-function',
-          label: '손실 함수'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/gradient-descent',
-          label: '경사 하강법'
+          id: 'computer-vision/training',
+          label: '모형 훈련'
         },
         {
           type: 'doc',
@@ -1125,25 +1040,25 @@ const sidebars: SidebarsConfig = {
           label: '테스트'
         },
         {
-            type: 'doc',
-            id: 'computer-vision/confusion-matrix',
-            label: '혼동 행렬'
+          type: 'doc',
+          id: 'computer-vision/review-basic-computer-vision',
+          label: '컴퓨터 비전 기초 복습'
+        },
+      ]
+    },
+  {
+      type: 'category',
+      label: '컴퓨터 비전 심화',
+      items: [
+        {
+          type: 'doc',
+          id: 'computer-vision/confusion-matrix',
+          label: '혼동 행렬'
         },
         {
           type: 'doc',
           id: 'computer-vision/threshold',
           label: '문턱값'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 다양한 모형',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day3-review',
-          label: '3일차 복습'
         },
         {
           type: 'doc',
@@ -1154,11 +1069,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'computer-vision/activation',
           label: '활성화 함수'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/hyperparameter-tuning',
-          label: '하이퍼파라미터 튜닝'
         },
         {
           type: 'doc',
@@ -1177,30 +1087,25 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'computer-vision/review-advanced-computer-vision',
+          label: '컴퓨터 비전 심화 복습'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/image-loading',
+          label: '이미지 로딩'
+        },
+        {
+          type: 'doc',
           id: 'computer-vision/augmentation',
           label: '데이터 증강'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/vit',
-          label: '비전 트랜스포머'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/transfer-learning',
-          label: '전이 학습'
         },
       ]
     },
     {
       type: 'category',
-      label: '5일차 - 물체 탐지',
+      label: '물체 탐지와 OCR',
       items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/day4-review',
-          label: '4일차 복습'
-        },
         {
           type: 'doc',
           id: 'computer-vision/object-detection',
@@ -1223,23 +1128,136 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'computer-vision/obb-pose',
-          label: 'OBB와 자세 추정'
+          id: 'computer-vision/obb',
+          label: 'OBB'
         },
         {
           type: 'doc',
-          id: 'computer-vision/adversarial',
-          label: '적대적 사례'
+          id: 'computer-vision/pose',
+          label: '자세 추정'
         },
         {
           type: 'doc',
-          id: 'computer-vision/generation',
-          label: '이미지 생성'
+          id: 'computer-vision/review-object-detection',
+          label: '물체 탐지 복습'
         },
+        {
+          type: 'doc',
+          id: 'computer-vision/ocr',
+          label: 'OCR'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/adversarial',
+        //   label: '적대적 사례'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/generation',
+        //   label: '이미지 생성'
+        // },
       ]
     },
+    // {
+    //   type: 'category',
+    //   label: '2일차 - 정보 추출',
+    //   items: [
+          // {
+          //   type: 'doc',
+          //   id: 'computer-vision/PIL',
+          //   label: '이미지 파일의 형식'
+          // },
+          // { type: 'doc',
+          //   id: 'computer-vision/opencv',
+          //   label: 'OpenCV 기초'
+          // },
+          // { type: 'doc',
+          //   id: 'computer-vision/image-operation',
+          //   label: '이미지 연산'
+          // },
+          // { type: 'doc',
+          //   id: 'computer-vision/color',
+          //   label: '색 보정'
+          // },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/binarization',
+    //       label: '이미지 이진화'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/lut',
+    //       label: 'Look-Up Table'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/image-transform',
+    //       label: '이미지 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/geometric-transform',
+    //       label: '기하학적 변환'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/camera-calibration',
+    //       label: '카메라 교정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/filter',
+    //       label: '필터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/shape',
+    //       label: '모양 감지'
+    //     },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/hough-transform',
+        //   label: '도형 검출'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/match',
+        //   label: '이미지 매칭'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/loss-function',
+        //   label: '손실 함수'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/gradient-descent',
+        //   label: '경사 하강법'
+        // },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/day3-review',
+    //       label: '3일차 복습'
+    //     },
+        
 
-
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/hyperparameter-tuning',
+    //       label: '하이퍼파라미터 튜닝'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/vit',
+    //       label: '비전 트랜스포머'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/transfer-learning',
+    //       label: '전이 학습'
+    //     },
+    //   ]
+    // },
     // {
     //   type: 'doc',
     //   id: 'computer-vision/feature-detector',

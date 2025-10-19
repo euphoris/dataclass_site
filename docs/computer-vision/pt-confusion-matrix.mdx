@@ -1,0 +1,158 @@
+# 혼동 행렬
+
+## Fashion MNIST
+*   MNIST 데이터셋이 너무 쉬워서 똑같은 형식으로 더 어렵게 만든 데이터셋
+    *   T-shirt/top : 0
+    *   Trouser : 1
+    *   Pullover : 2
+    *   Dress : 3
+    *   Coat : 4
+    *   Sandal : 5
+    *   Shirt : 6
+    *   Sneaker : 7
+    *   Bag : 8
+    *   Ankle boot : 9
+
+## Fashion MNIST
+```python
+train_dataset = datasets.FashionMNIST(
+    root='./data', train=True, download=True, transform=transforms.ToTensor())
+test_dataset = datasets.FashionMNIST(
+    root='./data', train=False, download=True, transform=transforms.ToTensor())
+
+# 2번과 6번의 이항 분류
+binary_train_dataset = torchutils.BinarySubset(train_dataset, 2, 6)
+binary_test_dataset = torchutils.BinarySubset(test_dataset, 2, 6)
+```
+
+## Fashion MNIST 모델 학습
+```python
+train_loader = DataLoader( # 훈련 데이터 로딩
+    binary_train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+
+model = BinaryClassifier() # 모형 정의
+
+logger = pl.loggers.CSVLogger("csv_logs", name="fashion_mnist")
+trainer = Trainer(max_epochs=3, logger=logger, log_every_n_steps=10)
+trainer.fit(model, train_loader)
+```
+
+## 정답과 확률 수집
+```python
+test_loader = DataLoader(binary_test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+y_true = [] # 정답
+y_prob = [] # 예측한 확률
+with torch.no_grad(): # 그래디언트 계산 비활성화
+ for x, y in test_loader:
+    probs = model(x)
+    y_true.extend(y.numpy()) # 정답에 추가
+    y_prob.extend(probs.squeeze().numpy()) # 확률에 추가
+y_prob = np.array(y_prob) # 배열로 변환
+```
+
+## 혼동 행렬 confusion matrix
+|     |     |**예측**||
+|:---:|:---:|:---:|:---:|
+|     |     |**음성 (0)**|**양성 (1)**|
+|**실제**|**음성 (0)**|TN|FP|
+|        |**양성 (1)**|FN|TP|
+
+## 진/위 양성/음성
+*   혼동행렬에서 양성/음성은 예측을 기준으로 말함
+*   현실에서는 실제로 어떤지 알 수 없는 경우가 많음
+*   진(True) → 예측이 맞음
+*   위(False) → 예측이 틀림
+
+## Python 혼동 행렬
+```python
+threshold = 0.5 # 문턱값
+y_pred = np.where(y_prob > threshold, 1, 0) # 문턱값보다 크면 1 아니면 0
+
+# 혼동행렬 구하기
+from sklearn.metrics import *
+confusion_matrix(y_true, y_pred)
+```
+
+## 정확도 accuracy
+(실제 음성-예측 음성, 실제 양성-예측 양성 칸이 강조된 혼동행렬 다이어그램)
+
+## 정확도 accuracy
+*   전체 중에 예측이 맞은 비율
+    `(TP + TN) / 전체`
+*   특별히 음성/양성 구분에 관심이 없는 경우 사용
+*   그러나 대부분은 양성에 더 관심이 있음
+```python
+accuracy_score(y_true, y_pred)
+```
+
+## 정밀도 precision
+(예측 양성 열에서 실제 양성 칸이 강조된 혼동행렬 다이어그램)
+
+## 정밀도 precision
+*   양성 예측 중에 맞은 비율
+    `TP / (TP + FP)`
+*   양성 예측이 중요한 경우 (예: 채용, 투자, 추천, 결혼 등)
+```python
+precision_score(y_true, y_pred)
+```
+
+## 재현도 recall
+(실제 양성 행에서 예측 양성 칸이 강조된 혼동행렬 다이어그램)
+
+## 재현도 recall
+*   실제 양성 중 찾아낸 비율
+    `TP / (TP + FN)`
+*   양성을 찾아 내는 것이 중요한 경우 (예: 방역)
+*   의학 등에서는 민감도(specificity)라고도 함
+*   또는 TPR(True Positive Rate)
+```python
+recall_score(y_true, y_pred)
+```
+
+## 특이도 specificity
+*   실제 음성 중 찾아낸 비율
+    `TN / (TN + FP)`
+*   음성을 찾아 내는 것이 중요한 경우 (예: 방역)
+*   대체로 양성 예측을 보수적으로 하면 특이도가 높아진다
+*   FPR(False Positive Rate):
+    `FP / (TN + FP) = 1 − specificity`
+```python
+recall_score(y_true, y_pred, pos_label=0)
+```
+
+## 특이도가 낮을 경우 문제점
+*   질병 검사에서는 음성이 양성보다 훨씬 많음
+*   특이도가 낮으면 정밀도가 떨어짐
+*   예) 실제 양성이 1%인 경우
+
+| | 예측 | |
+| :--- | :---: | :---: |
+| | **음성** | **양성** |
+| **실제** **음성** | 9900 | 0 |
+| **실제** **양성** | 2 | 98 |
+> 특이도 100%
+> 민감도 98%
+> 정밀도 100%
+
+| | 예측 | |
+| :--- | :---: | :---: |
+| | **음성** | **양성** |
+| **실제** **음성** | 9504 | 396 |
+| **실제** **양성** | 10 | 90 |
+> 특이도 96%
+> 민감도 90%
+> 정밀도 18.5%
+
+## F1
+*   정밀도(p)와 재현도(r)의 조화 평균
+    ` (2pr) / (p + r) `
+*   조화평균: 역수의 평균의 역수
+*   비율, 속도 등을 평균낼 때는 산술평균 대신 조화평균을 사용
+```python
+f1_score(y_true, y_pred)
+```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mDoL05?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2167" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 혼동행렬"></iframe>

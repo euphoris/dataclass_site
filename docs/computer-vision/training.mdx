@@ -1,0 +1,166 @@
+# 모형 훈련
+
+## 훈련
+
+```python
+# 훈련 설정
+model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.0001),
+              loss='binary_crossentropy', metrics=['accuracy'])
+
+# 훈련
+model.fit(x_train_binary, y_train_binary, epochs=5, batch_size=32)
+```
+
+
+## 경사하강법 gradient descent
+*   기존의 파라미터를 바탕으로 예측 ŷ을 출력
+*   실제 y와 비교하여 손실을 계산 L(y,ŷ)
+*   손실을 줄이는 방향으로 파라미터를 수정
+*   위의 과정을 반복
+
+## 학습률 learning rate
+*   파라미터는 한 번에 경사 × 학습률만큼 수정
+*   경사가 0에 가까울 수록 오차는 최소에 가까워짐
+*   경사에 비례하여 수정할 크기를 조정
+*   학습률이 크면 학습이 빠르지만 최소점 근처에서 수렴하지 않을 수 있음
+
+## 경사하강법의 문제점
+*   한 단계의 가중치 수정을 위해 전체 데이터셋에 대해 계산
+*   국소최소점(local minima: 근방에서만 최소인 점)에 수렴
+*   안장점(saddle point: 경사가 0이지만 최소나 최대가 아닌 점)에서 업데이트 불가
+
+## 확률적 경사하강법 Stochastic GD
+*   하나의 사례를 바탕으로 경사를 계산
+*   극소점을 향해 바로 가지 않고 지그재그로 이동하게 됨
+*   한 번의 업데이트를 위한 계산량이 적음
+*   국소최적화를 피할 가능성이 있음
+*   업데이트 방향이 불안정하므로 더 많은 업데이트가 필요할 수 있음
+
+## 미니배치(Mini-batch) 경사하강법
+*   전체 데이터의 일부(=미니배치)만을 사용하여 경사하강법
+*   경사하강법과 확률적 경사하강법을 장점을 융합
+*   일반적으로 확률적 경사하강법이라고 하면 실제로는 미니배치 경사하강법을 가리킴
+
+
+## 손실 함수 loss function
+*   비용 함수 cost function 또는 오차 함수 error function라고도 함
+*   예측과 실제의 차이를 계산
+*   손실 ≥ 0
+*   손실을 최소화할 수록 성능이 개선
+
+## MSE mean squared error
+*   오차 제곱의 평균(오차 = 실제 – 예측)
+*   연속변수의 예측에 사용
+
+$$
+\text{MSE} = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2
+$$
+
+*   이상치(outlier)에 민감
+
+
+## 교차 엔트로피 cross entropy
+*   두 확률 분포의 차이를 계산
+*   범주형 변수의 예측에 사용
+
+$$
+H(p,q) = -\sum_{x \in X} p(x) \log q(x) = -y \log(\hat{y}) - (1 - y) \log(1 - \hat{y})
+$$
+
+*   p와 q 두 확률 분포가 비슷할 수록 작아짐
+*   높은 확률로 예측했을 때 맞고, 낮은 확률로 예측했을 때 틀려야 감소
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="training" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "경사하강법은 어떤 방향으로 파라미터를 수정합니까?",
+        "options": [
+            "손실이 늘어나는 방향으로",
+            "손실이 같은 방향으로",
+            "손실이 줄어드는 방향으로"
+        ],
+        "hint": "경사하강법의 목표는 손실(오차)을 최소화하는 것입니다.",
+        "solution": "손실이 줄어드는 방향으로"
+    },
+    {
+        "item_type": "radio",
+        "question": "경사하강법에서 학습률이 지나치게 작을 때의 단점은?",
+        "options": [
+            "학습이 느리다",
+            "최소점 근처에서 수렴을 잘 하지 않는다",
+            "오차가 크다"
+        ],
+        "hint": "학습률은 한 번에 이동하는 보폭의 크기와 같습니다. 보폭이 너무 작으면 목적지까지 오래 걸립니다.",
+        "solution": "학습이 느리다"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "다음 중 경사가 0인 점들을 모두 고르세요",
+        "options": [
+            "출발점",
+            "국소최소점(local minima)",
+            "전역최소점(global minma)",
+            "안장점(saddle point)"
+        ],
+        "hint": "미분값이 0이 되는 지점, 즉 기울기가 없는 평평한 지점을 모두 찾으면 됩니다.",
+        "solution": [
+            "국소최소점(local minima)",
+            "전역최소점(global minma)",
+            "안장점(saddle point)"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "확률적 경사하강법의 장점을 모두 고르세요",
+        "options": [
+            "한 번의 업데이트를 위한 계산량이 적다",
+            "국소최적화를 피할 가능성이 있다",
+            "전역최적화를 보장한다",
+            "업데이트가 안정적이다"
+        ],
+        "hint": "전체 데이터가 아닌 일부 데이터(미니배치)만 사용하여 파라미터를 업데이트하는 방식의 장점을 생각해보세요.",
+        "solution": [
+            "한 번의 업데이트를 위한 계산량이 적다",
+            "국소최적화를 피할 가능성이 있다"
+        ]
+    },
+    {
+        "item_type": "short",
+        "question": "Keras에서 학습률을 설정하는 인자는?",
+        "options": [],
+        "hint": "학습률의 영어 단어를 생각해보세요.",
+        "solution": "learning_rate"
+    },
+    {
+        "item_type": "radio",
+        "question": "이항 분류에 사용하는 손실 함수는?",
+        "options": [
+            "mse",
+            "binary_cross_entropy",
+            "cross_entropy"
+        ],
+        "hint": "이름에 '이항(binary)'이 포함된 손실 함수입니다.",
+        "solution": "binary_cross_entropy"
+    },
+    {
+        "item_type": "radio",
+        "question": "교차 엔트로피는 언제 최소화됩니까?",
+        "options": [
+            "높은 확률로 예측했을 때 맞고, 낮은 확률로 예측했을 때 틀릴 때",
+            "낮은 확률로 예측했을 때 맞고, 높은 확률로 예측했을 때 틀릴 때"
+        ],
+        "hint": "모델이 정답을 확신할수록 손실(엔트로피)은 줄어듭니다.",
+        "solution": "높은 확률로 예측했을 때 맞고, 낮은 확률로 예측했을 때 틀릴 때"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

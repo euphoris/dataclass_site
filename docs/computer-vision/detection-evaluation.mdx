@@ -18,20 +18,20 @@
 ## 성능 측정
 *   coco128 데이터셋으로 성능 검증
 *   (자체 데이터셋으로 성능 검증하는 방법은 뒤에서 다룸)
-    ```python
-    metrics = model.val(data="coco128.yaml", plots=True)
-    ```
+```python
+metrics = model.val(data="coco128.yaml", plots=True)
+```
 *   화면에 출력되는지표
     *   P: 정밀도(Precision)
     *   R: 재현도(Recall)
     *   mAP50
     *   mAP50-95
 *   클래스별 mAP50-95 보기
-    ```python
-    for class_id, map_val in enumerate(metrics.box.maps):
-        class_name = model.names[class_id] # 클래스 이름
-        print(f"{class_id:<10} {class_name:<20} {map_val:.4f}")
-    ```
+```python
+for class_id, map_val in enumerate(metrics.box.maps):
+    class_name = model.names[class_id] # 클래스 이름
+    print(f"{class_id:<10} {class_name:<20} {map_val:.4f}")
+```
 
 ## 혼동 행렬
 ```python
@@ -39,39 +39,97 @@ cm = metrics.confusion_matrix.to_df()
 ncm = metrics.confusion_matrix.to_df(normalize=True) # 비율로 표시
 ```
 *   곰 인형이 어떤 물체로 분류되는지 보기
-    ```python
-    column = 'teddy_bear'
-    ncm[['Predicted', column]].sort_values(column, ascending=False)
-    ```
+```python
+column = 'teddy_bear'
+ncm[['Predicted', column]].sort_values(column, ascending=False)
+```
 
 ## 정밀도(Precision) 곡선
 *   confidence 수준에 따른 정밀도 곡선
-    ```python
-    from PIL import Image
-    Image.open('runs/detect/val/P_curve.png')
-    ```
+```python
+from PIL import Image
+Image.open('runs/detect/val/P_curve.png')
+```
 
 ## 재현도(Recall) 곡선
 *   confidence 수준에 따른 재현도 곡선
-    ```python
-    Image.open('runs/detect/val/R_curve.png')
-    ```
+```python
+Image.open('runs/detect/val/R_curve.png')
+```
 
 ## F1 곡선
 *   confidence 수준에 따른 F1 곡선
 *   F1 = 정밀도와 재현도의 조화평균
-    ```python
-    Image.open('runs/detect/val/F1_curve.png')
-    ```
+```python
+Image.open('runs/detect/val/F1_curve.png')
+```
 
 ## PR 곡선
 *   재현도에 따른 정밀도 곡선
 *   이 곡선의 곡선하 면적 = mAP
-    ```python
-    Image.open('runs/detect/val/PR_curve.png')
-    ```
+```python
+Image.open('runs/detect/val/PR_curve.png')
+```
 
 ## 퀴즈
 
+import { QuizComponent } from "@/components/QuizComponent";
 
-<iframe src="https://tally.so/embed/wk4MJo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1105" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 물체 탐지의 평가"></iframe>
+<QuizComponent quizId="detection-evaluation" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "IOU의 공식은?",
+        "options": [
+            "교집합 / 합집합",
+            "합집합 / 교집합",
+            "차집합 / 합집합",
+            "차집합 / 교집합"
+        ],
+        "hint": "Intersection over Union의 약자입니다.",
+        "solution": "교집합 / 합집합"
+    },
+    {
+        "item_type": "radio",
+        "question": "Precision-Recall 곡선의 곡선하 면적은 무엇과 같습니까?",
+        "options": [
+            "ROC 곡선의 곡선하 면적",
+            "모든 Precision에서 Recall의 평균",
+            "모든 Recall에서 Precision의 평균"
+        ],
+        "hint": "이 값은 AP(Average Precision)라고도 불립니다.",
+        "solution": "모든 Recall에서 Precision의 평균"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "mAP 50-95에 대한 설명으로 올바른 것을 모두 고르세요",
+        "options": [
+            "모든 종류의 물체에 대한 지표이다",
+            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다",
+            "IOU 임계값이 0.5일 때와 0.95일 때의 차이를 나타낸다"
+        ],
+        "hint": "mAP는 'mean Average Precision'의 약자로, 여러 클래스와 여러 IOU 임계값에 대한 성능을 종합적으로 평가합니다.",
+        "solution": [
+            "모든 종류의 물체에 대한 지표이다",
+            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "PR 곡선은 어떤 형태일때 모형의 성능이 가장 높습니까?",
+        "options": [
+            "왼쪽 위로 볼록",
+            "오른쪽 위로 볼록",
+            "왼쪽 아래로 오목",
+            "오른쪽 아래로 오목",
+            "대각선에 가까움"
+        ],
+        "hint": "가장 이상적인 모델은 재현율(Recall)과 정밀도(Precision)가 모두 1에 가까운 값을 가집니다.",
+        "solution": "오른쪽 위로 볼록"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

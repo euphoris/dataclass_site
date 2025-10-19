@@ -16,7 +16,9 @@
 *   손실 함수에 L2 노름을 추가하고, SGD로 파라미터를 업데이트 한 것과 동일
 *   경사하강법 알고리즘에 weight_decay 인자
     *   위 수식의 λ와 같음(클 수록 더 많이 줄임)
-
+    ```python
+    optimizier = torch.optim.Adam(model.parameters(), weight_decay=0.9)
+    ```
 
 ## 노름 Norm
 *   노름(norm): 길이 또는 크기를 일반화한 개념
@@ -46,21 +48,25 @@ $$
 
 ## 얼리스톱핑을 이용한 훈련
 ```python
-model = keras.models.Sequential([
-    keras.layers.Rescaling(1/255), 
-    keras.layers.Flatten(), 
-    keras.layers.Dense(10)])
-model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.001), 
-              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), 
-              metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=32, 
-    epochs=50, # 최대 에포크 
-    validation_split=0.2, # 에포크마다 20%의 데이터로 검증   
-    callbacks=[keras.callbacks.EarlyStopping(monitor='val_loss', patience=1)]) 
-    # monitor: 검증 데이터의 손실을 기준으로 멈춤 여부를 결정
-    # patience: 몇 에포크 동안 개선이 없으면 멈출지 지정
+class MultiClassValModel(MultiClassModel): # 기존 모델을 상속. 다른 부분은 동일하게 유지
+    def validation_step(self, batch): # 검증 단계 정의
+        images, labels = batch
+        outputs = self(images)
+        loss = F.cross_entropy(outputs, labels)
+        self.log('val_loss', loss)
+        return loss
 ```
 
+
+## 얼리스톱핑을 이용한 훈련
+```python
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+model = MultiClassValModel()
+trainer = Trainer(max_epochs=100, callbacks=[# 최대 100에포크 진행
+    EarlyStopping(monitor='val_loss', mode="min", verbose=True)]) 
+# 검증 손실이 최소일 때 중단
+trainer.fit(model, train_loader, test_loader)
+```
 
 ## 자동 저장
 *   얼리스톱핑은 성능이 일시적으로 하락해도 정지
@@ -69,13 +75,15 @@ model.fit(x_train, y_train, batch_size=32,
 *   정해진 에포크의 훈련이 모두 끝난 후 가장 성능이 좋았던 에포크의 파라미터를 다시 불러올 수 있음
 
 ```python
-model.fit(x_train, y_train, epochs=50, batch_size=32, validation_split=0.2, callbacks=[
-    keras.callbacks.EarlyStopping(monitor='val_loss', patience=3),
-    keras.callbacks.ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
-    ])
+from pytorch_lightning.callbacks import ModelCheckpoint
+model = MultiClassValModel()
+# 검증 손실이 가장 작은 상위 1개의 모델만 저장
+checkpoint = ModelCheckpoint(monitor='val_loss', mode="min", save_top_k=1, verbose=True)
+trainer = Trainer(max_epochs=30, callbacks=[checkpoint])
+trainer.fit(model, train_loader, val_loader)
 
 # 저장된 파라미터 불러오기
-best_model = keras.models.load_model('best_model.h5')
+best_model = MultiClassValModel.load_from_checkpoint(checkpoint.best_model_path)
 ```
 
 ## 드롭아웃 dropout
@@ -85,12 +93,14 @@ best_model = keras.models.load_model('best_model.h5')
 *   예측시에는 드롭아웃 대신, 출력이 비율로 조정(훈련시에 출력 중 50%를 드롭아웃 했으면, 예측시에는 모든 출력의 크기를 50%로 줄임)
 
 ```python
-model = keras.models.Sequential([
-    keras.layers.Rescaling(1/255), 
-    keras.layers.Flatten(), 
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dropout(0.5), # 드롭아웃 비율 50%
-    keras.layers.Dense(10)])
+class MLPClassifierDropout(MultiClassValModel):
+    def forward(self, x):
+        x = x.view(-1, 784)
+        x = F.dropout(x, p=0.5) # 입력 드롭아웃(50%의 입력을 무작위로 0으로 만듦)
+        x = F.relu(self.linear1(x))
+        x = F.dropout(x, p=0.5) # 드롭아웃(50%의 뉴런을 무작위로 끔)
+        x = F.sigmoid(self.linear2(x))
+        return x
 ```
 
 ## Normalization
@@ -138,12 +148,21 @@ model = keras.models.Sequential([
     *   Dropout과 비슷한 효과 → Dropout을 안 써도 된다 → 학습 속도도 빨라짐
 
 ```python
-model = keras.models.Sequential([
-    keras.layers.Rescaling(1/255), 
-    keras.layers.Flatten(), 
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.BatchNormalization(), # 배치 정규화
-    keras.layers.Dense(10)])
+class MLPClassifierBatchNorm(MultiClassValModel):
+    def __init__(self, input_size=784):
+        super().__init__()
+        self.linear1 = nn.Linear(input_size, 16)
+        self.bn1 = nn.BatchNorm1d(16) # 이전 레이어의 출력 뉴런 수와 같게
+                                      # LayerNorm으로 바꾸면 layer normalizatiojn
+        self.linear2 = nn.Linear(16, 1)
+
+    def forward(self, x):
+        x = x.view(-1, 784) 
+        x = self.linear1(x) 
+        x = self.bn1(x) # BatchNorm 적용
+        x = F.relu(x)
+        x = F.sigmoid(self.linear2(x))
+        return x
 ```
 
 ## one-hot encoding
@@ -166,94 +185,12 @@ model = keras.models.Sequential([
 *   원 핫 인코딩에서 1을 조금 줄이고 그만큼 0을 키워줌
 *   데이터에 있는 레이블에 100%보다 낮은 확률을 부여(없는 레이블도 0%보다 높은 확률을 부여)
 *   예) (1, 0, 0, 0) → (0.85, 0.05, 0.05, 0.05)
-
-이항 분류:
-```python
-keras.losses.BinaryCrossentropy(label_smoothing=0.15)
-```
-
-다항 분류:
-```python
-keras.losses.CategoricalCrossentropy(label_smoothing=0.15)
-```
-*   `keras.losses.SparseCategoricalCrossentropy`는 지원X
-
+    ```python
+    loss = F.cross_entropy(outputs, labels, label_smoothing=0.15)
+    ```
+*   BCELoss는 지원X
 
 
 ## 퀴즈
 
-import { QuizComponent } from "@/components/QuizComponent";
-
-<QuizComponent quizId="regularization" quizItems={
-    [
-    {
-        "item_type": "radio",
-        "question": "정칙화 방법 중 모형 출력의 목표값을 줄이는 방법은?",
-        "options": [
-            "weight decay",
-            "early stopping",
-            "dropout",
-            "batch normalization",
-            "label smoothing"
-        ],
-        "hint": "정답 레이블을 0 또는 1과 같은 확정적인 값(hard label)이 아닌, 부드러운 값(soft label)으로 바꾸어 모델이 과도하게 확신하는 것을 방지합니다.",
-        "solution": "label smoothing"
-    },
-    {
-        "item_type": "radio",
-        "question": "정칙화 방법 중 파라미터 업데이트를 일찍 멈추는 방법은?",
-        "options": [
-            "weight decay",
-            "early stopping",
-            "dropout",
-            "batch normalization",
-            "label smoothing"
-        ],
-        "hint": "검증(validation) 데이터에 대한 성능이 더 이상 좋아지지 않을 때 학습을 중단하여 과대적합을 방지합니다.",
-        "solution": "early stopping"
-    },
-    {
-        "item_type": "radio",
-        "question": "정칙화 방법 중 일부 파라미터를 훈련에서 배제하는 방법은?",
-        "options": [
-            "weight decay",
-            "early stopping",
-            "dropout",
-            "batch normalization",
-            "label smoothing"
-        ],
-        "hint": "학습 과정에서 무작위로 일부 뉴런을 비활성화하여 특정 뉴런에 대한 의존도를 줄입니다.",
-        "solution": "dropout"
-    },
-    {
-        "item_type": "radio",
-        "question": "정칙화 방법 중 레이어의 출력값을 정규화하는 방법은?",
-        "options": [
-            "weight decay",
-            "early stopping",
-            "dropout",
-            "batch normalization",
-            "label smoothing"
-        ],
-        "hint": "각 미니배치(mini-batch)마다 데이터의 분포를 평균 0, 분산 1로 조정하여 학습을 안정화시킵니다.",
-        "solution": "batch normalization"
-    },
-    {
-        "item_type": "radio",
-        "question": "정칙화 방법 중 파라미터를 업데이트할 때마다 조금씩 줄이는 방법은?",
-        "options": [
-            "weight decay",
-            "early stopping",
-            "dropout",
-            "batch normalization",
-            "label smoothing"
-        ],
-        "hint": "손실 함수에 가중치(파라미터)의 크기에 대한 페널티 항을 추가하여 가중치가 너무 커지는 것을 막습니다.",
-        "solution": "weight decay"
-    }
-]
-} />
-
-
-## Q&A
-<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+<iframe src="https://tally.so/embed/w7YQAR?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="702" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 정칙화"></iframe>

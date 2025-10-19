@@ -26,34 +26,14 @@
 
 ## 다층신경망 multi-layer perceptron
 ```python
-class MLPClassifier(pl.LightningModule):
-    def __init__(self):
-        super().__init__()
-        self.linear1 = nn.Linear(28*28, 16) # 16개의 뉴런을 가진 은닉층
-        self.linear2 = nn.Linear(16, 1) # 한 개의 출력 뉴런
-        self.accuracy = BinaryAccuracy()
- 
-    def forward(self, x):
-        x = x.view(-1, 784) # Flatten 레이어 없이, 텐서 모양을 (N, 28, 28) → (N, 784)
-        x = F.relu(self.linear1(x)) # ReLU 활성화 함수
-        x = F.sigmoid(self.linear2(x))
-        return x
-
-    def training_step(self, batch, batch_idx): # 훈련의 한 단계
-        images, labels = batch
-        outputs = self(images).squeeze() # 이미지를 모형에 입력하여 출력을 얻음
-        loss = F.binary_cross_entropy(outputs, labels.float()) # 손실 계산
-        self.log('loss', loss) # 손실 기록
-        accuracy = self.accuracy(outputs, labels) # 정확도 계산
-        self.log('accuracy', accuracy) # 정확도 기록
-        return loss
-
-    def test_step(self, batch, batch_idx): # 테스트도 훈련과 동일하게
-        return self.training_step(batch, batch_idx)
-
-    def configure_optimizers(self): # 알고리즘 설정
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
-        return optimizer
+model = keras.models.Sequential(
+    [
+        keras.layers.Rescaling(1/255),
+        keras.layers.Flatten(),
+        keras.layers.Dense(16, activation='relu'),
+        keras.layers.Dense(1, activation='sigmoid')
+    ]
+)
 ```
 
 ## 미분의 연쇄 규칙 chain rule
@@ -80,4 +60,61 @@ class MLPClassifier(pl.LightningModule):
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/n0Y4lQ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1125" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 다층 신경망"></iframe>
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="MLP" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "이항 분류에서 단층신경망은 기하학적으로 무엇을 수행하는 것과 같습니까?",
+        "options": [
+            "데이터 공간을 하나의 직선 또는 평면으로 나누는 것",
+            "데이터 공간을 여러 개의 직선 또는 평면으로 나누는 것",
+            "데이터 공간을 하나의 곡선 또는 곡면으로 나누는 것",
+            "데이터 공간을 여러 개의 곡선 또는 곡면으로 나누는 것"
+        ],
+        "hint": "단층 신경망은 선형(linear) 경계면밖에 만들 수 없습니다.",
+        "solution": "데이터 공간을 하나의 직선 또는 평면으로 나누는 것"
+    },
+    {
+        "item_type": "radio",
+        "question": "다층 신경망에서 은닉층에 대한 설명으로 올바르지 않은 것은?",
+        "options": [
+            "데이터를 직접 입력 받거나 출력하지 않는다",
+            "과제 수행에 필요한 특징을 학습한다",
+            "은닉층을 이루는 뉴런의 개수나, 은닉층의 수는 자유롭게 정할 수 있다",
+            "크면 클 수록 성능이 높아진다"
+        ],
+        "hint": "은닉층의 크기가 무조건 크다고 좋은 것은 아닙니다. 과대적합의 원인이 될 수 있습니다.",
+        "solution": "크면 클 수록 성능이 높아진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "다층신경망을 학습시키는 알고리즘을 무엇이라고 합니까?",
+        "options": [
+            "역전이 알고리즘",
+            "역전파 알고리즘",
+            "학습 알고리즘",
+            "사라지는 경사 알고리즘"
+        ],
+        "hint": "출력층의 오차를 입력층 방향으로 거꾸로 전파시키며 가중치를 업데이트합니다.",
+        "solution": "역전파 알고리즘"
+    },
+    {
+        "item_type": "radio",
+        "question": "사라지는 경사는 어떤 문제입니까?",
+        "options": [
+            "신경망 초반 레이어의 경사가 0에 가까워지는 문제",
+            "신경망 중간 레이어의 경사가 0에 가까워지는 문제",
+            "신경망 후반 레이어의 경사가 0에 가까워지는 문제"
+        ],
+        "hint": "역전파 과정에서 경사(gradient)가 뒤로 전달될수록 점점 작아져서 앞쪽 레이어의 학습이 잘 이루어지지 않는 문제입니다.",
+        "solution": "신경망 초반 레이어의 경사가 0에 가까워지는 문제"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

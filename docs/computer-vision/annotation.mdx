@@ -95,6 +95,107 @@ names: ['clip'] # 클래스 이름 (Label Studio에서 사용한 순서와 동�
     *   배치 크기(batch): GPU 메모리에 맞춰 최적화.
 *   사전 학습된 모델: 모델 크기: 더 큰 YOLO 모델을 시도하거나 다른 사전 학습 모델 사용
 
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="annotation" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "데이터 라벨링 도구인 LabelStudio를 설치하는 올바른 pip 명령어는 무엇입니까?",
+        "options": [
+            "pip install -U label-studio",
+            "pip get label-studio",
+            "conda install label-studio",
+            "install new label-studio"
+        ],
+        "hint": "강의 자료의 '설치' 부분을 확인하세요. '-U'는 업그레이드를 의미합니다.",
+        "solution": "pip install -U label-studio"
+    },
+    {
+        "item_type": "radio",
+        "question": "LabelStudio에서 YOLO 모델 학습을 위해 데이터를 내보낼 때 어떤 형식을 선택해야 합니까?",
+        "options": [
+            "COCO",
+            "Pascal VOC",
+            "YOLO with Images",
+            "CSV"
+        ],
+        "hint": "YOLO 모델에 맞는 특정 내보내기 형식이 있습니다.",
+        "solution": "YOLO with Images"
+    },
+    {
+        "item_type": "radio",
+        "question": "YOLO 학습에 사용되는 data.yaml 파일에서 'nc'는 무엇을 의미합니까?",
+        "options": [
+            "신경망 채널 수 (Number of Channels)",
+            "클래스 개수 (Number of Classes)",
+            "노드 개수 (Number of nodes)",
+            "신뢰도 점수 (Confidence Score)"
+        ],
+        "hint": "분류해야 할 대상의 종류 수와 관련이 있습니다.",
+        "solution": "클래스 개수 (Number of Classes)"
+    },
+    {
+        "item_type": "radio",
+        "question": "ultralytics 라이브러리를 사용하여 YOLO 모델의  훈련(미세 조정)을 시작하는 함수는 무엇입니까?",
+        "options": [
+            "model.fit()",
+            "model.run()",
+            "model.train()",
+            "model.start()"
+        ],
+        "hint": "훈련을 의미하는 영어 단어를 생각해보세요.",
+        "solution": "model.train()"
+    },
+    {
+        "item_type": "radio",
+        "question": "YOLO 모델 훈련 후, 가장 성능이 좋은 모델의 가중치(weights)는 어떤 파일에 저장됩니까?",
+        "options": [
+            "latest.pt",
+            "results.csv",
+            "best.pt",
+            "model.weights"
+        ],
+        "hint": "'가장 좋은'을 의미하는 영어 단어가 파일명에 포함되어 있습니다.",
+        "solution": "best.pt"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "학습된 모델의 성능이 낮을 때, 시도해볼 수 있는 개선 방법을 모두 고르세요.",
+        "options": [
+            "더 많은 데이터 수집 또는 증강",
+            "라벨링 오류 재검토 및 수정",
+            "학습 에폭 수(epochs) 늘리기",
+            "무조건 학습률(learning rate) 높이기"
+        ],
+        "hint": "모델 성능은 데이터의 양과 질, 그리고 적절한 학습 파라미터 설정에 크게 의존합니다.",
+        "solution": [
+            "더 많은 데이터 수집 또는 증강",
+            "라벨링 오류 재검토 및 수정",
+            "학습 에폭 수(epochs) 늘리기"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "모델 학습이 성공적으로 진행되고 있는지 확인하기 위한 지표를 모두 고르세요.",
+        "options": [
+            "손실(Loss) 값의 점진적 감소",
+            "mAP 값의 점진적 상승",
+            "손실(Loss) 값의 급격한 변동",
+            "mAP 값의 점진적 하락"
+        ],
+        "hint": "손실은 오차를 의미하므로 작아져야 하고, mAP는 모델의 정확도를 나타내는 지표이므로 커져야 합니다.",
+        "solution": [
+            "손실(Loss) 값의 점진적 감소",
+            "mAP 값의 점진적 상승"
+        ]
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
 
 {/* 
 

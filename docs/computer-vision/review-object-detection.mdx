@@ -1,0 +1,107 @@
+# 컴퓨터 비전과 딥러닝 기초 복습
+
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="review-object-detection" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "PyTorch에서 'cats', 'dogs'와 같이 클래스별로 폴더가 나뉜 이미지 데이터셋을 불러올 때 가장 적합한 클래스는 무엇입니까?",
+        "options": [
+            "DataLoader",
+            "ImageLoader",
+            "Dataset",
+            "ImageFolder"
+        ],
+        "hint": "폴더 구조 자체를 데이터셋으로 인식하여 레이블을 자동으로 생성해주는 편리한 클래스가 있습니다.",
+        "solution": "ImageFolder"
+    },
+        {
+        "item_type": "checkbox",
+        "question": "데이터 증강에 대한 설명으로 올바른 것을 모두 고르세요",
+        "options": [
+            "데이터를 다양하게 변형하여 마치 데이터 수가 늘어나는 것과 같은 효과를 준다",
+            "데이터에 임의적인 노이즈를 추가하여 과대적합을 방지한다",
+            "학습된 모델을 사용할 때도 데이터 증강을 하면 효과적이다"
+        ],
+        "hint": "데이터 증강은 학습(training) 시에만 적용하여 모델의 일반화 성능을 높이는 기법입니다.",
+        "solution": [
+            "데이터를 다양하게 변형하여 마치 데이터 수가 늘어나는 것과 같은 효과를 준다",
+            "데이터에 임의적인 노이즈를 추가하여 과대적합을 방지한다"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "물체 탐지에 대한 설명으로 올바른 것을 모두 고르세요",
+        "options": [
+            "이미지에 있는 여러 개의 물체의 종류를 분류한다",
+            "물체의 위치를 경계 상자로 나타낸다",
+            "물체와 배경을 분리한다",
+            "손실 함수가 두 가지 예측의 손실을 최소화하는 형태이다"
+        ],
+        "hint": "물체 탐지는 이미지 분류에서 한 단계 더 나아가, 물체의 위치 정보까지 함께 예측합니다.",
+        "solution": [
+            "이미지에 있는 여러 개의 물체의 종류를 분류한다",
+            "물체의 위치를 경계 상자로 나타낸다",
+            "손실 함수가 두 가지 예측의 손실을 최소화하는 형태이다"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "YOLO의 특징에 해당하는 것을 모두 고르세요",
+        "options": [
+            "2단계 탐지기이다",
+            "추론 속도가 매우 빠르다",
+            "이미지를 특정한 크기의 그리드 셀로 나누어 처리한다"
+        ],
+        "hint": "YOLO는 'You Only Look Once'의 약자로, 이름에서 그 특징을 유추할 수 있습니다.",
+        "solution": [
+            "추론 속도가 매우 빠르다",
+            "이미지를 특정한 크기의 그리드 셀로 나누어 처리한다"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "mAP 50-95에 대한 설명으로 올바른 것을 모두 고르세요",
+        "options": [
+            "모든 종류의 물체에 대한 지표이다",
+            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다",
+            "IOU 임계값이 0.5일 때와 0.95일 때의 차이를 나타낸다"
+        ],
+        "hint": "mAP는 'mean Average Precision'의 약자로, 여러 클래스와 여러 IOU 임계값에 대한 성능을 종합적으로 평가합니다.",
+        "solution": [
+            "모든 종류의 물체에 대한 지표이다",
+            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "객체가 회전되어 있을 때, 일반적인 경계 상자(AABB)의 가장 큰 단점은 무엇입니까?",
+        "options": [
+            "처리 속도가 매우 느려진다",
+            "객체와 불필요한 배경을 함께 포함하여 박스가 너무 커진다",
+            "객체의 색상 정보를 잃어버린다",
+            "하나의 객체만 탐지할 수 있다"
+        ],
+        "hint": "Axis-Aligned Bounding Box는 이름 그대로 축에 평행해야 하므로 기울어진 객체를 효율적으로 감싸지 못합니다.",
+        "solution": "객체와 불필요한 배경을 함께 포함하여 박스가 너무 커진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "Ultralytics 라이브러리에서 자세 추정(pose estimation)을 위해 사용하는 사전 학습된 YOLO 모델 파일명은 무엇입니까?",
+        "options": [
+            "yolo11n.pt",
+            "yolo11n-obb.pt",
+            "yolo11n-pose.pt",
+            "yolo11n-seg.pt"
+        ],
+        "hint": "자세를 의미하는 영어 단어 'pose'가 파일명에 포함되어 있습니다.",
+        "solution": "yolo11n-pose.pt"
+    },
+]    
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

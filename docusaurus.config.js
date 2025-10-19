@@ -122,10 +122,10 @@ const config = {
             //   label: '강화 학습',
             //   to: '/docs/reinforcement-learning/lab',
             // },
-            // {
-            //   label: '머신 러닝',
-            //   to: '/docs/machine-learning/lab',
-            // },
+            {
+              label: '머신 러닝',
+              to: '/docs/machine-learning/lab',
+            },
             {
               label: '컴퓨터 비전',
               to: '/docs/computer-vision/lab',

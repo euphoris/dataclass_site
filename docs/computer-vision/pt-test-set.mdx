@@ -1,0 +1,93 @@
+# 테스트
+
+## 과소/과대 적합
+*   과소적합(underfitting): 실제 패턴보다 모형이 단순
+*   과대적합(overfitting): 실제 패턴보다 모형이 복잡
+
+## 데이터 분할
+*   데이터를 Training과 Testing으로 분할 (보통 8:2 또는 9:1)
+*   파라미터를 추정하는데는 많은 데이터가 필요하므로 Training을 크게
+*   Testing은 모형들의 성능을 구별할 정도만 되면 충분하므로 작게
+*   Training에 과적합되면 Testing에서 성능이 낮아짐
+*   Training과 Testing의 데이터가 섞이지 않도록 유의
+
+## 과적합의 진단
+*   training set에서는 성능이 높지만 testing set에서는 성능이 낮을 경우
+    *   → overfitting 되었을 가능성이 높음
+    *   → 모형의 복잡도를 낮추는 방향으로 구조/하이퍼파라미터를 조정
+*   training set에서도 성능이 낮을 경우
+    *   → underfitting이 되었을 가능성이 높음
+    *   → 모형의 복잡도를 높이는 방향으로 구조/하이퍼파라미터를 조정
+
+## 테스트 데이터 다운로드
+```python
+test_dataset = datasets.MNIST(
+    root='./data',
+    train=False, # 테스트용 데이터셋(이 부분만 달라짐)
+    download=True,
+    transform=transforms.ToTensor()
+)
+
+binary_test_dataset = torchutils.BinarySubset(test_dataset, 0, 1)
+```
+
+## 테스트 데이터 평가
+```python
+test_loader = DataLoader(
+    binary_test_dataset, # 테스트 데이터
+    batch_size=BATCH_SIZE, # 32개씩
+    shuffle=False) # 섞지 말고
+
+trainer.test(model, test_loader)
+```
+
+## 파라미터
+```python
+weight = model.linear.weight.data # Linear 레이어의 가중치
+w = weight.reshape(28, 28).detach().cpu().numpy() # 가중치를 28x28 이미지 형태로
+plt.imshow(w, cmap='gray') # 시각화
+```
+*   흰색: 1로 판단하는 데 영향을 주는 픽셀
+*   검은색: 0으로 판단하는 데 영향을 주는 픽셀
+
+## 직접 손글씨 입력해보기
+*   그림판에서 직접 손글씨 입력
+*   크기 조정(픽셀, 28, 28, 가로세로 비율 X)
+*   오른쪽 하단 확대/축소로 확대
+*   색 채우기 (검은색)
+*   브러시(색 1 → 흰 색)
+*   검은 바탕에 흰 글씨로 0 또는 1
+*   hand.png로 저장
+
+## 손글씨 이미지 불러오기
+```python
+import cv2 as cv
+x = cv.imread('hand.png', cv.IMREAD_GRAYSCALE) # 이미지 불러오기
+
+# 모형에 입력할 때는 (이미지 장수, 세로 길이, 가로 길이) 형태여야 함
+# 한 장 짜리 이미지의 경우 0번 차원을 추가해야 함
+x = np.expand_dims(x, 0) # 차원 추가 (28, 28) → (1, 28, 28)
+x = torch.from_numpy(x).float() # 텐서로 변환
+x = x / 255.0 # 정규화 [0~255] → [0~1]
+model(x) # 모형 예측
+```
+
+## 차원의 추가 방법들
+*   expand_dims
+    ```python
+    np.expand_dims(x, 0) # 0번 차원 확장
+    ```
+*   new_axis
+    ```python
+    x[np.newaxis, 0:28, 0:28] # 0번 차원에 새 축, 1, 2차원은 0~28번값
+    x[np.newaxis, :, :] # 0번 차원에 새 축, 1, 2차원은 모든 값
+    x[np.newaxis, ...] # 0번 차원에 새 축, 다른 차원은 모든 값
+    ```
+*   reshape
+    ```python
+    x.reshape(1, 28, 28) # 모양을 1, 28, 28로 변경
+    ```
+
+## 퀴즈
+
+<iframe src="https://tally.so/embed/mYb2YB?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="892" frameborder="0" marginheight="0" marginwidth="0" title="[CV] 테스트"></iframe>

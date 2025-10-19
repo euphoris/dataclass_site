@@ -1,0 +1,89 @@
+# 컴퓨터 비전과 딥러닝 기초 복습
+
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="review-cv-dl-basic" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "베어링 부품의 이미지를 바탕으로 정상과 불량으로 분류하는 것은 어떤 과업에 해당합니까?",
+        "options": [
+            "이미지 분류",
+            "물체 탐지",
+            "광학 문자 인식",
+            "이미지 분리",
+            "깊이 추정",
+            "자세 추정",
+            "이미지 간 변환",
+            "이미지 생성"
+        ],
+        "hint": "이미지를 주어진 카테고리 중 하나로 구분하는 작업입니다.",
+        "solution": "이미지 분류"
+    },
+    {
+        "item_type": "radio",
+        "question": "x와 y가 짝지어진 형태의 데이터에서 관계를 학습하는 머신 러닝의 형태를 무엇이라고 합니까?",
+        "options": [
+            "지도 학습",
+            "비지도 학습",
+            "강화 학습"
+        ],
+        "hint": "정답(label)이 있는 데이터를 사용하여 학습하는 방식입니다.",
+        "solution": "지도 학습"
+    },
+    {
+        "item_type": "radio",
+        "question": "인공신경망에 대한 설명으로 올바른 것은?",
+        "options": [
+            "생물학적 신경망과 완전히 똑같은 방식으로 작동한다",
+            "인공 뉴런은 모든 입력값에 같은 가중치를 적용한다",
+            "여러 개의 층(layer)로 이뤄져있다",
+            "구조가 같은 모형은 같은 예측을 한다"
+        ],
+        "hint": "인공신경망은 입력층, 은닉층, 출력층 등 여러 층으로 구성되어 계층적인 특징을 학습합니다.",
+        "solution": "여러 개의 층(layer)로 이뤄져있다"
+    },
+    {
+        "item_type": "short",
+        "question": "모형의 구체적 형태를 결정하는 수치를 무엇이라고 합니까?",
+        "hint": "강의 자료 참고",
+        "solution": ["파라미터", "parameter"]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "이항 분류 문제에서 일반적으로 사용되는 레이블을 고르세요",
+        "options": [
+            "0",
+            "1",
+            "2",
+            "3",
+        ],
+        "hint": "시그모이드 함수는 0에서 1 사이의 값을 출력합니다.",
+        "solution": ["0", "1"]
+    },
+    {
+        "item_type": "radio",
+        "question": "시그모이드 함수의 출력이 0.4라면 입력된 이미지가 0번 카테고리일 확률은?",
+        "options": [
+            "20%",
+            "40%",
+            "60%",
+            "80%"
+        ],
+        "hint": "시그모이드 함수의 출력값은 1번 카테고리에 속할 확률을 의미하며, 두 카테고리의 확률의 합은 1(100%)입니다.",
+        "solution": "60%"
+    },
+    {
+        "item_type": "number",
+        "tolerance": 0.01,
+        "question": "어제 배운 모형을 이용하여 MNIST 데이터셋의 숫자 3과 4를 구분하는 이항 분류 모형을 학습시키고, 테스트 데이터로 평가해보세요. 테스트 정확도(accuracy)를 소수점 둘째 자리까지 입력하세요.",
+        "hint": "```\nmodel = keras.models.Sequential(\n    [\n        keras.layers.Rescaling(1/255),\n        keras.layers.Flatten(),\n        keras.layers.Dense(1, activation=\'sigmoid\')\n    ]\n)\nx_train_binary, y_train_binary = filter_binary(x_train, y_train, 3, 4)\nmodel.compile(optimizer=keras.optimizers.SGD(learning_rate=0.0001), loss=\'binary_crossentropy\', metrics=[\'accuracy\'])\nmodel.fit(x_train_binary, y_train_binary, epochs=5, batch_size=32)\nx_test_binary, y_test_binary = filter_binary(x_test, y_test, 3, 4)\nmodel.evaluate(x_test_binary, y_test_binary)\n```",
+        "solution": null
+    },
+]    
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
