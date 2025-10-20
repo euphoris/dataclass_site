@@ -1,0 +1,180 @@
+# 머신러닝의 종류
+
+## 머신러닝의 주요 접근
+
+- 지도 학습
+- 비지도 학습
+- 강화 학습
+
+## 지도학습 supervised learning
+
+- 라벨이 있는 데이터로부터 학습
+- 입력(𝑥)과 출력(𝑦) 간의 관계 모형화
+- 머신 러닝의 90% 이상을 차지하는 학습 형태
+- 종류:
+    - 회귀(regression): 연속적인 y를 예측하는 것
+    - 분류(classification): 여러 종류의 값들을 구분하는 것. 범주형 y를 예측하는 것
+
+예시:
+- 스팸 메일 필터링: 이메일 내용을 분석하여 스팸 여부를 판단
+- 이미지 분류: 이미지를 특정 카테고리로 자동 분류
+- 질병 예측: 환자의 데이터를 기반으로 질병 발병 확률 예측
+- 주가 예측: 과거 주식 데이터를 이용해 미래 주가를 예측
+
+## 비지도 학습 unsupervised learning
+
+- 라벨이 없는 데이터로부터 학습
+- 데이터의 구조나 패턴 발견
+
+종류:
+- 클러스터링(clustering): 비슷한 특성을 가지는 군집으로 묶음
+- 차원 축소(dimensionality reduction): 데이터를 더 낮은 차원으로 표현
+
+예시:
+- 고객 세분화: 비슷한 특성을 가진 고객 그룹으로 분류
+- 문서 군집화: 유사한 내용의 문서를 자동으로 묶음
+- 차원 축소: 데이터의 중요 정보를 유지하면서 차원 축소
+- 장바구니 분석: 고객의 구매 패턴을 분석하여 연관 상품 추천
+
+### 클러스터링 clustering
+
+- 비슷한 사례들을 하나의 군집(cluster)으로 만드는 비지도 학습
+
+- 파티션(partition) 알고리즘: 수평적인 군집들로 나눔
+    - K-Means
+    - Mixture of Gaussian
+    - Spectral Clustering
+- 위계적(hierarchical) 알고리즘: 큰 군집 안에 작은 군집들이 포함되는 형태로 나눔
+
+### 다차원 척도법 MultiDimensional Scaling
+
+- 주어진 거리를 최대한 만족하는 방식으로 점들의 좌표를 계산하여 시각화하는 방법
+- 포지셔닝 맵과 같은 시각화를 할 때 사용할 수 있음
+
+## 강화 학습 Reinforcement Learning
+
+- 행위자는 환경과 상호작용
+- 행위자의 행동(𝐴)에 따라 보상이 주어짐
+- 수익(𝐺): 보상을 장기간에 걸쳐 누적한 것
+- 행위자는 현재 상태(𝑆)에서 앞으로 수익이 가장 큰 행동을 내는 정책(𝜋)을 찾아야 함
+
+예시:
+- 게임 인공지능: 게임 환경에서 스스로 학습하여 최적의 전략을 수행(예: AlphaGo)
+- 로봇 제어: 로봇이 다양한 환경에서 최적의 행동을 학습
+- 자율 주행: 자율 주행 차량이 주행 상황에 맞춰 최적의 경로를 선택
+
+### 지도 학습과 강화 학습의 차이
+
+- 지도 학습
+    - X에서 Y를 예측하는 문제.
+    - X와 Y가 모두 있는 데이터가 필요
+    - Y에 대한 예측 오차를 줄이는 것이 목표
+    - 바둑) 현재 상황(X)에서 프로 기사들의 다음 수(Y)를 학습
+    - 투자) 기업의 정보(X)에서 주가(Y)를 학습
+- 강화 학습
+    - 데이터 대신 직접 시행 착오
+    - 행동으로 인한 보상을 최대화하는 것이 목표
+    - 바둑) 현재 상황(S)에서 다음 수(A)를 시행착오를 통해 학습
+    - 투자) 기업의 정보(X)에서 매수/매도/보유(A)를 시행착오를 통해 학습
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="types-of-learning" quizItems={
+    [
+    {
+        "item_type": "checkbox",
+        "question": "머신러닝의 주요 접근법 세 가지를 모두 고르세요.",
+        "options": [
+            "지도 학습 (Supervised Learning)",
+            "비지도 학습 (Unsupervised Learning)",
+            "강화 학습 (Reinforcement Learning)",
+            "통계적 학습 (Statistical Learning)"
+        ],
+        "hint": "강의자료 첫 부분에 세 가지 주요 접근법이 나열되어 있습니다. 통계적 학습은 머신러닝의 다른 이름이기도 합니다.",
+        "solution": [
+            "지도 학습 (Supervised Learning)",
+            "비지도 학습 (Unsupervised Learning)",
+            "강화 학습 (Reinforcement Learning)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "지도 학습(Supervised Learning)의 가장 핵심적인 특징은 무엇입니까?",
+        "options": [
+            "라벨(정답)이 없는 데이터로부터 학습한다",
+            "라벨(정답)이 있는 데이터로부터 학습한다",
+            "시행착오를 통해 보상을 최대화하는 방식으로 학습한다",
+            "데이터를 비슷한 그룹으로 묶는다"
+        ],
+        "hint": "지도 학습은 입력(x)과 출력(y)의 관계를 모델링합니다. 여기서 y가 바로 라벨(정답)에 해당합니다.",
+        "solution": "라벨(정답)이 있는 데이터로부터 학습한다"
+    },
+    {
+        "item_type": "radio",
+        "question": "과거 데이터를 이용해 미래 주가를 예측하는 문제는 어떤 종류의 지도 학습에 해당합니까?",
+        "options": [
+            "회귀 (Regression)",
+            "분류 (Classification)",
+            "클러스터링 (Clustering)",
+            "차원 축소 (Dimensionality Reduction)"
+        ],
+        "hint": "주가는 연속적인 숫자 값입니다. 연속적인 값을 예측하는 지도 학습의 종류를 찾아보세요.",
+        "solution": "회귀 (Regression)"
+    },
+    {
+        "item_type": "radio",
+        "question": "비지도 학습(Unsupervised Learning)의 주된 목적은 무엇입니까?",
+        "options": [
+            "입력과 출력 사이의 관계를 정확히 예측하는 것",
+            "데이터 자체에 내재된 구조나 패턴을 발견하는 것",
+            "장기적인 보상을 최대로 만드는 행동 정책을 찾는 것",
+            "미리 정의된 카테고리로 데이터를 나누는 것"
+        ],
+        "hint": "비지도 학습은 정답(라벨)이 없는 상태에서 데이터의 특성을 파악하는 데 중점을 둡니다.",
+        "solution": "데이터 자체에 내재된 구조나 패턴을 발견하는 것"
+    },
+    {
+        "item_type": "radio",
+        "question": "비슷한 특성을 가진 고객들을 그룹으로 묶어 관리하는 '고객 세분화'는 어떤 비지도 학습의 대표적인 예시입니까?",
+        "options": [
+            "클러스터링 (Clustering)",
+            "차원 축소 (Dimensionality Reduction)",
+            "다차원 척도법 (MultiDimensional Scaling)",
+            "강화 학습 (Reinforcement Learning)"
+        ],
+        "hint": "비슷한 사례들을 하나의 '군집(cluster)'으로 만드는 비지도 학습 기법입니다.",
+        "solution": "클러스터링 (Clustering)"
+    },
+    {
+        "item_type": "radio",
+        "question": "강화 학습(Reinforcement Learning)에서 행위자(agent)의 궁극적인 목표는 무엇입니까?",
+        "options": [
+            "주어진 데이터의 예측 오차를 최소화하는 것",
+            "데이터를 가장 잘 설명하는 군집을 찾는 것",
+            "장기간에 걸쳐 누적되는 보상(수익)을 최대화하는 정책을 찾는 것",
+            "환경과의 상호작용을 최소화하는 것"
+        ],
+        "hint": "행위자는 현재 상태(S)에서 어떤 행동(A)을 해야 미래의 누적 보상(G)이 가장 커질지를 학습합니다.",
+        "solution": "장기간에 걸쳐 누적되는 보상(수익)을 최대화하는 정책을 찾는 것"
+    },
+    {
+        "item_type": "radio",
+        "question": "지도 학습과 강화 학습의 목표 차이에 대한 설명으로 가장 올바른 것은 무엇입니까?",
+        "options": [
+            "지도 학습은 보상을 최대화하고, 강화 학습은 예측 오차를 줄이는 것이 목표이다.",
+            "지도 학습은 예측 오차를 줄이고, 강화 학습은 누적 보상을 최대화하는 것이 목표이다.",
+            "둘 다 예측 오차를 줄이는 것이 목표이지만, 사용하는 데이터의 종류가 다르다.",
+            "둘 다 보상을 최대화하는 것이 목표이지만, 학습 방식에 차이가 있다."
+        ],
+        "hint": "지도 학습은 정답(Y)이 주어진 문제이고, 강화 학습은 정답 없이 시행착오를 통해 최적의 행동을 배웁니다.",
+        "solution": "지도 학습은 예측 오차를 줄이고, 강화 학습은 누적 보상을 최대화하는 것이 목표이다."
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
+

@@ -1,233 +1,267 @@
+# 하이퍼 파라미터 튜닝
 
+## 파라미터 vs. 하이퍼파라미터
 
+  * 파라미터
+      * 데이터로부터 학습되는 변수
+      * 신경망에서 가중치
+      * 역전파 알고리즘을 통해 학습
+  * 하이퍼파라미터
+      * 모형 또는 학습의 특성을 정의하는 변수
+      * 학습 전에 결정
+      * 종류:
+          * 신경망의 구조: 은닉층의 수, 각 층의 폭, 활성화 함수
+          * 학습 및 최적화: 학습률, 배치의 크기, 최적화 알고리즘, 에포크 수, 학습 중단 방식
+          * 정칙화: 드롭아웃 방식, 데이터 증강 등
 
-```python copy
+## 실습 준비
+
+```python
 import pandas as pd
 df = pd.read_excel('cancer.xlsx')
-
-# 전처리
+#전처리
 target = 'diagnosis'
-y = df[target].map({'B': 0, 'M': 1})
-x = df.drop(columns=target)
-
-# 데이터 분할
+y = df[target].map({'B' : 0, 'M': 1})
+X = df.drop(columns=target)
+#데이터 분할
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.2, random_state = 42)
 ```
 
+## 하이퍼파라미터 vs. 파라미터
 
-
-```python copy
+```python
 # Support Vector Machine
 from sklearn.svm import SVC
 model = SVC(kernel='linear')
-# 하이퍼 파라미터
+#하이퍼 파라미터
 model.get_params()
+#학습
+model.fit(X_train, y_train)
+#파라미터
+model.coef_
 ```
 
-:::info[output]
-```
-{'C': 1.0,
- 'break_ties': False,
- 'cache_size': 200,
- 'class_weight': None,
- 'coef0': 0.0,
- 'decision_function_shape': 'ovr',
- 'degree': 3,
- 'gamma': 'scale',
- 'kernel': 'linear',
- 'max_iter': -1,
- 'probability': False,
- 'random_state': None,
- 'shrinking': True,
- 'tol': 0.001,
- 'verbose': False}
-```
+## 하이퍼파라미터 튜닝 hyperparameter tuning
 
-:::
+  * 하이퍼파라미터: 모형의 성격이나 학습 방법과 관련된 설정
+  * 학습률, 은닉층의 수, 은닉층의 크기 등
+  * 데이터로부터 학습될 수 없고 시행착오를 통해 튜닝
+  * 보통 1, 2, 3, ...이 아니라 1, 10, 100, ... 등으로 탐색
 
+## Validation 또는 Development set
 
+  * 테스트셋 데이터를 이용해서 결정하면 하이퍼파라미터가 테스트셋에 과적합될 우려
+  * 별도의 Validataion 또는 Development set을 이용해서 하이퍼파라미터를 결정
 
-```python copy
-# 학습
-model.fit(x_train, y_train)
-# 파라미터
-model.coef_ # 계수(coefficient)
-```
+## 하이퍼파라미터 튜닝
 
-:::info[output]
-```
-array([[0.13394802, 0.7031127 , 1.15047261, 1.02227898, 0.33443023,
-        0.30568719, 0.44130614, 0.08846798, 0.00658455, 1.48314137,
-        3.11137723, 1.08210364]])
-```
+## 교차 검증 cross-validation
 
-:::
+  * 하나의 검증셋만 사용할 경우, 하이퍼파라미터가 정확하지 않을 수 있음
+  * 다양한 검증셋을 이용하여 검증
+  * K-fold
+      * 가장 많이 사용하는 방법
+      * 훈련 데이터를 k개의 겹치지 않는 부분으로 나눔
+      * k-1개로 훈련하고 나머지 하나로 검증하는 것을 k번 반복
 
+## 교차 검증
 
-
-```python copy
-model.score(x_test, y_test)
-```
-
-:::info[output]
-```
-0.9736842105263158
-```
-
-:::
-
-
-
-```python copy
-# 간단하게
+```python
+#5-Fold
+from sklearn.model_selection import KFold
+kf = KFold(n_splits = 5)
+for train, val in kf.split(X_train):
+    model.fit(X_train.iloc[train], y_train.iloc[train])
+    print(model.score(X_train.iloc[val], y_train.iloc[val]))
+#간단하게
 from sklearn.model_selection import cross_val_score
-scores = cross_val_score(model, x_train, y_train, cv=5)
-scores
+scores = cross_val_score(model, X_train, y_train, cv=5)
 ```
 
-:::info[output]
-```
-array([0.97802198, 0.92307692, 0.96703297, 0.93406593, 0.9010989 ])
-```
+## 격자 탐색과 무작위 탐색
 
-:::
+  * 격자 탐색 grid search: 각 하이퍼파라미터의 설정값을 정하고, 이들을 조합하여 하나씩 시도
+  * 무작위 탐색 random search: 하이퍼파라미터를 무작위로 조합하여 하나씩 시도
+  * 하이퍼파라미터를 더 다양하고 촘촘하게 탐색하여 격자 탐색보다 더 높은 성능을 내는 경향
 
+## 격자 탐색
 
-
-```python copy
-# 229
+```python
+#격자 탐색
+from sklearn.model_selection import GridSearchCV
 param_grid = [
-{'C': [1, 10, 100, 1000], 'kernel': ['linear']},
-{'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+    {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+    {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
 ]
+grid_cv = GridSearchCV (model, param_grid, cv=5, verbose = 2)
+grid_cv.fit(X_train, y_train)
+#가장 성능이 높은 하이퍼파라미터
+grid_cv.best_params_
+#가장 성능 높은 모델로 테스트
+best_model = grid_cv.best_estimator_
+best_model.score(X_test, y_test)
+```
 
-# 230
+## 무작위 탐색
+
+```python
+#격자 탐색
 from sklearn.model_selection import RandomizedSearchCV
-random_cv = RandomizedSearchCV(model, param_grid, n_iter=10, cv=5, verbose=2)
-random_cv.fit(x_train, y_train)
-```
-
-
-
-```python copy
-# 가장 성능이 높은 하이퍼파라미터
+random_cv = RandomizedSearchCV(model, param_grid, n_iter = 10, cv=5, verbose = 2)
+random_cv.fit(X_train, y_train)
+#가장 성능이 높은 하이퍼파라미터
 random_cv.best_params_
-```
-
-
-
-```python copy
+#가장 성능 높은 모델로 테스트
 best_model = random_cv.best_estimator_
-best_model.score(x_test, y_test)
+best_model.score(X_test, y_test)
 ```
 
-:::info[output]
-```
-0.956140350877193
-```
+## 난수 생성을 이용한 무작위 탐색
 
-:::
-
-
-
-```python copy
+```python
+#1에서 10까지 균등 분포
 import scipy
 p = scipy.stats.randint(1, 10)
-p.rvs(10) # 난수 10개
+p.rvs(10)
+#1에서 10까지 이산균등분포
+p = scipy.stats.randint(1, 10)
+# 10^-4 에서 10^-1 까지 로그 균등 분포
+p = scipy.stats.loguniform(1e-4, 1e-1)
 ```
 
-:::info[output]
-```
-array([2, 9, 2, 5, 7, 1, 5, 1, 6, 7], dtype=int64)
-```
+## 난수 생성을 이용한 무작위 탐색
 
-:::
-
-
-
-```python copy
-p = scipy.stats.uniform(1, -1) # randint -> uniform
-10 ** p.rvs(10) # 난수 10개
-```
-
-:::info[output]
-```
-array([2.01295604e-03, 1.04887187e-04, 4.12424409e-04, 3.99452887e-04,
-       9.12718717e-05, 5.47252328e-03, 6.73801288e-04, 1.66499546e-03,
-       2.78770827e-05, 1.49368040e-04])
-```
-
-:::
-
-
-
-```python copy
-p = scipy.stats.loguniform(1e-4, 1e-1) # 0.0001 ~ 0.1
-p.rvs(10) # 난수 10개
-```
-
-:::info[output]
-```
-array([0.00372758, 0.00096534, 0.00013629, 0.00090773, 0.05639246,
-       0.03542506, 0.00018209, 0.00418193, 0.08801932, 0.01706827])
-```
-
-:::
-
-
-
-```python copy
+```python
+#하이퍼파라미터를 분포로 설정
 param_grid = [
-{'C': scipy.stats.loguniform(1, 1000), 'kernel': ['linear']},
-{'C': scipy.stats.loguniform(1, 1000), 'gamma': scipy.stats.loguniform(1e-4, 1e-3),
-'kernel': ['rbf']},
+    {'C': scipy.stats.loguniform(1, 1000), 'kernel': ['linear']},
+    {'C': scipy.stats.loguniform(1, 1000),
+     'gamma': scipy.stats.loguniform(1e-4, 1e-3),
+     'kernel': ['rbf']},
 ]
-# 튜닝
-random_cv = RandomizedSearchCV(model, param_grid, n_iter=10, cv=2, verbose=2)
-random_cv.fit(x_train, y_train)
+#튜닝
+random_cv = RandomizedSearchCV(model, param_grid, n_iter = 10, cv=2, verbose = 2)
+random_cv.fit(X_train, y_train)
 ```
 
-:::info[output]
-```
-Fitting 2 folds for each of 10 candidates, totalling 20 fits
-[CV] END C=182.75740211688858, gamma=0.0004501479076085557, kernel=rbf; total time=   0.0s
-[CV] END C=182.75740211688858, gamma=0.0004501479076085557, kernel=rbf; total time=   0.0s
-[CV] END C=428.830454770395, gamma=0.000676596264077591, kernel=rbf; total time=   0.0s
-[CV] END C=428.830454770395, gamma=0.000676596264077591, kernel=rbf; total time=   0.0s
-[CV] END C=2.1091684248556524, gamma=0.0009966409328125913, kernel=rbf; total time=   0.0s
-[CV] END C=2.1091684248556524, gamma=0.0009966409328125913, kernel=rbf; total time=   0.0s
-[CV] END ................C=12.372385356504877, kernel=linear; total time=   4.9s
-[CV] END ................C=12.372385356504877, kernel=linear; total time=   0.7s
-[CV] END .................C=18.06890033548341, kernel=linear; total time=   2.4s
-[CV] END .................C=18.06890033548341, kernel=linear; total time=   3.4s
-[CV] END ................C=230.52753222097869, kernel=linear; total time=  10.2s
-[CV] END ................C=230.52753222097869, kernel=linear; total time=   2.7s
-[CV] END ................C=1.7636566309281456, kernel=linear; total time=   0.6s
-[CV] END ................C=1.7636566309281456, kernel=linear; total time=   1.2s
-[CV] END .................C=76.85992166504752, kernel=linear; total time=   5.6s
-[CV] END .................C=76.85992166504752, kernel=linear; total time=   2.1s
-[CV] END C=45.61013158825893, gamma=0.00012061126531531652, kernel=rbf; total time=   0.0s
-[CV] END C=45.61013158825893, gamma=0.00012061126531531652, kernel=rbf; total time=   0.0s
-[CV] END ................C=16.132445179832295, kernel=linear; total time=   5.6s
-[CV] END ................C=16.132445179832295, kernel=linear; total time=   1.8s
+## Sequential Model-Based Optimization
 
-```
+  * 무작위 탐색의 문제점:
+      * 하이퍼파라미터의 종류가 많아질 수록 더 많은 탐색이 필요
+      * 하이퍼파라미터는 학습 전체가 끝나야 성능을 알 수 있음 (비쌈)
+      * 무작위 탐색은 이전의 학습 결과를 활용하지 않음
+  * SMBO: 하이퍼파라미터와 성능의 관계를 모형화
+      * 모형을 바탕으로 최적의 하이퍼파라미터를 선택하여 학습
+      * 학습 결과를 바탕으로 모형을 업데이트하는 과정을 반복
+      * 적은 데이터에서 높은 성능을 내는 모형을 사용
+      * 기본적으로 어느 정도의 데이터를 요구하므로 다양한 하이퍼파라미터를 선제적으로 시도해야 함 → 효율성이 떨어짐
 
-```
-RandomizedSearchCV(cv=2, estimator=SVC(kernel='linear'),
-                   param_distributions=[{'C': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B8C10>,
-                                         'kernel': ['linear']},
-                                        {'C': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B81F0>,
-                                         'gamma': <scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x00000176393B8AF0>,
-                                         'kernel': ['rbf']}],
-                   verbose=2)
-```
+## 베이즈 오차 Bayes Error
 
-:::
-
+  * 오차 0%는 다양한 이유로 실현 불가능(예: 테스트 이미지의 레이블이 잘못 붙어 있음. 식별 불가능한 이미지 등)
+  * 베이즈 오차: 데이터로부터 도달할 수 있는 이론적으로 최소의 오차
+  * 베이즈 오차를 실제로 추정하기는 불가능
+  * 보통 사람의 오차를 베이즈 오차 대용으로 사용
+  * 예: MNIST의 경우 사람의 오차 0.2% 수준
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wAxe0o?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 하이퍼파라미터"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="regularization" quizItems={[
+    {
+        "item_type": "radio",
+        "question": "다음 중 하이퍼파라미터(Hyperparameter)에 대한 설명으로 가장 올바른 것은 무엇입니까?",
+        "options": [
+            "데이터로부터 학습 과정 중에 모델이 스스로 학습하는 변수이다.",
+            "모델의 구조나 학습 방식을 결정하기 위해 사용자가 학습 전에 직접 설정하는 변수이다.",
+            "역전파 알고리즘을 통해 최적의 값이 자동으로 찾아진다.",
+            "모델이 학습을 마친 후에만 확인할 수 있는 값이다."
+        ],
+        "hint": "파라미터와 하이퍼파라미터의 가장 큰 차이점은 '누가 그 값을 결정하는가'입니다.",
+        "solution": "모델의 구조나 학습 방식을 결정하기 위해 사용자가 학습 전에 직접 설정하는 변수이다."
+    },
+    {
+        "item_type": "radio",
+        "question": "최적의 하이퍼파라미터를 찾을 때, 학습(train) 데이터와 테스트(test) 데이터 외에 별도의 검증(validation) 데이터를 사용하는 주된 이유는 무엇입니까?",
+        "options": [
+            "학습 데이터의 양을 늘리기 위해서입니다.",
+            "모델의 학습 속도를 높이기 위해서입니다.",
+            "테스트 데이터에 하이퍼파라미터가 과대적합되는 것을 방지하기 위해서입니다.",
+            "파라미터의 개수를 줄이기 위해서입니다."
+        ],
+        "hint": "테스트 데이터는 '최종 시험'과 같습니다. 시험 문제로 공부를 하면 안 되겠죠?",
+        "solution": "테스트 데이터에 하이퍼파라미터가 과대적합되는 것을 방지하기 위해서입니다."
+    },
+    {
+        "item_type": "radio",
+        "question": "K-Fold 교차 검증(Cross-validation)에 대한 설명으로 가장 올바른 것은 무엇입니까?",
+        "options": [
+            "데이터를 K개의 부분 집합으로 나눈 뒤, 그 중 1개만으로 학습하고 나머지 K-1개로 검증한다.",
+            "데이터를 무작위로 섞은 뒤 K개의 모델을 만들어 성능을 평균 내는 방법이다.",
+            "데이터를 K개의 부분 집합으로 나누고, K-1개로 학습, 1개로 검증하는 과정을 K번 반복하여 성능을 평균 낸다.",
+            "데이터를 K개의 부분 집합으로 나눈 뒤, K개의 부분 집합 전체를 동시에 학습시키는 방법이다."
+        ],
+        "hint": "데이터를 여러 번 나누어 학습과 검증에 골고루 사용한다고 생각해보세요.",
+        "solution": "데이터를 K개의 부분 집합으로 나누고, K-1개로 학습, 1개로 검증하는 과정을 K번 반복하여 성능을 평균 낸다."
+    },
+    {
+        "item_type": "radio",
+        "question": "격자 탐색(Grid Search)에 비해 무작위 탐색(Random Search)이 더 효율적인 경향을 보이는 이유는 무엇입니까?",
+        "options": [
+            "항상 더 적은 횟수로 최적의 하이퍼파라미터를 찾기 때문입니다.",
+            "이전 탐색 결과를 바탕으로 다음 탐색 범위를 좁혀나가기 때문입니다.",
+            "모델 성능에 영향을 거의 주지 않는 하이퍼파라미터에 불필요한 탐색을 반복하지 않고, 더 다양한 값들을 탐색할 수 있기 때문입니다.",
+            "격자 탐색보다 항상 더 높은 성능의 하이퍼파라미터 조합을 보장하기 때문입니다."
+        ],
+        "hint": "모든 하이퍼파라미터가 모델 성능에 똑같이 중요한 것은 아니라는 점을 생각해보세요.",
+        "solution": "모델 성능에 영향을 거의 주지 않는 하이퍼파라미터에 불필요한 탐색을 반복하지 않고, 더 다양한 값들을 탐색할 수 있기 때문입니다."
+    },
+    {
+        "item_type": "checkbox",
+        "question": "다음 중 SVM 모델의 하이퍼파라미터(hyperparameter)에 해당하는 것을 모두 고르세요.",
+        "options": [
+            "커널(kernel)의 종류 (예: 'linear', 'rbf')",
+            "정칙화 강도 C",
+            "학습 후 결정되는 각 특성의 계수(model.coef_)",
+            "감마(gamma)"
+        ],
+        "hint": "모델이 `fit()` 함수를 통해 데이터로부터 직접 배우는 값이 무엇인지 생각해보세요. 그 외의 설정값들이 하이퍼파라미터입니다.",
+        "solution": [
+            "커널(kernel)의 종류 (예: 'linear', 'rbf')",
+            "정칙화 강도 C",
+            "감마(gamma)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "이전의 하이퍼파라미터 탐색 결과를 활용하여 '성능이 좋을 것 같은' 다음 하이퍼파라미터 조합을 예측하고 시도하는 최적화 기법은 무엇입니까?",
+        "options": [
+            "격자 탐색 (Grid Search)",
+            "무작위 탐색 (Random Search)",
+            "K-Fold 교차 검증 (K-Fold Cross-validation)",
+            "순차적 모델 기반 최적화 (SMBO)"
+        ],
+        "hint": "단순히 시도하는 것을 넘어, '경험'을 통해 더 나은 선택을 하려는 시도입니다.",
+        "solution": "순차적 모델 기반 최적화 (SMBO)"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터 자체의 한계(예: 노이즈, 잘못된 라벨)로 인해 이론적으로 도달할 수 있는 가장 낮은 오류율을 무엇이라고 합니까?",
+        "options": [
+            "훈련 오차 (Training Error)",
+            "테스트 오차 (Test Error)",
+            "베이즈 오차 (Bayes Error)",
+            "과대적합 오차 (Overfitting Error)"
+        ],
+        "hint": "완벽한 모델이라도 절대 0%의 오차를 만들 수 없는 이유를 생각해보세요.",
+        "solution": "베이즈 오차 (Bayes Error)"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

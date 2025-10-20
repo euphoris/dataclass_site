@@ -917,38 +917,92 @@ const sidebars: SidebarsConfig = {
       id: 'machine-learning/lab',
       label: '실습 및 Q&A'
     },
-    { type: 'doc',
-      id: 'machine-learning/intro',
-      label: '시작하기'
+    {
+      type: 'category',
+      label: '머신러닝 기초',
+      items: [
+        { 
+          type: 'doc',
+          id: 'machine-learning/intro',
+          label: '머신러닝 소개 및 기본 개념'
+        },
+        { 
+          type: 'doc',
+          id: 'machine-learning/types-of-learning',
+          label: '머신러닝의 종류'
+        },
+        { 
+          type: 'doc',
+          id: 'machine-learning/eda',
+          label: '탐색적 데이터 분석'
+        },
+        { 
+          type: 'doc',
+          id: 'machine-learning/knn',
+          label: 'KNN'
+        },
+        { 
+          type: 'doc',
+          id: 'machine-learning/missing',
+          label: '결측치 처리'
+        },
+      ]
     },
-    { type: 'doc',
-      id: 'machine-learning/preprocessing',
-      label: '데이터 클리닝 및 전처리 기법'
+    {
+      type: 'category',
+      label: '다양한 머신러닝 기법',
+      items: [
+
+        { type: 'doc',
+          id: 'machine-learning/review-machine-learning-basics',
+          label: '머신러닝 기초 복습'
+        },
+        { type: 'doc',
+          id: 'machine-learning/linear-regression',
+          label: '선형 회귀'
+        },
+        { type: 'doc',
+          id: 'machine-learning/logistic-regression',
+          label: '로지스틱 회귀'
+        },
+        { type: 'doc',
+          id: 'machine-learning/decision-tree',
+          label: '의사결정 나무'
+        },
+        { type: 'doc',
+          id: 'machine-learning/ensemble',
+          label: '앙상블'
+        },
+        { type: 'doc',
+          id: 'machine-learning/hyperparameter-tuning',
+          label: '하이퍼파라미터 튜닝'
+        },
+        { type: 'doc',
+          id: 'machine-learning/imbalanced',
+          label: '불균형한 데이터의 처리'
+        },
+      ]
     },
+    // { type: 'doc',
+    //   id: 'machine-learning/preprocessing',
+    //   label: '데이터 클리닝 및 전처리 기법'
+    // },
     // { type: 'doc',
     //   id: 'machine-learning/recent-trends',
     //   label: '머신러닝 기법의 최근 동향'
     // },
-    { type: 'doc',
-      id: 'machine-learning/eda',
-      label: '탐색적 데이터 분석'
-    },
-    { type: 'doc',
-      id: 'machine-learning/imbalanced',
-      label: '불균형한 데이터의 처리'
-    },
     // { type: 'doc',
     //   id: 'machine-learning/augmentation',
     //   label: '데이터 증강'
     // },
-    { type: 'doc',
-      id: 'machine-learning/time-series',
-      label: '시계열 분석 프로젝트 사례 연구'
-    },
-    { type: 'doc',
-      id: 'machine-learning/tabpfn',
-      label: '표(tabular) 데이터의 머신러닝'
-    },
+    // { type: 'doc',
+    //   id: 'machine-learning/time-series',
+    //   label: '시계열 분석 프로젝트 사례 연구'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/tabpfn',
+    //   label: '표(tabular) 데이터의 머신러닝'
+    // },
     // { type: 'doc',
     //   id: 'machine-learning/unstructured',
     //   label: '비정형 데이터의 머신 러닝'
@@ -957,38 +1011,30 @@ const sidebars: SidebarsConfig = {
     //   id: 'machine-learning/weak-supervision',
     //   label: '불완전한 데이터의 약한 지도'
     // },
-    { type: 'doc',
-      id: 'machine-learning/hyperparameter-tuning',
-      label: '하이퍼파라미터 튜닝'
-    },
-    { type: 'doc',
-      id: 'machine-learning/confusion-matrix',
-      label: '모델 성능 비교 및 선택 전략'
-    },
+    // { type: 'doc',
+    //   id: 'machine-learning/confusion-matrix',
+    //   label: '모델 성능 비교 및 선택 전략'
+    // },
     // { type: 'doc',
     //   id: 'machine-learning/computer-vision',
     //   label: '컴퓨터 비전 사례 연구'
     // },
-    { type: 'doc',
-      id: 'machine-learning/ensemble',
-      label: '앙상블'
-    },
-    { type: 'doc',
-      id: 'machine-learning/xAI',
-      label: '설명가능한 AI'
-    },
-    { type: 'doc',
-      id: 'machine-learning/generative-ai',
-      label: '생성형 AI'
-    },
-    { type: 'doc',
-      id: 'machine-learning/nlg',
-      label: '자연어 생성'
-    },
-    { type: 'doc',
-      id: 'machine-learning/nlp',
-      label: '자연어 처리 프로젝트 사례 연구'
-    },
+    // { type: 'doc',
+    //   id: 'machine-learning/xAI',
+    //   label: '설명가능한 AI'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/generative-ai',
+    //   label: '생성형 AI'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/nlg',
+    //   label: '자연어 생성'
+    // },
+    // { type: 'doc',
+    //   id: 'machine-learning/nlp',
+    //   label: '자연어 처리 프로젝트 사례 연구'
+    // },
   ],
   computerVisionSidebar: [
     { type: 'doc',

@@ -1,31 +1,219 @@
 # 탐색적 데이터 분석
 
-주피터 노트북 종료하고
+## 탐색적 데이터 분석 Exploratory Data Analysis
 
-시작 -> Anaconda 3 -> Anaconda Prompt 연 후에 아래 명령 입력
+  * 특별한 가설 없이 데이터의 주요 특성을 시각적 및 통계적으로 조사하는 과정
+  * 가설을 검증하려는 경우는 확인적(Confirmatory) 데이터 분석
+  * 데이터의 기본적인 특성과 구조를 이해하여 적절한 모형과 방법을 선택
+      * 예: 데이터가 비선형 관계를 가지는 경우
+  * 이상치나 결측치 등을 조기에 발견하여 이를 수정하거나 처리
+  * 데이터를 탐색하면서 새로운 가설을 생성
 
-```bash
-pip install ydata-profiling
-```
+## 변수의 종류
 
-데이터 열기
+  * 범주형 변수(categorical variable): 종류, 이름 등에 해당
+      * 숫자로 표시하더라도 양적인 개념이 아님
+      * 덧셈 등 대부분의 연산이 의미가 없음
+      * 순서가 있을 수도 있으나, 간격이 일정하지 않음
+      * 예: 주거 형태, 고향, 학력, 출석
+  * 연속형 변수(continuous variable): 연속적인 수치
+      * 간격이 일정하고 덧셈, 뺄셈 등의 계산이 의미가 있음
+      * 예: 무게, 나이, 시간, 거리, 자녀의 수, 시험 점수
 
-```Python
+## 기술 통계
+
+  * 기술 통계(descriptive statistics): 데이터를 묘사, 설명
+  * [참고] 추론 통계(inferential statistics): 데이터를 바탕으로 추론, 예측
+  * 중심 경향치: 데이터가 어디에 몰려있는가?
+      * 평균
+      * 중간값
+  * 분위수: 데이터에서 각각의 순위가 어느 정도인가?
+  * 변산성 측정치: 데이터가 어떻게 퍼져있는가?
+      * 범위, IQR
+      * 분산, 표준편차
+
+## 평균
+
+$\overline{X}=\frac{1}{N}\sum_{i=1}^{N}X_{i}$
+
+  * N개의 값 $(X_{1},X_{2},...,X_{n})$ 이 있을 때, 그 합계(Σ)를 N으로 나눈 것
+  * 평균은 극단값에 따라 영향을 크게 받음
+      * 10, 20, 30, 40, 50이 있을 경우 → 30
+      * 10, 20, 30, 40, 500이 있을 경우 → 120
+  * 1986년 미국 노스캐롤라이나 대학 (UNC) 졸업생 평균 초봉 조사
+      * 가장 높은 학과는 지리학과 (25만 달러)
+      * 당시 미국 대졸 평균 초봉은 2만 2천달러 수준
+      * 당시 마이클 조던이 UNC 지리학과를 졸업
+
+## 중간값 median
+
+  * 값들을 크기 순으로 정렬했을 때 중간에 위치한 값
+      * 10, 20, 30, 40, 50의 중간값 → 30
+  * 10, 20, 30, 40, 500의 중간값 → 30
+  * "중위수"라는 표현도 많이 사용 (중위소득, 중위가격 등)
+  * 값이 짝수개 있을 경우는 가운데 두 값의 평균
+      * 10, 20, 30, 40의 중간값 → 20과 30의 평균 → 25
+
+## 평균 vs. 중간값
+
+  * 임금근로자 평균소득 \> 중위소득
+      * 월 500만원 고소득차들이 있어서 평균을 끌어올림
+  * 평균으로 보면, 임금근로자의 소득에 대해 과대평가를 할 수 있음
+  * 중간값도 왜곡된 인식을 줄 수 있음
+      * 만약 여러 명의 방문 고객 중에 1명만 구매할 경우, 고객 1인당 중위매출 = 0원 → 평균과 달리 전체 매출을 알 수 없음
+  * 평균과 중간값이 보여주는 측면이 다르므로 둘 다 보는 것이 바람직
+
+## Python 중심경향치
+
+```python
 import pandas as pd
 df = pd.read_excel('car.xlsx')
+df.price.mean() # 평균
+df.price.median() #중간값
+df.model.value_counts() # 범주별 빈도
 ```
 
-보고서 생성
+## Python 최소, 최대, 퍼센타일
 
-```Python
-from ydata_profiling import ProfileReport
-report = ProfileReport(df, title='My Data')
-report.to_file("my_report.html")
+```python
+df.price.min() #최소
+df.price.max() # 최대
+df.price.quantile(.25) #분위수(하위 25% 위치)
 ```
 
-바탕화면 -> 머신러닝을 활용한 빅데이터 분석실무 -> 실습 데이터 폴더에 가서 my_report.html 파일을 더블클릭하면 열림
+## 분산 variance
+
+  * 편차(=값 - 평균) 제곱의 평균
+  * 직관적으로 이해하기는 어려우나 수학적으로 중요한 여러 성질이 있음
+  * 편차를 제곱하여 크기가 커지므로 표준편차(√분산)를 많이 사용
+
+```python
+df.price.var() # 분산
+df.price.std() # 표준편차
+```
+
+
+## 히스토그램 histogram
+
+  * 데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것
+  * Python에서 데이터 시각화를 위한 라이브러리 "시본"을 임포트
+  * histplot 함수를 이용해서 히스토그램 그리기
+  * 데이터는 df로 지정
+  * x축(가로)은 price로 지정
+  * 'price'는 변수가 아닌 df의 한 열 이름이므로 따옴표를 쳐서 문자열로 표시
+
+
+```python
+import seaborn as sns
+sns.histplot(x='price', data=df)
+```
+
+## 커널 밀도 추정 kernel density estimation
+
+  * 데이터 밀도 추정 기법
+  * kde=True로 설정하면 데이터의 밀도를 추정하여 표시
+
+
+```python
+sns.histplot(x='price', data=df, kde=True)
+```
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wMLZd8?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1093" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 탐색적 데이터 분석
-"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="eda" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "탐색적 데이터 분석(EDA)에 대한 설명으로 가장 올바른 것은 무엇입니까?",
+        "options": [
+            "미리 설정한 특정 가설이 통계적으로 유의미한지 검증하는 과정이다.",
+            "특별한 가설 없이 데이터의 구조나 주요 특성을 시각적으로 조사하는 과정이다.",
+            "데이터를 바탕으로 미래 값을 예측하는 모형을 만드는 과정이다.",
+            "오직 데이터의 결측치와 이상치만 제거하는 과정이다."
+        ],
+        "hint": "EDA는 데이터를 '탐색'하는 것에 중점을 둡니다. 가설을 '확인'하는 것은 확인적 데이터 분석(CDA)입니다.",
+        "solution": "특별한 가설 없이 데이터의 구조나 주요 특성을 시각적으로 조사하는 과정이다."
+    },
+    {
+        "item_type": "checkbox",
+        "question": "다음 중 범주형 변수(categorical variable)에 해당하는 것을 모두 고르세요.",
+        "options": [
+            "시험 점수",
+            "거주하는 도시 이름",
+            "몸무게",
+            "학력 (고졸, 대졸, 대학원졸)"
+        ],
+        "hint": "숫자로 표현되더라도 덧셈, 뺄셈 같은 연산이 의미가 없는 변수를 찾아보세요.",
+        "solution": [
+            "거주하는 도시 이름",
+            "학력 (고졸, 대졸, 대학원졸)"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "소수의 극단적인 값(outlier)에 의해 크게 영향을 받는 기술 통계량은 무엇입니까?",
+        "options": [
+            "평균 (Mean)",
+            "중간값 (Median)",
+            "최빈값 (Mode)",
+            "사분위범위 (IQR)"
+        ],
+        "hint": "마이클 조던의 연봉 때문에 UNC 지리학과 졸업생의 평균 초봉이 엄청나게 높아졌던 사례를 생각해보세요.",
+        "solution": "평균 (Mean)"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터가 얼마나 흩어져 있는지, 즉 퍼져있는 정도를 나타내는 '변산성 측정치'가 아닌 것은 무엇입니까?",
+        "options": [
+            "분산 (Variance)",
+            "표준편차 (Standard Deviation)",
+            "범위 (Range)",
+            "중간값 (Median)"
+        ],
+        "hint": "데이터의 중심 경향을 나타내는 값을 찾으면 됩니다.",
+        "solution": "중간값 (Median)"
+    },
+    {
+        "item_type": "radio",
+        "question": "Pandas 데이터프레임 `df`의 'price' 열에 대한 표준편차를 계산하는 올바른 코드는 무엇입니까?",
+        "options": [
+            "df.price.mean()",
+            "df.price.median()",
+            "df.price.var()",
+            "df.price.std()"
+        ],
+        "hint": "표준편차는 영어로 Standard Deviation입니다.",
+        "solution": "df.price.std()"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터를 여러 구간으로 나누어 각 구간에 속하는 데이터의 빈도를 막대그래프로 표현하는 시각화 방법은 무엇입니까?",
+        "options": [
+            "산점도 (Scatter plot)",
+            "히스토그램 (Histogram)",
+            "선 그래프 (Line plot)",
+            "원 그래프 (Pie chart)"
+        ],
+        "hint": "연속형 변수 하나의 분포를 파악하는 데 주로 사용됩니다.",
+        "solution": "히스토그램 (Histogram)"
+    },
+    {
+        "item_type": "radio",
+        "question": "Seaborn의 `histplot` 함수를 사용하여 히스토그램과 함께 커널 밀도 추정(KDE) 곡선을 함께 그리려면 어떤 인자를 추가해야 합니까?",
+        "options": [
+            "density=True",
+            "line=True",
+            "kde=True",
+            "curve=True"
+        ],
+        "hint": "인자 이름은 'Kernel Density Estimation'의 약어와 같습니다.",
+        "solution": "kde=True"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

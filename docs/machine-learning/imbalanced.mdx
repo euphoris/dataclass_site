@@ -462,4 +462,125 @@ plt.contourf(xx, yy, Z, alpha=0.3, levels=np.linspace(Z.min(), Z.max(), 3), zord
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mOLqBM?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 불균형한 데이터의 처리"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="regularization" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "클래스 간의 데이터 포인트 수가 현저히 차이나는 데이터셋을 무엇이라고 합니까?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "데이터의 분포가 한쪽 클래스로 심하게 치우쳐 있는 상태를 의미합니다.",
+        "solution": "불균형 데이터"
+    },
+    {
+        "item_type": "radio",
+        "question": "소수 클래스의 데이터를 복제하거나 합성하여 늘리는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "데이터의 수를 늘려서 균형을 맞추는 기법입니다.",
+        "solution": "오버샘플링"
+    },
+    {
+        "item_type": "radio",
+        "question": "위의 방법 중에서 가까운 두 사례를 랜덤하게 합성하는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "Synthetic Minority Over-sampling TEchnique의 약자입니다. 단순히 복제하는 것이 아니라 새로운 데이터를 '합성'합니다.",
+        "solution": "SMOTE"
+    },
+    {
+        "item_type": "radio",
+        "question": "경계선 근방의 데이터를 더 많이 합성하여 늘리는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "Adaptive Synthetic Sampling의 약자로, 분류하기 어려운 경계 영역의 데이터에 더 집중하여 합성합니다.",
+        "solution": "ADASYN"
+    },
+    {
+        "item_type": "radio",
+        "question": "다수 클래스의 데이터를 삭제하여 줄이는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "데이터의 수를 줄여서 균형을 맞추는 기법입니다.",
+        "solution": "언더샘플링"
+    },
+    {
+        "item_type": "radio",
+        "question": "위의 방법 중에서 경계선 근처의 사례만 남기는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "다수 클래스 데이터 중에서 소수 클래스와 가까운 데이터는 남기고, 너무 멀거나 너무 가까운(중복된) 데이터를 제거하는 방식 중 하나입니다.",
+        "solution": "Near Miss"
+    },
+    {
+        "item_type": "radio",
+        "question": "소수 클래스와 접한 다수 클래스를 삭제하는 방법은?",
+        "options": [
+            "불균형 데이터",
+            "선형판별분석",
+            "오버샘플링",
+            "SMOTE",
+            "ADASYN",
+            "언더샘플링",
+            "Near Miss",
+            "TomekLinks"
+        ],
+        "hint": "서로 다른 클래스이면서 매우 가까이 붙어있는 쌍(pair)을 찾아서 다수 클래스 쪽 데이터를 제거하는 방법입니다.",
+        "solution": "TomekLinks"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

@@ -1,3 +1,249 @@
 # 앙상블
 
-<iframe src="https://tally.so/embed/mOLM9M?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0" title="[ML] 모델 앙상블"></iframe>
+## 앙상블 ensemble
+
+  * 여러 학습 알고리즘을 조합하여 단독 알고리즘보다 더 높은 성능을 내는 방법 
+  * 종류: 
+      * 배깅 
+      * 부스팅 
+      * 스태킹 
+
+## 배깅 bagging
+
+  * 부트스트랩 집계(bootstrap aggregation)의 약자 
+  * 데이터셋에서 동일한 크기의 부분 집합들을 샘플링 
+  * 부분 집합으로 여러 개의 약한 모형을 학습 
+  * 약한 모형의 예측을 평균/다수결하여 최종 예측 
+
+## 실습 준비
+
+```python
+import pandas as pd
+df = pd.read_excel('cancer.xlsx')
+#데이터 분할
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state = 42)
+```
+
+## 의사결정나무
+
+```python
+#의사결정나무
+from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier()
+dt.fit(X_train, y_train)
+#예측 및 정확도
+from sklearn.metrics import accuracy_score
+y_pred = dt.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 배깅
+
+```python
+#10개의 의사결정나무로 배깅
+from sklearn.ensemble import BaggingClassifier
+bg = BaggingClassifier(
+    estimator=DecisionTreeClassifier(),
+    n_estimators = 100, random_state = 42)
+#학습
+bg.fit(X_train, y_train)
+#예측 및 정확도
+y_pred = bg.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 랜덤 포레스트 Random Forest
+
+  * 의사결정나무 + 배깅에 추가로 특징(feature)도 랜덤하게 사용 
+  * 트리 간의 유사성을 낮추고, 과대적합을 방지 
+  * 랜덤 포레스트
+
+
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(n_estimators = 100, random_state = 42)
+rf.fit(X_train, y_train)
+```
+
+  * 예측 및 정확도
+
+
+
+```python
+y_pred = rf.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 부스팅 boosting
+
+  * 전체 데이터를 약한 모형에 학습 
+  * 이전에 학습 모형의 예측 오차를 바탕으로 다음 약한 모형을 학습 
+
+## AdaBoost
+
+  * 이전의 모형에서 잘못 분류한 사례에 가중치를 주어 다음 모형을 학습 
+
+
+
+```python
+#AdaBoost
+from sklearn.ensemble import AdaBoostClassifier
+ada = AdaBoostClassifier(n_estimators = 100, random_state = 42)
+ada.fit(x_train, y_train)
+#예측 및 정확도
+y_pred = ada.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 경사 부스트 gradient boost
+
+  * 경사하강법을 부스팅으로 구현한 것 
+  * 이전 모형의 예측 오차를 다음 모형으로 예측 
+  * 모형을 추가할 때마다 예측 오차가 점진적으로 줄어듦(경사하강법) 
+
+
+
+```python
+from sklearn.ensemble import GradientBoostingClassifier
+gb = GradientBoostingClassifier(n_estimators = 100, random_state = 42)
+gb.fit(x_train, y_train)
+#예측 및 정확도
+y_pred = gb.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 스태킹 stacking
+
+  * 여러 개의 약한 모형을 학습 
+  * 부스팅이나 배깅과 달리 서로 다른 종류의 모형을 사용 
+  * 메타 모형에 약한 모형의 예측을 입력하여 최종 예측 
+
+## 스태킹
+
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import StackingClassifier
+#스태킹
+base_models = [('dt', DecisionTreeClassifier()), ('lr', LogisticRegression())]
+meta_model = SVC(probability=True, random_state = 42) #메타 모형
+st = StackingClassifier(base_models, meta_model)
+st.fit(x_train, y_train)
+#예측 및 정확도
+y_pred = st.predict(X_test)
+accuracy_score(y_test, y_pred)
+```
+
+## 앙상블의 동향
+
+  * 표 형태의 데이터에서는 의사결정나무에 기반한 앙상블이 주류 
+  * 특히 경사부스팅 계열의 알고리즘들(XGBoost, LightGBM, CatBoost)이 각광 
+  * 딥러닝도 일종의 앙상블로 이해할 수 있음 
+  * 앙상블은 성능은 높지만 계산량이 많아, 예측의 정확도보다 계산량이나 속도가 더 중요할 경우 쓰지 않을 때도 많음 
+  * 명시적으로 앙상블 기법은 아니어도, 비슷한 아이디어는 널리 사용됨 
+  * 예: 넷플릭스 추천 시스템 - 한 사용자에게 복수의 추천 알고리즘을 사용 
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="regularization" quizItems={
+  [
+    {
+        "item_type": "radio",
+        "question": "여러 학습 알고리즘을 조합하여 단일 알고리즘보다 더 높은 성능을 내는 방법을 무엇이라고 합니까?",
+        "options": [
+            "앙상블 (Ensemble)",
+            "정칙화 (Regularization)",
+            "최적화 (Optimization)",
+            "스케일링 (Scaling)"
+        ],
+        "hint": "프랑스어로 '조화', '통일'을 의미하는 단어에서 유래했습니다.",
+        "solution": "앙상블 (Ensemble)"
+    },
+    {
+        "item_type": "radio",
+        "question": "원본 데이터셋에서 무작위로 여러 개의 부분 집합을 만들고, 각 부분 집합으로 별도의 모델을 학습시킨 뒤 결과를 종합하는 앙상블 기법은 무엇입니까?",
+        "options": [
+            "배깅 (Bagging)",
+            "부스팅 (Boosting)",
+            "스태킹 (Stacking)",
+            "클러스터링 (Clustering)"
+        ],
+        "hint": "Bootstrap Aggregation의 약자입니다.",
+        "solution": "배깅 (Bagging)"
+    },
+    {
+        "item_type": "radio",
+        "question": "랜덤 포레스트(Random Forest)가 일반적인 배깅과 다른 가장 큰 특징은 무엇입니까?",
+        "options": [
+            "의사결정나무 대신 선형 회귀 모델을 사용한다",
+            "각 나무를 학습할 때 전체 데이터셋을 그대로 사용한다",
+            "각 나무의 노드를 분할할 때, 전체 특성(feature) 중 일부만 무작위로 선택하여 사용한다",
+            "항상 배깅보다 학습 속도가 빠르다"
+        ],
+        "hint": "데이터 샘플링에 더해, '특성(feature)'에도 무작위성을 추가하여 트리 간의 유사성을 낮춥니다.",
+        "solution": "각 나무의 노드를 분할할 때, 전체 특성(feature) 중 일부만 무작위로 선택하여 사용한다"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "부스팅(Boosting) 계열 앙상블의 특징으로 올바른 것을 모두 고르세요.",
+        "options": [
+            "이전 모델이 예측을 잘못한 데이터에 더 큰 가중치를 부여한다",
+            "모든 약한 모델들을 동시에 병렬적으로 학습시킨다",
+            "모델들이 순차적으로 학습되며, 이전 모델의 약점을 보완하는 방식으로 진행된다",
+            "주로 과소적합(underfitting)을 해결하기 위해 사용된다"
+        ],
+        "hint": "약한 학습기들을 순서대로 연결하여 점차 강한 학습기로 만들어가는 과정입니다.",
+        "solution": [
+            "이전 모델이 예측을 잘못한 데이터에 더 큰 가중치를 부여한다",
+            "모델들이 순차적으로 학습되며, 이전 모델의 약점을 보완하는 방식으로 진행된다"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "이전 모델의 예측 오차(residual) 자체를 다음 모델이 학습하도록 하는 부스팅 알고리즘은 무엇입니까?",
+        "options": [
+            "AdaBoost",
+            "랜덤 포레스트 (Random Forest)",
+            "경사 부스트 (Gradient Boost)",
+            "배깅 (Bagging)"
+        ],
+        "hint": "이름처럼 경사하강법의 원리를 부스팅에 적용한 것입니다.",
+        "solution": "경사 부스트 (Gradient Boost)"
+    },
+    {
+        "item_type": "radio",
+        "question": "서로 다른 종류의 여러 모델(예: 의사결정나무, 로지스틱 회귀)의 예측 결과를 다시 입력 데이터로 사용하여, 최종 예측을 하는 '메타 모델(meta model)'을 학습시키는 앙상블 기법은 무엇입니까?",
+        "options": [
+            "배깅 (Bagging)",
+            "부스팅 (Boosting)",
+            "스태킹 (Stacking)",
+            "랜덤 포레스트 (Random Forest)"
+        ],
+        "hint": "여러 모델을 블록처럼 '쌓아서' 최종 모델을 만드는 모습을 상상해보세요.",
+        "solution": "스태킹 (Stacking)"
+    },
+    {
+        "item_type": "radio",
+        "question": "앙상블 기법의 일반적인 장단점에 대한 설명으로 가장 적절한 것은 무엇입니까?",
+        "options": [
+            "성능은 낮아지지만 계산 속도가 매우 빠르다",
+            "성능은 높아지지만 계산량이 많아지고 모델 해석이 어려워진다",
+            "성능과 계산 속도 모두 단일 모델보다 항상 우수하다",
+            "성능은 단일 모델과 비슷하지만 과대적합을 항상 완벽하게 방지한다"
+        ],
+        "hint": "여러 모델을 조합하는 만큼의 대가가 따릅니다.",
+        "solution": "성능은 높아지지만 계산량이 많아지고 모델 해석이 어려워진다"
+    }
+]
+
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

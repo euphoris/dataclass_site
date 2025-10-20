@@ -1,0 +1,160 @@
+# 의사결정 나무
+
+## 의사결정나무 Decision Tree
+
+  * 한 번에 한 가지 변수에 대해 Yes/No로 분기 
+  * 분기를 반복하여 최종 의사결정까지 과정에 도달 
+  * 나무에서 각각의 마디(node)는 데이터의 부분 집합 
+  * 용어:
+      * 뿌리(root): 의사결정나무의 출발점. 모든 사례를 포함. 
+      * 자식(child): 하나의 마디에서 분기된 마디 
+      * 끝(terminal)/ 잎사귀(leaf): 자식이 없는 마디 
+      * 가지(branch): 뿌리에서 잎사귀 사이의 마디들 
+
+
+
+## 의사결정 나무의 장점
+
+  * 결과를 이해하기 쉽다 
+  * 전처리가 단순 
+  * 빠르다 
+  * 다양한 종류의 변수를 다룰 수 있음 
+  * 불필요한 변수에 영향을 적게 받음 
+  * 시각화가 쉬움 
+  * 통계적 가정이 적음 
+
+
+
+## 의사결정 나무의 단점
+
+  * 과대 적합(overfitting)되기 쉬움 
+  * 결과의 불안정 
+  * 최적화가 어려움 
+  * 학습시키기 어려운 문제들이 있음(예: XOR) 
+  * 변수의 중요성 판단하기가 쉽지 않음 
+  * 불균형 데이터(imbalanced data)에 취약 
+
+
+
+## 범주형 변수의 분리 규칙
+
+  * 불순도(impurity)를 크게 감소시키는 방식으로 분할 
+  * 카이제곱 통계량: 실제와 기대의 차이 ($O_{i}$: 관찰 빈도, $E_{i}$: 기대 빈도) 
+      * $\chi^{2}=\sum_{i}\frac{(O_{i}-E_{i})^{2}}{E_{i}}$ 
+  * 지니 지수: 모든 경우의 확률이 고를 경우 가장 높아짐(가장 많이 사용) 
+      * $1-\sum_{i}p_{i}^{2}$ 
+  * 엔트로피: 열역학에서 유래한 무질서도 
+      * 지니 지수와 비슷하나 로그가 포함되어 약간 더 계산이 많음 
+      * $-\sum_{i}p_{i}log~p_{i}$ 
+
+
+
+## 의사결정 나무 실습
+
+  * 과대 적합
+
+
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+model = DecisionTreeClassifier(random_state = 42)
+model.fit(X_train, y_train)
+model.score(X_train, y_train)
+model.score(X_test, y_test)
+```
+
+  * 깊이를 제한해서 과대 적합을 억제
+
+
+
+```python
+model = DecisionTreeClassifier(max_depth = 5, random_state=42)
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="regularization" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "의사결정나무의 출발점으로 모든 데이터를 포함하는 마디(node)를 무엇이라고 합니까?",
+        "options": [
+            "뿌리 마디 (root node)",
+            "끝 마디 (terminal node)",
+            "자식 마디 (child node)",
+            "가지 (branch)"
+        ],
+        "hint": "나무가 시작되는 가장 위쪽의 노드를 가리키는 용어입니다.",
+        "solution": "뿌리 마디 (root node)"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "의사결정나무의 장점으로 올바른 것을 모두 고르세요.",
+        "options": [
+            "결과를 이해하고 시각화하기 쉽다",
+            "과대적합(overfitting)되기 쉽다",
+            "데이터 스케일링 같은 복잡한 전처리가 비교적 덜 필요하다",
+            "불균형 데이터(imbalanced data)에 강하다"
+        ],
+        "hint": "의사결정나무는 직관적이고 빠르다는 장점이 있지만, 단점도 명확합니다. 문제의 선택지는 장점과 단점이 섞여 있습니다.",
+        "solution": [
+            "결과를 이해하고 시각화하기 쉽다",
+            "데이터 스케일링 같은 복잡한 전처리가 비교적 덜 필요하다"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "의사결정나무가 노드를 분할할 때 사용하는 주된 원칙은 무엇입니까?",
+        "options": [
+            "불순도(impurity)를 최대한 증가시키는 방향으로 분할한다",
+            "불순도(impurity)를 최대한 감소시키는 방향으로 분할한다",
+            "데이터의 개수를 동일하게 나누는 방향으로 분할한다",
+            "변수의 개수를 줄이는 방향으로 분할한다"
+        ],
+        "hint": "분할의 목표는 각 노드에 최대한 비슷한 데이터(동일한 클래스)끼리 모이도록 하는 것입니다. 순도가 높아지는 방향을 생각해보세요.",
+        "solution": "불순도(impurity)를 최대한 감소시키는 방향으로 분할한다"
+    },
+    {
+        "item_type": "radio",
+        "question": "다음 중 의사결정나무에서 노드의 불순도(impurity)를 측정하는 지표가 아닌 것은 무엇입니까?",
+        "options": [
+            "지니 지수 (Gini Index)",
+            "엔트로피 (Entropy)",
+            "평균 제곱 오차 (Mean Squared Error)",
+            "카이제곱 통계량 (Chi-squared statistic)"
+        ],
+        "hint": "평균 제곱 오차(MSE)는 주로 어떤 종류의 머신러닝 문제에서 손실 함수로 사용되는지 생각해보세요.",
+        "solution": "평균 제곱 오차 (Mean Squared Error)"
+    },
+    {
+        "item_type": "radio",
+        "question": "의사결정나무의 가장 대표적인 단점인 과대적합(overfitting)을 억제하기 위한 방법으로 가장 적절한 것은 무엇입니까?",
+        "options": [
+            "나무의 깊이(depth)를 제한 없이 최대한 깊게 만든다",
+            "나무의 깊이(depth)에 제한을 둔다",
+            "데이터의 개수를 줄인다",
+            "학습률(learning rate)을 높인다"
+        ],
+        "hint": "나무가 너무 복잡하고 상세하게 자라나면 학습 데이터에만 잘 맞는 모델이 됩니다. 이를 방지하기 위한 방법을 생각해보세요.",
+        "solution": "나무의 깊이(depth)에 제한을 둔다"
+    },
+    {
+        "item_type": "radio",
+        "question": "scikit-learn의 `DecisionTreeClassifier`에서 과대적합을 억제하기 위해 나무의 최대 깊이를 제한하는 파라미터는 무엇입니까?",
+        "options": [
+            "max_leaf_nodes",
+            "min_samples_split",
+            "max_depth",
+            "criterion"
+        ],
+        "hint": "'최대 깊이'를 의미하는 영어 단어를 찾아보세요.",
+        "solution": "max_depth"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
