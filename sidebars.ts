@@ -48,6 +48,12 @@ const sidebars: SidebarsConfig = {
           id: 'doe/sampling',
           label: '모집단과 표본'
         },
+      ] 
+    }, // 1일차 끝
+    {
+      type: 'category',
+      label: '2일차',
+      items: [
         {
           type: 'doc',
           id: 'doe/hypothesis-testing',
@@ -58,64 +64,58 @@ const sidebars: SidebarsConfig = {
           id: 'doe/types-of-error',
           label: '오류의 종류'
         },
-      ] 
-    }, // 1일차 끝
-    // {
-    //   type: 'category',
-    //   label: '2일차',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/review1',
-    //       label: '1일차 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/sample-size',
-    //       label: '표본 크기 결정'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/nuisance-factor',
-    //       label: '방해 요인'
-    //     },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'doe/model-selection',
-    //     //   label: '모형 선택'
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'doe/interaction',
-    //     //   label: '교호 작용'
-    //     // },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/full-factorial-design',
-    //       label: '완전 요인 배치법'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/fractional-factorial-design',
-    //       label: '부분 요인 배치법'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/screening',
-    //       label: '스크리닝'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/nonlinearity',
-    //       label: '변수의 변형'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doe/response-surface',
-    //       label: '반응 표면 설계'
-    //     },
-    //   ]
-    // } // 2일차끝
+        // {
+        //   type: 'doc',
+        //   id: 'doe/review1',
+        //   label: '1일차 복습'
+        // },
+        {
+          type: 'doc',
+          id: 'doe/sample-size',
+          label: '표본 크기 결정'
+        },
+        {
+          type: 'doc',
+          id: 'doe/nuisance-factor',
+          label: '방해 요인'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'doe/model-selection',
+        //   label: '모형 선택'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'doe/interaction',
+        //   label: '교호 작용'
+        // },
+        {
+          type: 'doc',
+          id: 'doe/full-factorial-design',
+          label: '완전 요인 배치법'
+        },
+        {
+          type: 'doc',
+          id: 'doe/fractional-factorial-design',
+          label: '부분 요인 배치법'
+        },
+        {
+          type: 'doc',
+          id: 'doe/screening',
+          label: '스크리닝'
+        },
+        {
+          type: 'doc',
+          id: 'doe/nonlinearity',
+          label: '변수의 변형'
+        },
+        {
+          type: 'doc',
+          id: 'doe/response-surface',
+          label: '반응 표면 설계'
+        },
+      ]
+    } // 2일차끝
   ],
   sqlSidebar: [
     {

@@ -34,7 +34,7 @@ df  # df 변수 내용 보기
 ```python
 from statsmodels.formula.api import ols
 FORMULA = 'strength ~ group'  # 회귀모형의 관계식
-DATA =   # 분석할 데이터
+DATA = df  # 분석할 데이터
 m = ols(FORMULA, data=DATA).fit()  # 모형 생성
 m.summary()  # 모형 요약 출력
 ```
