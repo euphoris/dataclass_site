@@ -25,7 +25,7 @@
       * 주 효과와 교호작용이 복잡하게 섞여(교락) 있으므로, 교호작용 분석에는 적합하지 않음
 
 ```python
-doe.pb(3) # 3개의 요인에 대한 설계
+pyDOE3.pb(3) # 3개의 요인에 대한 설계
 ```
 
 
@@ -47,15 +47,16 @@ doe.pb(3) # 3개의 요인에 대한 설계
 
 완전 요인 설계
 ```python
+from yeom import doe
 NUM_FACTORS = 3
-ff_design = doe.ff2n(NUM_FACTORS)
-doeutils.compute_d_optimality(ff_design)
+ff_design = pyDOE3.ff2n(NUM_FACTORS)
+doe.compute_d_optimality(ff_design)
 ```
 
 Plackett-Burman 설계
 ```python
-pb_design = doe.pbdesign(NUM_FACTORS)
-doeutils.compute_d_optimality(pb_design)
+pb_design = pyDOE3.pbdesign(NUM_FACTORS)
+doe.compute_d_optimality(pb_design)
 ```
 
 ## 좌표 교환 알고리즘
@@ -69,8 +70,7 @@ doeutils.compute_d_optimality(pb_design)
   - 국소 최적(locally optimal) 설계 생성
   - 전역 최적(globally optimal) 설계를 찾기 위해 여러 시작점 필요
 ```python
-import doeutils
-design, det = doeutils.coordinate_exchange(4, 'a + b + a:b')
+design, det = doe.coordinate_exchange(4, 'a + b + a:b')
 ```
 
 

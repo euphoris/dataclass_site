@@ -48,7 +48,7 @@
 
 - 임포트
 ```python
-import pyDOE3 as doe
+import pyDOE3
 ```
 
 
@@ -58,14 +58,14 @@ import pyDOE3 as doe
 - 요인별로 여러 수준이 있는 경우
 ```python
 LEVELS = [2, 3]  # 첫번째 요인은 2 수준, 두번째 요인은 3 수준
-doe.fullfact(LEVELS)
+pyDOE3.fullfact(LEVELS)
 ```
 
 
 - 2수준 완전 요인 배치법
   - 요인별로 낮음/높음 2 수준만 실험
 ```python
-doe.ff2n(3)
+pyDOE3.ff2n(3)
 ```
 
 

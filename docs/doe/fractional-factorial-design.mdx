@@ -36,12 +36,12 @@
       - 이 설계에서는 5번째 요인(E)이 A, B, C, D의 교호작용(ABCD)과 동일하게 설정됨 (E = ABCD)
       - 4차 교호작용은 드물기 때문에 어느 정도 안전한 가정
 ```python
-doe.fracfact("a b c d abcd")
+pyDOE3.fracfact("a b c d abcd")
 ```
 
 - $2^{(5-1)}$ 부분요인 배치법에서 최적의 설계 찾기
 ```python
-design, alias_map, alias_cost = doe.fracfact_opt(5, 1)
+design, alias_map, alias_cost = pyDOE3.fracfact_opt(5, 1)
 design
 ```
 

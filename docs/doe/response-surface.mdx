@@ -59,8 +59,8 @@
     - 순차적 실험: 2^𝑘 요인 설계 실험을 먼저 수행한 후, 곡면성의 존재가 의심될 때 축점과 중심점을 추가하여 중심 합성 설계로 확장할 수 있음
 
 ```python
-import pyDOE3 as doe
-doe.ccdesign(2, center=(3, 3), alpha='r')
+import pyDOE3
+pyDOE3.ccdesign(2, center=(3, 3), alpha='r')
 # 2개의 연속형 요인에 대한 중심 합성 설계 생성
 # center=(3, 3) -> 요인점 3회, 축점 3회 중심점 반복(보통 3~5회 반복)
 ```
@@ -80,7 +80,7 @@ doe.ccdesign(2, center=(3, 3), alpha='r')
     - 꼭짓점 부근 예측 품질 저하
 
 ```python
-doe.bbdesign(3, center=3) # 중심점 3회 반복
+pyDOE3.bbdesign(3, center=3) # 중심점 3회 반복
 ```
 
 ## 퀴즈

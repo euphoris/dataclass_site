@@ -18,12 +18,18 @@
 
 ## 검정력 계산
 
+설치
+```sh
+!pip install yeom
+```
+
+계산
 ```python
-import doeutils
+from yeom import doe
 MODEL = m # 모델 객체
 VARIABLE = 'group[T.Old]' # 비교할 변수
 ALPHA = 0.05 # 유의수준
-doeutils.reg_coef_power(MODEL, VARIABLE, ALPHA)  # 회귀 계수의 검정력 계산
+doe.reg_coef_power(MODEL, VARIABLE, ALPHA)  # 회귀 계수의 검정력 계산
 ```
 
 - 결과 ≒ 0.57
@@ -39,7 +45,7 @@ MODEL = m # 모델 객체
 VARIABLE = 'group[T.Old]' # 비교할 변수
 ALPHA = 0.05 # 유의수준
 POWER = 0.8 # 검정력
-doeutils.find_reg_n(MODEL, VARIABLE, POWER, ALPHA)
+doe.find_reg_n(MODEL, VARIABLE, POWER, ALPHA)
 ```
 
 - 결과 ≒ 33 
