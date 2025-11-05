@@ -1,16 +1,14 @@
-
 # GROUP BY
 
----
-
 ## GROUP BY 절을 사용한 데이터 그룹화
-* `GROUP BY` 절의 역할: 특정 열(들)의 값이 동일한 행들을 하나의 그룹으로 묶어, 각 그룹에 대한 요약 정보(집계 값)를 계산할 때 사용.
-* 동작 원리:
-    1.  `FROM` 절에서 테이블 지정.
-    2.  `WHERE` 절에서 개별 행 필터링 (있는 경우).
-    3.  `GROUP BY` 절에 명시된 열(들)을 기준으로 행들을 그룹화.
-    4.  `SELECT` 절에서 각 그룹별 집계 함수 결과 또는 `GROUP BY`에 사용된 열을 조회.
-* 문법:
+
+*   **`GROUP BY` 절의 역할**: 특정 열(들)의 값이 동일한 행들을 하나의 그룹으로 묶어, 각 그룹에 대한 요약 정보(집계 값)를 계산할 때 사용.
+*   **동작 원리**:
+    *   `FROM` 절에서 테이블 지정.
+    *   `WHERE` 절에서 개별 행 필터링 (있는 경우).
+    *   `GROUP BY` 절에 명시된 열(들)을 기준으로 행들을 그룹화.
+    *   `SELECT` 절에서 각 그룹별 집계 함수 결과 또는 `GROUP BY`에 사용된 열을 조회.
+
 ```sql
 SELECT column_to_group_by1, column_to_group_by2, ..., aggregate_function(column)
 FROM table_name
@@ -18,136 +16,188 @@ WHERE condition -- (선택 사항, 그룹화 전 필터링)
 GROUP BY column_to_group_by1, column_to_group_by2, ...
 ORDER BY ...; -- (선택 사항, 그룹화 후 결과 정렬)
 ```
-* 주의: `SELECT` 절에는 `GROUP BY` 절에 명시된 열이나 집계 함수만 올 수 있음 (표준 SQL 기준, 일부 DBMS는 유연성 제공).
-* 예시: `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값) 별로 회사 수 세기
+
+*   **주의**: `SELECT` 절에는 `GROUP BY` 절에 명시된 열이나 집계 함수만 올 수 있음 (표준 SQL 기준, 일부 DBMS는 유연성 제공).
+
+## GROUP BY 절을 사용한 데이터 그룹화
+
+*   **예시**: `TB_COMPANY_MASTER` 테이블에서 `COMPANY_TYPE_CAT` (기업구분범주값) 별로 회사 수 세기
+
 ```sql
 SELECT COMPANY_TYPE_CAT, COUNT(*) AS "기업 수"
 FROM TB_COMPANY_MASTER
 GROUP BY COMPANY_TYPE_CAT;
 ```
-* 예시: `TB_LOAN_ACCOUNT` 테이블에서 `BIZ_REG_NO` (사업자등록번호) 별로 총 `LOAN_AMT` (여신금액) 합계 구하기
+
+*   **예시**: `TB_LOAN_ACCOUNT` 테이블에서 `BIZ_REG_NO` (사업자등록번호) 별로 총 `LOAN_AMT` (여신금액) 합계 구하기
+
 ```sql
 SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS "총 여신금액"
 FROM TB_LOAN_ACCOUNT
 GROUP BY BIZ_REG_NO;
 ```
 
----
 ## COUNT 집계 함수
-* 집계 함수 (Aggregate Functions): 여러 행의 값을 바탕으로 단일 결과 값을 반환 (주로 `GROUP BY` 절과 함께 사용되나, 단독 사용 시 전체 테이블 대상).
 
-* `COUNT(*)`: 그룹 내 전체 행의 수 (NULL 값 포함).
+*   **집계 함수 (Aggregate Functions)**: 여러 행의 값을 바탕으로 단일 결과 값을 반환 (주로 `GROUP BY` 절과 함께 사용되나, 단독 사용 시 전체 테이블 대상).
+
+*   **`COUNT(*)`**: 그룹 내 전체 행의 수 (`NULL` 값 포함).
+*   기업구분별 전체 회사 수
+
 ```sql
--- 기업구분별 전체 회사 수
-SELECT COMPANY_TYPE_CAT, COUNT(*) AS "전체 회사 수" FROM TB_COMPANY_MASTER GROUP BY COMPANY_TYPE_CAT;
+SELECT COMPANY_TYPE_CAT, COUNT(*) AS "전체 회사 수" FROM TB_COMPANY_MASTER
+GROUP BY COMPANY_TYPE_CAT;
 ```
-* `COUNT(컬럼명)`: 그룹 내 해당 컬럼의 값이 `NULL`이 아닌 행의 수.
- ```sql
--- 신용등급이 있는(NULL이 아닌) 신용정보 건수 (사업자번호별)
-SELECT BIZ_REG_NO, COUNT(CREDIT_GRADE) AS "신용등급 보유 건수" FROM TB_CREDIT_INFO GROUP BY BIZ_REG_NO;
-```
-* `COUNT(DISTINCT 컬럼명)`: 그룹 내 해당 컬럼의 중복을 제외한 유일한 값의 개수.
+
+*   **`COUNT(컬럼명)`**: 그룹 내 해당 컬럼의 값이 `NULL`이 아닌 행의 수.
+*   신용등급이 있는(`NULL`이 아닌) 신용정보 건수(사업자번호별)
+
 ```sql
--- 여신을 받은 회사 수 (중복 제외)
+SELECT BIZ_REG_NO, COUNT(CREDIT_GRADE) AS "신용등급 보유 건수"
+FROM TB_CREDIT_INFO GROUP BY BIZ_REG_NO;
+```
+
+*   **`COUNT(DISTINCT 컬럼명)`**: 그룹 내 해당 컬럼의 중복을 제외한 유일한 값의 개수.
+*   여신을 받은 회사 수(중복 제외)
+
+```sql
 SELECT COUNT(DISTINCT BIZ_REG_NO) AS "여신 보유 회사 수" FROM TB_LOAN_ACCOUNT;
 ```
----
+
 ## 합계와 평균
-* `SUM(컬럼명)`: 그룹 내 해당 컬럼 값의 합계 (숫자형 데이터에 사용).
-* 예시: `TB_FINANCIAL_STATEMENT`에서 회사별 총 `REVENUE` (매출액)
-    ```sql
-    SELECT BIZ_REG_NO, FS_TYPE, SUM(REVENUE) AS "총 매출액"
-    FROM TB_FINANCIAL_STATEMENT
-    WHERE FS_TYPE = 'ANNUAL'
-    GROUP BY BIZ_REG_NO, FS_TYPE;
-    ```
-* `AVG(컬럼명)`: 그룹 내 해당 컬럼 값의 평균 (숫자형 데이터에 사용, `NULL` 값 제외).
-* 예시: `TB_LOAN_ACCOUNT`에서 여신종류별 평균 `INTEREST_RATE` (금리)
-    ```sql
-    SELECT LOAN_TYPE_CD, AVG(INTEREST_RATE) AS "평균 금리"
-    FROM TB_LOAN_ACCOUNT
-    GROUP BY LOAN_TYPE_CD;
-    ```
----
-## 최대, 최소
-* `MAX(컬럼명)`: 그룹 내 해당 컬럼 값의 최대값.
-* `MIN(컬럼명)`: 그룹 내 해당 컬럼 값의 최소값.
-* 예시: `TB_FINANCIAL_STATEMENT`에서 회사별 연간 `NET_INCOME` (당기순이익)의 최대/최소값
+
+*   **`SUM(컬럼명)`**: 그룹 내 해당 컬럼 값의 합계 (숫자형 데이터에 사용).
+*   **예시**: `TB_FINANCIAL_STATEMENT`에서 회사별 총 `REVENUE` (매출액)
+
 ```sql
-SELECT BIZ_REG_NO, MAX(NET_INCOME) AS "최대 순이익", MIN(NET_INCOME) AS "최소 순이익"
+SELECT BIZ_REG_NO, FS_TYPE, SUM(REVENUE) AS "총 매출액"
+FROM TB_FINANCIAL_STATEMENT
+WHERE FS_TYPE = 'ANNUAL'
+GROUP BY BIZ_REG_NO, FS_TYPE;
+```
+
+*   **`AVG(컬럼명)`**: 그룹 내 해당 컬럼 값의 평균 (숫자형 데이터에 사용, `NULL` 값 제외).
+*   **예시**: `TB_LOAN_ACCOUNT`에서 여신종류별 평균 `INTEREST_RATE` (금리)
+
+```sql
+SELECT LOAN_TYPE_CD, AVG(INTEREST_RATE) AS "평균 금리"
+FROM TB_LOAN_ACCOUNT
+GROUP BY LOAN_TYPE_CD;
+```
+
+## 최대, 최소
+
+*   **`MAX(컬럼명)`**: 그룹 내 해당 컬럼 값의 최대값.
+*   **`MIN(컬럼명)`**: 그룹 내 해당 컬럼 값의 최소값.
+*   **예시**: `TB_FINANCIAL_STATEMENT`에서 회사별 연간 `NET_INCOME` (당기순이익)의 최대/최소값
+
+```sql
+SELECT BIZ_REG_NO,
+    MAX(NET_INCOME) AS "최대 순이익",
+    MIN(NET_INCOME) AS "최소 순이익"
 FROM TB_FINANCIAL_STATEMENT
 WHERE FS_TYPE = 'ANNUAL'
 GROUP BY BIZ_REG_NO;
 ```
----
+
 ## 피봇 테이블
 
-상환방식별 &times; 여신상태별 계좌 수
+*   상환방식별 × 여신상태별 계좌 수
+
 ```sql
-SELECT 
-    REPAYMENT_METHOD, 
+SELECT
+    REPAYMENT_METHOD,
     COUNT(CASE LOAN_STATUS_CD WHEN '정상' THEN 1 END) AS 정상,
     COUNT(CASE LOAN_STATUS_CD WHEN '연체' THEN 1 END) AS 연체,
     COUNT(LOAN_STATUS_CD) AS 합계
-FROM TB_LOAN_ACCOUNT 
+FROM TB_LOAN_ACCOUNT
 GROUP BY REPAYMENT_METHOD;
 ```
-상환방식별 &times; 여신상태별 여신 잔액 합계
+
+## 피봇 테이블
+
+*   상환방식별 × 여신상태별 여신 잔액 합계
 
 ```sql
-SELECT 
-    REPAYMENT_METHOD, 
+SELECT
+    REPAYMENT_METHOD,
     SUM(CASE LOAN_STATUS_CD WHEN '정상' THEN LOAN_AMT ELSE 0 END) AS 정상,
     SUM(CASE LOAN_STATUS_CD WHEN '연체' THEN LOAN_AMT ELSE 0 END) AS 연체,
     SUM(LOAN_AMT) AS 합계
-FROM TB_LOAN_ACCOUNT 
+FROM TB_LOAN_ACCOUNT
 GROUP BY REPAYMENT_METHOD;
 ```
 
----
-## PARTITION BY
-* `PARTITION BY`: `GROUP BY`와 유사하지만, 전체 데이터 집합을 그룹화하지 않고, 각 행에 대해 집계 함수를 적용할 때 사용.
+## GROUP BY와 CASE를 함께 사용
+
+*   기업들을 고자산, 중자산, 저자산으로 나누어 기업 수와 평균 자산을 구함
 
 ```sql
-SELECT 
-    BIZ_REG_NO, 
+SELECT
+    CASE WHEN TOTAL_ASSETS_RECENT >= 5000000000000 THEN '고자산'
+         WHEN TOTAL_ASSETS_RECENT < 5000000000000 AND
+              TOTAL_ASSETS_RECENT > 500000000000 THEN '중자산'
+         ELSE '저자산' END "분류",
+    COUNT(*), AVG(TOTAL_ASSETS_RECENT) FROM tb_company_master
+GROUP BY
+    CASE WHEN TOTAL_ASSETS_RECENT >= 5000000000000 THEN '고자산'
+         WHEN TOTAL_ASSETS_RECENT < 5000000000000 AND
+              TOTAL_ASSETS_RECENT > 500000000000 THEN '중자산'
+         ELSE '저자산' END;
+```
+
+## PARTITION BY
+
+*   **`PARTITION BY`**: `GROUP BY`와 유사하지만, 전체 데이터 집합을 그룹화하지 않고, 각 행에 대해 집계 함수를 적용할 때 사용.
+
+```sql
+SELECT
+    BIZ_REG_NO,
     INTEREST_RATE,
-    MIN(INTEREST_RATE) 
-        OVER (PARTITION BY BIZ_REG_NO) 
+    MIN(INTEREST_RATE)
+        OVER (PARTITION BY BIZ_REG_NO)
         AS "회사별 최소 금리"
 FROM TB_LOAN_ACCOUNT;
 ```
----
+
 ## HAVING 절을 사용한 그룹 결과 필터링
-* `HAVING` 절의 역할: `GROUP BY` 절로 그룹화된 결과(즉, 집계 값)에 대한 조건을 지정하여 필터링.
-* `WHERE` 절과의 차이점:
-    * `WHERE` 절: 그룹화 전 개별 행에 대한 조건 필터링. (FROM 절 다음, GROUP BY 절 이전)
-    * `HAVING` 절: 그룹화 후 집계 결과에 대한 조건 필터링. (GROUP BY 절 다음)
-* 문법:
-```sql
-SELECT column_to_group_by, aggregate_function(column)
-FROM table_name
-WHERE individual_row_condition -- (선택 사항)
-GROUP BY column_to_group_by
-HAVING group_condition -- (집계 함수에 대한 조건)
-ORDER BY ...; -- (선택 사항)
-```
-* 예시:
-* `TB_LOAN_ACCOUNT` 테이블에서 `BIZ_REG_NO` (사업자등록번호) 별로 총 `LOAN_AMT` (여신금액) 합계가 100억 이상인 회사만 조회
+
+*   **`HAVING` 절의 역할**: `GROUP BY` 절로 그룹화된 결과(즉, 집계 값)에 대한 조건을 지정하여 필터링.
+*   **`WHERE` 절과의 차이점**:
+*   **`WHERE` 절**: 그룹화 전 개별 행에 대한 조건 필터링. (`FROM` 절 다음, `GROUP BY` 절 이전)
+*   **`HAVING` 절**: 그룹화 후 집계 결과에 대한 조건 필터링. (`GROUP BY` 절 다음)
+
+*   `SELECT column_to_group_by, aggregate_function(column)`
+*   `FROM table_name`
+*   `WHERE individual_row_condition -- (선택 사항)`
+*   `GROUP BY column_to_group_by`
+*   `HAVING group_condition --(집계 함수에 대한 조건)`
+*   `ORDER BY ...; -- (선택 사항)`
+
+## HAVING 절을 사용한 그룹 결과 필터링
+
+*   `TB_LOAN_ACCOUNT` 테이블에서 `BIZ_REG_NO` (사업자등록번호) 별로 총 `LOAN_AMT` (여신금액) 합계가 100억 이상인 회사만 조회
+
 ```sql
 SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS "총 여신금액"
 FROM TB_LOAN_ACCOUNT
 GROUP BY BIZ_REG_NO
 HAVING SUM(LOAN_AMT) >= 10000000000;
 ```
-* `TB_COMPANY_MASTER`에서 `COMPANY_TYPE_CAT` (기업구분범주값) 별 회사 수가 2개 이상인 기업 구분만 조회
+
+*   `TB_COMPANY_MASTER`에서 `COMPANY_TYPE_CAT` (기업구분범주값) 별 회사 수가 2개 이상인 기업 구분만 조회
+
 ```sql
 SELECT COMPANY_TYPE_CAT, COUNT(*) AS "기업 수"
 FROM TB_COMPANY_MASTER
 GROUP BY COMPANY_TYPE_CAT
 HAVING COUNT(*) >= 2;
 ```
-* `WHERE` 절과 `HAVING` 절 함께 사용: `TB_LOAN_ACCOUNT`에서 `LOAN_TYPE_CD`가 'L001'(운전자금)인 대출 중, 회사별 평균 금리가 3.0% 초과인 경우 조회
+
+## WHERE 절과 HAVING 절 함께 사용
+
+*   `TB_LOAN_ACCOUNT`에서 `LOAN_TYPE_CD`가 `'L001'`(운전자금)인 대출 중, 회사별 평균 금리가 3.0% 초과인 경우 조회
+
 ```sql
 SELECT BIZ_REG_NO, AVG(INTEREST_RATE) AS "평균 운전자금 금리"
 FROM TB_LOAN_ACCOUNT
@@ -214,3 +264,30 @@ GROUP BY ROLLUP(FS_TYPE, AUDIT_YN);
 ## 퀴즈
 
 <iframe src="https://tally.so/embed/w2gZNe?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1400" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] GROUP BY"></iframe>
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="intro" quizItems={
+    
+[
+    {
+        "item_type": "long",
+        "question": "'데이터의 비합리적인 효과(Unreasonable effectiveness of data)' 논문의 핵심 주장은 무엇입니까?",
+        "options": [
+            "최신 모델을 사용하는 것이 데이터의 양보다 항상 더 중요하다.",
+            "데이터의 양이 충분히 많아지면, 모델의 종류에 따른 성능 차이가 줄어들고 전반적으로 성능이 향상된다.",
+            "데이터가 많아질수록 과대적합 문제가 심각해져 성능이 오히려 떨어진다.",
+            "도메인 지식을 활용하는 것이 데이터의 양을 늘리는 것보다 효과적이다."
+        ],
+        "hint": "모형의 정교함보다 '데이터' 자체의 힘을 강조한 개념입니다.",
+        "solution": "데이터의 양이 충분히 많아지면, 모델의 종류에 따른 성능 차이가 줄어들고 전반적으로 성능이 향상된다."
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

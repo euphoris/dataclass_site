@@ -120,13 +120,10 @@ const sidebars: SidebarsConfig = {
   sqlSidebar: [
     {
       type: 'doc',
-      id: 'sql/index',
+      id: 'sql/home',
       label: 'SQL 프로그래밍'
     },
-    {
-      type: 'category',
-      label: '1일차 - SQL 기초',
-      items: [
+
         {
           type: 'doc',
           id: 'sql/basic',
@@ -157,18 +154,11 @@ const sidebars: SidebarsConfig = {
           id: 'sql/functions',
           label: '함수'
         },
-
-      ]
-    },
-    {
-      type: 'category',
-      label: '2일차 - 복잡한 SQL',
-      items: [
-        {
-          type: 'doc',
-          id: 'sql/day-1-review',
-          label: '1일차 복습'
-        },
+        // {
+        //   type: 'doc',
+        //   id: 'sql/day-1-review',
+        //   label: '1일차 복습'
+        // },
         {
           type: 'doc',
           id: 'sql/select-expressions',
@@ -204,8 +194,11 @@ const sidebars: SidebarsConfig = {
           id: 'sql/cte',
           label: '공통 테이블 표현식'
         },
-      ]
-    },
+        {
+          type: 'doc',
+          id: 'sql/indexing',
+          label: '인덱스'
+        },
   ],
   dataAnalysisSidebar: [
     {

@@ -1,117 +1,121 @@
-
 # 서브쿼리
 
----
 ## 서브쿼리
-* 서브쿼리 (Subquery) 또는 하위 질의 (Inner Query): 하나의 SQL 문장(주로 `SELECT` 문) 내에 포함되어 실행되는 또 다른 `SELECT` 문.
-* 개념: 쿼리 안의 쿼리. 복잡한 문제를 해결하기 위해 쿼리를 단계적으로 구성.
-* 실행 순서: 일반적으로 서브쿼리가 먼저 실행되어 그 결과를 외부 쿼리(Main Query 또는 Outer Query)가 사용.
-* 예시 구조:
+
+*   **서브쿼리 (`Subquery`)** 또는 **하위 질의 (`Inner Query`)**: 하나의 SQL 문장(주로 `SELECT` 문) 내에 포함되어 실행되는 또 다른 `SELECT` 문.
+*   **개념**: 쿼리 안의 쿼리. 복잡한 문제를 해결하기 위해 쿼리를 단계적으로 구성.
+*   **실행 순서**: 일반적으로 서브쿼리가 먼저 실행되어 그 결과를 외부 쿼리(`Main Query` 또는 `Outer Query`)가 사용.
+
 ```sql
 SELECT column1, column2
 FROM table1
 WHERE column1 = (SELECT MAX(some_column) FROM table2); -- 이 부분이 서브쿼리
 ```
 
----
 ## 서브쿼리의 장점과 주의점
-* 장점:
-    * 복잡한 질의 단순화: 긴 SQL 문을 여러 부분으로 나누어 작성하고 이해하기 용이.
-    * 데이터 접근 유연성: 메인 쿼리만으로는 한 번에 얻기 어려운 데이터를 단계적으로 접근 가능.
-    * 가독성 향상: 적절히 사용하면, 복잡한 로직을 명확하게 표현 가능.
-* 주의점:
-    * 성능: 너무 많은 서브쿼리나 비효율적인 서브쿼리는 성능 저하의 원인이 될 수 있음. (특히 상관 서브쿼리)
-    * 가독성 저하: 과도하게 중첩된 서브쿼리는 오히려 이해하기 어려울 수 있음.
-    * JOIN과의 관계: 많은 경우 JOIN으로 대체 가능하며, JOIN이 더 효율적일 때도 있음.
 
----
+*   **장점**:
+    *   **복잡한 질의 단순화**: 긴 SQL 문을 여러 부분으로 나누어 작성하고 이해하기 용이.
+    *   **데이터 접근 유연성**: 메인 쿼리만으로는 한 번에 얻기 어려운 데이터를 단계적으로 접근 가능.
+    *   **가독성 향상**: 적절히 사용하면, 복잡한 로직을 명확하게 표현 가능.
+*   **주의점**:
+    *   **성능**: 너무 많은 서브쿼리나 비효율적인 서브쿼리는 성능 저하의 원인이 될 수 있음. (특히 상관 서브쿼리)
+    *   **가독성 저하**: 과도하게 중첩된 서브쿼리는 오히려 이해하기 어려울 수 있음.
+    *   **`JOIN`과의 관계**: 많은 경우 `JOIN`으로 대체 가능하며, `JOIN`이 더 효율적일 때도 있음.
+
 ## 서브쿼리 사용 위치: SELECT 절
-* 스칼라 서브쿼리 (Scalar Subquery): `SELECT` 절에서 사용되며, 반드시 단일 값(하나의 행, 하나의 열)만 반환해야 함.
-* 반환된 단일 값은 외부 쿼리의 컬럼처럼 동작.
-* 예시: 각 회사의 정보와 함께, 해당 회사의 평균 대출 금리를 조회 (상관 서브쿼리 형태)
+
+*   **스칼라 서브쿼리 (`Scalar Subquery`)**: `SELECT` 절에서 사용되며, 반드시 단일 값(하나의 행, 하나의 열)만 반환해야 함.
+*   반환된 단일 값은 외부 쿼리의 컬럼처럼 동작.
+*   **예시**: 각 회사의 정보와 함께, 해당 회사의 평균 대출 금리를 조회 (상관 서브쿼리 형태)
+
 ```sql
 SELECT
     c.COMPANY_NM AS "회사명",
     c.CEO_NM AS "대표자명",
     (SELECT AVG(l.INTEREST_RATE)
-        FROM TB_LOAN_ACCOUNT l
-        WHERE l.BIZ_REG_NO = c.BIZ_REG_NO) AS "평균 대출 금리" -- 스칼라 서브쿼리
+     FROM TB_LOAN_ACCOUNT l
+     WHERE l.BIZ_REG_NO = c.BIZ_REG_NO) AS "평균 대출 금리" -- 스칼라 서브쿼리
 FROM
     TB_COMPANY_MASTER c;
 ```
 
----
 ## 서브쿼리 사용 위치: FROM 절
-* 인라인 뷰 (Inline View): `FROM` 절에서 사용되며, 서브쿼리의 결과가 하나의 가상 테이블처럼 동작.
-* 서브쿼리가 반환하는 결과 집합에 별칭(Alias)을 부여하여 사용.
-* 예시: 회사별 총 여신 금액을 계산한 후, 그 결과(인라인 뷰)에서 총 여신 금액이 500억 이상인 회사만 조회.
+
+*   **인라인 뷰 (`Inline View`)**: `FROM` 절에서 사용되며, 서브쿼리의 결과가 하나의 가상 테이블처럼 동작.
+*   서브쿼리가 반환하는 결과 집합에 별칭(`Alias`)을 부여하여 사용.
+*   **예시**: 회사별 총 여신 금액을 계산한 후, 그 결과(인라인 뷰)에서 총 여신 금액이 500억 이상인 회사만 조회.
+
 ```sql
 SELECT
     iv.BIZ_REG_NO AS "사업자등록번호",
     iv.TOTAL_LOAN_AMOUNT AS "총 여신금액"
 FROM
     (SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS TOTAL_LOAN_AMOUNT
-        FROM TB_LOAN_ACCOUNT
-        GROUP BY BIZ_REG_NO) iv -- 인라인 뷰 (별칭 iv)
+     FROM TB_LOAN_ACCOUNT
+     GROUP BY BIZ_REG_NO) iv -- 인라인 뷰(별칭 iv)
 WHERE
     iv.TOTAL_LOAN_AMOUNT >= 50000000000;
 ```
----
+
 ## 서브쿼리와 ROWNUM
 
-* ROWNUM을 ORDER BY와 함께 사용하면 개수를 제한한 후, 정렬함
-* 정렬을 먼저 하고, 그 후에 ROWNUM을 적용하려면 서브쿼리를 사용해야 함.
-* `TB_LOAN_ACCOUNT` 테이블에서 `LOAN_AMT` (여신금액)이 가장 큰 3개 여신 계좌 조회
+*   `ROWNUM`을 `ORDER BY`와 함께 사용하면 개수를 제한한 후, 정렬함
+*   정렬을 먼저 하고, 그 후에 `ROWNUM`을 적용하려면 서브쿼리를 사용해야 함.
+*   **`TB_LOAN_ACCOUNT` 테이블에서 `LOAN_AMT` (여신금액)이 가장 큰 3개 여신 계좌 조회**
+
 ```sql
 SELECT *
 FROM (
     SELECT LOAN_ACCT_NO, LOAN_AMT, INTEREST_RATE
     FROM TB_LOAN_ACCOUNT
-    ORDER BY INTEREST_RATE DESC
+    ORDER BY LOAN_AMT DESC
 )
 WHERE ROWNUM <= 3;
 ```
 
-* LIMIT를 사용하는 DBMS에서는 위와 같이 할 필요 없음
+*   `LIMIT`를 사용하는 DBMS에서는 위와 같이 할 필요 없음
 
----
 ## ROW_NUMBER()
 
-* 같은 사업자 등록 번호 계좌들 중에 최신 계좌 1개씩만 보기
+*   같은 사업자 등록 번호 계좌들 중에 최신 계좌 1개씩만 보기
+
 ```sql
 SELECT * FROM (
-    SELECT 
-        BIZ_REG_NO, 
-        LOAN_AMT, 
+    SELECT
+        BIZ_REG_NO,
+        LOAN_AMT,
         ROW_NUMBER() OVER (PARTITION BY BIZ_REG_NO ORDER BY START_DT DESC) AS RN
-        -- 같은 사업자 등록번호에서 시작한 순서의 역순으로 정렬했을 때 행 번호
+        -- 같은 사업자 등록번호에서 시작일 순서의 역순으로 정렬했을 때 행 번호
     FROM TB_LOAN_ACCOUNT)
 WHERE RN = 1;
 ```
 
-* DISTINCT는 완전히 중복된 행을 제거하는 반면, `ROW_NUMBER()`는 조건을 만족하는 행만 1개씩 남김
-* WHERE가 SELECT보다 먼저 실행
-    * 서브 쿼리가 아니면 RN의 값은 SELECT에서 계산하므로 WHERE 문에서 필터링할 수 없음
+*   `DISTINCT`는 완전히 중복된 행을 제거하는 반면, `ROW_NUMBER()`는 조건을 만족하는 행만 1개씩 남김
+*   `WHERE`가 `SELECT`보다 먼저 실행
+    *   서브 쿼리가 아니면 `RN`의 값은 `SELECT`에서 계산하므로 `WHERE` 문에서 필터링할 수 없음
 
-
----
 ## 서브쿼리 사용 위치: WHERE 절
-* 조건 비교: `WHERE` 절의 조건식에서 서브쿼리의 결과를 사용하여 특정 행을 필터링.
-* 서브쿼리가 반환하는 값의 형태에 따라 다양한 비교 연산자와 함께 사용.
-* 예시: 전체 여신 계좌의 평균 금리보다 높은 금리를 가진 여신 계좌 정보 조회.
+
+*   **조건 비교**: `WHERE` 절의 조건식에서 서브쿼리의 결과를 사용하여 특정 행을 필터링.
+*   서브쿼리가 반환하는 값의 형태에 따라 다양한 비교 연산자와 함께 사용.
+*   **예시**: 전체 여신 계좌의 평균 금리보다 높은 금리를 가진 여신 계좌 정보 조회.
+
 ```sql
 SELECT
     LOAN_ACCT_NO, BIZ_REG_NO, INTEREST_RATE, LOAN_AMT
 FROM
     TB_LOAN_ACCOUNT
 WHERE
-    INTEREST_RATE > (SELECT AVG(INTEREST_RATE) FROM TB_LOAN_ACCOUNT); -- 서브쿼리가 평균 금리(단일 값) 반환
+    INTEREST_RATE > (SELECT AVG(INTEREST_RATE) FROM TB_LOAN_ACCOUNT);
+    -- 서브쿼리가 평균 금리(단일 값) 반환
 ```
 
----
 ## 서브쿼리 사용 위치: HAVING 절
-* 그룹 결과 필터링: `HAVING` 절에서 `GROUP BY`로 그룹화된 결과에 대해 조건을 적용할 때 서브쿼리 사용 가능.
-* 예시: 회사별 평균 여신 금액을 구하고, 이 평균 금액이 전체 회사들의 평균 여신 금액보다 큰 회사 그룹만 조회.
+
+*   **그룹 결과 필터링**: `HAVING` 절에서 `GROUP BY`로 그룹화된 결과에 대해 조건을 적용할 때 서브쿼리 사용 가능.
+*   **예시**: 회사별 평균 여신 금액을 구하고, 이 평균 금액이 전체 회사들의 평균 여신 금액보다 큰 회사 그룹만 조회.
+
 ```sql
 SELECT
     BIZ_REG_NO, AVG(LOAN_AMT) AS "회사별 평균여신금액"
@@ -120,64 +124,69 @@ FROM
 GROUP BY
     BIZ_REG_NO
 HAVING
-    AVG(LOAN_AMT) > (SELECT AVG(LOAN_AMT) FROM TB_LOAN_ACCOUNT); -- 전체 평균 여신 금액 (단일 값)
+    AVG(LOAN_AMT) > (SELECT AVG(LOAN_AMT) FROM TB_LOAN_ACCOUNT);
+    -- 전체 평균 여신 금액(단일 값)
 ```
 
-
----
 ## 다중 행 서브쿼리 연산자: ANY, SOME
-* `ANY` (또는 `SOME`): 서브쿼리가 반환하는 여러 값들 중 어느 하나라도 조건을 만족하면 참.
-    * `컬럼 = ANY (서브쿼리)`: `IN`과 동일.
-    * `컬럼 > ANY (서브쿼리)`: 서브쿼리 결과 중 최소값보다 크면 참.
-    * `컬럼 < ANY (서브쿼리)`: 서브쿼리 결과 중 최대값보다 작으면 참 (단, 서브쿼리 결과가 모두 양수이고 컬럼이 음수일 수도 있는 등 주의).
-* 예시 (`>ANY`): 'L001' 종류 여신의 최소 금리보다 높은 금리를 가진 모든 여신 조회.
+
+*   **`ANY` (또는 `SOME`)**: 서브쿼리가 반환하는 여러 값들 중 어느 하나라도 조건을 만족하면 참.
+*   컬럼 `=` `ANY` (서브쿼리): `IN`과 동일.
+*   컬럼 `>` `ANY`(서브쿼리): 서브쿼리 결과 중 최소값보다 크면 참.
+*   컬럼 `<` `ANY`(서브쿼리): 서브쿼리 결과 중 최대값보다 작으면 참 (단, 서브쿼리 결과가 모두 양수이고 컬럼이 음수일 수도 있는 등 주의).
+*   **예시 (`>ANY`)**: 'L001' 종류 여신의 최소 금리보다 높은 금리를 가진 모든 여신 조회.
+
 ```sql
 SELECT LOAN_ACCT_NO, INTEREST_RATE
 FROM TB_LOAN_ACCOUNT
-WHERE INTEREST_RATE > ANY (SELECT INTEREST_RATE
-                            FROM TB_LOAN_ACCOUNT
-                            WHERE LOAN_TYPE_CD = 'L001' AND INTEREST_RATE IS NOT NULL);
+WHERE INTEREST_RATE > ANY
+    (SELECT INTEREST_RATE
+     FROM TB_LOAN_ACCOUNT
+     WHERE LOAN_TYPE_CD = 'L001' AND INTEREST_RATE IS NOT NULL);
 ```
 
----
 ## 다중 행 서브쿼리 연산자: ALL
-* `ALL`: 서브쿼리가 반환하는 여러 값들 모두를 조건을 만족해야 참.
-    * `컬럼 > ALL (서브쿼리)`: 서브쿼리 결과 중 최대값보다 크면 참.
-    * `컬럼 < ALL (서브쿼리)`: 서브쿼리 결과 중 최소값보다 작으면 참.
-* 예시 (`>ALL`): 'L001' 종류 여신의 최대 금리보다 높은 금리를 가진 모든 여신 조회.
+
+*   **`ALL`**: 서브쿼리가 반환하는 여러 값들 모두를 조건을 만족해야 참.
+*   컬럼 `>` `ALL` (서브쿼리): 서브쿼리 결과 중 최대값보다 크면 참.
+*   컬럼 `<` `ALL` (서브쿼리): 서브쿼리 결과 중 최소값보다 작으면 참.
+*   **예시 (`>ALL`)**: 'L002' 종류 여신의 최대 금리보다 높은 금리를 가진 모든 여신 조회.
+
 ```sql
 SELECT LOAN_ACCT_NO, INTEREST_RATE
 FROM TB_LOAN_ACCOUNT
-WHERE INTEREST_RATE > ALL (SELECT INTEREST_RATE
-                            FROM TB_LOAN_ACCOUNT
-                            WHERE LOAN_TYPE_CD = 'L001' AND INTEREST_RATE IS NOT NULL);
+WHERE INTEREST_RATE > ALL
+    (SELECT INTEREST_RATE
+     FROM TB_LOAN_ACCOUNT
+     WHERE LOAN_TYPE_CD = 'L002' AND INTEREST_RATE IS NOT NULL);
 ```
 
----
-## 상관 서브쿼리 (Correlated Subquery) - 개념 소개
-* 정의: 서브쿼리가 외부 쿼리의 컬럼 값을 참조하여 실행되는 형태.
-* 실행 방식 (개념적):
-    1.  외부 쿼리가 첫 번째 행을 읽음.
-    2.  외부 쿼리의 해당 행의 값을 서브쿼리로 전달.
-    3.  서브쿼리가 전달받은 값을 사용하여 실행되고 결과를 외부 쿼리로 반환.
-    4.  외부 쿼리는 그 결과를 사용하여 해당 행의 조건을 판단.
-    5.  외부 쿼리의 다음 행에 대해 2~4단계 반복.
-* 특징: "바깥쪽 루프 안의 안쪽 루프"처럼 동작. 외부 쿼리의 행 수만큼 서브쿼리가 반복 실행될 수 있어 성능에 영향.
-* 주로 `EXISTS`, `NOT EXISTS` 연산자와 함께 활용되거나, `SELECT` 절에서 각 행에 대한 개별적인 값을 계산할 때 사용.
+## 상관 서브쿼리 (Correlated Subquery)
 
----
+*   **정의**: 서브쿼리가 외부 쿼리의 컬럼 값을 참조하여 실행되는 형태.
+*   **실행 방식 (개념적)**:
+    *   외부 쿼리가 첫 번째 행을 읽음.
+    *   외부 쿼리의 해당 행의 값을 서브쿼리로 전달.
+    *   서브쿼리가 전달받은 값을 사용하여 실행되고 결과를 외부 쿼리로 반환.
+    *   외부 쿼리는 그 결과를 사용하여 해당 행의 조건을 판단.
+    *   외부 쿼리의 다음 행에 대해 2~4단계 반복.
+*   **특징**: "바깥쪽 루프 안의 안쪽 루프"처럼 동작. 외부 쿼리의 행 수만큼 서브쿼리가 반복 실행될 수 있어 성능에 영향.
+*   주로 `EXISTS`, `NOT EXISTS` 연산자와 함께 활용되거나, `SELECT` 절에서 각 행에 대한 개별적인 값을 계산할 때 사용.
+
 ## 상관 서브쿼리 예시 (EXISTS 활용)
-* `EXISTS` 연산자: 서브쿼리의 결과 집합에 행이 하나라도 존재하면 참(TRUE)을 반환. (실제 데이터 값을 비교하지 않음)
-* 예시: 여신(Loan) 거래가 한 건이라도 있는 회사들의 정보 조회.
-    ```sql
-    SELECT c.BIZ_REG_NO, c.COMPANY_NM
-    FROM TB_COMPANY_MASTER c
-    WHERE EXISTS (SELECT 1 -- 어떤 값을 선택하든 상관없음 (보통 1 또는 *)
-                  FROM TB_LOAN_ACCOUNT l
-                  WHERE l.BIZ_REG_NO = c.BIZ_REG_NO); -- 외부 쿼리의 BIZ_REG_NO 참조
-    ```
-    * 위 서브쿼리는 각 `TB_COMPANY_MASTER`의 `BIZ_REG_NO`에 대해 `TB_LOAN_ACCOUNT`에 해당 사업자번호의 여신이 있는지 확인.
 
+*   **`EXISTS` 연산자**: 서브쿼리의 결과 집합에 행이 하나라도 존재하면 참(`TRUE`)을 반환. (실제 데이터 값을 비교하지 않음)
+*   **예시**: 여신(Loan) 거래가 한 건이라도 있는 회사들의 정보 조회.
+
+```sql
+SELECT c.BIZ_REG_NO, c.COMPANY_NM
+FROM TB_COMPANY_MASTER c
+WHERE EXISTS (SELECT 1 -- 어떤 값을 선택하든 상관없음(보통 1 또는 *)
+              FROM TB_LOAN_ACCOUNT l
+              WHERE l.BIZ_REG_NO = c.BIZ_REG_NO); -- 외부 쿼리의 BIZ_REG_NO 참조
+```
+
+*   위 서브쿼리는 각 `TB_COMPANY_MASTER`의 `BIZ_REG_NO`에 대해 `TB_LOAN_ACCOUNT`에 해당 사업자번호의 여신이 있는지 확인.
 ---
 
 ## 퀴즈
