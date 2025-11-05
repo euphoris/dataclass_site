@@ -46,4 +46,75 @@ SELECT BIZ_REG_NO FROM TB_LOAN_ACCOUNT WHERE INTEREST_RATE < 3.0;
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/wd4pAK?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1548" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] 집합"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="set" quizItems={
+    [
+  {
+    "item_type": "radio",
+    "question": "다음 중 UNION과 UNION ALL의 차이점에 대한 설명으로 가장 올바른 것은?",
+    "options": [
+      "UNION은 중복 행을 포함하고, UNION ALL은 중복을 제거한다.",
+      "UNION ALL이 중복 제거 과정을 거치지 않으므로 UNION보다 일반적으로 더 빠르다.",
+      "두 연산자는 기능적으로 완전히 동일하며, DBMS 종류에 따라 이름만 다르다.",
+      "ORDER BY 절은 UNION에서는 사용할 수 없지만 UNION ALL에서는 사용할 수 있다."
+    ],
+    "hint": "두 연산자의 핵심 차이는 '중복 행'을 어떻게 처리하는지와 그로 인한 성능 차이에 있습니다.",
+    "solution": "UNION ALL이 중복 제거 과정을 거치지 않으므로 UNION보다 일반적으로 더 빠르다."
+  },
+  {
+    "item_type": "radio",
+    "question": "두 개 이상의 SELECT문 결과에서 공통적으로 존재하는 행(교집합)만을 반환하는 집합 연산자는 무엇인가?",
+    "options": [
+      "UNION",
+      "MINUS",
+      "INTERSECT",
+      "JOIN"
+    ],
+    "hint": "수학의 '교집합'에 해당하는 SQL 집합 연산자입니다.",
+    "solution": "INTERSECT"
+  },
+  {
+    "item_type": "radio",
+    "question": "아래는 집합 연산자의 사용 규칙에 대한 설명이다. 가장 올바르지 않은 것은?",
+    "options": [
+      "두 SELECT문의 열 개수는 동일해야 한다.",
+      "두 SELECT문의 각 열의 데이터 타입은 서로 호환 가능해야 한다.",
+      "최종 결과의 열 이름은 항상 첫 번째 SELECT문의 열 이름을 따른다.",
+      "ORDER BY절은 각 SELECT문마다 개별적으로 추가하여 정렬할 수 있다."
+    ],
+    "hint": "ORDER BY 절은 모든 집합 연산이 완료된 최종 결과에 대해 한 번만 적용됩니다.",
+    "solution": "ORDER BY절은 각 SELECT문마다 개별적으로 추가하여 정렬할 수 있다."
+  },
+  {
+    "item_type": "radio",
+    "question": "첫 번째 SELECT문의 결과에서 두 번째 SELECT문의 결과를 제외한 차집합을 구하고자 할 때 Oracle DBMS에서 사용하는 명령어는 무엇인가?",
+    "options": [
+      "EXCEPT",
+      "DIFFERENCE",
+      "MINUS",
+      "SUBTRACT"
+    ],
+    "hint": "Oracle 데이터베이스에서 사용하는 차집합 연산자입니다. (참고: SQL Server나 PostgreSQL에서는 EXCEPT를 사용합니다)",
+    "solution": "MINUS"
+  },
+  {
+    "item_type": "long",
+    "question": "2023년(FS_YM 기준)에 '연간'(FS_TYPE = 'ANNUAL') 재무제표를 제출했으며, 동시에 신용등급(CREDIT_GRADE)이 'A' 이상인 회사를 집합 연산자를 이용해 찾는 SQL 쿼리를 작성하세요)",
+    "options": [],
+    "hint": "TB_FINANCIAL_STATEMENT와 TB_CREDIT_INFO 테이블을 JOIN하고, WHERE절에서 각 조건을 필터링한 후, 고유한 회사(BIZ_REG_NO)의 개수를 세어야 합니다.",
+    "solution": "SELECT BIZ_REG_NO FROM TB_FINANCIAL_STATEMENT WHERE SUBSTR(FS_YM, 1, 4) = '2023' AND FS_TYPE = 'ANNUAL' INTERSECT SELECT BIZ_REG_NO FROM TB_CREDIT_INFO WHERE CREDIT_GRADE >= 'A';"
+  },
+  {
+    "item_type": "number",
+    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
+    "options": [],
+    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
+    "solution": 6
+  }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

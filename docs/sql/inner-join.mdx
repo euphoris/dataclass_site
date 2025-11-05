@@ -122,4 +122,68 @@ WHERE
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mJZgdz?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1300" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] JOIN"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="inner-join" quizItems={
+[
+  {
+    "item_type": "radio",
+    "question": "다음 중 INNER JOIN에 대한 설명으로 가장 올바른 것은 무엇인가요?",
+    "options": [
+      "양쪽 테이블에 공통으로 존재하는 데이터만 결과로 반환한다.",
+      "왼쪽 테이블에 존재하는 데이터만 결과로 반환한다.",
+      "오른쪽 테이블에 존재하는 데이터만 결과로 반환한다.",
+      "양쪽 테이블 중 어느 한쪽에라도 존재하는 데이터는 모두 결과로 반환한다."
+    ],
+    "hint": "INNER JOIN은 두 테이블 간의 '교집합'에 해당하는 데이터를 조회합니다.",
+    "solution": "양쪽 테이블에 공통으로 존재하는 데이터만 결과로 반환한다."
+  },
+  {
+    "item_type": "checkbox",
+    "question": "조인 시 테이블 별칭(alias)을 붙이는 방법에 대해 옳은 것을 모두 고르세요",
+    "options": [
+      "테이블 이름이 길 경우 코드를 간결하게 만들기 위해 사용한다",
+      "별칭.컬럼명 형식으로 어느 테이블의 컬럼인지 표시할 수 있다",
+      "FROM이나 JOIN 뒤의 테이블 명에 붙인다",
+      "Oracle에서는 AS를 사용할 수 있다"
+    ],
+    "hint": "별칭은 쿼리의 가독성과 편의성을 높이기 위해 사용됩니다. Oracle에서는 FROM에서는 AS를 사용하지 않음(타 DBMS에서는 사용할 수 있음)",
+    "solution": [
+      "테이블 이름이 길 경우 코드를 간결하게 만들기 위해 사용한다",
+      "별칭.컬럼명 형식으로 어느 테이블의 컬럼인지 표시할 수 있다",
+      "FROM이나 JOIN 뒤의 테이블 명에 붙인다",
+    ]
+  },
+  {
+    "item_type": "radio",
+    "question": "조인하려는 두 테이블의 연결 컬럼명이 동일할 경우 사용 가능한 절은 무엇인가요?",
+    "options": [
+      "ON",
+      "USING",
+      "WHERE",
+      "HAVING"
+    ],
+    "hint": "예: `ON T1.BIZ_REG_NO = T2.BIZ_REG_NO` 대신 `USING (BIZ_REG_NO)`로 간결하게 표현할 수 있습니다.",
+    "solution": "USING"
+  },
+  {
+    "item_type": "long",
+    "question": "TB_COMPANY_MASTER 테이블과 TB_LOAN_ACCOUNT 테이블을 조인하여, '벤처기업' (IS_VENTURE = 'Y')이면서 여신 상태(LOAN_STATUS_CD)가 '정상'인 여신 계좌를 찾는 SQL 질의를 작성하세요",
+    "options": [],
+    "hint": "두 테이블을 `BIZ_REG_NO`로 JOIN하고, WHERE 절에 두 가지 조건을 AND로 연결하세요.",
+    "solution": "SELECT m.BIZ_REG_NO, m.IS_VENTURE, a.LOAN_STATUS_CD FROM TB_COMPANY_MASTER m JOIN TB_LOAN_ACCOUNT a ON m.BIZ_REG_NO = a.BIZ_REG_NO WHERE m.IS_VENTURE = 'Y' AND a.LOAN_STATUS_CD = '정상';"
+  },
+  {
+    "item_type": "number",
+    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
+    "options": [],
+    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
+    "solution": 4
+  }
+]
+
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

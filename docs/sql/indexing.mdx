@@ -261,3 +261,140 @@ SELECT * FROM TB_COMPANY_MASTER WHERE COMPANY_NM LIKE '(주)%'
 UNION
 SELECT * FROM TB_COMPANY_MASTER WHERE ESTABLISH_DT > '2000-01-01';
 ```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="indexing" quizItems={
+    [
+  {
+    "item_type": "radio",
+    "question": "SQL 실행 계획(Execution Plan)에서 `CARDINALITY` 항목이 의미하는 것은 무엇인가요?",
+    "options": [
+      "SQL 구문의 실행 순서",
+      "예상되는 실행 비용",
+      "예상되는 실행 결과 행 수",
+      "쿼리 처리에 사용된 연산자(OPTIONS)"
+    ],
+    "hint": "이 값이 실제 결과와 크게 다를 경우 질의가 비효율적일 수 있습니다.",
+    "solution": "예상되는 실행 결과 행 수"
+  },
+  {
+    "item_type": "radio",
+    "question": "비용 기반 옵티마이저(Cost-Based Optimizer)가 최종 실행 계획을 선택하는 기준은 무엇인가요?",
+    "options": [
+      "가장 많은 인덱스를 사용하는 계획",
+      "통계 정보를 바탕으로 추정한 비용(Cost)이 가장 낮은 계획",
+      "사용자가 작성한 SQL 구문 순서와 가장 유사한 계획",
+      "가장 적은 수의 조인을 사용하는 계획"
+    ],
+    "hint": "여러 '후보 실행 계획'을 생성하고 통계 정보를 바탕으로 각 계획의 '비용'을 추정합니다.",
+    "solution": "통계 정보를 바탕으로 추정한 비용(Cost)이 가장 낮은 계획"
+  },
+  {
+    "item_type": "checkbox",
+    "question": "인덱스(Index)의 단점에 대한 설명으로 옳은 것을 모두 고르세요.",
+    "options": [
+      "테이블 조회 속도를 향상시킨다.",
+      "인덱스 관리를 위한 추가 저장 공간이 필요하다.",
+      "데이터가 변경(INSERT, UPDATE, DELETE)될 때 인덱스도 변경되어야 하므로 추가 작업이 필요하다.",
+      "잘못 사용하면 오히려 성능이 저하될 수 있다."
+    ],
+    "hint": "인덱스는 검색 속도를 높이는 대신 유지 관리에 비용이 듭니다.",
+    "solution": [
+      "인덱스 관리를 위한 추가 저장 공간이 필요하다.",
+      "데이터가 변경(INSERT, UPDATE, DELETE)될 때 인덱스도 변경되어야 하므로 추가 작업이 필요하다.",
+      "잘못 사용하면 오히려 성능이 저하될 수 있다."
+    ]
+  },
+  {
+    "item_type": "radio",
+    "question": "PRIMARY KEY (PK)나 UNIQUE 제약조건이 걸린 컬럼을 '=' 조건으로 조회하면 유일한 결과를 보장합니다. 이때 인덱스를 스캔하는 방식은 무엇인가요?",
+    "options": [
+      "FULL SCAN",
+      "RANGE SCAN",
+      "UNIQUE SCAN",
+      "SKIP SCAN"
+    ],
+    "hint": "결과가 유일(unique)합니다.",
+    "solution": "UNIQUE SCAN"
+  },
+  {
+    "item_type": "radio",
+    "question": "`SELECT * FROM TB_COMPANY_MASTER WHERE COMPANY_NM LIKE '(주)%'` 쿼리에서 사용될 가능성이 높은 인덱스 스캔 방식은 무엇인가요?",
+    "options": [
+      "FULL SCAN",
+      "RANGE SCAN",
+      "FAST FULL SCAN",
+      "UNIQUE SCAN"
+    ],
+    "hint": "인덱스가 사전순으로 정렬되어 있을 때, 특정 '범위'를 검색하는 방식입니다.",
+    "solution": "RANGE SCAN"
+  },
+  {
+    "item_type": "radio",
+    "question": "여러 컬럼으로 구성된 복합 인덱스(예: (FS_TYPE, FS_YM))에서, 인덱스의 첫 번째 컬럼(FS_TYPE)이 아닌 두 번째 컬럼(FS_YM)을 조건으로 검색할 때 사용되는 스캔 방식은 무엇인가요?",
+    "options": [
+      "SKIP SCAN",
+      "RANGE SCAN",
+      "FULL SCAN",
+      "TABLE ACCESS (FULL)"
+    ],
+    "hint": "첫 번째 컬럼의 값들을 '건너뛰면서' 두 번째 컬럼을 탐색하는 방식입니다.",
+    "solution": "SKIP SCAN"
+  },
+  {
+    "item_type": "radio",
+    "question": "인덱스를 효과적으로 사용할 수 있는 쿼리 형태(일명 '인덱스를 탄다')를 의미하는 용어는 무엇인가요?",
+    "options": [
+      "Cardinality",
+      "Optimizer",
+      "Sargable",
+      "Statistics"
+    ],
+    "hint": "'Search Argument Able'의 줄임말입니다.",
+    "solution": "Sargable"
+  },
+  {
+    "item_type": "radio",
+    "question": "다음 SQL 쿼리 중, `ESTABLISH_DT` 컬럼의 인덱스를 가장 효과적으로 사용할 수 있는(Sargable) 형태는 무엇인가요?",
+    "options": [
+      "SELECT * FROM TB_COMPANY_MASTER WHERE TO_CHAR(ESTABLISH_DT, 'YYYY') < '2000';",
+      "SELECT * FROM TB_COMPANY_MASTER WHERE ESTABLISH_DT < TO_DATE('2000', 'YYYY');",
+      "SELECT * FROM TB_COMPANY_MASTER WHERE ESTABLISH_DT || '' < '2000-01-01';",
+      "SELECT * FROM TB_COMPANY_MASTER WHERE ESTABLISH_DT + 1 < TO_DATE('2000-01-02', 'YYYY-MM-DD');"
+    ],
+    "hint": "비교 대상인 *컬럼* 자체에 함수나 계산을 적용하면 인덱스를 사용하기 어렵습니다.",
+    "solution": "SELECT * FROM TB_COMPANY_MASTER WHERE ESTABLISH_DT < TO_DATE('2000', 'YYYY');"
+  },
+  {
+    "item_type": "radio",
+    "question": "`WHERE UPPER(COMPANY_ENG_NM) = 'APPLE'`과 같이 컬럼에 함수를 적용한 조건문이 인덱스를 사용할 수 있는(Sargable) 경우는 무엇인가요?",
+    "options": [
+      "해당 컬럼이 PRIMARY KEY일 때",
+      "UPPER(COMPANY_ENG_NM)와 동일한 형태의 '함수 기반 인덱스(Function-Based Index)'가 생성되어 있을 때",
+      "해당 컬럼이 UNIQUE 제약조건을 가질 때",
+      "옵티마이저가 항상 함수를 자동으로 변환해주기 때문에 언제나 가능하다."
+    ],
+    "hint": "인덱스 자체가 함수 계산 결과를 미리 저장하고 있어야 합니다.",
+    "solution": "UPPER(COMPANY_ENG_NM)와 동일한 형태의 '함수 기반 인덱스(Function-Based Index)'가 생성되어 있을 때"
+  },
+  {
+    "item_type": "radio",
+    "question": "`OR` 연산자 대신 `UNION`을 사용하여 질의를 작성하면 더 빠른 경우가 있습니다. 왜 그렇습니까?",
+    "options": [
+      "모든 경우에 UNION이 OR보다 빠르기 때문에",
+      "OR로 검색할 경우 인덱스를 사용하지 못할 수 있어, 각각의 조건이 인덱스를 사용하도록 분리한 뒤 UNION으로 합쳤을 때 더 빠를 수 있기 때문에",
+      "OR은 두 개의 조건만 비교할 수 있지만 UNION은 세 개 이상의 조건을 합칠 수 있기 때문에",
+      "OR은 NULL 값을 처리하지 못하기 때문에"
+    ],
+    "hint": "OR로 연결된 서로 다른 컬럼의 조건은 옵티마이저가 인덱스를 활용하기 어려울 수 있습니다.",
+    "solution": "OR로 검색할 경우 인덱스를 사용하지 못할 수 있어, 각각의 조건이 인덱스를 사용하도록 분리한 뒤 UNION으로 합쳤을 때 더 빠를 수 있기 때문에"
+  }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

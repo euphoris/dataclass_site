@@ -118,8 +118,52 @@ ORDER BY
     *   **조인**: 결과에 양쪽 테이블의 컬럼들이 모두 (또는 선택적으로) 포함될 수 있음.
     *   **집합 연산자**: 참여하는 `SELECT` 문의 컬럼 개수와 데이터 타입이 일치해야 하며, 결과 컬럼은 첫 번째 `SELECT`문을 따름.
 
----
-
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w5YjaE?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1075" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] OUTER JOIN"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="outer-join" quizItems={
+    [
+  {
+    "item_type": "radio",
+    "question": "TB_COMPANY_MASTER 테이블에 있는 기업 중에서 여신 정보(TB_CREDIT_INFO)가 없는 기업까지 모두 포함하여 기업 목록을 조회하고 싶을 때, 가장 적절한 조인 방법은 무엇인가요?",
+    "options": [
+      "INNER JOIN",
+      "LEFT OUTER JOIN",
+      "FULL OUTER JOIN"
+    ],
+    "hint": "기준이 되는 테이블(TB_COMPANY_MASTER)의 모든 행을 표시하고, 다른 테이블(TB_CREDIT_INFO)은 일치하는 경우에만 데이터를 표시해야 합니다.",
+    "solution": "LEFT OUTER JOIN"
+  },
+  {
+    "item_type": "radio",
+    "question": "조인(JOIN)과 집합 연산자(UNION, INTERSECT 등)의 가장 큰 차이점은 무엇인가요?",
+    "options": [
+      "조인은 2개의 테이블만 가능하지만, 집합 연산자는 3개 이상도 가능하다.",
+      "조인은 데이터를 옆(컬럼)으로 확장하고, 집합 연산자는 데이터를 위아래(행)로 확장하거나 비교한다.",
+      "조인은 성능이 항상 빠르고, 집합 연산자는 항상 느리다.",
+      "조인은 SELECT 문 내에서만 사용되고, 집합 연산자는 CREATE 문에서도 사용된다."
+    ],
+    "hint": "데이터가 결합되는 방향(열 추가 vs 행 추가)을 생각해보세요.",
+    "solution": "조인은 데이터를 옆(컬럼)으로 확장하고, 집합 연산자는 데이터를 위아래(행)로 확장하거나 비교한다."
+  },
+  {
+    "item_type": "long",
+    "question": "TB_COMPANY_MASTER에 TB_CREDIT_INFO를 JOIN 했을 때 해당되는 TB_CREDIT_INFO가 없는 회사(CREDIT_INFO_ID가 NULL인 경우)를 찾는 SQL 문을 작성해보세요",
+    "options": [],
+    "hint": "LEFT OUTER JOIN을 사용하여 TB_COMPANY_MASTER를 기준으로 조인한 뒤, WHERE 절에서 TB_CREDIT_INFO 테이블의 기본 키(또는 NOT NULL 컬럼)가 NULL인 조건을 찾습니다.",
+    "solution": "SELECT * FROM TB_COMPANY_MASTER m LEFT OUTER JOIN TB_CREDIT_INFO c ON m.BIZ_REG_NO = c.BIZ_REG_NO WHERE c.CREDIT_INFO_ID IS NULL;"
+  },
+  {
+    "item_type": "number",
+    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
+    "options": [],
+    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
+    "solution": 1
+  }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

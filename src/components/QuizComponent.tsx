@@ -167,7 +167,7 @@ export interface QuizItem {
 }
 
 // 퀴즈 결과 상태를 위한 타입
-export type QuizStatus = 'unanswered' | 'correct' | 'hint-correct' | 'incorrect';
+export type QuizStatus = 'unanswered' | 'correct' | 'hint-correct' | 'incorrect' | 'pending';
 
 interface QuizProps {
   quizId: string;
@@ -195,13 +195,15 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
     let correct = 0;
     let hintCorrect = 0;
     let incorrect = 0;
+    let pending = 0;
     quizStatus.forEach((status) => {
       if (status === 'correct') correct++;
       else if (status === 'hint-correct') hintCorrect++;
       else if (status === 'incorrect') incorrect++;
+      else if (status === 'pending') pending++;
     });
-    const remaining = totalQuestions - (correct + hintCorrect + incorrect);
-    return { correct, hintCorrect, incorrect, remaining };
+    const remaining = totalQuestions - (correct + hintCorrect + incorrect + pending);
+    return { correct, hintCorrect, incorrect, pending, remaining };
   }, [quizStatus, totalQuestions]);
 
   const progressValue = ((currentIndex + 1) / totalQuestions) * 100;
@@ -258,15 +260,49 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
     setHintsUsed(new Set(hintsUsed.add(currentIndex)));
   };
 
-  const handleSubmit = async () => {
-    const isCorrect = checkAnswer(currentAnswer);
+  const handleUserGrading = async (isCorrect: boolean) => {
     const wasHintUsed = hintsUsed.has(currentIndex);
-    let newStatus: QuizStatus;
+    const newStatus: QuizStatus = isCorrect 
+      ? (wasHintUsed ? 'hint-correct' : 'correct')
+      : 'incorrect';
 
-    if (isCorrect) {
-      newStatus = wasHintUsed ? 'hint-correct' : 'correct';
-    } else {
+    setQuizStatus(new Map(quizStatus.set(currentIndex, newStatus)));
+    
+    // 데이터베이스 업데이트 (기존 답안의 correct 값을 업데이트)
+    const { data, error } = await supabase
+      .from('answers')
+      .update({ correct: isCorrect })
+      .eq('name', userInfo?.name)
+      .eq('nickname', userInfo?.nickname)
+      .eq('affiliation', userInfo?.affiliation)
+      .eq('quiz_id', quizId)
+      .eq('item_id', currentIndex);
+  };
+
+  const handleSubmit = async () => {
+    let newStatus: QuizStatus;
+    let isCorrect = false;
+    const wasHintUsed = hintsUsed.has(currentIndex);
+
+    if (currentItem.item_type === 'long') {
+      // long 타입에서 답안이 비어있으면 바로 incorrect로 처리
+      console.log('long type submit:', currentAnswer);
+      if (!!!currentAnswer || (typeof currentAnswer === 'string' && currentAnswer.trim() === '')) {
       newStatus = 'incorrect';
+      isCorrect = false;
+      } else {
+      // 답안이 있으면 사용자가 직접 채점하도록 pending 상태로 설정
+      newStatus = 'pending';
+      isCorrect = false; // pending 상태에서는 임시로 false
+      }
+    } else {
+      // 다른 타입들은 기존처럼 자동 채점
+      isCorrect = checkAnswer(currentAnswer);
+      if (isCorrect) {
+        newStatus = wasHintUsed ? 'hint-correct' : 'correct';
+      } else {
+        newStatus = 'incorrect';
+      }
     }
 
     setQuizStatus(new Map(quizStatus.set(currentIndex, newStatus)));
@@ -371,6 +407,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
               <span>맞음: {stats.correct}</span>
               <span>힌트: {stats.hintCorrect}</span>
               <span>틀림: {stats.incorrect}</span>
+              <span>채점중: {stats.pending}</span>
               <span>남음: {stats.remaining}</span>
             </div>
           </div>
@@ -391,7 +428,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
               </AlertDescription>
             </Alert>
           )}
-          {isAnswered && (
+          {isAnswered && currentStatus !== 'pending' && (
              <Alert
               variant={currentStatus === 'correct' || currentStatus === 'hint-correct' ? 'default' : 'destructive'}
               className="mt-4"
@@ -401,6 +438,37 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
               </AlertTitle>
               <AlertDescription>
                 정답: {Array.isArray(currentItem.solution) ? currentItem.solution.join(', ') : currentItem.solution}
+              </AlertDescription>
+            </Alert>
+          )}
+          {currentStatus === 'pending' && (
+            <Alert variant="default" className="mt-4">
+              <AlertTitle>채점이 필요합니다</AlertTitle>
+              <AlertDescription>
+                <div className="mt-2 space-x-2">
+                  <span>답안이 맞나요?</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => handleUserGrading(true)}
+                    className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                  >
+                    맞음
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => handleUserGrading(false)}
+                    className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                  >
+                    틀림
+                  </Button>
+                </div>
+                {currentItem.solution && (
+                  <div className="mt-2 text-sm text-muted-foreground">
+                    참고 답안: {Array.isArray(currentItem.solution) ? currentItem.solution.join(', ') : currentItem.solution}
+                  </div>
+                )}
               </AlertDescription>
             </Alert>
           )}
