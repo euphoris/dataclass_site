@@ -1508,56 +1508,77 @@ const sidebars: SidebarsConfig = {
   pythonSidebar: [
     { type: 'doc',
       id: 'python/index',
-      label: 'Python 데이터분석/자동화'
+      label: 'Python 실습'
+    },
+    {
+      type: 'doc',
+      id: 'python/miniforge',
+      label: 'Miniforge 설치'
     },
     { type: 'doc',
       id: 'python/intro',
-      label: '소개 및 기초'
+      label: 'Python 소개와 기초'
     },
     { type: 'doc',
-      id: 'python/vibe-coding',
-      label: '바이브 코딩'
+      id: 'python/python-sql',
+      label: 'Python과 SQL'
     },
     { type: 'doc',
-      id: 'python/data-type-and-function',
-      label: '자료형과 함수'
+      id: 'python/eda',
+      label: '탐색적 데이터 분석'
     },
     { type: 'doc',
-      id: 'python/data-structure',
-      label: '리스트와 딕셔너리'
+      id: 'python/visualization',
+      label: '데이터 시각화'
     },
     { type: 'doc',
-      id: 'python/bool',
-      label: 'os 모듈과 불리언'
+      id: 'python/regression',
+      label: '회귀 분석'
     },
-    { type: 'doc',
-      id: 'python/control-flow',
-      label: '조건문과 반복문'
-    },
-    { type: 'doc',
-      id: 'python/day1-review',
-      label: '★ 1일차 복습'
-    },
-    { type: 'doc',
-      id: 'python/openpyxl',
-      label: 'openpyxl 엑셀 자동화'
-    },
-    { type: 'doc',
-      id: 'python/pandas',
-      label: 'pandas 데이터 분석'
-    },
-    { type: 'doc',
-      id: 'python/seaborn',
-      label: 'seaborn 시각화'
-    },
-    { type: 'doc',
-      id: 'python/pptx',
-      label: 'pptx 보고서 자동화'
-    },
-    { type: 'doc',
-      id: 'python/streamlit',
-      label: 'streamlit 대시보드'
-    },
+    // { type: 'doc',
+    //   id: 'python/vibe-coding',
+    //   label: '바이브 코딩'
+    // },
+    // { type: 'doc',
+    //   id: 'python/data-type-and-function',
+    //   label: '자료형과 함수'
+    // },
+    // { type: 'doc',
+    //   id: 'python/data-structure',
+    //   label: '리스트와 딕셔너리'
+    // },
+    // { type: 'doc',
+    //   id: 'python/bool',
+    //   label: 'os 모듈과 불리언'
+    // },
+    // { type: 'doc',
+    //   id: 'python/control-flow',
+    //   label: '조건문과 반복문'
+    // },
+    // { type: 'doc',
+    //   id: 'python/day1-review',
+    //   label: '★ 1일차 복습'
+    // },
+    // { type: 'doc',
+    //   id: 'python/openpyxl',
+    //   label: 'openpyxl 엑셀 자동화'
+    // },
+    // { type: 'doc',
+    //   id: 'python/pandas',
+    //   label: 'pandas 데이터 분석'
+    // },
+    // { type: 'doc',
+    //   id: 'python/seaborn',
+    //   label: 'seaborn 시각화'
+    // },
+    // { type: 'doc',
+    //   id: 'python/pptx',
+    //   label: 'pptx 보고서 자동화'
+    // },
+    // { type: 'doc',
+    //   id: 'python/streamlit',
+    //   label: 'streamlit 대시보드'
+    // },
   ]
 };
 

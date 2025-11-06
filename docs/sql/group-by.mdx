@@ -308,7 +308,7 @@ import { QuizComponent } from "@/components/QuizComponent";
     "question": "TB_LOAN_ACCOUNT 테이블에서, 회사(BIZ_REG_NO)별로 총 여신 잔액(LOAN_BALANCE)의 합계를 구했을 때, 그 합계가 50억 원 이상인 회사만 보여주는 SQL 쿼리를 작성하세요",
     "options": [],
     "hint": "먼저 BIZ_REG_NO로 그룹화(GROUP BY)하고, SUM(LOAN_BALANCE)을 계산한 뒤, HAVING 절로 합계를 필터링하고, 마지막으로 이 그룹들의 개수를 세어야(COUNT) 합니다.",
-    "solution": "SELECT BIZ_REG_NO FROM TB_LOAN_ACCOUNT GROUP BY BIZ_REG_NO HAVING SUM(LOAN_BALANCE) >= 5000000000;"
+    "solution": "SELECT BIZ_REG_NO, SUM(LOAN_BALANCE) FROM TB_LOAN_ACCOUNT GROUP BY BIZ_REG_NO HAVING SUM(LOAN_BALANCE) >= 5000000000;"
   },
   {
     "item_type": "number",

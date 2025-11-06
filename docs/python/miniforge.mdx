@@ -1,0 +1,30 @@
+# Miniforge 설치
+
+- Python 및 관련 도구들을 쉽게 설치할 수 있도록 도와주는 툴
+- Anaconda라는 툴이 널리 쓰였지만, 라이선스 문제로 기업에서 사용하는데 제한
+개인은 문제 없음
+- Miniforge는 라이선스 문제가 없어 기업에서도 자유롭게 쓸 수 있음
+설치 및 사용방법은 동일
+
+## 다운로드
+
+https://conda-forge.org/download/ 에서 OS에 맞는 설치파일 다운로드
+
+## 설치
+
+다운로드한 설치파일 실행 후 다음 순서로 진행
+
+1. Next
+2. I agree
+3. Install for: Just Me &rarr; Next
+4. Destination Folder(자동 설정되므로 건드리지 않음) &rarr; Next
+5. Create a shortcut on the desktop와 Clear the cache upon completion 체크 &rarr; Install
+
+## 실습을 위한 패키지 설치
+
+miniforge prompt 창에 다음 명령을 복사해서 붙여넣고 엔터
+```sh
+mamba config remove channels defaults
+mamba install -y jupyterlab pandas seaborn notebook opencv scikit-learn openpyxl
+```
+"Transaction finished"라는 말이 나온 후에 창을 닫으시면 됩니다

@@ -1,0 +1,382 @@
+# 데이터 시각화
+
+## Python 데이터 시각화
+
+  * 데이터 시각화: 데이터를 그래프나 차트 등 시각적 형태로 표현하는 과정 
+  * matplotlib: Python의 대표적인 표준 시각화 라이브러리, 다양한 종류의 정적, 애니메이션, 인터랙티브 시각화 생성 가능 
+  * seaborn: matplotlib을 기반으로 하며, 더 아름답고 통계적으로 의미 있는 고급 시각화 기능을 간편하게 제공 
+  * 임포트:
+
+
+
+```python
+import matplotlib.pyplot as plt # matplotlib의 pyplot 모듈
+import seaborn as sns # seaborn 라이브러리
+```
+
+
+
+## 히스토그램 histogram
+
+  * 데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것 
+  * Python에서 데이터 시각화를 위한 라이브러리 "시본"을 임포트 
+
+
+
+```python
+import seaborn as sns
+```
+
+
+
+  * histplot 함수를 이용해서 히스토그램 그리기 
+      * 데이터는 df로 지정 
+      * x축(가로)은 price로 지정 
+  * 'price'는 변수가 아닌 df의 한 열 이름이므로 따옴표를 쳐서 문자열로 표시 
+
+
+
+```python
+sns.histplot(x='price', data=df)
+```
+
+
+
+## 커널 밀도 추정 kernel density estimation
+
+  * 데이터 밀도 추정 기법 
+
+
+
+```python
+sns.kdeplot(x='price', data=df)
+```
+
+
+
+## 데이터 포인트 눈금으로 표시
+
+  * 아래 두 코드를 한 셀에서 실행 
+
+
+
+```python
+sns.kdeplot(x='price', data=df)
+sns.rugplot(x='price', data=df)
+```
+
+
+
+## 히스토그램 + 커널 밀도 추정
+
+  * kde=True로 설정하면 데이터의 밀도를 추정하여 표시 
+
+
+
+```python
+sns.histplot(x='price', data=df, kde=True)
+```
+
+
+
+## ECDF
+
+  * ECDF(Empirical Cumulative Distribution Function), 즉 '경험적 누적 분포 함수' 
+  * 히스토그램과 달리 구간 설정 필요 X 
+  * 커널 밀도 추정과 달리 추정치가 아님(경험적) 
+  * 데이터의 분위수를 쉽게 파악 가능 
+
+
+
+```python
+sns.ecdfplot(data=df, x="price")
+```
+
+
+
+## 비교
+
+  * 모델별로 색상(hue)를 달리해서 그림 
+
+
+
+```python
+sns.kdeplot(data=df, x="price", hue="model") # 왼쪽
+```
+
+
+
+```python
+sns.ecdfplot(data=df, x="price", hue="model") # 오른쪽
+```
+
+
+
+## 상자-수염 그림 (Box Plot)
+
+  * sns.boxplot(x='범주형열', y='숫자형열', data=데이터프레임) 또는 
+  * sns.boxplot(data=데이터프레임의\_숫자형열): 
+  * 데이터의 사분위수, 중앙값, 이상치 등을 상자 그림으로 표현 
+  * 범주별 데이터 분포 비교에 유용 
+
+
+
+```python
+sns.boxplot(data=df, y='price') #가격 분포
+```
+
+
+
+```python
+sns.boxplot(data=df, x='model', y='price') #모델별 가격 분포
+```
+
+
+
+## 산점도
+
+  * 각각의 사례를 점으로 표시 
+
+
+
+```python
+sns.scatterplot(x='mileage', y='price', data=df)
+```
+
+
+
+## 연식을 점의 크기로
+
+```python
+sns.scatterplot(x='mileage', y='price', size='year', data=df)
+```
+
+
+
+## 추세선 추가
+
+```python
+sns.lmplot(x='mileage', y='price', data=df)
+```
+
+
+
+## 등고선 추가
+
+  * 두 줄을 한 셀에 
+
+
+
+```python
+sns.scatterplot(x='mileage', y='price', data=df)
+sns.kdeplot(x='mileage', y='price', data=df, color='lightgray', alpha=0.5)
+```
+
+
+
+## 선 그래프
+
+  * sns.lineplot(x='x축\_열이름', y='y축\_열이름', data=데이터프레임) 
+  * 용도: 시간의 흐름에 따른 데이터 변화, 연속적인 값들의 추세 시각화 
+  * 주요 인자:
+      * x: x축에 해당하는 데이터프레임의 열 이름 
+      * y: y축에 해당하는 데이터프레임의 열 이름 
+      * data: 사용할 데이터프레임 객체 
+      * hue: 특정 열의 값에 따라 선 색상 구분 
+      * estimator: y값의 집계 방법 (기본값은 평균) 
+
+
+
+```python
+sns.lineplot(data=df,
+             x='year',
+             y='price') #연도별 가격
+```
+
+
+
+```python
+sns.lineplot(data=df,
+             x='year',
+             y='price', hue='model') #연도별 모델별 가격
+```
+
+
+
+```python
+sns.lineplot(data=df,
+             x='year',
+             y='price', estimator='std') #연도별 표준편차
+```
+
+
+
+## 막대 그래프
+
+  * sns.barplot(x='x축\_범주형열', y='y축\_수치형열', data=데이터프레임): 
+      * 범주형 데이터에 따른 수치형 데이터의 크기(예: 평균, 합계 등) 비교 
+
+
+
+```python
+sns.barplot(data=df, x='model', y='price') #모델별 가격 평균
+```
+
+
+
+  * sns.countplot(x='x축\_범주형열', data=데이터프레임): 
+      * 범주형 데이터의 각 항목별 빈도수(개수) 시각화 (y축 별도 지정 불필요) 
+
+
+
+```python
+sns.countplot(data=df, x='model') #모델별 개수
+```
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="visualization" quizItems={
+
+[
+  {
+    "item_type": "radio",
+    "question": "matplotlib을 기반으로 하며, 더 아름답고 통계적으로 의미 있는 고급 시각화 기능을 간편하게 제공하는 라이브러리는 무엇인가요?",
+    "options": [
+      "matplotlib.pyplot",
+      "seaborn",
+      "pandas",
+      "oracledb"
+    ],
+    "hint": "교안에서 `sns`라는 별칭으로 임포트(import)하는 라이브러리입니다.",
+    "solution": "seaborn"
+  },
+  {
+    "item_type": "radio",
+    "question": "데이터를 여러 구간으로 나눠, 각 구간에 속하는 데이터의 개수(사례 수)를 막대그래프로 표현한 것은 무엇인가요?",
+    "options": [
+      "히스토그램 (Histogram)",
+      "산점도 (Scatter Plot)",
+      "선 그래프 (Line Plot)",
+      "상자-수염 그림 (Box Plot)"
+    ],
+    "hint": "`sns.histplot()` 함수로 그릴 수 있습니다.",
+    "solution": "히스토그램 (Histogram)"
+  },
+  {
+    "item_type": "radio",
+    "question": "`sns.histplot(x='price', data=df, kde=True)` 코드에서 `kde=True` 옵션의 역할은 무엇인가요?",
+    "options": [
+      "데이터의 밀도 추정(Kernel Density Estimation) 곡선을 함께 표시한다.",
+      "데이터의 평균값을 점선으로 표시한다.",
+      "막대의 색깔을 무지개색으로 바꾼다.",
+      "데이터의 개수를 막대 위에 숫자로 표시한다."
+    ],
+    "hint": "히스토그램 위에 부드러운 곡선이 추가되는 것을 생각해보세요.",
+    "solution": "데이터의 밀도 추정(Kernel Density Estimation) 곡선을 함께 표시한다."
+  },
+  {
+    "item_type": "radio",
+    "question": "히스토그램과 달리 구간 설정이 필요 없고, 데이터의 분위수를 쉽게 파악할 수 있게 해주는 '경험적 누적 분포 함수'를 그리는 함수는 무엇인가요?",
+    "options": [
+      "sns.histplot()",
+      "sns.kdeplot()",
+      "sns.ecdfplot()",
+      "sns.boxplot()"
+    ],
+    "hint": "ECDF(Empirical Cumulative Distribution Function)의 약자를 포함한 함수명입니다.",
+    "solution": "sns.ecdfplot()"
+  },
+  {
+    "item_type": "radio",
+    "question": "`seaborn`의 많은 그리기 함수에서 'model'과 같은 특정 열의 값에 따라 그래프의 색상을 다르게 구분하도록 지정하는 파라미터는 무엇인가요?",
+    "options": [
+      "color",
+      "style",
+      "hue",
+      "palette"
+    ],
+    "hint": "예: `sns.kdeplot(data=df, x=\"price\", hue=\"model\")`",
+    "solution": "hue"
+  },
+  {
+    "item_type": "radio",
+    "question": "데이터의 사분위수, 중앙값, 이상치 등을 상자 모양으로 표현하여 범주별 데이터 분포를 비교하는 데 유용한 그래프는 무엇인가요?",
+    "options": [
+      "sns.scatterplot()",
+      "sns.lineplot()",
+      "sns.boxplot()",
+      "sns.histplot()"
+    ],
+    "hint": "상자-수염 그림이라고도 불립니다.",
+    "solution": "sns.boxplot()"
+  },
+  {
+    "item_type": "radio",
+    "question": "두 변수(예: 'mileage'와 'price') 간의 관계를 보기 위해 개별 데이터를 점으로 표시하는 그래프는 무엇인가요?",
+    "options": [
+      "산점도 (Scatter Plot)",
+      "막대 그래프 (Bar Plot)",
+      "히스토그램 (Histogram)",
+      "선 그래프 (Line Plot)"
+    ],
+    "hint": "`sns.scatterplot()` 함수를 사용합니다.",
+    "solution": "산점도 (Scatter Plot)"
+  },
+  {
+    "item_type": "radio",
+    "question": "산점도에 선형 회귀 추세선을 함께 그려주는 `seaborn` 함수는 무엇인가요?",
+    "options": [
+      "sns.scatterplot()",
+      "sns.regplot() 또는 sns.lmplot()",
+      "sns.lineplot()",
+      "sns.kdeplot()"
+    ],
+    "hint": "교안에서는 `sns.lmplot()`으로 소개되었습니다.",
+    "solution": "sns.regplot() 또는 sns.lmplot()"
+  },
+  {
+    "item_type": "radio",
+    "question": "선 그래프를 그리는 함수는 무엇인가요?",
+    "options": [
+      "sns.scatterplot()",
+      "sns.lineplot()",
+      "sns.barplot()",
+      "sns.histplot()"
+    ],
+    "hint": "선 그래프 (Line Plot)",
+    "solution": "sns.lineplot()"
+  },
+  {
+    "item_type": "radio",
+    "question": "범주형 데이터(예: 'model')의 각 항목별 빈도수(개수)를 세어서 막대그래프로 표시하는 함수는 무엇인가요?",
+    "options": [
+      "sns.barplot(x='model', y='price', data=df)",
+      "sns.countplot(x='model', data=df)",
+      "sns.histplot(x='model', data=df)",
+      "sns.lineplot(x='model', data=df)"
+    ],
+    "hint": "`y`축을 별도로 지정하지 않고, 개수(count)를 세는 함수입니다.",
+    "solution": "sns.countplot(x='model', data=df)"
+  },
+  {
+    "item_type": "radio",
+    "question": "범주형 데이터(예: 'model')에 따른 수치형 데이터(예: 'price')의 평균값을 막대그래프로 비교하고 싶을 때 사용하는 함수는 무엇인가요?",
+    "options": [
+      "sns.barplot(x='model', y='price', data=df)",
+      "sns.countplot(x='model', data=df)",
+      "sns.boxplot(x='model', y='price', data=df)",
+      "sns.scatterplot(x='model', y='price', data=df)"
+    ],
+    "hint": "`x`축과 `y`축을 모두 지정하여 `y`의 통계치(기본값: 평균)를 보여주는 막대그래프입니다.",
+    "solution": "sns.barplot(x='model', y='price', data=df)"
+  }
+]
+
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

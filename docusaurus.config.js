@@ -80,9 +80,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'sqlSidebar', // 사이드바 ID
+          sidebarId: 'pythonSidebar', // 사이드바 ID
           position: 'left',
-          label: 'SQL', // 상단 메뉴
+          label: 'Python', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {

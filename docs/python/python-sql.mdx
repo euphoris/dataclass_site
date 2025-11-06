@@ -1,0 +1,189 @@
+# Python과 SQL
+
+## Python을 이용하면 가능한 작업
+
+  * SQL은 DB에서 데이터를 조회할 수만 있음
+  * Python을 이용하면 가능한 작업
+      * DB에서 SQL 실행
+      * 외부의 데이터 호출: 금융감독원, 한국은행 등 외부 기관의 API(웹)에서 최신 환율, 금리, 주가 정보
+      * 복잡한 데이터 처리: 통계 및 머신러닝
+      * 파일 처리: 엑셀, 파워포인트 등
+      * 반복 작업 수행
+      * 데이터 시각화
+  * 예: 여러 개의 SQL 질의 결과를 조합하여, 그래프로 시각화하고, 이를 파워포인트 보고서로 작성하여, 이해 당사자들에게 이메일로 발송하는 작업의 자동화
+
+## 데이터 베이스 접속
+
+  * Python에서 Oracle 데이터베이스에 접근하기 위한 라이브러리 설치
+      * 라이브러리: 함수 모음
+
+```python
+!pip install oracledb
+```
+
+  * 임포트(라이브러리를 사용할 수 있게 불러오는 것)
+
+
+
+```python
+import oracledb
+```
+
+  * 서버 접속
+
+```python
+un = "c##user" # 사용자 이름
+pw = '1234' # 비밀번호
+cs = "localhost:1521/xe" # 접속 문자열(서버: 포트/서비스이름)
+connection = oracledb.connect(user=un, password=pw, dsn=cs) # 접속
+```
+
+## SQL 실행
+
+  * 회사 이름과 대표 이름을 SQL로 실행하고 그 결과를 화면에 출력
+
+```python
+#데이터베이스와 상호작용(SQL 실행, 결과 가져오기 등)을 수행하는 '커서' 객체를 생성
+# with 블록이 시작될 때 커서가 열리고, 블록이 종료될 때 자동으로 커서가 해제
+with connection.cursor() as cursor:
+    sql = "SELECT COMPANY_NM, CEO_NM FROM TB_COMPANY_MASTER"
+    for r in cursor.execute(sql): #sql을 실행하고 그 결과의 각 행 r에 대하여(for) 반복
+        print(r) #r을 화면에 출력
+# with 블록 끝남
+```
+
+## pandas
+
+  * pandas: Python에서 표 형태의 데이터를 다루는 라이브러리
+  * SQL 실행 결과를 읽어서 pandas의 표 형태로 변환
+
+```python
+import pandas as pd
+company = pd.read_sql("SELECT COMPANY_NM, CEO_NM FROM TB_COMPANY_MASTER",
+                      con=connection)
+company
+```
+
+  * 엑셀 파일로 저장
+
+```python
+company.to_excel('회사목록.xlsx', index=False)
+```
+
+  * index=False: 왼쪽의 행 번호는 저장하지 않고 생략하라는 뜻(F가 대문자)
+  * 엑셀 파일에서 불러오기
+
+
+
+```python
+company2 = pd.read_excel('회사목록.xlsx')
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="python-sql" quizItems={
+[
+  {
+    "item_type": "radio",
+    "question": "Python에서 Oracle 데이터베이스에 접속하기 위해 `!pip install`로 설치해야 하는 라이브러리의 이름은 무엇인가요?",
+    "options": [
+      "oracledb",
+      "pandas",
+      "py-oracle",
+      "oracle-connector"
+    ],
+    "hint": "교안의 첫 번째 코드 블록을 확인하세요.",
+    "solution": "oracledb"
+  },
+  {
+    "item_type": "radio",
+    "question": "Python에서 라이브러리를 사용할 수 있게 불러올 때 사용하는 표현은?",
+    "options": [
+        "import",
+        "include",
+        "require",
+        "load"
+    ],
+    "hint": "\"수입하다\", \"들여오다\"라는 뜻의 영어 단어입니다",
+    "solution": "import"
+  },
+  {
+    "item_type": "radio",
+    "question": "with 문을 사용하는 이유는 무엇인가요?",
+    "options": [
+        "자동으로 자원을 해제하기 위해",
+        "반복문을 실행하기 위해",
+        "조건문을 실행하기 위해",
+        "함수를 정의하기 위해"
+    ],
+    "hint": "`with connection.cursor() as cursor:` 구문을 참고하세요.",
+    "solution": "자동으로 자원을 해제하기 위해"
+  },
+  {
+    "item_type": "radio",
+    "question": "for 문을 사용하는 이유는 무엇인가요?",
+    "options": [
+        "자동으로 자원을 해제하기 위해",
+        "반복문을 실행하기 위해",
+        "조건문을 실행하기 위해",
+        "함수를 정의하기 위해"
+    ],
+    "hint": "`for r in cursor.execute(sql):` 구문을 참고하세요.",
+    "solution": "반복문을 실행하기 위해"
+  },
+  {
+    "item_type": "radio",
+    "question": "Python에서 표(테이블) 형태의 데이터를 다루는 데 사용되며, 교안에서 `pd`라는 별칭으로 임포트된 라이브러리는 무엇인가요?",
+    "options": [
+      "oracledb",
+      "numpy",
+      "pandas",
+      "matplotlib"
+    ],
+    "hint": "SQL 실행 결과를 표 형태로 변환하는 데 사용되었습니다.",
+    "solution": "pandas"
+  },
+  {
+    "item_type": "radio",
+    "question": "SQL 쿼리 실행 결과를 한 번에 pandas DataFrame(표) 객체로 읽어오는 함수는 무엇인가요?",
+    "options": [
+      "pd.read_sql()",
+      "pd.read_excel()",
+      "pd.to_sql()",
+      "oracledb.to_pandas()"
+    ],
+    "hint": "`company = pd.read_sql(...)` 코드를 참고하세요.",
+    "solution": "pd.read_sql()"
+  },
+  {
+    "item_type": "radio",
+    "question": "pandas에서 엑셀 파일을 읽어오는 함수는 무엇인가요?",
+    "options": [
+        "pd.read_excel()",
+        "pd.read_sql()",
+        "pd.to_excel()",
+        "pd.load_excel()"
+    ],
+    "hint": "`company2 = pd.read_excel('회사목록.xlsx')` 코드를 참고하세요.",
+    "solution": "pd.read_excel()"
+  },
+  {
+    "item_type": "radio",
+    "question": "`company.to_excel('회사목록.xlsx', index=False)` 코드에서 `index=False` 옵션의 의미로 올바른 것은 무엇인가요?",
+    "options": [
+      "DataFrame의 행 번호(인덱스)를 엑셀 파일에 포함하지 않는다.",
+      "엑셀 파일의 첫 번째 시트를 사용하지 않는다.",
+      "파일 저장을 실패(False) 처리한다.",
+      "데이터의 순서(index)를 무시하고 저장한다."
+    ],
+    "hint": "교안에서 '왼쪽의 행 번호'에 대해 설명한 부분을 참고하세요.",
+    "solution": "DataFrame의 행 번호(인덱스)를 엑셀 파일에 포함하지 않는다."
+  }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

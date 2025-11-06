@@ -268,15 +268,21 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
 
     setQuizStatus(new Map(quizStatus.set(currentIndex, newStatus)));
     
-    // 데이터베이스 업데이트 (기존 답안의 correct 값을 업데이트)
+    // pending 상태에서 사용자가 채점할 때 supabase에 답안 삽입
     const { data, error } = await supabase
       .from('answers')
-      .update({ correct: isCorrect })
-      .eq('name', userInfo?.name)
-      .eq('nickname', userInfo?.nickname)
-      .eq('affiliation', userInfo?.affiliation)
-      .eq('quiz_id', quizId)
-      .eq('item_id', currentIndex);
+      .insert([
+        { 
+          name: userInfo?.name, 
+          nickname: userInfo?.nickname, 
+          affiliation: userInfo?.affiliation, 
+          quiz_id: quizId, 
+          item_id: currentIndex, 
+          answer: currentAnswer, 
+          correct: isCorrect, 
+          hint: wasHintUsed 
+        }
+      ]);
   };
 
   const handleSubmit = async () => {
@@ -306,19 +312,23 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
     }
 
     setQuizStatus(new Map(quizStatus.set(currentIndex, newStatus)));
-    const { data, error } = await supabase
-    .from('answers')
-    .insert([
-      { 
-        name: userInfo?.name, 
-        nickname: userInfo?.nickname, 
-        affiliation: userInfo?.affiliation, 
-        quiz_id: quizId, 
-        item_id: currentIndex, 
-        answer: currentAnswer, 
-        correct: isCorrect, 
-        hint: wasHintUsed },
-    ]);
+
+    // pending 상태가 아닐 때만 supabase에 전송
+    if (newStatus !== 'pending') {
+      const { data, error } = await supabase
+      .from('answers')
+      .insert([
+        { 
+          name: userInfo?.name, 
+          nickname: userInfo?.nickname, 
+          affiliation: userInfo?.affiliation, 
+          quiz_id: quizId, 
+          item_id: currentIndex, 
+          answer: currentAnswer, 
+          correct: isCorrect, 
+          hint: wasHintUsed },
+      ]);
+    }
   };
 
   const isInputEmpty = !currentAnswer || (Array.isArray(currentAnswer) && currentAnswer.length === 0);
