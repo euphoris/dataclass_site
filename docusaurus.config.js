@@ -80,9 +80,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'pythonSidebar', // 사이드바 ID
+          sidebarId: 'computerVisionSidebar', // 사이드바 ID
           position: 'left',
-          label: 'Python', // 상단 메뉴
+          label: '컴퓨터 비전', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -128,7 +128,7 @@ const config = {
             },
             {
               label: '컴퓨터 비전',
-              to: '/docs/computer-vision/lab',
+              to: '/docs/computer-vision',
             },
             // {
             //   label: '시계열 데이터 분석',

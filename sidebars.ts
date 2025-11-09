@@ -1043,8 +1043,8 @@ const sidebars: SidebarsConfig = {
   ],
   computerVisionSidebar: [
     { type: 'doc',
-      id: 'computer-vision/lab',
-      label: '실습 및 Q&A'
+      id: 'computer-vision/index',
+      label: '강의 자료'
     },
     {
       type: 'category',
@@ -1090,113 +1090,119 @@ const sidebars: SidebarsConfig = {
           id: 'computer-vision/test-set',
           label: '테스트'
         },
-        {
-          type: 'doc',
-          id: 'computer-vision/review-basic-computer-vision',
-          label: '컴퓨터 비전 기초 복습'
-        },
       ]
     },
-  {
-      type: 'category',
-      label: '컴퓨터 비전 심화',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/confusion-matrix',
-          label: '혼동 행렬'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/threshold',
-          label: '문턱값'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/MLP',
-          label: '다층 신경망'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/activation',
-          label: '활성화 함수'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/multiclass',
-          label: '다항 분류'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/regularization',
-          label: '정칙화'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/cnn',
-          label: '합성곱 신경망'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/review-advanced-computer-vision',
-          label: '컴퓨터 비전 심화 복습'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/image-loading',
-          label: '이미지 로딩'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/augmentation',
-          label: '데이터 증강'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '물체 탐지와 OCR',
-      items: [
-        {
-          type: 'doc',
-          id: 'computer-vision/object-detection',
-          label: '물체 탐지'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/ultralytics',
-          label: 'Ultralytics'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/detection-evaluation',
-          label: '물체 탐지 평가'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/annotation',
-          label: '데이터 만들기'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/obb',
-          label: 'OBB'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/pose',
-          label: '자세 추정'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/review-object-detection',
-          label: '물체 탐지 복습'
-        },
-        {
-          type: 'doc',
-          id: 'computer-vision/ocr',
-          label: 'OCR'
-        },
+    // {
+    //   type: 'category',
+    //   label: '컴퓨터 비전 심화',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/review-basic-computer-vision',
+    //       label: '컴퓨터 비전 기초 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/confusion-matrix',
+    //       label: '혼동 행렬'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/threshold',
+    //       label: '문턱값'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/MLP',
+    //       label: '다층 신경망'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/activation',
+    //       label: '활성화 함수'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/multiclass',
+    //       label: '다항 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/regularization',
+    //       label: '정칙화'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/cnn',
+    //       label: '합성곱 신경망'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/review-advanced-computer-vision',
+    //       label: '컴퓨터 비전 심화 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/image-loading',
+    //       label: '이미지 로딩'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/augmentation',
+    //       label: '데이터 증강'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '물체 탐지와 OCR',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/object-detection',
+    //       label: '물체 탐지'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/ultralytics',
+    //       label: 'Ultralytics'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/detection-evaluation',
+    //       label: '물체 탐지 평가'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/annotation',
+    //       label: '데이터 만들기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/obb',
+    //       label: 'OBB'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/pose',
+    //       label: '자세 추정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/review-object-detection',
+    //       label: '물체 탐지 복습'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'computer-vision/ocr',
+    //       label: 'OCR'
+    //     },
+    //   ]
+    // },
+    // {
+      //   type: 'category',
+      //   label: '2일차 - 정보 추출',
+      //   items: [
         // {
         //   type: 'doc',
         //   id: 'computer-vision/adversarial',
@@ -1207,13 +1213,7 @@ const sidebars: SidebarsConfig = {
         //   id: 'computer-vision/generation',
         //   label: '이미지 생성'
         // },
-      ]
-    },
-    // {
-    //   type: 'category',
-    //   label: '2일차 - 정보 추출',
-    //   items: [
-          // {
+        // {
           //   type: 'doc',
           //   id: 'computer-vision/PIL',
           //   label: '이미지 파일의 형식'
