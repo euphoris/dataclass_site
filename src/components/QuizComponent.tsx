@@ -340,7 +340,8 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
       case 'radio':
         return (
           <RadioGroup
-            value={currentAnswer as string}
+            key={currentIndex}
+            value={typeof currentAnswer === 'string' ? currentAnswer : ''}
             onValueChange={handleAnswerChange}
             disabled={isAnswered}
             className="space-y-2"

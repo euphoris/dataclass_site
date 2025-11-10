@@ -1092,67 +1092,67 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '컴퓨터 비전 심화',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/review-basic-computer-vision',
-    //       label: '컴퓨터 비전 기초 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/confusion-matrix',
-    //       label: '혼동 행렬'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/threshold',
-    //       label: '문턱값'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/MLP',
-    //       label: '다층 신경망'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/activation',
-    //       label: '활성화 함수'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/multiclass',
-    //       label: '다항 분류'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/regularization',
-    //       label: '정칙화'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/cnn',
-    //       label: '합성곱 신경망'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/review-advanced-computer-vision',
-    //       label: '컴퓨터 비전 심화 복습'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/image-loading',
-    //       label: '이미지 로딩'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/augmentation',
-    //       label: '데이터 증강'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '컴퓨터 비전 심화',
+      items: [
+        {
+          type: 'doc',
+          id: 'computer-vision/review-basic-computer-vision',
+          label: '컴퓨터 비전 기초 복습'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/confusion-matrix',
+          label: '혼동 행렬'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/threshold',
+          label: '문턱값'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/MLP',
+          label: '다층 신경망'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/activation',
+          label: '활성화 함수'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/multiclass',
+          label: '다항 분류'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/regularization',
+          label: '정칙화'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/cnn',
+          label: '합성곱 신경망'
+        },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/review-advanced-computer-vision',
+        //   label: '컴퓨터 비전 심화 복습'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/image-loading',
+        //   label: '이미지 로딩'
+        // },
+        // {
+        //   type: 'doc',
+        //   id: 'computer-vision/augmentation',
+        //   label: '데이터 증강'
+        // },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '물체 탐지와 OCR',
