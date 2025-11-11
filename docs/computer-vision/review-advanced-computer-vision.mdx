@@ -1,5 +1,28 @@
 # 컴퓨터 비전 심화 복습
 
+
+## 실습 준비
+
+- 시작 메뉴에서 miniforge prompt 실행
+- `jupyter notebook` 입력 후 엔터
+- 브라우저에서 주피터 노트북 열림
+    - 자동으로 열리지 않으면 http://localhost:8888 로 시작하는 주소 복사해서 브라우저에 붙여넣기
+- Desktop 폴더 클릭
+- New &rarr; Python 3 클릭
+
+## 코드 실행
+
+- 아래 코드 셀을 복사해서 붙여넣기
+- 셀 왼쪽의 ▶ 아이콘 클릭 또는 Shift + Enter 키 입력하여 코드 실행
+
+```python   
+import os
+os.environ["KERAS_BACKEND"] = "torch"
+import keras
+import numpy as np
+```
+
+## 퀴즈
 import { QuizComponent } from "@/components/QuizComponent";
 
 <QuizComponent quizId="review-advanced-computer-vision" quizItems={

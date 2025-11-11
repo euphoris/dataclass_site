@@ -1136,57 +1136,57 @@ const sidebars: SidebarsConfig = {
           id: 'computer-vision/cnn',
           label: '합성곱 신경망'
         },
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/review-advanced-computer-vision',
-        //   label: '컴퓨터 비전 심화 복습'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/image-loading',
-        //   label: '이미지 로딩'
-        // },
-        // {
-        //   type: 'doc',
-        //   id: 'computer-vision/augmentation',
-        //   label: '데이터 증강'
-        // },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '물체 탐지와 OCR',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/object-detection',
-    //       label: '물체 탐지'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/ultralytics',
-    //       label: 'Ultralytics'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/detection-evaluation',
-    //       label: '물체 탐지 평가'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/annotation',
-    //       label: '데이터 만들기'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/obb',
-    //       label: 'OBB'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'computer-vision/pose',
-    //       label: '자세 추정'
-    //     },
+    {
+      type: 'category',
+      label: '물체 탐지',
+      items: [
+        {
+          type: 'doc',
+          id: 'computer-vision/review-advanced-computer-vision',
+          label: '컴퓨터 비전 심화 복습'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/image-loading',
+          label: '이미지 로딩'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/augmentation',
+          label: '데이터 증강'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/object-detection',
+          label: '물체 탐지'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/ultralytics',
+          label: 'Ultralytics'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/detection-evaluation',
+          label: '물체 탐지 평가'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/annotation',
+          label: '데이터 만들기'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/obb',
+          label: 'OBB'
+        },
+        {
+          type: 'doc',
+          id: 'computer-vision/pose',
+          label: '자세 추정'
+        },
     //     {
     //       type: 'doc',
     //       id: 'computer-vision/review-object-detection',
@@ -1197,8 +1197,8 @@ const sidebars: SidebarsConfig = {
     //       id: 'computer-vision/ocr',
     //       label: 'OCR'
     //     },
-    //   ]
-    // },
+      ]
+    },
     // {
       //   type: 'category',
       //   label: '2일차 - 정보 추출',
