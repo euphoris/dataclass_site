@@ -41,34 +41,34 @@ ncm = metrics.confusion_matrix.to_df(normalize=True) # 비율로 표시
 *   곰 인형이 어떤 물체로 분류되는지 보기
 ```python
 column = 'teddy_bear'
-ncm[['Predicted', column]].sort_values(column, ascending=False)
+ncm[['Predicted', column]].sort(column, descending=True)
 ```
 
 ## 정밀도(Precision) 곡선
 *   confidence 수준에 따른 정밀도 곡선
 ```python
 from PIL import Image
-Image.open('runs/detect/val/P_curve.png')
+Image.open('runs/detect/val/BoxP_curve.png')
 ```
 
 ## 재현도(Recall) 곡선
 *   confidence 수준에 따른 재현도 곡선
 ```python
-Image.open('runs/detect/val/R_curve.png')
+Image.open('runs/detect/val/BoxR_curve.png')
 ```
 
 ## F1 곡선
 *   confidence 수준에 따른 F1 곡선
 *   F1 = 정밀도와 재현도의 조화평균
 ```python
-Image.open('runs/detect/val/F1_curve.png')
+Image.open('runs/detect/val/BoxF1_curve.png')
 ```
 
 ## PR 곡선
 *   재현도에 따른 정밀도 곡선
 *   이 곡선의 곡선하 면적 = mAP
 ```python
-Image.open('runs/detect/val/PR_curve.png')
+Image.open('runs/detect/val/BoxPR_curve.png')
 ```
 
 ## 퀴즈

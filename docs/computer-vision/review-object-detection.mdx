@@ -9,7 +9,7 @@ import { QuizComponent } from "@/components/QuizComponent";
         "item_type": "radio",
         "question": "PyTorch에서 'cats', 'dogs'와 같이 클래스별로 폴더가 나뉜 이미지 데이터셋을 불러올 때 가장 적합한 클래스는 무엇입니까?",
         "options": [
-            "DataLoader",
+            "ClassLoader",
             "ImageLoader",
             "Dataset",
             "ImageFolder"
@@ -18,18 +18,15 @@ import { QuizComponent } from "@/components/QuizComponent";
         "solution": "ImageFolder"
     },
         {
-        "item_type": "checkbox",
-        "question": "데이터 증강에 대한 설명으로 올바른 것을 모두 고르세요",
+        "item_type": "radio",
+        "question": "데이터 증강에 대한 설명으로 올바른 것을 고르세요",
         "options": [
             "데이터를 다양하게 변형하여 마치 데이터 수가 늘어나는 것과 같은 효과를 준다",
-            "데이터에 임의적인 노이즈를 추가하여 과대적합을 방지한다",
+            "어떤 종류의 데이터에도 동일한 증강 기법을 적용할 수 있다",
             "학습된 모델을 사용할 때도 데이터 증강을 하면 효과적이다"
         ],
         "hint": "데이터 증강은 학습(training) 시에만 적용하여 모델의 일반화 성능을 높이는 기법입니다.",
-        "solution": [
-            "데이터를 다양하게 변형하여 마치 데이터 수가 늘어나는 것과 같은 효과를 준다",
-            "데이터에 임의적인 노이즈를 추가하여 과대적합을 방지한다"
-        ]
+        "solution": "데이터를 다양하게 변형하여 마치 데이터 수가 늘어나는 것과 같은 효과를 준다",
     },
     {
         "item_type": "checkbox",
@@ -65,14 +62,14 @@ import { QuizComponent } from "@/components/QuizComponent";
         "item_type": "checkbox",
         "question": "mAP 50-95에 대한 설명으로 올바른 것을 모두 고르세요",
         "options": [
-            "모든 종류의 물체에 대한 지표이다",
-            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다",
-            "IOU 임계값이 0.5일 때와 0.95일 때의 차이를 나타낸다"
+            "m은 모든 종류의 물체에 대한 평균을 나타낸다",
+            "AP는 모든 Recall에 대한 Precision의 평균한 것임을 나타낸다",
+            "50-95는 IOU 임계값이 0.5일 때와 0.95일 때의 차이를 나타낸다"
         ],
         "hint": "mAP는 'mean Average Precision'의 약자로, 여러 클래스와 여러 IOU 임계값에 대한 성능을 종합적으로 평가합니다.",
         "solution": [
-            "모든 종류의 물체에 대한 지표이다",
-            "모든 Recall에서 Precision의 평균한 것을 다시 물체별로 평균한 것이다"
+            "m은 모든 종류의 물체에 대한 평균을 나타낸다",
+            "AP는 모든 Recall에 대한 Precision의 평균한 것임을 나타낸다",
         ]
     },
     {
@@ -89,15 +86,15 @@ import { QuizComponent } from "@/components/QuizComponent";
     },
     {
         "item_type": "radio",
-        "question": "Ultralytics 라이브러리에서 자세 추정(pose estimation)을 위해 사용하는 사전 학습된 YOLO 모델 파일명은 무엇입니까?",
+        "question": "YOLO 모델을 쉽게 사용할 수 있는 라이브러리의 이름은 무엇입니까?",
         "options": [
-            "yolo11n.pt",
-            "yolo11n-obb.pt",
-            "yolo11n-pose.pt",
-            "yolo11n-seg.pt"
+            "pytorch",
+            "keras",
+            "tensorflow",
+            "ultralytics"
         ],
-        "hint": "자세를 의미하는 영어 단어 'pose'가 파일명에 포함되어 있습니다.",
-        "solution": "yolo11n-pose.pt"
+        "hint": "Ultralytics는 YOLO 모델의 구현과 사용을 간편하게 해주는 라이브러리입니다.",
+        "solution": "ultralytics"
     },
 ]    
 } />

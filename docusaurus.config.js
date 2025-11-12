@@ -124,7 +124,7 @@ const config = {
             // },
             {
               label: '머신 러닝',
-              to: '/docs/machine-learning/lab',
+              to: '/docs/machine-learning',
             },
             {
               label: '컴퓨터 비전',

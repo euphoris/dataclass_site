@@ -4,25 +4,25 @@
 
 * 데이터셋에서 누락된 값 또는 값이 기록되지 않은 경우  
 * 원인  
-* 데이터 수집 오류: 데이터 입력 실수, 기기 오작동이나 데이터 전송 오류  
-* 의도적 미응답: 설문 등에서 민감한 질문이나 답변하기 까다로운 질문  
-* 데이터 손실: 데이터베이스 손상, 파일 손실, 시스템 충돌, 네트워크 문제  
-* 불완전한 데이터 소스: 데이터가 일부만 제공되거나 누락된 경우  
+    * 데이터 수집 오류: 데이터 입력 실수, 기기 오작동이나 데이터 전송 오류  
+    * 의도적 미응답: 설문 등에서 민감한 질문이나 답변하기 까다로운 질문  
+    * 데이터 손실: 데이터베이스 손상, 파일 손실, 시스템 충돌, 네트워크 문제  
+    * 불완전한 데이터 소스: 데이터가 일부만 제공되거나 누락된 경우  
 
 ## 결측치의 종류
 
 * MCAR (Missing Completely at Random)  
-* 결측치가 완전히 무작위로 발생하며, 다른 변수들과 상관관계가 없음  
-* 예: 설문 조사에서 무작위로 몇 명이 응답하지 않은 경우  
-* 큰 문제 안되지만 MCAR은 드뭄  
+    * 결측치가 완전히 무작위로 발생하며, 다른 변수들과 상관관계가 없음  
+    * 예: 설문 조사에서 무작위로 몇 명이 응답하지 않은 경우  
+    * 큰 문제 안되지만 MCAR은 드뭄  
 * MAR (Missing at Random)  
-* 결측치가 다른 관측 가능한 변수와 관련이 있지만, 해당 변수와는 무관  
-* 예: 남성 응답자들이 특정 질문에 응답하지 않은 경우, 그러나 성별은 관찰됨  
-* 어느 정도 대응 가능하며, 일반적으로 결측치에 대해 MAR을 가정하고 대응  
+    * 결측치가 다른 관측 가능한 변수와 관련이 있지만, 해당 변수와는 무관  
+    * 예: 남성 응답자들이 특정 질문에 응답하지 않은 경우, 그러나 성별은 관찰됨  
+    * 어느 정도 대응 가능하며, 일반적으로 결측치에 대해 MAR을 가정하고 대응  
 * MNAR (Missing Not at Random)  
-* 결측치가 해당 변수와 관련이 있으며, 무작위로 발생하지 않음  
-* 예: 소득이 낮은 사람들이 소득 질문에 응답하지 않는 경우  
-* 대응이 까다로움  
+    * 결측치가 해당 변수와 관련이 있으며, 무작위로 발생하지 않음  
+    * 예: 소득이 낮은 사람들이 소득 질문에 응답하지 않는 경우  
+    * 대응이 까다로움  
 
 ## 결측치 대응 방법
 
@@ -34,14 +34,14 @@
 ## 삭제의 방법
 
 * 리스트 삭제 (Listwise Deletion)  
-* 결측치가 있는 전체 행을 삭제  
-* 간단하고 구현이 용이하지만, 많은 데이터 손실  
-* MCAR일 때만 유효.  
+    * 결측치가 있는 전체 행을 삭제  
+    * 간단하고 구현이 용이하지만, 많은 데이터 손실  
+    * MCAR일 때만 유효.  
 * 페어와이즈 삭제 (Pairwise Deletion)  
-* 분석에 필요한 변수에만 결측치가 있는 행을 삭제  
-* 데이터 손실 최소화  
-* 각각의 분석이 서로 다른 부분집합에 대해 이뤄지기 때문에, 결과 일관성에 문제가 생길 수 있음  
-* 예: 상관행렬이 양의 정부호(positive definite)가 아닐 수 있음  
+    * 분석에 필요한 변수에만 결측치가 있는 행을 삭제  
+    * 데이터 손실 최소화  
+    * 각각의 분석이 서로 다른 부분집합에 대해 이뤄지기 때문에, 결과 일관성에 문제가 생길 수 있음  
+    * 예: 상관행렬이 양의 정부호(positive definite)가 아닐 수 있음  
 
 ## 실습
 
@@ -120,16 +120,16 @@ plt.legend()
 ## 대체의 방법
 
 * 평균/중앙값 또는 최빈값으로 대체  
-* 장점: 간단하고 빠름  
-* 단점: 데이터 변동성 감소, 편향 발생 가능  
+    * 장점: 간단하고 빠름  
+    * 단점: 데이터 변동성 감소, 편향 발생 가능  
 * 예측 대체  
 * 회귀 모형이나 KNN을 사용하여 결측치를 예측하여 대체  
-* 장점: 보다 정확한 대체  
-* 단점: 데이터 변동성 감소  
+    * 장점: 보다 정확한 대체  
+    * 단점: 데이터 변동성 감소  
 * 다중 대체 (Multiple Imputation)  
-* 결측치를 여러 번 대체하고, 여러 대체 결과를 결합하여 불확실성을 반영  
-* 장점: 불확실성 반영, 보다 정확한 대체.  
-* 단점: 복잡도 증가, 계산 비용 증가.  
+    * 결측치를 여러 번 대체하고, 여러 대체 결과를 결합하여 불확실성을 반영  
+    * 장점: 불확실성 반영, 보다 정확한 대체.  
+    * 단점: 복잡도 증가, 계산 비용 증가.  
 
 ## 평균으로 대체
 
@@ -170,3 +170,102 @@ sns.kdeplot(dm['mileage'], label='original')
 sns.kdeplot(impute_knn, label='knn')  
 plt.legend()  
 ```
+
+요청하신 강의 자료의 내용을 바탕으로 예시 형식에 맞춘 퀴즈 코드를 생성했습니다.
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="missing" quizItems={
+    [
+    {
+        "item_type": "radio",
+        "question": "다음 중 결측치(Missing Values)가 발생하는 일반적인 원인으로 보기 어려운 것은 무엇입니까?",
+        "options": [
+            "데이터 입력 중 발생한 실수",
+            "설문조사에서 민감한 질문에 대한 의도적 미응답",
+            "데이터 분석을 용이하게 하기 위한 의도적인 값 제거",
+            "데이터 전송 과정에서의 시스템 오류"
+        ],
+        "hint": "결측치는 데이터가 '누락'된 상황을 의미합니다. 분석을 위한 '처리'와는 다릅니다.",
+        "solution": "데이터 분석을 용이하게 하기 위한 의도적인 값 제거"
+    },
+    {
+        "item_type": "radio",
+        "question": "소득이 낮은 사람들이 자신의 소득을 묻는 질문에 의도적으로 응답하지 않아 결측치가 발생했습니다. 이는 어떤 종류의 결측치에 해당합니까?",
+        "options": [
+            "MCAR (Missing Completely at Random)",
+            "MAR (Missing at Random)",
+            "MNAR (Missing Not at Random)",
+            "MCR (Missing Completely Related)"
+        ],
+        "hint": "결측치가 발생한 '소득' 변수 자체의 값(낮은 소득)과 관련이 있는지 생각해보세요.",
+        "solution": "MNAR (Missing Not at Random)"
+    },
+    {
+        "item_type": "radio",
+        "question": "결측치가 다른 관측된 변수(예: 성별)와는 관련이 있지만, 결측치가 발생한 변수 자체의 값과는 관련이 없는 경우를 무엇이라고 합니까?",
+        "options": [
+            "MCAR (Missing Completely at Random)",
+            "MAR (Missing at Random)",
+            "MNAR (Missing Not at Random)",
+            "페어와이즈 삭제 (Pairwise Deletion)"
+        ],
+        "hint": "결측치가 '무작위로' 발생하긴 하지만, 그 무작위성이 '다른 관측된 변수'에 의해 설명될 수 있는 경우입니다.",
+        "solution": "MAR (Missing at Random)"
+    },
+    {
+        "item_type": "radio",
+        "question": "결측치 처리 방법 중, 결측치가 하나라도 포함된 행 전체를 삭제하는 방법은 무엇입니까?",
+        "options": [
+            "페어와이즈 삭제 (Pairwise Deletion)",
+            "리스트와이즈 삭제 (Listwise Deletion)",
+            "평균값 대체 (Mean Imputation)",
+            "다중 대체 (Multiple Imputation)"
+        ],
+        "hint": "'목록(list)'에서 해당 항목(행)을 통째로 지우는 것을 생각해보세요.",
+        "solution": "리스트와이즈 삭제 (Listwise Deletion)"
+    },
+    {
+        "item_type": "radio",
+        "question": "결측치를 해당 변수의 '평균값'으로 대체할 경우 발생할 수 있는 주요 단점은 무엇입니까?",
+        "options": [
+            "데이터의 평균이 변하게 된다",
+            "데이터의 변동성(분산)이 실제보다 작아진다",
+            "계산 시간이 매우 오래 걸린다",
+            "결측치가 MCAR일 때만 사용할 수 있다"
+        ],
+        "hint": "모든 결측치가 동일한 '평균' 값으로 채워지면 데이터의 전체적인 '흩어짐' 정도가 어떻게 될까요?",
+        "solution": "데이터의 변동성(분산)이 실제보다 작아진다"
+    },
+    {
+        "item_type": "radio",
+        "question": "결측치를 여러 번 대체하고 그 결과를 결합하여 결측치의 '불확실성'까지 반영하려는 정교한 대체 방법은 무엇입니까?",
+        "options": [
+            "평균 대체 (Mean Imputation)",
+            "KNN 예측 대체 (KNN Predictive Imputation)",
+            "다중 대체 (Multiple Imputation)",
+            "리스트와이즈 삭제 (Listwise Deletion)"
+        ],
+        "hint": "'여러 번' 대체한다는 의미의 '다중(Multiple)'이라는 단어에 주목하세요.",
+        "solution": "다중 대체 (Multiple Imputation)"
+    },
+    {
+        "item_type": "radio",
+        "question": "Scikit-learn 라이브러리를 사용하여 K-Nearest Neighbors (KNN) 방식으로 결측치를 대체할 때 사용하는 모듈은 무엇입니까?",
+        "options": [
+            "KNeighborsRegressor",
+            "StandardScaler",
+            "KNNImputer",
+            "pandas.fillna"
+        ],
+        "hint": "KNN을 사용하여 '대체(Impute)'하는 기능을 가진 클래스입니다. 강의 자료의 '예측 대체' 코드를 확인해보세요.",
+        "solution": "KNNImputer"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
