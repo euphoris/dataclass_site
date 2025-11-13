@@ -28,6 +28,15 @@ keypoint_names = [
 
 ## 자세 추정 결과 시각화
 ```python
+# 임포트
+from PIL import Image, ImageDraw, ImageFont
+
+# 글꼴 설정: 같은 폴더에 ttf 글꼴 파일이 있어야 함. 없으면 기본 글꼴 사용.
+try:
+    font = ImageFont.truetype("NanumGothic.ttf", 20)
+except IOError:
+    font = ImageFont.load_default()
+
 result = results[0]
 kpts = result.keypoints.data.cpu().numpy() # 사람별, 키포인트별, 좌표
 img_bbox = Image.fromarray(cv.cvtColor(img, cv.COLOR_BGR2RGB))

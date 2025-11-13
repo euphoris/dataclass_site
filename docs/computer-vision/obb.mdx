@@ -41,13 +41,16 @@ results = model(img)
 ## 탐지 결과 시각화
 
 ```python
-import math
+# 임포트
+from PIL import Image, ImageDraw, ImageFont
+
 # 글꼴 설정: 같은 폴더에 ttf 글꼴 파일이 있어야 함. 없으면 기본 글꼴 사용.
 try:
     font = ImageFont.truetype("NanumGothic.ttf", 20)
 except IOError:
     font = ImageFont.load_default()
 
+import math
 # 결과를 그릴 새 이미지 만듦
 
 img_bbox = Image.fromarray(cv.cvtColor(img, cv.COLOR_BGR2RGB))

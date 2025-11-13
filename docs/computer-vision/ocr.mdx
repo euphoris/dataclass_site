@@ -77,3 +77,50 @@ for text, poly in zip(res['rec_texts'], res['rec_polys']):
     draw.text((text_position[0] + 5, text_position[1] + 5), text, fill="#FF0000", font=font)
 img
 ```
+
+## 추가 설명
+
+### PDF에서 텍스트 추출하기
+
+설치(miniforge prompt에 입력할 때는 `!` 제거)
+```sh
+!pip install pdf2image
+!mamba install -y poppler
+```
+
+PDF에서 페이지들을 이미지 배열로 변환
+
+```python
+import pdf2image
+import numpy as np
+pages = pdf2image.convert_from_path("교안.pdf")
+page_arrays = [np.array(p) for p in pages]
+```
+
+텍스트 추출
+
+```python
+result = ocr.predict(input=page_arrays)
+```
+
+`result[0]`은 1페이지, `result[1]`은 2페이지, ... 
+
+### 이미지 전처리
+
+```python
+import cv2 as cv
+img = cv.imread("blueprint.jpg")
+img = cv.resize(img, fx=0.5, fy=0.5) # 절반 크기로 축소
+crop1 = img[0:400, :, :] # 상단 400픽셀 자르기
+crop2 = img[401:, :, :] # 하단 나머지 자르기
+imgs = [crop1, crop2] # 자른 이미지 배열
+result = ocr.predict(input=imgs)
+```
+
+### 신뢰도 조정
+
+```python
+ocr.predict(img, text_det_thresh=0.1) # 텍스트 감지 임계값 낮추기
+```
+
+기타 자세한 설정값은 [PaddleOCR 공식 문서](https://www.paddleocr.ai/latest/en/version3.x/pipeline_usage/OCR.html#22-python-script-integration)를 참고하세요.
