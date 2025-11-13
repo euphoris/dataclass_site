@@ -80,6 +80,12 @@ const config = {
       items: [
         {
           type: 'docSidebar',
+          sidebarId: 'machineLearningSidebar', // 사이드바 ID
+          position: 'left',
+          label: '머신 러닝', // 상단 메뉴
+        },
+        {
+          type: 'docSidebar',
           sidebarId: 'computerVisionSidebar', // 사이드바 ID
           position: 'left',
           label: '컴퓨터 비전', // 상단 메뉴

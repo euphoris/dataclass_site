@@ -171,7 +171,31 @@ sns.kdeplot(impute_knn, label='knn')
 plt.legend()  
 ```
 
-요청하신 강의 자료의 내용을 바탕으로 예시 형식에 맞춘 퀴즈 코드를 생성했습니다.
+## 다중 대체
+
+```python
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
+
+# 다중 대체
+imputer = IterativeImputer(
+    sample_posterior=True,
+    random_state=42
+)
+X1 = imputer.fit_transform(dm[['mileage', 'price', 'year']]) # 첫번째 반복
+X2 = imputer.fit_transform(dm[['mileage', 'price', 'year']]) # 두번째 반복
+X = np.concatenate([X1, X2], axis=0) # 두번의 반복 결과 합치기
+
+# 분포 시각화
+sns.kdeplot(dm['mileage'], label='original')
+sns.kdeplot(X1[:, 0], label='iteration 1')
+sns.kdeplot(X2[:, 0], label='iteration 2')
+sns.kdeplot(X[:, 0], label='combined')
+plt.legend()
+```
 
 ## 퀴즈
 

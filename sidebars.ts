@@ -953,41 +953,41 @@ const sidebars: SidebarsConfig = {
         },
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '다양한 머신러닝 기법',
-    //   items: [
+    {
+      type: 'category',
+      label: '다양한 머신러닝 기법',
+      items: [
 
-    //     { type: 'doc',
-    //       id: 'machine-learning/review-machine-learning-basics',
-    //       label: '머신러닝 기초 복습'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/linear-regression',
-    //       label: '선형 회귀'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/logistic-regression',
-    //       label: '로지스틱 회귀'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/decision-tree',
-    //       label: '의사결정 나무'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/ensemble',
-    //       label: '앙상블'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/hyperparameter-tuning',
-    //       label: '하이퍼파라미터 튜닝'
-    //     },
-    //     { type: 'doc',
-    //       id: 'machine-learning/imbalanced',
-    //       label: '불균형한 데이터의 처리'
-    //     },
-    //   ]
-    // },
+        { type: 'doc',
+          id: 'machine-learning/review-machine-learning-basics',
+          label: '머신러닝 기초 복습'
+        },
+        { type: 'doc',
+          id: 'machine-learning/linear-regression',
+          label: '선형 회귀'
+        },
+        { type: 'doc',
+          id: 'machine-learning/logistic-regression',
+          label: '로지스틱 회귀'
+        },
+        { type: 'doc',
+          id: 'machine-learning/decision-tree',
+          label: '의사결정 나무'
+        },
+        { type: 'doc',
+          id: 'machine-learning/ensemble',
+          label: '앙상블'
+        },
+        { type: 'doc',
+          id: 'machine-learning/hyperparameter-tuning',
+          label: '하이퍼파라미터 튜닝'
+        },
+        { type: 'doc',
+          id: 'machine-learning/imbalanced',
+          label: '불균형한 데이터의 처리'
+        },
+      ]
+    },
     // { type: 'doc',
     //   id: 'machine-learning/preprocessing',
     //   label: '데이터 클리닝 및 전처리 기법'
