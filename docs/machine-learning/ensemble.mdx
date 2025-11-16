@@ -92,7 +92,7 @@ accuracy_score(y_test, y_pred)
 #AdaBoost
 from sklearn.ensemble import AdaBoostClassifier
 ada = AdaBoostClassifier(n_estimators = 100, random_state = 42)
-ada.fit(x_train, y_train)
+ada.fit(X_train, y_train)
 #예측 및 정확도
 y_pred = ada.predict(X_test)
 accuracy_score(y_test, y_pred)
@@ -109,7 +109,7 @@ accuracy_score(y_test, y_pred)
 ```python
 from sklearn.ensemble import GradientBoostingClassifier
 gb = GradientBoostingClassifier(n_estimators = 100, random_state = 42)
-gb.fit(x_train, y_train)
+gb.fit(X_train, y_train)
 #예측 및 정확도
 y_pred = gb.predict(X_test)
 accuracy_score(y_test, y_pred)
@@ -131,7 +131,7 @@ from sklearn.ensemble import StackingClassifier
 base_models = [('dt', DecisionTreeClassifier()), ('lr', LogisticRegression())]
 meta_model = SVC(probability=True, random_state = 42) #메타 모형
 st = StackingClassifier(base_models, meta_model)
-st.fit(x_train, y_train)
+st.fit(X_train, y_train)
 #예측 및 정확도
 y_pred = st.predict(X_test)
 accuracy_score(y_test, y_pred)
@@ -151,7 +151,7 @@ accuracy_score(y_test, y_pred)
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent quizId="regularization" quizItems={
+<QuizComponent quizId="ensemble" quizItems={
   [
     {
         "item_type": "radio",

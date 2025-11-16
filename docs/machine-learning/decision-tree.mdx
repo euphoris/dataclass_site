@@ -71,11 +71,21 @@ model.score(X_test, y_test)
 model = DecisionTreeClassifier(max_depth = 5, random_state=42)
 ```
 
+## 시각화
+
+```python
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+plt.figure(figsize=(20,10)) # 그림 크기 가로 20, 세로 10
+plot_tree(model, fontsize=10, filled=True) # 글꼴 크기 10, 색칠
+plt.savefig("tree.png") # 그림 저장
+```
+
 ## 퀴즈
 
 import { QuizComponent } from "@/components/QuizComponent";
 
-<QuizComponent quizId="regularization" quizItems={
+<QuizComponent quizId="decision-tree" quizItems={
     [
     {
         "item_type": "radio",

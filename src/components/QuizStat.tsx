@@ -110,18 +110,35 @@ interface ItemChartData {
   incorrect: number;
 }
 
+interface QuizOption {
+  id: string;
+  latest: string | null;
+}
+
+interface QuizSummaryRow {
+  quiz_id: string | null;
+  created_at: string | null;
+}
+
 export function QuizResultVisualizer() {
   const [supabaseUrl, setSupabaseUrl] = useState("https://xcwnivbdpliylnbmiust.supabase.co");
   const [supabaseKey, setSupabaseKey] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhjd25pdmJkcGxpeWxuYm1pdXN0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTM5MjI3NSwiZXhwIjoyMDcwOTY4Mjc1fQ.hnh9pURhacXgfWinuBTGvYMsglppt1IcKe8MzbWzHvI");
   const [quizId, setQuizId] = useState("hypothesis-testing");
   const [hours, setHours] = useState(2);
   const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | null>(null);
+  const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [itemChartData, setItemChartData] = useState<ItemChartData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const initialFetchRef = useRef<boolean>(false);
+
+  const formatLatestTimestamp = (timestamp: string | null) => {
+    if (!timestamp) return "시간 정보 없음";
+    return new Date(timestamp).toLocaleString();
+  };
 
   const fetchData = useCallback(async (client: SupabaseClient | null, id: string, hours: number) => {
     if (!client || !id) return;
@@ -222,17 +239,94 @@ export function QuizResultVisualizer() {
     }
   }, []); // 종속성 배열이 비어있으므로 함수는 한 번만 생성됩니다.
 
+  const fetchQuizOptions = useCallback(async (client: SupabaseClient | null, hours: number): Promise<QuizOption[]> => {
+    if (!client) return [];
+
+    const hoursAgo = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
+    const { data, error: fetchError } = await client
+      .from("answers")
+      .select("quiz_id, created_at")
+      .gte("created_at", hoursAgo)
+      .order("created_at", { ascending: false });
+
+    if (fetchError) throw fetchError;
+    if (!data) {
+      setQuizOptions([]);
+      return [];
+    }
+
+    const seen = new Set<string>();
+    const uniqueOptions: QuizOption[] = [];
+
+    (data as QuizSummaryRow[]).forEach((row) => {
+      if (!row.quiz_id || seen.has(row.quiz_id)) return;
+      seen.add(row.quiz_id);
+      uniqueOptions.push({ id: row.quiz_id, latest: row.created_at });
+    });
+
+    setQuizOptions(uniqueOptions);
+    return uniqueOptions;
+  }, []);
+
   // "결과 보기" 버튼 클릭 핸들러
-  const handleInitialFetch = () => {
-    if (!supabaseUrl || !supabaseKey || !quizId) {
-      setError("Supabase URL, API Key, Quiz ID를 모두 입력해주세요.");
+  const handleInitialFetch = useCallback(async (preferredQuizId?: string) => {
+    if (!supabaseUrl || !supabaseKey) {
+      setError("Supabase URL과 API Key를 입력해주세요.");
       return;
     }
-    const client = createClient(supabaseUrl, supabaseKey);
-    setSupabaseClient(client);
-    fetchData(client, quizId, hours);
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const client = createClient(supabaseUrl, supabaseKey);
+      setSupabaseClient(client);
+
+      const options = await fetchQuizOptions(client, hours);
+      const fallbackQuizId = options[0]?.id ?? "";
+      const targetQuizId = preferredQuizId?.trim() || fallbackQuizId;
+
+      if (!targetQuizId) {
+        setQuizId("");
+        setChartData([]);
+        setItemChartData([]);
+        return;
+      }
+
+      setQuizId(targetQuizId);
+      await fetchData(client, targetQuizId, hours);
+    } catch (err: any) {
+      const message = err?.message ? `퀴즈 목록을 불러오는 중 오류가 발생했습니다: ${err.message}` : "퀴즈 목록을 불러오는 중 알 수 없는 오류가 발생했습니다.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchData, fetchQuizOptions, hours, supabaseKey, supabaseUrl]);
+
+  const handleQuizSelect = async (selectedId: string) => {
+    const trimmedId = selectedId.trim();
+    setQuizId(trimmedId);
+
+    if (!trimmedId) {
+      setChartData([]);
+      setItemChartData([]);
+      return;
+    }
+
+    if (!supabaseClient) {
+      await handleInitialFetch(trimmedId);
+      return;
+    }
+
+    await fetchData(supabaseClient, trimmedId, hours);
   };
   
+  useEffect(() => {
+    if (initialFetchRef.current) return;
+    initialFetchRef.current = true;
+    void handleInitialFetch();
+  }, [handleInitialFetch]);
+
   // 자동 새로고침 설정
   useEffect(() => {
     // Supabase client와 quizId가 설정되면 1분마다 데이터 fetch
@@ -255,7 +349,7 @@ export function QuizResultVisualizer() {
         }
       };
     }
-  }, [supabaseClient, quizId, fetchData]);
+  }, [supabaseClient, quizId, hours, fetchData]);
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -286,15 +380,26 @@ export function QuizResultVisualizer() {
               onChange={(e) => setSupabaseKey(e.target.value)}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="quiz-id">Quiz ID</Label>
-            <Input
-              id="quiz-id"
-              placeholder="결과를 조회할 퀴즈의 ID"
-              value={quizId}
-              onChange={(e) => setQuizId(e.target.value)}
-            />
-          </div>
+          {quizOptions.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="quiz-select">최근 퀴즈 선택</Label>
+              <select
+                id="quiz-select"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                value={quizId || ""}
+                onChange={(e) => handleQuizSelect(e.target.value)}
+              >
+                {quizOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.id} ({formatLatestTimestamp(option.latest)})
+                  </option>
+                ))}
+                {quizId && !quizOptions.some((option) => option.id === quizId) && (
+                  <option value={quizId}>{quizId}</option>
+                )}
+              </select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="hours">최근 몇 시간</Label>
             <Input
@@ -305,7 +410,7 @@ export function QuizResultVisualizer() {
               onChange={(e) => setHours(Number(e.target.value))}
             />
           </div>
-          <Button onClick={handleInitialFetch} disabled={isLoading} className="w-full">
+          <Button onClick={() => handleInitialFetch(quizId)} disabled={isLoading} className="w-full">
             {isLoading ? "결과 불러오는 중..." : "결과 보기"}
           </Button>
         </CardContent>

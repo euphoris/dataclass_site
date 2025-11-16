@@ -260,6 +260,30 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
     setHintsUsed(new Set(hintsUsed.add(currentIndex)));
   };
 
+  const persistAnswer = async (
+    answer: string | string[] | undefined,
+    correct: boolean,
+    wasHintUsed: boolean,
+    itemIndex: number
+  ) => {
+    if (!userInfo) return;
+
+    await supabase
+      .from('answers')
+      .insert([
+        {
+          name: userInfo.name,
+          nickname: userInfo.nickname,
+          affiliation: userInfo.affiliation,
+          quiz_id: quizId,
+          item_id: itemIndex + 1, // 1-based index
+          answer,
+          correct,
+          hint: wasHintUsed,
+        },
+      ]);
+  };
+
   const handleUserGrading = async (isCorrect: boolean) => {
     const wasHintUsed = hintsUsed.has(currentIndex);
     const newStatus: QuizStatus = isCorrect 
@@ -268,21 +292,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
 
     setQuizStatus(new Map(quizStatus.set(currentIndex, newStatus)));
     
-    // pending 상태에서 사용자가 채점할 때 supabase에 답안 삽입
-    const { data, error } = await supabase
-      .from('answers')
-      .insert([
-        { 
-          name: userInfo?.name, 
-          nickname: userInfo?.nickname, 
-          affiliation: userInfo?.affiliation, 
-          quiz_id: quizId, 
-          item_id: currentIndex, 
-          answer: currentAnswer, 
-          correct: isCorrect, 
-          hint: wasHintUsed 
-        }
-      ]);
+    await persistAnswer(currentAnswer, isCorrect, wasHintUsed, currentIndex);
   };
 
   const handleSubmit = async () => {
@@ -315,19 +325,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
 
     // pending 상태가 아닐 때만 supabase에 전송
     if (newStatus !== 'pending') {
-      const { data, error } = await supabase
-      .from('answers')
-      .insert([
-        { 
-          name: userInfo?.name, 
-          nickname: userInfo?.nickname, 
-          affiliation: userInfo?.affiliation, 
-          quiz_id: quizId, 
-          item_id: currentIndex, 
-          answer: currentAnswer, 
-          correct: isCorrect, 
-          hint: wasHintUsed },
-      ]);
+      await persistAnswer(currentAnswer, isCorrect, wasHintUsed, currentIndex);
     }
   };
 
