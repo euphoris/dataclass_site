@@ -1,0 +1,188 @@
+# 대시보드
+
+## streamlit 라이브러리 소개
+* streamlit: Python 언어만으로 데이터 과학자나 개발자가 쉽고 빠르게 데이터 기반 웹 애플리케이션을 구축할 수 있도록 지원하는 오픈소스 프레임워크
+* 특징:
+    * 적은 코드로 인터랙티브한 웹 UI 구현
+    * 실시간 코드 변경 감지 및 자동 앱 새로고침
+    * 데이터 시각화, 위젯 등 다양한 컴포넌트 제공
+* 공식 문서: https://docs.streamlit.io
+* 설치: Anaconda Prompt (또는 명령 프롬프트, 터미널) 실행 후 다음 명령어 입력
+`pip install streamlit`
+
+## VS Code 소개
+* Visual Studio Code (VS Code) 소개:
+    * Microsoft에서 개발한 무료 소스 코드 편집기 (IDE - 통합 개발 환경에 가까움)
+    * 다양한 프로그래밍 언어 지원 (Python, JavaScript, Java 등)
+    * 강력한 기능: 디버깅, Git 연동, 확장 프로그램, 터미널 통합 등
+    * 특징: 가볍고 빠르며, 사용자 맞춤 설정이 용이
+* 다운로드:
+    * https://code.visualstudio.com
+
+## Jupyter vs. Visual Studio Code
+| | Jupyter | Visual Studio Code |
+| :--- | :--- | :--- |
+| **주요 용도** | 데이터 탐색, 실험<b/>빠른 프로토타이핑<br/>교육 | 웹 애플리케이션 개발<br/>복잡한 프로젝트 관리<br/>전체적인 소프트웨어 개발 |
+| **실행 단위** | 셀(Cell) 단위 실행 및 즉각적 결과 확인 | 전체 스크립트(.py) 실행 또는 디버깅 모드 |
+| **파일 관리** | 개별 노트북 파일(.ipynb) 중심 | 프로젝트 폴더 기반의 파일 및 모듈 관리 |
+| **애플리케이션 배포** | 노트북 자체는 웹 앱 배포에 부적합 | .py 스크립트 기반<br/>앱 실행 및 배포 |
+| **편집 기능** | 코드 셀 + 마크다운 셀 | 고급 코드 편집 기능<br/>자동 완성<br/>리팩토링 등 |
+
+## streamlit 애플리케이션 실행 방법
+* `dashboard.py` 를 만들고 작업
+* 임포트: 파이썬 스크립트 상단에 다음과 같이 작성
+```python
+import streamlit as st
+```
+* 실행: 터미널(Anaconda Prompt 등)에서 다음 명령 입력
+```
+streamlit run dashboard.py
+```
+* 실행 결과: 명령 실행 시 웹 브라우저가 자동으로 열리면서 애플리케이션 실행
+* 기본적으로 로컬호스트(예: `http://localhost:8501`)에서 실행
+
+## 웹 페이지에 제목 및 부제목 표시
+* `st.title('페이지 제목 텍스트')`: 웹 애플리케이션의 가장 큰 제목 표시
+* `st.header('섹션 제목 텍스트')`: 주요 섹션의 제목 표시
+* `st.subheader('소제목 텍스트')`: 하위 섹션 또는 부가 설명 제목 표시
+* `dashboard.py`를 다음과 같이 수정 후 저장
+* 대시보드에서 상단 "Always rerun"을 선택하면, 파일 저장 시 자동으로 업데이트
+```python
+import streamlit as st
+st.title('나의 첫 Streamlit 앱')
+st.header('데이터 분석 결과')
+st.subheader('상세 분석 내용')
+```
+
+## 다양한 형태의 텍스트 표시
+* `st.text('일반 텍스트 내용')`: 고정폭 글꼴로 단순 텍스트 표시
+* `st.markdown('마크다운 형식 지원 텍스트')`: 마크다운 문법 사용 가능 (굵게: `**굵게**`, 기울임: `*기울임*`, 목록, 링크 등)
+* `st.write(*args)`: 다용도 출력 함수. 문자열, 숫자, 데이터프레임, 차트 등 다양한 객체 자동 인식 및 적절한 형태로 표시
+* `dashboard.py`끝에 다음 내용을 추가 후 저장
+```python
+st.markdown("분석 **결과**는 다음과 같습니다:")
+```
+
+## pandas DataFrame 표 형태로 표시
+* `st.dataframe(pandas_dataframe)`:
+    * 인터랙티브한 테이블 형태로 DataFrame 표시 (정렬, 크기 조절 등 가능)
+    * 다음 내용 추가 후 저장
+```python
+import pandas as pd
+df = pd.read_excel('실습 데이터/car.xlsx')
+st.dataframe(df)
+```
+* 단순히 `write`를 사용해도 됨
+```python
+st.write(df)
+```
+* `st.table(pandas_dataframe)`:
+* 정적인 테이블 형태로 DataFrame 표시 (단순 표 출력)
+* 위의 `st.dataframe`을 `st.table`로 변경 후 저장
+```python
+st.table(df)
+```
+
+## 데이터 시각화 차트 웹 앱에 표시
+* `st.pyplot(matplotlib_figure_object)`:
+* Matplotlib 또는 Seaborn(Matplotlib 기반)으로 생성한 Figure 객체를 Streamlit 앱에 표시
+```python
+import seaborn as sns
+ax = sns.lineplot(x='year', y='price', data=df) # 차트
+st.pyplot(ax.figure) # 차트의 그림(figure)
+```
+* `pyplot`은 `write`로 변경해도 동일:
+```python
+st.write(ax.figure)
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="dashboard" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "Python 코드만으로 데이터 기반의 인터랙티브 웹 애플리케이션을 쉽게 구축할 수 있도록 지원하는 오픈소스 프레임워크는 무엇입니까?",
+        "options": [
+            "Jupyter",
+            "VS Code",
+            "Streamlit",
+            "Pandas"
+        ],
+        "hint": "교안의 제목이며, `pip install streamlit` 명령어로 설치합니다.",
+        "solution": "Streamlit"
+    },
+    {
+        "item_type": "radio",
+        "question": "교안의 비교표에 따르면, Jupyter의 주요 용도로 가장 적절한 것은 무엇입니까?",
+        "options": [
+            "웹 애플리케이션 개발 및 배포",
+            "데이터 탐색, 실험, 빠른 프로토타이핑",
+            "복잡한 프로젝트의 모듈 관리",
+            "고급 코드 편집 및 리팩토링"
+        ],
+        "hint": "Jupyter는 셀 단위 실행을 통해 즉각적인 결과를 확인하는 데 강점이 있습니다.",
+        "solution": "데이터 탐색, 실험, 빠른 프로토타이핑"
+    },
+    {
+        "item_type": "short",
+        "question": "터미널에서 `dashboard.py`라는 이름의 Streamlit 애플리케이션을 실행하기 위한 전체 명령어는 무엇입니까?",
+        "hint": "`streamlit` 명령어와 '실행하다'라는 의미의 영어 단어, 그리고 파일 이름을 순서대로 입력합니다.",
+        "solution": "streamlit run dashboard.py"
+    },
+    {
+        "item_type": "radio",
+        "question": "Streamlit 앱에서 가장 큰 최상위 제목을 표시하기 위해 사용하는 함수는 무엇입니까?",
+        "options": [
+            "st.title()",
+            "st.header()",
+            "st.subheader()",
+            "st.markdown()"
+        ],
+        "hint": "'제목'을 의미하는 영어 단어를 사용합니다.",
+        "solution": "st.title()"
+    },
+    {
+        "item_type": "radio",
+        "question": "Streamlit에서 Pandas DataFrame을 표시할 때, 사용자가 직접 정렬하거나 크기를 조절할 수 있는 '인터랙티브한' 테이블로 보여주는 함수는 무엇입니까?",
+        "options": [
+            "st.table()",
+            "st.dataframe()",
+            "st.write()",
+            "st.markdown()"
+        ],
+        "hint": "이 함수는 정적인 `st.table()`과 달리 동적인 기능을 제공합니다.",
+        "solution": "st.dataframe()"
+    },
+    {
+        "item_type": "radio",
+        "question": "Seaborn으로 생성한 차트 객체 `ax`를 Streamlit 웹 앱에 표시하기 위한 올바른 코드는 무엇입니까?",
+        "options": [
+            "st.pyplot(ax)",
+            "st.pyplot(ax.figure)",
+            "st.seaborn(ax)",
+            "st.chart(ax.figure)"
+        ],
+        "hint": "Matplotlib/Seaborn 차트를 표시할 때는 `st.pyplot` 함수를 사용하며, 차트가 그려진 전체 '그림(figure)' 객체를 인자로 전달해야 합니다.",
+        "solution": "st.pyplot(ax.figure)"
+    },
+    {
+        "item_type": "radio",
+        "question": "문자열, 숫자, 데이터프레임, 차트 등 다양한 종류의 파이썬 객체를 자동으로 인식하여 웹 페이지에 적절한 형태로 표시해주는 다용도 출력 함수는 무엇입니까?",
+        "options": [
+            "st.text()",
+            "st.print()",
+            "st.markdown()",
+            "st.write()"
+        ],
+        "hint": "'쓰다'라는 의미의 영어 단어를 사용하는 함수입니다.",
+        "solution": "st.write()"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

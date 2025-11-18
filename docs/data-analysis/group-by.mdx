@@ -1,90 +1,193 @@
-# # GroupBy와 시간대별 데이터 분석
+# 그룹핑
 
-## 자전거 데이터
-- 미국 시애틀 프레몬트 브릿지 자전거 카운터
-  ```python
-  data = pd.read_csv(
-      'bicycle.csv',
-      index_col='Date', # Date 컬럼을 인덱스로 지정
-      parse_dates=True) # 자동으로 날짜 처리
-  data.head()
-  ```
-
-
-## 시각화
-- 편의를 위해 컬럼 이름 변경
-  ```python
-  data.columns = ['Total', 'East', 'West']
-  ```
-- 시각화
-  ```python
-  data.plot()
-  ```
-- 주 단위 합계 시각화
-  ```python
-  data.resample('W').sum().plot()
-  ```
-
-
-## 이동 평균
-- 일단위 합계의 30일 이동 평균
-  ```python
-  daily = data.resample('D').sum()
-  daily.rolling(30, center=True).mean().plot()
-  ```
-- 가까운 날짜에 더 많은 가중치를 주고, 먼 날짜에 적은 가중치를 주는 방식
-  ```python
-  roll = daily.rolling(50, center=True, win_type='gaussian')
-  roll.sum(std=10).plot()
-  ```
-
-
-## 시간대별 평균
-- 시간별(data.index.time)로 데이터를 모아(groupby) 평균
-  ```python
-  by_time = data.groupby(data.index.time).mean()
-  by_time.plot()
-  ```
-
-
-## 가로 눈금을 4시간 간격으로
+## group by (데이터 집계)
+* 데이터 분석의 핵심: 데이터를 특정 기준으로 "그룹화"하여 요약
+* "A반의 평균 점수", "도시별 인구수", "성별 평균 연봉" 등
+* Pandas의 `groupby()`: 데이터를 특정 그룹으로 나눔
 ```python
-import numpy as np
-hourly_ticks = 4 * 60 * 60 * np.arange(6)
-by_time.plot(xticks=hourly_ticks, style=[':', '--', '-'])
+pp = pd.read_excel('people.xlsx')
+grouped = pp.groupby('성별') # 성별에 따라 그룹으로 분할
+grouped['점수'].mean() # 그룹별 점수 평균
 ```
 
+## 집계 함수
+* `.sum()`: 그룹별 합계
+* `.mean()`: 그룹별 평균
+* `.count()`: 그룹별 개수 (NaN 포함)
+* `.size()`: 그룹별 개수 (NaN 포함, 더 빠름)
+* `.max()`, `.min()`: 그룹별 최대/최소값
 
-## 요일별 평균
+## 다중 컬럼으로 GroupBy
+* 여러 개의 기준을 리스트(`[]`)로 묶어 전달
+* 예: '도시'별, '성별' 평균 점수
 ```python
-by_weekday = data.groupby(data.index.dayofweek).mean()
-by_weekday.index = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-by_weekday.plot()
+pp.groupby(['도시', '성별'])['점수'].mean()
+```
+* 결과: '도시'와 '성별'이 다중 인덱스(MultiIndex)로 생성됨
+* 결과를 표 형태로 만들려면 컬럼도 리스트로
+```python
+pp.groupby(['도시', '성별'])[['점수']].mean()
 ```
 
+## 그룹화 후 인덱스 초기화
+* `groupby`의 결과는 기준 컬럼이 인덱스가 됨
+* 인덱스로 만들지 않으려면 `as_index=False` 사용
+```python
+pp.groupby('도시', as_index=False)['나이'].mean()
+```
+* 만들어진 인덱스를 리셋할 수도 있음
+```python
+df.groupby('도시')['나이'].mean().reset_index()
+```
 
-## 주중과 주말의 비교
-- 주중과 주말, 시간대별로 나누어 평균
-  ```python
-  weekend = np.where(data.index.weekday < 5, 'Weekday', 'Weekend')
-  by_time = data.groupby([weekend, data.index.time]).mean()
-  ```
-- 비교 시각화
-  ```python
-  by_time.loc['Weekday'].plot(xticks=hourly_ticks)
-  by_time.loc['Weekend'].plot(xticks=hourly_ticks)
-  ```
+## 여러 집계 함수 동시 적용
+* 한 번에 여러 통계치를 보고 싶을 때
+* `.agg()` 메소드에 함수 이름을 리스트(`[]`)로 전달
+* 도시별 나이의 '평균'과 '최대값'
+```python
+pp.groupby('도시')['나이'].agg(['mean', 'max'])
+```
 
+## 컬럼별로 다른 집계 함수 적용
+* `.agg()`에 딕셔너리(`{}`)를 전달
+    * `{ '컬럼명': '함수명', ... }`
+* 도시별로 '나이'는 평균(mean)을 '점수'는 합계(sum)를 계산
+```python
+st = pp.groupby('도시').agg({
+ '나이': 'mean',
+ '점수': 'sum'
+})
+```
+* 전체 결과 보기
+```python
+st
+```
 
-## 하나의 그래프에 합쳐 그리기
-- 하나의 셀에 실행
-  ```python
-  import matplotlib.pyplot as plt
-  fig, ax = plt.subplots(1, 2, figsize=(14, 5))
-  by_time.loc['Weekday'].plot(ax=ax[0], title='Weekdays', xticks=hourly_ticks)
-  by_time.loc['Weekend'].plot(ax=ax[1], title='Weekends', xticks=hourly_ticks)
-  ```
+## 멀티 인덱스
+* 나이의 평균만 보기
+```python
+st[('나이', 'mean')]
+```
+* 대구의 나이 평균 보기
+```python
+st.loc['대구', ('나이', 'mean')]
+```
+
+## 그룹별 변환
+* `agg`: 그룹별 요약 (행 개수가 줄어듦)
+* `transform()`: 그룹별 연산 후, 원본 인덱스와 동일한 크기로 반환
+    * 원본 데이터프레임에 그룹별 통계치를 추가할 때 유용
+* '도시'별 평균 나이를 계산 (결과가 원본 행 개수와 동일)
+```python
+pp['도시_평균_나이'] = pp.groupby('도시')['나이'].transform('mean')
+pp
+```
+
+## groupby와 value_counts의 관계
+* `.value_counts()`: 특정 컬럼의 고유값 개수를 세는 기능
+* `.groupby().size()`와 사실상 동일한 작업
+* '도시'별 데이터 개수 세기 (방법 1)
+```python
+pp['도시'].value_counts()
+```
+* '도시'별 데이터 개수 세기 (방법 2)
+```python
+pp.groupby('도시').size()
+```
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/mKAPMK?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="412" frameborder="0" marginheight="0" marginwidth="0" title="[시계열] group by"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="group-by" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "pandas에서 데이터를 특정 기준으로 그룹화하여 그룹별로 통계량을 계산하는 데 사용되는 핵심 메소드는 무엇입니까?",
+        "options": [
+            "filter()",
+            "sort_values()",
+            "groupby()",
+            "merge()"
+        ],
+        "hint": "데이터 분석에서 '도시별 인구수', '성별 평균 연봉' 등을 구할 때 사용하는 기능입니다.",
+        "solution": "groupby()"
+    },
+    {
+        "item_type": "radio",
+        "question": "DataFrame `pp`를 '도시'와 '성별' 두 개의 기준으로 그룹화하려고 할 때, 올바른 코드는 무엇입니까?",
+        "options": [
+            "pp.groupby('도시', '성별')",
+            "pp.groupby('도시').groupby('성별')",
+            "pp.groupby(['도시', '성별'])",
+            "pp.groupby('도시 and 성별')"
+        ],
+        "hint": "여러 개의 기준을 그룹화할 때는 리스트(`[]`) 형태로 묶어서 전달해야 합니다.",
+        "solution": "pp.groupby(['도시', '성별'])"
+    },
+    {
+        "item_type": "radio",
+        "question": "그룹화 작업 후, 그룹화의 기준이 된 컬럼이 인덱스로 설정되는 것을 방지하고 일반 컬럼으로 유지하고 싶을 때 `groupby()` 메소드에 추가해야 할 인자는 무엇입니까?",
+        "options": [
+            "index=False",
+            "header=False",
+            "no_index=True",
+            "as_index=False"
+        ],
+        "hint": "`as_`로 시작하는 인자이며, 인덱스로서의 역할을 할 것인지 묻는 옵션입니다.",
+        "solution": "as_index=False"
+    },
+    {
+        "item_type": "radio",
+        "question": "그룹별로 여러 개의 집계 함수(예: 평균과 최대값)를 동시에 적용하고 싶을 때 사용하는 메소드는 무엇입니까?",
+        "options": [
+            "agg()",
+            "apply()",
+            "transform()",
+            "multi()"
+        ],
+        "hint": "Aggregation(집계)의 약어인 메소드를 사용하며, 함수 이름들을 리스트로 전달할 수 있습니다.",
+        "solution": "agg()"
+    },
+    {
+        "item_type": "radio",
+        "question": "그룹화 후 각 컬럼에 서로 다른 집계 함수를 적용하고 싶습니다. '나이' 컬럼에는 평균('mean')을, '점수' 컬럼에는 합계('sum')를 적용하는 올바른 코드는 무엇입니까?",
+        "options": [
+            "pp.groupby('도시').agg(['나이':'mean', '점수':'sum'])",
+            "pp.groupby('도시').agg({'나이': 'mean', '점수': 'sum'})",
+            "pp.groupby('도시').agg('나이'='mean', '점수'='sum')",
+            "pp.groupby('도시').apply({'나이': 'mean', '점수': 'sum'})"
+        ],
+        "hint": "`.agg()` 메소드에 파이썬의 딕셔너리(`{}`) 자료형을 사용하여 컬럼별로 함수를 지정합니다.",
+        "solution": "pp.groupby('도시').agg({'나이': 'mean', '점수': 'sum'})"
+    },
+    {
+        "item_type": "radio",
+        "question": "그룹별 연산을 수행한 후, 그 결과를 원본 DataFrame과 동일한 크기(인덱스)로 반환하여 새로운 열을 추가하는 데 유용한 메소드는 무엇입니까?",
+        "options": [
+            "agg()",
+            "reduce()",
+            "transform()",
+            "summarize()"
+        ],
+        "hint": "이 메소드는 그룹별 요약(aggregation)과 달리 행의 개수를 줄이지 않습니다.",
+        "solution": "transform()"
+    },
+    {
+        "item_type": "radio",
+        "question": "특정 컬럼의 고유값별 데이터 개수를 세는 `pp['도시'].value_counts()`와 기능적으로 동일한 `groupby` 코드는 무엇입니까?",
+        "options": [
+            "pp.groupby('도시').mean()",
+            "pp.groupby('도시').sum()",
+            "pp.groupby('도시').count()",
+            "pp.groupby('도시').size()"
+        ],
+        "hint": "`.size()`는 결측치를 포함하여 그룹의 크기 자체를 세는 반면, `.count()`는 결측치를 제외한 값의 개수를 셉니다. `value_counts()`는 `.size()`와 더 유사하게 동작합니다.",
+        "solution": "pp.groupby('도시').size()"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

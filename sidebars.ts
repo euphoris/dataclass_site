@@ -203,181 +203,268 @@ const sidebars: SidebarsConfig = {
   dataAnalysisSidebar: [
     {
       type: 'doc',
-      id: 'data-analysis/lab',
+      id: 'data-analysis/index',
       label: '실습 및 Q&A'
     },
     {
       type: 'category',
-      label: '1일차 - 탐색적 데이터 분석',
+      label: '1일차 - Python으로 데이터 다루기',
       items: [
         {
           type: 'doc',
-          id: 'data-analysis/statistics-and-ai',
-          label: '데이터 분석의 종류와 관련 분야'
+          id: 'data-analysis/python-intro',
+          label: 'Python 소개'
         },
         {
           type: 'doc',
-          id: 'data-analysis/python',
-          label: 'Python'
+          id: 'data-analysis/python-basic',
+          label: 'Python 기초 문법'
         },
         {
           type: 'doc',
-          id: 'data-analysis/module',
-          label: '모듈과 패키지'
+          id: 'data-analysis/pandas',
+          label: 'Pandas'
         },
         {
           type: 'doc',
-          id: 'data-analysis/central-tendency',
-          label: '기술 통계: 중심경향치'
-        },
-         {
-          type: 'doc',
-          id: 'data-analysis/variability',
-          label: '기술 통계: 변산성 측정치'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/distribution',
-          label: '분포의 특성'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/filtering',
+          id: 'data-analysis/query',
           label: '필터링'
         },
         {
           type: 'doc',
-          id: 'data-analysis/day1-exercise',
-          label: '1일차 종합 실습'
+          id: 'data-analysis/eda',
+          label: '탐색적 데이터 분석'
         },
+        {
+          type: 'doc',
+          id: 'data-analysis/missing',
+          label: '결측치'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/imputation',
+          label: '결측치 대체'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/group-by',
+          label: '그룹화'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/merge',
+          label: '데이터 합치기'
+        }
       ]
     },
     {
       type: 'category',
-      label: '2일차 - 추정과 가설 검정',
+      label: '2일차 - 데이터 시각화',
       items: [
         {
-            type: 'doc',
-            id: 'data-analysis/estimation',
-            label: '추정'
+          type: 'doc',
+          id: 'data-analysis/univariate-visualization',
+          label: '한 변수의 분포 시각화'
         },
         {
           type: 'doc',
-          id: 'data-analysis/confidence-interval',
-          label: '신뢰구간'
+          id: 'data-analysis/bivariate-visualization',
+          label: '두 변수의 관계 시각화'
         },
         {
           type: 'doc',
-          id: 'data-analysis/margin-of-error',
-          label: '오차 범위'
+          id: 'data-analysis/plot-customization',
+          label: '플롯 커스터마이제이션'
         },
         {
           type: 'doc',
-          id: 'data-analysis/hypothesis-testing',
-          label: '통계적 가설 검정'
+          id: 'data-analysis/data-visualization-best-practices',
+          label: '데이터 시각화 잘하기'
         },
         {
           type: 'doc',
-          id: 'data-analysis/correlation',
-          label: '상관 분석'
+          id: 'data-analysis/dashboard',
+          label: '대시보드'
         },
         {
           type: 'doc',
-          id: 'data-analysis/regression',
-          label: '회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/exercise-estimation-testing',
-          label: '종합 실습: 추정과 가설 검정'
+          id: 'data-analysis/complex-dashboard',
+          label: '복잡한 대시보드'
         },
       ]
     },
-    {
-      type: 'category',
-      label: '3일차 - 회귀 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'data-analysis/check-inf',
-          label: '추론 통계 개념 체크'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/multiple-regression',
-          label: '다중 회귀 분석'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/dummy-coding',
-          label: '범주형 독립변수'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/model-selection',
-          label: '모형 선택'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/cross-validation',
-          label: '교차 검증'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/variable-transformation',
-          label: '변수의 변형'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/I-function',
-          label: 'I 함수'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/interaction',
-          label: '상호작용'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/exercise-coating',
-          label: '종합 실습: 도장 품질 예측'
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '4일차 - 머신 러닝',
-      items: [
-        {
-          type: 'doc',
-          id: 'data-analysis/supervised-learning-regression',
-          label: '지도학습 - 회귀'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/supervised-learning-classification',
-          label: '지도학습 - 분류'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/confusion-matrix',
-          label: '혼동 행렬'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/roc-auc',
-          label: 'ROC 곡선'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/unsupervised-learning-dimension-reduction',
-          label: '비지도학습 - 차원 축소'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/unsupervised-learning-clustering',
-          label: '비지도학습 - 클러스터링'
-        },
+    // {
+    //   type: 'category',
+    //   label: '1일차 - 탐색적 데이터 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/statistics-and-ai',
+    //       label: '데이터 분석의 종류와 관련 분야'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/python',
+    //       label: 'Python'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/module',
+    //       label: '모듈과 패키지'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/central-tendency',
+    //       label: '기술 통계: 중심경향치'
+    //     },
+    //      {
+    //       type: 'doc',
+    //       id: 'data-analysis/variability',
+    //       label: '기술 통계: 변산성 측정치'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/distribution',
+    //       label: '분포의 특성'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/filtering',
+    //       label: '필터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/day1-exercise',
+    //       label: '1일차 종합 실습'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '2일차 - 추정과 가설 검정',
+    //   items: [
+    //     {
+    //         type: 'doc',
+    //         id: 'data-analysis/estimation',
+    //         label: '추정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/confidence-interval',
+    //       label: '신뢰구간'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/margin-of-error',
+    //       label: '오차 범위'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/hypothesis-testing',
+    //       label: '통계적 가설 검정'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/correlation',
+    //       label: '상관 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/regression',
+    //       label: '회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/exercise-estimation-testing',
+    //       label: '종합 실습: 추정과 가설 검정'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '3일차 - 회귀 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/check-inf',
+    //       label: '추론 통계 개념 체크'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/multiple-regression',
+    //       label: '다중 회귀 분석'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/dummy-coding',
+    //       label: '범주형 독립변수'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/model-selection',
+    //       label: '모형 선택'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/cross-validation',
+    //       label: '교차 검증'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/variable-transformation',
+    //       label: '변수의 변형'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/I-function',
+    //       label: 'I 함수'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/interaction',
+    //       label: '상호작용'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/exercise-coating',
+    //       label: '종합 실습: 도장 품질 예측'
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '4일차 - 머신 러닝',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/supervised-learning-regression',
+    //       label: '지도학습 - 회귀'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/supervised-learning-classification',
+    //       label: '지도학습 - 분류'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/confusion-matrix',
+    //       label: '혼동 행렬'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/roc-auc',
+    //       label: 'ROC 곡선'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/unsupervised-learning-dimension-reduction',
+    //       label: '비지도학습 - 차원 축소'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/unsupervised-learning-clustering',
+    //       label: '비지도학습 - 클러스터링'
+    //     },
         // {
         //   type: 'doc',
         //   id: 'data-analysis/dtm',
@@ -393,64 +480,64 @@ const sidebars: SidebarsConfig = {
         //   id: 'data-analysis/keyword-extraction',
         //   label: '키워드 추출'
         // },
-        {
-          type: 'doc',
-          id: 'data-analysis/rl-dl',
-          label: '강화학습과 딥러닝'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/exercise-classification',
-          label: '종합 실습: 재무 건전성 분류' // RandomForest로 분류
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: '5일차 - 시계열 분석',
-      items: [
-        {
-          type: 'doc',
-          id: 'data-analysis/time-series',
-          label: '시계열 데이터 분석의 소개'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/python-time-series',
-          label: 'Python으로 시계열 데이터 다루기'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/group-by',
-          label: 'group by'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/time-series-decomposition',
-          label: '시계열 분해'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/autocorrelation',
-          label: '자기 상관'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/forecasting',
-          label: '시계열 예측'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/time-series-clustering',
-          label: '시계열 클러스터링'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/exercise-greenhouse-forecasting',
-          label: '종합 실습: 온실 가스 배출 예측'
-        },
-      ]
-    },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/rl-dl',
+    //       label: '강화학습과 딥러닝'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/exercise-classification',
+    //       label: '종합 실습: 재무 건전성 분류' // RandomForest로 분류
+    //     },
+    //   ]
+    // },
+    // {
+    //   type: 'category',
+    //   label: '5일차 - 시계열 분석',
+    //   items: [
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/time-series',
+    //       label: '시계열 데이터 분석의 소개'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/python-time-series',
+    //       label: 'Python으로 시계열 데이터 다루기'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/group-by',
+    //       label: 'group by'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/time-series-decomposition',
+    //       label: '시계열 분해'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/autocorrelation',
+    //       label: '자기 상관'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/forecasting',
+    //       label: '시계열 예측'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/time-series-clustering',
+    //       label: '시계열 클러스터링'
+    //     },
+    //     {
+    //       type: 'doc',
+    //       id: 'data-analysis/exercise-greenhouse-forecasting',
+    //       label: '종합 실습: 온실 가스 배출 예측'
+    //     },
+    //   ]
+    // },
   ],
   statSidebar: [
     {

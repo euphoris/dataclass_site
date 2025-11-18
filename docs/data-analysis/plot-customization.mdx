@@ -1,0 +1,196 @@
+# 플롯 커스터마이제이션
+
+## Figure, Axes, Axis의 관계
+* Figure (fig): 캔버스(액자) 전체. 차트의 모든 요소를 담는 가장 큰 단위.
+* Axes (ax): 실제 데이터가 그려지는 하나의 플롯 공간
+    * x축(Axis), y축(Axis), 제목, 플롯 자체를 모두 포함.
+* Axis: 하나의 축 (x-axis, y-axis).
+* 가로 8, 세로 4 크기의 Figure 생성
+```python
+fig, ax = plt.subplots(figsize=(8, 4))
+```
+* 생성된 Axes에 시본으로 그래프 그리기
+```python
+sns.histplot(data=df, x='price', bins=20, kde=True, ax=ax)
+```
+* 시본으로 그래프를 그리면, 그려진 Axes를 반환
+```python
+ax = sns.histplot(data=df, x='price', bins=20, kde=True)
+```
+
+## 제목 및 축 라벨
+```python
+plt.rcParams['font.family'] = 'Malgun Gothic' # 맑은 고딕으로 글꼴 설정
+plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
+ax = sns.histplot(data=df, x='price', bins=20, kde=True)
+ax.set_title('자동차 가격 분포') # 그래프 제목
+ax.set_xlabel('가격') # x축 레이블 설정
+ax.set_ylabel('빈도') # y축 레이블 설정
+```
+
+## 하나의 Figure에 여러 Axes
+```python
+# 하나의 Figure에 1행 2열로 Axes를 배치
+fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+sns.histplot(data=df, x='price', bins=20, kde=True, ax=axs[0]) # 0번 Axes
+sns.boxplot(data=df, x='price', ax=axs[1]) # 1번 Axes
+```
+
+## 설명 추가
+```python
+ax = sns.scatterplot(data=df, x='year', y='price', hue='model')
+ax.text(2010, 1200, '★2010년', fontsize=12, color='red')
+ax.annotate('600만원', xy=(2013, 600), xytext=(2016, 400),
+ arrowprops={'facecolor': 'black', 'arrowstyle': '->'},
+ fontsize=10, color='red')
+```
+
+## 범례
+```python
+ax = sns.scatterplot(data=df, x='year', y='price', hue='model')
+ax.legend(title='모델', loc='lower right')
+```
+* 위치:
+    * 'best' (기본값, 자동으로 최적 위치 선정)
+```
+upper left upper center upper right
+center left center center right
+lower left lower center lower right
+```
+
+## 스타일
+* 어두운 배경 스타일로 그리기
+```python
+plt.style.use('dark_background')
+ax = sns.scatterplot(data=df, x='year', y='price', hue='model')
+```
+* 기본 스타일
+```python
+plt.style.use('default')
+```
+* 가능한 스타일 목록:
+```python
+plt.style.available
+```
+* 스타일 목록:
+http://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html
+
+## 그림 저장
+```python
+fig.savefig('chart_name.png') # PNG 파일로 저장
+fig.savefig('chart_name.pdf') # PDF 파일로 저장, 벡터
+fig.savefig('high_res.png', dpi=300) # 해상도(dpi) 지정
+fig.savefig('transparent.png', transparent=True) # 배경 투명
+```
+* ax만 있을 경우에는 ax.figure로 그림에 접근할 수 있음
+```python
+ax.figure.savefig('chart_name.png')
+```
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="plot-customization" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "Matplotlib 시각화 구조에서, 차트의 모든 요소를 담는 가장 큰 단위인 전체 캔버스(액자)를 무엇이라고 합니까?",
+        "options": [
+            "Figure",
+            "Axes",
+            "Axis",
+            "Plot"
+        ],
+        "hint": "차트를 그리기 위한 가장 바깥쪽의 컨테이너입니다.",
+        "solution": "Figure"
+    },
+    {
+        "item_type": "radio",
+        "question": "Seaborn으로 그래프를 그릴 때, 미리 생성된 특정 Matplotlib Axes 객체 `ax` 위에 그림을 그리도록 지정하는 방법은 무엇입니까?",
+        "options": [
+            "sns.histplot(..., target=ax)",
+            "sns.histplot(..., on=ax)",
+            "sns.histplot(..., axes=ax)",
+            "sns.histplot(..., ax=ax)"
+        ],
+        "hint": "axes의 약자인 `ax`를 파라미터 이름으로 사용합니다.",
+        "solution": "sns.histplot(..., ax=ax)"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "`ax`라는 이름의 Axes 객체에 그려진 그래프의 제목과 축 라벨을 설정하는 메소드로 올바른 것을 모두 고르세요.",
+        "options": [
+            "ax.set_title()",
+            "ax.set_xlabel()",
+            "ax.set_ylabel()",
+            "ax.set_labels()"
+        ],
+        "hint": "제목, x축, y축 각각에 대한 설정 메소드가 별도로 존재합니다.",
+        "solution": [
+            "ax.set_title()",
+            "ax.set_xlabel()",
+            "ax.set_ylabel()"
+        ]
+    },
+    {
+        "item_type": "radio",
+        "question": "하나의 Figure 안에 1행 2열(두 개의 그래프를 가로로 나란히)로 구성된 플롯 공간(Axes)을 생성하는 올바른 코드는 무엇입니까?",
+        "options": [
+            "plt.subplots(nrows=1, ncols=2)",
+            "plt.subplots(nrows=2, ncols=1)",
+            "plt.figure(1, 2)",
+            "sns.subplots(1, 2)"
+        ],
+        "hint": "`plt.subplots` 함수에 행(row)과 열(column)의 개수를 지정합니다.",
+        "solution": "plt.subplots(nrows=1, ncols=2)"
+    },
+    {
+        "item_type": "radio",
+        "question": "그래프의 특정 데이터 포인트를 가리키는 화살표와 함께 텍스트 설명을 추가하는 데 가장 적합한 메소드는 무엇입니까?",
+        "options": [
+            "ax.text()",
+            "ax.annotate()",
+            "ax.label()",
+            "ax.arrow()"
+        ],
+        "hint": "'주석을 달다'라는 의미의 영어 단어(annotate)를 사용하는 메소드입니다.",
+        "solution": "ax.annotate()"
+    },
+    {
+        "item_type": "radio",
+        "question": "`ax.legend(loc='lower right')` 코드에서 `loc` 인자의 역할은 무엇입니까?",
+        "options": [
+            "범례의 위치 지정",
+            "범례의 색상 지정",
+            "범례의 글꼴 크기 지정",
+            "범례의 제목 지정"
+        ],
+        "hint": "`loc`는 location의 약자입니다.",
+        "solution": "범례의 위치 지정"
+    },
+    {
+        "item_type": "short",
+        "question": "matplotlib의 시각화 스타일을 'dark_background'로 설정하기 위해 사용하는 명령어는 `plt.style.____('dark_background')` 입니다. 빈칸에 들어갈 단어는 무엇입니까?",
+        "hint": "'사용하다'라는 의미의 영어 단어입니다.",
+        "solution": "use"
+    },
+    {
+        "item_type": "radio",
+        "question": "`fig`라는 Figure 객체를 300 DPI의 고해상도 PNG 파일('chart.png')로 저장하는 올바른 코드는 무엇입니까?",
+        "options": [
+            "fig.savefig('chart.png', dpi=300)",
+            "fig.save('chart.png', resolution=300)",
+            "fig.export('chart.png', dpi=300)",
+            "fig.write('chart.png', dpi=300)"
+        ],
+        "hint": "'그림 저장하기(save figure)'라는 의미를 가진 메소드를 사용하며, 해상도 옵션은 `dpi`입니다.",
+        "solution": "fig.savefig('chart.png', dpi=300)"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

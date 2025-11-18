@@ -1,0 +1,163 @@
+
+# 데이터 합치기
+
+## 행(Row) 기준 합치기
+* `axis=0` (기본값): 위-아래로 합침.
+* 두 DataFrame의 컬럼 이름이 같아야 의미 있음.
+```python
+pd.concat([df_2023, df_2024])
+```
+* `concat` 후, 인덱스가 중복될 수 있음 (e.g., 202301, 202401...)
+* 기존 인덱스를 무시하고 0, 1, 2, ... 순서로 새 인덱스 부여.
+```python
+pd.concat(
+ [df_2023, df_2024],
+ ignore_index=True
+)
+```
+
+## 열(Column) 기준 합치기
+* `axis=1`: 좌-우로 합침.
+* 두 DataFrame의 인덱스(Index)를 기준으로 정렬/결합됨.
+* 인덱스가 한쪽에만 존재하면, 해당 행의 반대쪽 데이터는 NaN (결측치) 처리됨.
+```python
+pd.concat([df_2023, df_2024], axis=1)
+```
+
+## 컬럼 값을 기준으로 합치기
+* `pd.merge()`: SQL에서 JOIN과 같음
+* `concat`과 달리, 공통된 '키(Key)' 컬럼을 기준으로 데이터를 병합.
+* `user_id` 컬럼의 값을 기준으로 `df_user` (고객 정보)와 `df_purchase` (구매 내역)을 결합
+```python
+pd.merge(df_user, df_purchase, on='user_id')
+```
+* 내부(inner) 조인: 양쪽에 모두 값이 있는 경우만 결합(기본)
+```python
+pd.merge(df_user, df_purchase, on='user_id', how='inner')
+```
+
+## 외부 조인
+* 왼쪽 표에 오른쪽 표를 붙임(오른쪽 표에 해당하는 행이 없으면 빈 칸)
+```python
+pd.merge(df_user, df_purchase, on='user_id', how='left')
+```
+* 오른쪽 표에 왼쪽 표를 붙임(왼쪽 표에 해당하는 행이 없으면 빈 칸)
+```python
+pd.merge(df_user, df_purchase, on='user_id', how='right')
+```
+* 어느 쪽이든 표에 있으면 모두 포함(다른 표에 해당하는 행이 없으면 빈 칸)
+```python
+pd.merge(df_user, df_purchase, on='user_id', how='outer')
+```
+
+## 키 컬럼 이름이 다를 때
+* 구매 데이터를 복사하여 `user_id` 컬럼을 `customer_id`로 바꿈
+```python
+df_purchase_new = df_purchase.copy()
+df_purchase_new.columns = ['purchase_id', 'customer_id', 'item']
+df_purchase_new
+```
+* `left_on`과 `right_on`으로 키 컬럼을 지정
+```python
+pd.merge(df_user, df_purchase_new, left_on='user_id', right_on='customer_id')
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="merge" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "서로 다른 연도의 데이터(df_2023, df_2024)를 위-아래로 합쳐 하나의 DataFrame으로 만들 때 사용하는 함수는 무엇입니까?",
+        "options": [
+            "pd.merge([df_2023, df_2024])",
+            "pd.join([df_2023, df_2024])",
+            "pd.concat([df_2023, df_2024])",
+            "pd.append([df_2023, df_2024])"
+        ],
+        "hint": "concatenate(연결하다)라는 단어에서 유래한 함수입니다.",
+        "solution": "pd.concat([df_2023, df_2024])"
+    },
+    {
+        "item_type": "radio",
+        "question": "`pd.concat`을 사용하여 데이터를 합친 후, 기존 인덱스를 무시하고 0부터 시작하는 새로운 정수 인덱스를 부여하고 싶을 때 사용하는 인자는 무엇입니까?",
+        "options": [
+            "reset_index=True",
+            "ignore_index=True",
+            "new_index=True",
+            "index=False"
+        ],
+        "hint": "'인덱스를 무시하라'는 의미를 가진 인자입니다.",
+        "solution": "ignore_index=True"
+    },
+    {
+        "item_type": "radio",
+        "question": "`pd.concat`을 사용하여 두 DataFrame을 인덱스 기준으로 좌-우로 합치려고 할 때, `axis` 인자의 값으로 무엇을 설정해야 합니까?",
+        "options": [
+            "axis=0",
+            "axis=1",
+            "axis='columns'",
+            "axis='horizontal'"
+        ],
+        "hint": "행(row) 기준은 0, 열(column) 기준은 1로 설정합니다.",
+        "solution": "axis=1"
+    },
+    {
+        "item_type": "radio",
+        "question": "SQL의 JOIN처럼, 특정 공통 '키(Key)' 컬럼의 값을 기준으로 두 DataFrame을 병합하는 데 사용되는 함수는 무엇입니까?",
+        "options": [
+            "pd.concat()",
+            "pd.join()",
+            "pd.combine()",
+            "pd.merge()"
+        ],
+        "hint": "'병합하다'라는 의미의 영어 단어입니다.",
+        "solution": "pd.merge()"
+    },
+    {
+        "item_type": "radio",
+        "question": "`pd.merge(df_user, df_purchase, on='user_id', how='left')` 코드가 의미하는 바로 가장 적절한 것은 무엇입니까?",
+        "options": [
+            "두 DataFrame에 공통으로 존재하는 user_id만 합친다.",
+            "왼쪽(df_user)의 모든 user_id를 기준으로 합치고, 오른쪽에 해당하는 값이 없으면 NaN으로 채운다.",
+            "오른쪽(df_purchase)의 모든 user_id를 기준으로 합치고, 왼쪽에 해당하는 값이 없으면 NaN으로 채운다.",
+            "두 DataFrame 중 한쪽에라도 존재하는 모든 user_id를 기준으로 합친다."
+        ],
+        "hint": "`how='left'`는 왼쪽 DataFrame을 기준으로 데이터를 유지하라는 의미입니다.",
+        "solution": "왼쪽(df_user)의 모든 user_id를 기준으로 합치고, 오른쪽에 해당하는 값이 없으면 NaN으로 채운다."
+    },
+    {
+        "item_type": "radio",
+        "question": "`pd.merge()` 함수에서 `how` 인자를 생략했을 때 기본으로 적용되는 조인(join) 방식은 무엇입니까?",
+        "options": [
+            "inner (내부 조인)",
+            "left (왼쪽 조인)",
+            "right (오른쪽 조인)",
+            "outer (외부 조인)"
+        ],
+        "hint": "양쪽 테이블에 모두 키 값이 존재하는 경우에만 데이터를 결합하는 방식이 기본값입니다.",
+        "solution": "inner (내부 조인)"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "`df_user`의 'user_id' 컬럼과 `df_purchase_new`의 'customer_id' 컬럼을 기준으로 두 DataFrame을 merge하려고 합니다. 이때 사용해야 할 인자들을 모두 고르세요.",
+        "options": [
+            "on",
+            "left_on",
+            "key",
+            "right_on"
+        ],
+        "hint": "왼쪽 DataFrame의 키와 오른쪽 DataFrame의 키를 각각 지정해야 합니다.",
+        "solution": [
+            "left_on",
+            "right_on"
+        ]
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

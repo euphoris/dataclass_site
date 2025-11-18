@@ -80,15 +80,9 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'machineLearningSidebar', // 사이드바 ID
+          sidebarId: 'dataAnalysisSidebar', // 사이드바 ID
           position: 'left',
-          label: '머신 러닝', // 상단 메뉴
-        },
-        {
-          type: 'docSidebar',
-          sidebarId: 'computerVisionSidebar', // 사이드바 ID
-          position: 'left',
-          label: '컴퓨터 비전', // 상단 메뉴
+          label: 'Python 활용 데이터 시각화', // 상단 메뉴
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
@@ -105,8 +99,8 @@ const config = {
           title: 'Docs',
           items: [ // 하단 메뉴
             {
-              label: '데이터 분석과 시각화',
-              to: '/docs/data-analysis/lab',
+              label: 'Python 활용 데이터 시각화',
+              to: '/docs/data-analysis',
             },
             {
               label: 'Python',

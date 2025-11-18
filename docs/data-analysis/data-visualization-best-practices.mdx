@@ -1,0 +1,130 @@
+
+# 데이터 시각화 잘하기
+
+## 잘못 설계된 데이터 시각화
+* 잘못 설계된 데이터 시각화는 정확한 해석을 왜곡하고 오도할 가능성
+* 2014년 Reuters에서 가져온 그래프의 예시
+    * "Stand Your Ground" 법이 제정된 이후 플로리다에서 총기로 인한 사망자 수
+    * 2005년 해당 법이 시행된 후 총기 관련 사망자 수가 크게 감소한 것처럼 표시
+    * 실제로는 증가(y축이 반대로 되어 있음)
+
+## 데이터-잉크 비율
+* 데이터와 그래프에 표시되는 요소들("잉크")의 비율
+* 격자선, 과도한 레이블, 장식 요소 등 불필요한 "잉크"를 줄임으로써 깔끔하고 효율적인 시각화
+
+## 축의 간격
+* 차이가 매우 작을 경우 특정 범위로 한정할 수 있으나, 차이를 과대하게 인식할 수 있음
+* 차이가 매우 큰 경우 로그스케일을 적용할 수 있으나, 차이를 과소하게 인식할 수 있음
+
+## 투명도 조절과 지터링
+* 점들이 너무 많을 경우 투명도를 조절하거나 지터링(점의 위치를 무작위로 조금씩 달리하는 것)을 통해 점들이 겹치는 것을 방지
+```python
+sns.scatterplot(data=df, x='year', y='price', alpha=0.3) # 불투명도 30%
+```
+
+## 지터링 코드
+```python
+import numpy as np
+
+x = df.year # x축
+y = df.price # y축
+ratio = 0.1 # 10% 지터링
+
+# 평균=0, 표준편차=10%인 정규분포에서 난수를 추출하여 무작위 노이즈로 추가
+rng = np.random.default_rng(42)
+x_j = x + rng.normal(0, x.std() * ratio, len(df))
+y_j = y + rng.normal(0, y.std() * ratio, len(df))
+
+sns.scatterplot(x=x_j, y=y_j)
+```
+
+## 너무 복잡한 범례는 어노테이션으로
+
+## 3D 차트의 문제점
+* 원근법 때문에 비율이 왜곡됨
+
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="data-visualization-best-practices" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "데이터 시각화에서 y축의 방향을 거꾸로 표시하여 실제로는 증가하는 데이터를 감소하는 것처럼 보이게 만드는 것은 무엇의 대표적인 예시입니까?",
+        "options": [
+            "효과적인 데이터 시각화",
+            "잘못 설계되어 해석을 왜곡하는 시각화",
+            "데이터-잉크 비율을 높인 시각화",
+            "로그 스케일을 적용한 시각화"
+        ],
+        "hint": "2014년 Reuters의 플로리다 총기 사망자 수 그래프 사례에서 볼 수 있는 문제입니다.",
+        "solution": "잘못 설계되어 해석을 왜곡하는 시각화"
+    },
+    {
+        "item_type": "radio",
+        "question": "시각화에서 격자선, 과도한 장식 등 불필요한 요소를 줄이고, 실제 데이터를 나타내는 데 사용되는 그래픽 요소('잉크')의 비율을 최대화해야 한다는 디자인 원칙은 무엇입니까?",
+        "options": [
+            "데이터-잉크 비율",
+            "축의 간격 원칙",
+            "지터링 원칙",
+            "3D 왜곡 원칙"
+        ],
+        "hint": "데이터와 그래픽 요소('잉크') 간의 비율을 의미하는 용어입니다.",
+        "solution": "데이터-잉크 비율"
+    },
+    {
+        "item_type": "radio",
+        "question": "산점도에서 많은 데이터 포인트가 겹쳐서 분포를 파악하기 어려울 때, 점들의 투명도를 조절하기 위해 `sns.scatterplot()`에서 사용하는 인자는 무엇입니까?",
+        "options": [
+            "transparency",
+            "opacity",
+            "alpha",
+            "lightness"
+        ],
+        "hint": "이 값은 0(투명)에서 1(불투명) 사이로 설정합니다.",
+        "solution": "alpha"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터 포인트가 서로 겹치는 문제를 해결하기 위해, 각 점의 위치에 약간의 무작위적인 노이즈를 추가하여 시각적으로 분산시키는 기법을 무엇이라고 합니까?",
+        "options": [
+            "지터링 (Jittering)",
+            "스케일링 (Scaling)",
+            "샘플링 (Sampling)",
+            "클러스터링 (Clustering)"
+        ],
+        "hint": "교안에서 `rng.normal()`을 사용하여 노이즈를 추가하는 코드로 설명되었습니다.",
+        "solution": "지터링 (Jittering)"
+    },
+    {
+        "item_type": "radio",
+        "question": "범례(legend)가 너무 많은 항목으로 인해 복잡해질 경우, 그래프를 더 명확하게 만들기 위한 대안으로 교안에서 제시된 방법은 무엇입니까?",
+        "options": [
+            "범례를 완전히 제거한다",
+            "범례의 글자 크기를 매우 작게 만든다",
+            "어노테이션(annotation)을 사용하여 직접 설명한다",
+            "그래프를 여러 개로 나눈다"
+        ],
+        "hint": "그래프 위의 특정 위치에 직접 텍스트나 화살표로 설명하는 방식입니다.",
+        "solution": "어노테이션(annotation)을 사용하여 직접 설명한다"
+    },
+    {
+        "item_type": "radio",
+        "question": "3D 차트를 사용할 때 발생할 수 있는 가장 큰 문제점으로 교안에서 지적한 것은 무엇입니까?",
+        "options": [
+            "생성하는 데 시간이 오래 걸린다",
+            "원근법 효과로 인해 실제 데이터의 비율이 왜곡되어 보일 수 있다",
+            "다양한 색상을 사용하기 어렵다",
+            "인쇄 시 품질이 저하된다"
+        ],
+        "hint": "보는 각도에 따라 막대의 높이나 파이 조각의 크기가 다르게 인식될 수 있습니다.",
+        "solution": "원근법 효과로 인해 실제 데이터의 비율이 왜곡되어 보일 수 있다"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
