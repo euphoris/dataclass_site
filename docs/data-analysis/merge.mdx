@@ -1,6 +1,45 @@
 
 # 데이터 합치기
 
+## 실습 데이터
+
+복사해서 붙여 쓰세요
+
+```python
+import pandas as pd
+import numpy as np
+
+np.random.seed(42)
+
+# 예제 1: 고객 정보 (df_user)
+df_user = pd.DataFrame({
+    'user_id': [101, 102, 103, 104],
+    'name': ['Alice', 'Bob', 'Charlie', 'David'],
+    'age': np.random.randint(20, 50, 4)
+})
+
+# 예제 2: 구매 내역 (df_purchase)
+df_purchase = pd.DataFrame({
+    'purchase_id': [1001, 1002, 1003, 1004, 1005],
+    'user_id': [101, 103, 101, 104, 103],
+    'item': ['A', 'B', 'C', 'A', 'D']
+})
+
+# 예제 3: 2023년 데이터 (df_2023)
+df_2023 = pd.DataFrame(
+    np.random.randint(0, 100, (3, 4)),
+    columns=['A', 'B', 'C', 'D'],
+    index=[202301, 202302, 202303]
+)
+
+# 예제 4: 2024년 데이터 (df_2024)
+df_2024 = pd.DataFrame(
+    np.random.randint(0, 100, (3, 4)),
+    columns=['A', 'B', 'C', 'D'],
+    index=[202401, 202402, 202403]
+)
+```
+
 ## 행(Row) 기준 합치기
 * `axis=0` (기본값): 위-아래로 합침.
 * 두 DataFrame의 컬럼 이름이 같아야 의미 있음.
