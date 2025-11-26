@@ -1,0 +1,175 @@
+# 머신러닝 소개
+
+- 통계적/수학적 기법을 이용해 데이터로부터 패턴을 추출하는 인공지능 기법
+- 최근 컴퓨터 비전에는 "딥러닝" 기법이 중심을 이루고 있음
+- 학습의 형태:
+    - 지도 학습: x와 y가 짝지어진 형태의 데이터에서 관계를 학습
+    - 비지도학습: 데이터의 내재적 구조를 학습
+    - 강화학습: 환경과 상호작용하여 가장 많은 보상을 받는 행동을 학습
+
+## 지도 학습
+- 입력(x)과 출력(y)이 짝지어진 데이터셋이 있을 때
+- x로부터 y를 예측하는 함수를 학습
+- 아직 y가 관찰되지 않은 x에 적용하여 y를 예측
+- 머신 러닝의 90% 이상을 차지하는 학습 형태
+- 예시:
+    - 사고 차량 사진(x)  예상 수리비(y)
+    - 주택 특성(x)  예상 가격(y)
+    - 부품 사진(x)  불량 여부(y)
+    - 채무자 특성(x)  상환 여부(y)
+
+## 지도학습의 대표적인 방식
+- 가중치 방식
+    - 입력된 여러 가지 특성에 각각 다른 가중치를 부여, 종합적인 하나의 점수를 도출
+    - 간단히 말해 대학입시 방식(국어 100%, 수학 200%, 영어 50% …)
+    - 선형 모형, 로지스틱 회귀분석, 딥러닝 등
+- 의사결정나무 방식
+    - 한 번에 한 가지 특성을 기준으로 분기하는 것을 반복하여 마지막에 최종 예측
+    - 간단히 말해 스무고개 방식
+    - CART, Random Forest, Gradient Boosting Tree 등
+
+## 로지스틱 회귀분석
+데이터 불러오기
+```python
+import pandas as pd
+cc = pd.read_excel('cancer.xlsx')
+cc.head()
+```
+
+준비
+```python
+x = cc.drop(columns=['diagnosis'])
+y = cc['diagnosis'].map({'M':1, 'B':0})
+```
+
+훈련 데이터와 테스트 데이터로 분할
+```python
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+```
+
+훈련
+```python
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression(max_iter=1000)
+lr.fit(x_train, y_train)
+```
+
+특징별 가중치(각각의 특징에 가중치를 곱한 총점을 기준으로 분류)
+```python
+lr.coef_
+```
+
+훈련 데이터의 정확도
+```python
+lr.score(x_train, y_train)
+```
+
+테스트 데이터의 정확도
+```python
+lr.score(x_test, y_test)
+```
+
+예측
+```python
+lr.predict(x_test)
+```
+
+## 의사결정나무
+훈련
+```python
+from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier(min_samples_leaf=10, random_state=42)
+dt.fit(x_train, y_train)
+```
+결정 과정 시각화
+```python
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+plt.figure(figsize=(20,10)) # 그림 크기 가로 20, 세로 10
+plot_tree(model, fontsize=10, filled=True) # 글꼴 크기 10, 색칠
+plt.savefig("tree.png") # 그림 저장
+```
+
+## 어떤 방법을 쓸 것인가?
+
+- 공짜 점심은 없다(no free lunch) 정리: 모든 머신러닝 방법의 성능은 평균적으로 똑같다
+    - 즉, 모든 경우에 우수한 머신러닝 방법은 없음
+- 데이터의 특성에 따라 더 잘 작동하는 방법이 다름	
+    - 딥러닝은 주로 자연어, 이미지 등 비정형 데이터에 강점
+    - 의사결정나무는 주로 표 형태의 데이터에 강점
+- 데이터의 특성을 어느 정도 짐작은 할 수 있지만 미리 확인할 방법은 없음
+- 여러 가지 방법을 시도해보고 가장 성능이 좋은 방법이 그 데이터에 맞는 방법
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="machine-learning" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "다음 중 교안에서 설명하는 '지도 학습'의 특징이 아닌 것은 무엇입니까?",
+        "options": [
+            "입력(x)과 출력(y)이 짝지어진 데이터셋을 사용한다.",
+            "x로부터 y를 예측하는 함수를 학습한다.",
+            "환경과 상호작용하며 보상을 최대화하는 행동을 학습한다.",
+            "머신 러닝의 90% 이상을 차지하는 학습 형태이다."
+        ],
+        "hint": "환경과 상호작용하며 보상을 받는 것은 강화 학습의 특징입니다.",
+        "solution": "환경과 상호작용하며 보상을 최대화하는 행동을 학습한다."
+    },
+    {
+        "item_type": "radio",
+        "question": "다음 중 '스무고개' 방식과 유사하며, 한 번에 한 가지 특성을 기준으로 분기하여 최종 예측을 수행하는 모델은 무엇입니까?",
+        "options": [
+            "로지스틱 회귀분석",
+            "선형 회귀",
+            "의사결정나무",
+            "딥러닝"
+        ],
+        "hint": "나무가 가지를 뻗어나가는 모양을 상상해 보세요.",
+        "solution": "의사결정나무"
+    },
+    {
+        "item_type": "radio",
+        "question": "로지스틱 회귀분석은 어떤 방식입니까?",
+        "options": [
+            "의사결정나무 방식",
+            "가중치 방식",
+            "스무고개 방식",
+            "비지도 학습 방식"
+        ],
+        "hint": "선형 모형, 로지스틱 회귀분석 등이 이 방식에 속합니다.",
+        "solution": "가중치 방식"
+    },
+    {
+        "item_type": "radio",
+        "question": "교안에 포함된 로지스틱 회귀분석 코드 중 `lr.coef_`가 의미하는 것은 무엇입니까?",
+        "options": [
+            "훈련 데이터의 정확도",
+            "테스트 데이터의 정확도",
+            "예측된 결과값 (y)",
+            "특징별 가중치"
+        ],
+        "hint": "모델이 학습한 계수(coefficient)를 확인하는 속성입니다.",
+        "solution": "특징별 가중치"
+    },
+    {
+        "item_type": "radio",
+        "question": "머신러닝에서 '모든 경우에 항상 우수한 방법은 없다'는 사실을 나타내는 정리(Theorem)는 무엇입니까?",
+        "options": [
+            "오캄의 면도날 (Occam's Razor)",
+            "공짜 점심은 없다 (No Free Lunch)",
+            "큰 수의 법칙 (Law of Large Numbers)",
+            "중심 극한 정리 (Central Limit Theorem)"
+        ],
+        "hint": "데이터의 특성에 따라 더 잘 작동하는 방법이 다르다는 것을 의미합니다.",
+        "solution": "공짜 점심은 없다 (No Free Lunch)"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

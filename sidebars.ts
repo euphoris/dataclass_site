@@ -257,42 +257,52 @@ const sidebars: SidebarsConfig = {
         }
       ]
     },
-    // {
-    //   type: 'category',
-    //   label: '2일차 - 데이터 시각화',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/univariate-visualization',
-    //       label: '한 변수의 분포 시각화'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/bivariate-visualization',
-    //       label: '두 변수의 관계 시각화'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/plot-customization',
-    //       label: '플롯 커스터마이제이션'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/data-visualization-best-practices',
-    //       label: '데이터 시각화 잘하기'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/dashboard',
-    //       label: '대시보드'
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'data-analysis/complex-dashboard',
-    //       label: '복잡한 대시보드'
-    //     },
-    //   ]
-    // },
+    {
+      type: 'category',
+      label: '2일차 - 데이터 시각화',
+      items: [
+        {
+          type: 'doc',
+          id: 'data-analysis/univariate-visualization',
+          label: '한 변수의 분포 시각화'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/bivariate-visualization',
+          label: '두 변수의 관계 시각화'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/plot-customization',
+          label: '플롯 커스터마이제이션'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/data-visualization-best-practices',
+          label: '데이터 시각화 잘하기'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/machine-learning',
+          label: '머신러닝 소개'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/automation',
+          label: 'Python 자동화'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/dashboard',
+          label: '대시보드'
+        },
+        {
+          type: 'doc',
+          id: 'data-analysis/complex-dashboard',
+          label: '복잡한 대시보드'
+        },
+      ]
+    },
     // {
     //   type: 'category',
     //   label: '1일차 - 탐색적 데이터 분석',

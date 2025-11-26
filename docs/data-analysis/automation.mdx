@@ -1,0 +1,101 @@
+# Python 자동화
+
+- 일반적인 파일 및 시스템 제어(Python 내장 모듈로 가능)
+    - os: 파일 경로 제어, 폴더 생성/삭제, 환경 변수 확인 등.
+    - shutil: 파일 복사, 이동, 이름 변경 등 고수준 파일 연산.
+- MS오피스 문서 다루기(별도 라이브러리 설치 필요)
+    - Excel (.xlsx): openpyxl, 간단한 것은 pandas
+    - PowerPoint (.pptx): python-pptx
+    - Word (.docx): python-docx 
+    - PDF: PyPDF2, pdfplumber
+- 웹 크롤링 및 브라우저 제어
+    - 데이터 수집: requests, BeautifulSoup
+    - 브라우저 제어: selenium, playwright (크롬, 엣지 등을 직접 띄워서 제어)
+- PC 화면 제어
+    - pyautogui: 마우스 이동, 클릭, 키보드 입력, 화면 이미지 인식.
+    - pyperclip: 클립보드(복사/붙여넣기) 제어.
+
+
+## PyAutoGUI
+- PyAutoGUI란: 마우스와 키보드를 제어하여 다른 프로그램과 상호작용하게 해주는 라이브러리
+    - 주요 기능: 마우스 커서 이동, 클릭, 드래그, 키보드 입력, 단축키 입력, 화면 스크린샷 및 이미지 위치 찾기.
+- 문제:
+    - PyAutoGUI의 키보드 입력 기능은 영문과 숫자는 잘 입력하지만, 한글 입력 시 글자가 깨지거나 입력되지 않음
+    - pyperclip으로 한글을 클립보드에 복사한 뒤, pyautogui로 '붙여넣기(Ctrl+V)' 단축키를 실행하는 방식을 사용
+
+- 설치
+```sh
+pip install pyautogui pyperclip pillow
+```
+
+## 마우스 움직이기
+```python
+import pyautogui
+import time
+
+# 3초 대기
+time.sleep(3)
+
+# 마우스 커서를  이동 (현재 위치에서 x 100, y 200만큼 1초 동안 이동)
+pyautogui.moveTo(100, 200, duration=1) 
+```
+
+- `moveTo`: 절대 좌표(왼쪽 최상단이 0, 0)
+- `move`: 상대 좌표(현재 위치를 기준으로 이동)
+
+## 마우스 클릭 및 드래그
+- `pyautogui.click()`: 왼쪽 클릭 (기본값). x, y 좌표를 지정할 수 있습니다.
+- `pyautogui.rightClick()`: 우클릭 (컨텍스트 메뉴 호출 등).
+- `pyautogui.doubleClick()`: 더블 클릭 (파일 실행 등).
+- `pyautogui.dragTo(x, y, duration=초)`: 현재 위치에서 버튼을 누른 채로 목표 지점까지 이동
+
+## 키보드 입력
+- `pyautogui.write('text', interval=초)`: text를 초 간격으로 입력(한글의 경우에는 잘 안됨)
+
+- pyperclip을 사용한 한글 입력
+```python
+import pyperclip
+def type_korean(text):  # 한글 입력 함수를 정의
+    pyperclip.copy(text)      # 클립보드에 복사
+    pyautogui.hotkey('ctrl', 'v') # CTRL + V: 붙여넣기 단축키
+
+type_korean("안녕하세요, 업무 자동화입니다.")
+```
+
+# 엔터키 입력
+
+```python
+pyautogui.press('enter')
+```
+
+# 탭 키 3번 입력
+```python
+pyautogui.press(['tab', 'tab', 'tab'])
+```
+
+# 복사하기 단축키 (Ctrl + C)
+```python
+pyautogui.hotkey('ctrl', 'c')
+```
+
+- `pyautogui.size()`: 현재 메인 모니터의 해상도(가로, 세로)
+- `pyautogui.position()`: 현재 마우스 커서의 (x, y) 좌표
+
+## 화면 정보 확인
+스크린샷 찍어서 파일로 저장
+```python
+pyautogui.screenshot('screen.png')
+```
+
+# 스크린샷을 저장하지 않고 이미지 객체로 가져오기
+```python
+img = pyautogui.screenshot()
+img.getpixel((0, 0)). # (예: (0, 0) 좌표의 RGB 색상 확인)
+```
+
+이미지 인식 알고리즘을 사용하면 화면 상의 특정 버튼이나 아이콘을 인식하여 클릭하게 할 수 있음
+
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
