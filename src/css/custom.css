@@ -155,6 +155,21 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Restore list markers for markdown-rendered content */
+  .markdown ul,
+  .theme-doc-markdown ul {
+    list-style: disc;
+    list-style-position: outside;
+    margin-left: 1.25rem;
+  }
+
+  .markdown ol,
+  .theme-doc-markdown ol {
+    list-style: decimal;
+    list-style-position: outside;
+    margin-left: 1.5rem;
+  }
 }
 
 .font-semibold strong {
