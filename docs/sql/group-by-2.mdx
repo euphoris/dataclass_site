@@ -1,0 +1,218 @@
+# GROUP BY 응용
+
+## 피봇 테이블
+
+*   상환방식별 × 여신상태별 계좌 수
+
+```sql
+SELECT
+    REPAYMENT_METHOD,
+    COUNT(CASE LOAN_STATUS_CD WHEN '정상' THEN 1 END) AS 정상,
+    COUNT(CASE LOAN_STATUS_CD WHEN '연체' THEN 1 END) AS 연체,
+    COUNT(LOAN_STATUS_CD) AS 합계
+FROM TB_LOAN_ACCOUNT
+GROUP BY REPAYMENT_METHOD;
+```
+
+## 피봇 테이블
+
+*   상환방식별 × 여신상태별 여신 잔액 합계
+
+```sql
+SELECT
+    REPAYMENT_METHOD,
+    SUM(CASE LOAN_STATUS_CD WHEN '정상' THEN LOAN_AMT ELSE 0 END) AS 정상,
+    SUM(CASE LOAN_STATUS_CD WHEN '연체' THEN LOAN_AMT ELSE 0 END) AS 연체,
+    SUM(LOAN_AMT) AS 합계
+FROM TB_LOAN_ACCOUNT
+GROUP BY REPAYMENT_METHOD;
+```
+
+## GROUP BY와 CASE를 함께 사용
+
+*   기업들을 고자산, 중자산, 저자산으로 나누어 기업 수와 평균 자산을 구함
+
+```sql
+SELECT
+    CASE WHEN TOTAL_ASSETS_RECENT >= 5000000000000 THEN '고자산'
+         WHEN TOTAL_ASSETS_RECENT < 5000000000000 AND
+              TOTAL_ASSETS_RECENT > 500000000000 THEN '중자산'
+         ELSE '저자산' END "분류",
+    COUNT(*), AVG(TOTAL_ASSETS_RECENT) FROM tb_company_master
+GROUP BY
+    CASE WHEN TOTAL_ASSETS_RECENT >= 5000000000000 THEN '고자산'
+         WHEN TOTAL_ASSETS_RECENT < 5000000000000 AND
+              TOTAL_ASSETS_RECENT > 500000000000 THEN '중자산'
+         ELSE '저자산' END;
+```
+
+## PARTITION BY
+
+*   **`PARTITION BY`**: `GROUP BY`와 유사하지만, 전체 데이터 집합을 그룹화하지 않고, 각 행에 대해 집계 함수를 적용할 때 사용.
+
+```sql
+SELECT
+    BIZ_REG_NO,
+    INTEREST_RATE,
+    MIN(INTEREST_RATE)
+        OVER (PARTITION BY BIZ_REG_NO)
+        AS "회사별 최소 금리"
+FROM TB_LOAN_ACCOUNT;
+```
+
+## HAVING 절을 사용한 그룹 결과 필터링
+
+*   **`HAVING` 절의 역할**: `GROUP BY` 절로 그룹화된 결과(즉, 집계 값)에 대한 조건을 지정하여 필터링.
+*   **`WHERE` 절과의 차이점**:
+*   **`WHERE` 절**: 그룹화 전 개별 행에 대한 조건 필터링. (`FROM` 절 다음, `GROUP BY` 절 이전)
+*   **`HAVING` 절**: 그룹화 후 집계 결과에 대한 조건 필터링. (`GROUP BY` 절 다음)
+
+```sql
+SELECT column_to_group_by, aggregate_function(column)
+FROM table_name
+WHERE individual_row_condition -- (선택 사항)
+GROUP BY column_to_group_by
+HAVING group_condition --(집계 함수에 대한 조건)
+ORDER BY ...; -- (선택 사항)
+```
+
+## HAVING 절을 사용한 그룹 결과 필터링
+
+*   `TB_LOAN_ACCOUNT` 테이블에서 `BIZ_REG_NO` (사업자등록번호) 별로 총 `LOAN_AMT` (여신금액) 합계가 100억 이상인 회사만 조회
+
+```sql
+SELECT BIZ_REG_NO, SUM(LOAN_AMT) AS "총 여신금액"
+FROM TB_LOAN_ACCOUNT
+GROUP BY BIZ_REG_NO
+HAVING SUM(LOAN_AMT) >= 10000000000;
+```
+
+*   `TB_COMPANY_MASTER`에서 `COMPANY_TYPE_CAT` (기업구분범주값) 별 회사 수가 2개 이상인 기업 구분만 조회
+
+```sql
+SELECT COMPANY_TYPE_CAT, COUNT(*) AS "기업 수"
+FROM TB_COMPANY_MASTER
+GROUP BY COMPANY_TYPE_CAT
+HAVING COUNT(*) >= 2;
+```
+
+## WHERE 절과 HAVING 절 함께 사용
+
+*   `TB_LOAN_ACCOUNT`에서 `LOAN_TYPE_CD`가 `'L001'`(운전자금)인 대출 중, 회사별 평균 금리가 3.0% 초과인 경우 조회
+
+```sql
+SELECT BIZ_REG_NO, AVG(INTEREST_RATE) AS "평균 운전자금 금리"
+FROM TB_LOAN_ACCOUNT
+WHERE LOAN_TYPE_CD = 'L001' -- 그룹화 전 개별 행 필터링
+GROUP BY BIZ_REG_NO
+HAVING AVG(INTEREST_RATE) > 3.0; -- 그룹화 후 집계 결과 필터링
+```
+
+
+## ROLLUP
+* 확장된 `GROUP BY` 기능: 다양한 수준의 소계 및 총계를 한 번의 쿼리로 생성.
+* `ROLLUP`: `GROUP BY` 절에 지정된 열들의 계층 구조를 따라 오른쪽에서 왼쪽으로 소계 및 총계를 생성.
+* `GROUP BY ROLLUP(A, B, C)`는 `(A,B,C)`, `(A,B,NULL)`, `(A,NULL,NULL)`, `(NULL,NULL,NULL)` 수준의 집계를 생성.
+* 예시: `TB_FINANCIAL_STATEMENT` 테이블에서 `FS_TYPE`별, 그리고 `FS_TYPE` 내 `AUDIT_YN`별 `REVENUE` 합계 및 총합계
+    ```sql
+    SELECT FS_TYPE, AUDIT_YN, SUM(REVENUE) AS "매출 합계"
+    FROM TB_FINANCIAL_STATEMENT
+    GROUP BY ROLLUP(FS_TYPE, AUDIT_YN)
+    ORDER BY FS_TYPE, AUDIT_YN;
+    -- 결과: (FS_TYPE, AUDIT_YN)별 합계, (FS_TYPE)별 소계, 전체 총계
+    ```
+
+## GROUPING SETS    
+* `GROUPING SETS`: `GROUP BY` 절에 명시된 열들의 다양한 조합에 대한 그룹별 집계를 한 번에 생성.
+* `GROUP BY GROUPING SETS((A,B), (A), (B), ())`는 `(A,B)` 그룹, `(A)` 그룹, `(B)` 그룹, 전체 그룹 `()` 의 집계를 각각 생성.
+* 예시: `TB_LOAN_ACCOUNT`에서 (여신종류별, 담당지점별) 여신금액 합계, (여신종류별) 합계, (담당지점별) 합계, 전체 합계
+```sql
+SELECT LOAN_TYPE_CD, BRANCH_CD, SUM(LOAN_AMT) AS "여신금액 합계"
+FROM TB_LOAN_ACCOUNT
+GROUP BY GROUPING SETS(
+    (LOAN_TYPE_CD, BRANCH_CD), -- 여신종류 & 지점별
+    (LOAN_TYPE_CD),           -- 여신종류별
+    (BRANCH_CD),              -- 지점별
+    ()                        -- 전체 총계
+)
+ORDER BY LOAN_TYPE_CD, BRANCH_CD;
+```
+
+## CUBE
+* `CUBE`: `GROUP BY` 절에 지정된 열들의 모든 조합에 대한 그룹별 집계를 생성.
+* 예시: 여신종류와 지점의 모든 조합에 대한 여신금액 합계
+```sql
+SELECT LOAN_TYPE_CD, BRANCH_CD, SUM(LOAN_AMT) AS "여신금액 합계"
+FROM TB_LOAN_ACCOUNT
+GROUP BY CUBE(LOAN_TYPE_CD, BRANCH_CD) -- 여신종류 & 지점별
+ORDER BY LOAN_TYPE_CD, BRANCH_CD;
+```
+
+## GROUPING 함수
+* `GROUPING()` 함수: `ROLLUP`이나 `CUBE`, `GROUPING SETS` 사용 시 해당 행이 소계/총계 행인지, 아니면 실제 `NULL` 값인지 구분하기 위해 사용. (소계/총계로 인해 `NULL`로 표시된 경우 1, 아니면 0 반환)
+```sql
+SELECT
+    FS_TYPE,
+    AUDIT_YN,
+    GROUPING(FS_TYPE) AS GRP_FS_TYPE, -- FS_TYPE이 소계로 인해 NULL이면 1
+    GROUPING(AUDIT_YN) AS GRP_AUDIT_YN, -- AUDIT_YN이 소계로 인해 NULL이면 1
+    SUM(REVENUE) AS "매출 합계"
+FROM TB_FINANCIAL_STATEMENT
+GROUP BY ROLLUP(FS_TYPE, AUDIT_YN);
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="group-by" quizItems={
+[
+  {
+    "item_type": "radio",
+    "question": "다음 중 `GROUP BY` 절에 대한 설명으로 가장 올바르지 않은 것은?",
+    "options": [
+      "특정 열의 값이 같은 행들을 하나의 그룹으로 묶기 위해 사용한다.",
+      "WHERE 절은 그룹화가 실행되기 전에 개별 행을 필터링한다.",
+      "GROUP BY를 사용하면 SELECT 절에는 어떤 컬럼이든 자유롭게 표시할 수 있다.",
+      "SUM(), AVG()와 같은 집계 함수와 함께 사용하여 그룹별 통계를 계산한다."
+    ],
+    "hint": "SELECT 절에 올 수 있는 컬럼은 GROUP BY 절에 명시되거나 집계 함수로 처리되어야 합니다.",
+    "solution": "GROUP BY를 사용하면 SELECT 절에는 어떤 컬럼이든 자유롭게 표시할 수 있다."
+  },
+  {
+    "item_type": "radio",
+    "question": "WHERE 절과 HAVING 절의 핵심적인 차이점은 무엇인가요?",
+    "options": [
+      "WHERE 절은 숫자 데이터에, HAVING 절은 문자 데이터에 조건을 적용한다.",
+      "HAVING 절은 GROUP BY로 그룹화된 결과(집계 값)를 필터링하고, WHERE 절은 그룹화 전의 개별 행을 필터링한다.",
+      "WHERE 절은 SELECT 문에서 필수이지만, HAVING 절은 선택 사항이다.",
+      "HAVING 절은 GROUP BY 절보다 반드시 먼저 나와야 문법적으로 올바르다."
+    ],
+    "hint": "두 절 모두 데이터를 필터링하지만, 어느 시점에서 필터링하는지 생각해보세요.",
+    "solution": "HAVING 절은 GROUP BY로 그룹화된 결과(집계 값)를 필터링하고, WHERE 절은 그룹화 전의 개별 행을 필터링한다."
+  },
+  {
+    "item_type": "radio",
+    "question": "다음 COUNT 함수 사용법 중, TB_COMPANY_MASTER 테이블에서 중복을 제외한 COMPANY_TYPE_CAT의 순수한 종류 개수를 세는 쿼리는 무엇인가요?",
+    "options": [
+      "SELECT COUNT(COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;",
+      "SELECT COUNT(*) FROM TB_COMPANY_MASTER;",
+      "SELECT COUNT(DISTINCT COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;",
+      "SELECT COUNT('COMPANY_TYPE_CAT') FROM TB_COMPANY_MASTER;"
+    ],
+    "hint": "중복을 제거하는 SQL 키워드를 생각해보세요.",
+    "solution": "SELECT COUNT(DISTINCT COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;"
+  },
+  {
+    "item_type": "long",
+    "question": "TB_LOAN_ACCOUNT 테이블에서, 회사(BIZ_REG_NO)별로 총 여신 잔액(LOAN_BALANCE)의 합계를 구했을 때, 그 합계가 50억 원 이상인 회사만 보여주는 SQL 쿼리를 작성하세요",
+    "options": [],
+    "hint": "먼저 BIZ_REG_NO로 그룹화(GROUP BY)하고, SUM(LOAN_BALANCE)을 계산한 뒤, HAVING 절로 합계를 필터링하고, 마지막으로 이 그룹들의 개수를 세어야(COUNT) 합니다.",
+    "solution": "SELECT BIZ_REG_NO, SUM(LOAN_BALANCE) FROM TB_LOAN_ACCOUNT GROUP BY BIZ_REG_NO HAVING SUM(LOAN_BALANCE) >= 5000000000;"
+  },
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

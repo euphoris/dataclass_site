@@ -28,20 +28,7 @@ FROM TB_COMPANY_MASTER;
 ```
 
 ---
-## SQL 실행 계획
 
-- SQL Developer에서 SQL 구문에 F10 키를 누르거나 다음 명령을 실행
-
-```sql
-EXPLAIN PLAN FOR SELECT * FROM TB_COMPANY_MASTER; -- 실행 계획 생성
-SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY); -- 실행 계획 보기
-```
-
-- OPTIONS: 처리 방법(FULL: 테이블 전체를 스캔)
-- CARDINALITY: 예상되는 실행 결과 행 수 (실제 결과와 크게 다를 경우 질의가 비효율적)
-- COST: 예상되는 실행 비용 (비용이 높으면 질의가 비효율적)
-
----
 ## 모든 열 조회 및 특정 열 선택 조회
 * 모든 열 조회 (`*` 와일드카드): 테이블의 모든 열을 빠르게 확인하고 싶을 때 사용
 ```sql
@@ -140,7 +127,85 @@ SELECT LOAN_ACCT_NO, LOAN_AMT, LOAN_AMT / 1000000000 AS "대출금액(십억원)
 FROM TB_LOAN_ACCOUNT;
 ```
 
-
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/3xLoxJ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1548" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] SELECT"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="select" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "FROM 절에 명시된 테이블의 모든 열(컬럼)을 조회하고자 할 때, SELECT 절에 사용하는 기호는 무엇인가요?",
+        "options": [
+            "%",
+            "&",
+            "*",
+            "ALL"
+        ],
+        "hint": "흔히 '별표' 또는 '아스타리스크'라고 부르는 기호입니다.",
+        "solution": "*"
+    },
+    {
+        "item_type": "radio",
+        "question": "SELECT 문으로 조회한 열의 이름을 더 이해하기 쉬운 다른 이름으로 표시하고 싶을 때 사용하는 키워드는 무엇인가요?",
+        "options": [
+            "RENAME",
+            "ALIAS",
+            "COLUMN",
+            "AS"
+        ],
+        "hint": "별칭(Alias)을 지정할 때 사용하는 전치사입니다.",
+        "solution": "AS"
+    },
+    {
+        "item_type": "radio",
+        "question": "다음 SQL 문은 어떤 테이블의 내용을 조회하는 것입니까? SELECT EVAL_DT, CREDIT_GRADE FROM TB_CREDIT_INFO;",
+        "options": [
+            "EVAL_DT",
+            "CREDIT_GRADE",
+            "TB_CREDIT_INFO"
+        ],
+        "hint": "데이터를 가져올 대상 테이블은 FROM 절 뒤에 명시됩니다.",
+        "solution": "TB_CREDIT_INFO"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "위의 SQL 문(SELECT EVAL_DT, CREDIT_GRADE FROM TB_CREDIT_INFO;)이 조회하는 컬럼을 모두 선택하세요.",
+        "options": [
+            "EVAL_DT",
+            "CREDIT_GRADE",
+            "TB_CREDIT_INFO"
+        ],
+        "hint": "SELECT 절 뒤에 나열된 항목들이 조회되는 컬럼입니다.",
+        "solution": [
+            "EVAL_DT",
+            "CREDIT_GRADE"
+        ]
+    },
+    {
+        "item_type": "checkbox",
+        "question": "SQL의 주석에 대한 설명 중 올바른 것을 모두 고르세요.",
+        "options": [
+            "-- 로 한 줄 주석을 작성할 수 있다",
+            "/* 와 */ 로 여러 줄 주석을 작성할 수 있다",
+            "주석은 코드에 대한 설명을 작성할 때 사용된다"
+        ],
+        "hint": "SQL은 한 줄 주석과 블록 주석을 모두 지원하며, 주석은 코드 설명에 활용됩니다.",
+        "solution": [
+            "-- 로 한 줄 주석을 작성할 수 있다",
+            "/* 와 */ 로 여러 줄 주석을 작성할 수 있다",
+            "주석은 코드에 대한 설명을 작성할 때 사용된다"
+        ]
+    },
+    {/* {
+        "item_type": "short",
+        "question": "Oracle에서 특정 테이블을 조회하지 않는 SELECT 문을 작성할 때 사용하는 가상의 테이블 이름은?",
+        "hint": "컬럼 하나, 행 하나만 존재하는 더미 테이블입니다.",
+        "solution": "DUAL"
+    } */}
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

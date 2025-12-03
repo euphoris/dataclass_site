@@ -172,13 +172,6 @@ import { QuizComponent } from "@/components/QuizComponent";
     "options": [],
     "hint": "두 테이블을 `BIZ_REG_NO`로 JOIN하고, WHERE 절에 두 가지 조건을 AND로 연결하세요.",
     "solution": "SELECT m.BIZ_REG_NO, m.IS_VENTURE, a.LOAN_STATUS_CD FROM TB_COMPANY_MASTER m JOIN TB_LOAN_ACCOUNT a ON m.BIZ_REG_NO = a.BIZ_REG_NO WHERE m.IS_VENTURE = 'Y' AND a.LOAN_STATUS_CD = '정상';"
-  },
-  {
-    "item_type": "number",
-    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
-    "options": [],
-    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
-    "solution": 4
   }
 ]
 

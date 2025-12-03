@@ -111,7 +111,75 @@ DESC TB_CREDIT_INFO;
 * `CHECK`: 해당 열에 입력될 수 있는 값의 범위나 특정 조건을 지정. 조건에 맞지 않는 데이터 입력 방지.
     * 예시: `IS_VENTURE CHAR(1) CHECK (IS_VENTURE IN ('Y', 'N'))`
     * 예시: `INTEREST_RATE NUMBER(5,2) CHECK (INTEREST_RATE >= 0)`
-
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w4DEeb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1546" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] 기초"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="basic" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "다음 중 데이터베이스(database)에 대한 설명으로 가장 올바른 것은?",
+        "options": [
+            "데이터를 표 형태로만 저장하는 시스템이다.",
+            "체계적으로 저장되고 관리되는 데이터의 집합이다.",
+            "Oracle, MySQL과 같은 특정 소프트웨어 프로그램을 지칭한다.",
+            "데이터베이스와 소통하기 위한 표준 언어이다."
+        ],
+        "hint": "특정 소프트웨어나 언어가 아닌, 데이터 그 자체의 모임을 관리하는 개념입니다.",
+        "solution": "체계적으로 저장되고 관리되는 데이터의 집합이다."
+    },
+    {
+        "item_type": "radio",
+        "question": "테이블의 각 행(Row)을 고유하게 식별하기 위해 사용되며, 중복되거나 NULL 값을 가질 수 없는 키(Key)는 무엇인가요?",
+        "options": [
+            "외래 키 (Foreign Key)",
+            "슈퍼 키 (Super Key)",
+            "후보 키 (Candidate Key)",
+            "기본 키 (Primary Key)"
+        ],
+        "hint": "데이터의 유일성을 보장하는 가장 대표적인 식별자입니다.",
+        "solution": "기본 키 (Primary Key)"
+    },
+    {
+        "item_type": "radio",
+        "question": "다음 SQL 명령어 중 종류가 다른 하나는 무엇인가요?",
+        "options": [
+            "CREATE",
+            "UPDATE",
+            "ALTER",
+            "DROP"
+        ],
+        "hint": "데이터 정의어(DDL)와 데이터 조작어(DML)를 구분해 보세요. 하나만 데이터를 직접 조작하는 명령어입니다.",
+        "solution": "UPDATE"
+    },
+    {
+        "item_type": "radio",
+        "question": "강의 내용에 언급된 Oracle 데이터베이스의 특징으로 적절하지 않은 것은?",
+        "options": [
+            "대용량 데이터 처리에 강점이 있다.",
+            "PL/SQL이라는 강력한 절차형 언어를 제공한다.",
+            "유연한 스키마를 가진 NoSQL 데이터베이스이다.",
+            "높은 안정성과 보안성을 제공하여 금융권에서 널리 사용된다."
+        ],
+        "hint": "Oracle은 정해진 스키마를 사용하는 관계형 데이터베이스(RDBMS)입니다.",
+        "solution": "유연한 스키마를 가진 NoSQL 데이터베이스이다."
+    },
+    {
+        "item_type": "radio",
+        "question": "SQL Developer에서 TB_CREDIT_INFO 테이블의 컬럼명, 데이터 타입 등 구조(스키마)를 확인하기 위한 명령어로 가장 적절한 것은?",
+        "options": [
+            "SELECT * FROM TB_CREDIT_INFO;",
+            "GRANT SELECT ON TB_CREDIT_INFO;",
+            "DESC TB_CREDIT_INFO;",
+            "INSERT INTO TB_CREDIT_INFO (...);"
+        ],
+        "hint": "테이블의 구조를 묘사(Describe)한다는 의미의 명령어를 축약해서 사용합니다.",
+        "solution": "DESC TB_CREDIT_INFO;"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

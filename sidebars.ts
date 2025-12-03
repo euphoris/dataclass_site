@@ -120,7 +120,7 @@ const sidebars: SidebarsConfig = {
   sqlSidebar: [
     {
       type: 'doc',
-      id: 'sql/home',
+      id: 'sql/index',
       label: 'SQL 프로그래밍'
     },
 
@@ -171,6 +171,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'sql/group-by-2',
+          label: 'GROUP BY 응용'
+        },
+        {
+          type: 'doc',
           id: 'sql/set',
           label: '집합 연산자'
         },
@@ -198,6 +203,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'sql/indexing',
           label: '인덱스'
+        },
+        {
+          type: 'doc',
+          id: 'sql/sargable',
+          label: '인덱스를 이용한 최적화'
         },
   ],
   dataAnalysisSidebar: [

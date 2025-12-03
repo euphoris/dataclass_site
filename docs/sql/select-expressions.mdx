@@ -189,4 +189,30 @@ FETCH NEXT 3 ROWS ONLY;
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/w2gZPe?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1446" frameborder="0" marginheight="0" marginwidth="0" title="[SQL] SELECT 표현"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="select-expressions" quizItems={
+[
+    {
+        "item_type": "long",
+        "question": "다음의 단순 CASE 표현식(Simple CASE)을 검색 CASE 표현식(Searched CASE)으로 바꿔서 전체 쿼리를 다시 작성해보세요.\n\n```sql\nSELECT \n    CASE COMPANY_TYPE_CAT\n    WHEN '대기업' THEN '대'\n    WHEN '중소기업' THEN '중소'\n    ELSE '기타' END\n    AS 분류 \nFROM TB_COMPANY_MASTER;\n```",
+        "hint": "검색 CASE 표현식은 'CASE WHEN 조건 THEN 결과' 형식을 사용합니다. (예: WHEN 컬럼명 = '값')",
+        "solution": "SELECT CASE WHEN COMPANY_TYPE_CAT = '대기업' THEN '대' WHEN COMPANY_TYPE_CAT = '중소기업' THEN '중소' ELSE '기타' END AS 분류 FROM TB_COMPANY_MASTER;"
+    },
+    {
+        "item_type": "radio",
+        "question": "신용등급(CREDIT_GRADE)에 따라 위험도를 분류하려고 합니다. 다음 중 CASE 문의 결과가 다른 하나는 무엇일까요?",
+        "options": [
+            "CASE WHEN CREDIT_GRADE IN ('AAA', 'AA+', 'AA') THEN '우량' ELSE '보통' END",
+            "CASE WHEN CREDIT_GRADE > 'A' THEN '우량' ELSE '보통' END",
+            "CASE CREDIT_GRADE WHEN 'AAA' THEN '우량' WHEN 'AA+' THEN '우량' WHEN 'AA' THEN '우량' ELSE '보통' END"
+        ],
+        "hint": "문자열 비교 연산(>)을 사용할 때, 사전 순서상 'B'는 'A'보다 크기 때문에 의도치 않게 '우량'으로 분류될 수 있습니다.",
+        "solution": "CASE WHEN CREDIT_GRADE > 'A' THEN '우량' ELSE '보통' END"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

@@ -104,13 +104,6 @@ import { QuizComponent } from "@/components/QuizComponent";
     "options": [],
     "hint": "TB_FINANCIAL_STATEMENT와 TB_CREDIT_INFO 테이블을 JOIN하고, WHERE절에서 각 조건을 필터링한 후, 고유한 회사(BIZ_REG_NO)의 개수를 세어야 합니다.",
     "solution": "SELECT BIZ_REG_NO FROM TB_FINANCIAL_STATEMENT WHERE FS_YM LIKE '2023%' AND FS_TYPE = 'ANNUAL' INTERSECT SELECT BIZ_REG_NO FROM TB_CREDIT_INFO WHERE CREDIT_GRADE LIKE 'A%';"
-  },
-  {
-    "item_type": "number",
-    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
-    "options": [],
-    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
-    "solution": 4
   }
 ]
 } />

@@ -19,9 +19,9 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/data-analysis">
+            to="/docs/sql">
             {/* 히어로 */}
-            Python 활용 데이터 시각화
+            SQL
           </Link>
         </div>
       </div>

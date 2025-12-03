@@ -153,13 +153,6 @@ import { QuizComponent } from "@/components/QuizComponent";
     "options": [],
     "hint": "LEFT OUTER JOIN을 사용하여 TB_COMPANY_MASTER를 기준으로 조인한 뒤, WHERE 절에서 TB_CREDIT_INFO 테이블의 기본 키(또는 NOT NULL 컬럼)가 NULL인 조건을 찾습니다.",
     "solution": "SELECT * FROM TB_COMPANY_MASTER m LEFT OUTER JOIN TB_CREDIT_INFO c ON m.BIZ_REG_NO = c.BIZ_REG_NO WHERE c.CREDIT_INFO_ID IS NULL;"
-  },
-  {
-    "item_type": "number",
-    "question": "앞의 질의의 실행 결과는 총 개수는 몇 개인가요?",
-    "options": [],
-    "hint": "실제 데이터베이스에서 쿼리를 실행하여 결과를 확인해야 합니다.",
-    "solution": 1
   }
 ]
 } />
