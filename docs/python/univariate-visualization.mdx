@@ -1,0 +1,160 @@
+# 한 변수의 분포 시각화
+
+## Python 데이터 시각화
+* 데이터 시각화: 데이터를 그래프나 차트 등 시각적 형태로 표현하는 과정
+* matplotlib: Python의 대표적인 표준 시각화 라이브러리, 다양한 종류의 정적, 애니메이션, 인터랙티브 시각화 생성 가능
+* seaborn: matplotlib을 기반으로 하며, 더 아름답고 통계적으로 의미 있는 고급 시각화 기능을 간편하게 제공
+* 임포트:
+```python
+import matplotlib.pyplot as plt # matplotlib의 pyplot 모듈
+import seaborn as sns # seaborn 라이브러리
+```
+
+## 히스토그램 histogram
+* 데이터를 구간별로 나눠, 각 구간의 사례 수를 막대그래프로 그린 것
+* Python에서 데이터 시각화를 위한 라이브러리 "시본"을 임포트
+```python
+import seaborn as sns
+```
+* histplot 함수를 이용해서 히스토그램 그리기
+    * 데이터는 df로 지정
+    * x축(가로)은 price로 지정
+    * 'price'는 변수가 아닌 df의 한 열 이름이므로 따옴표를 쳐서 문자열로 표시
+```python
+sns.histplot(x='price', data=df)
+```
+
+## 커널 밀도 추정 kernel density estimation
+* 데이터 밀도 추정 기법
+```python
+sns.kdeplot(x='price', data=df)
+```
+
+## 데이터 포인트 눈금으로 표시
+* 아래 두 코드를 한 셀에서 실행
+```python
+sns.kdeplot(x='price', data=df)
+sns.rugplot(x='price', data=df)
+```
+
+## 히스토그램 + 커널 밀도 추정
+* kde=True로 설정하면 데이터의 밀도를 추정하여 표시
+```python
+sns.histplot(x='price', data=df, kde=True)
+```
+
+## ECDF
+* ECDF(Empirical Cumulative Distribution Function), 즉 '경험적 누적 분포 함수'
+* 히스토그램과 달리 구간 설정 필요 X
+* 커널 밀도 추정과 달리 추정치가 아님(경험적)
+* 데이터의 분위수를 쉽게 파악 가능
+```python
+sns.ecdfplot(data=df, x="price")
+```
+
+## 비교
+* 모델별로 색상(hue)을 달리해서 그림
+```python
+sns.kdeplot(data=df, x="price", hue="model") # 왼쪽
+sns.ecdfplot(data=df, x="price", hue="model") # 오른쪽
+```
+
+## 상자-수염 그림 (Box Plot)
+* `sns.boxplot(x='범주형열', y='숫자형열', data=데이터프레임)` 또는 `sns.boxplot(data=데이터프레임의_숫자형열)`:
+* 데이터의 사분위수, 중앙값, 이상치 등을 상자 그림으로 표현
+* 범주별 데이터 분포 비교에 유용
+```python
+sns.boxplot(data=df, y='price') # 가격 분포
+sns.boxplot(data=df, x='model', y='price') # 모델별 가격 분포
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="univariate-visualization" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "Python의 대표적인 시각화 라이브러리인 matplotlib을 기반으로, 더 아름답고 통계적으로 의미 있는 고급 시각화 기능을 간편하게 제공하는 라이브러리는 무엇입니까?",
+        "options": [
+            "pandas",
+            "numpy",
+            "seaborn",
+            "scikit-learn"
+        ],
+        "hint": "교안에서는 `import ??? as sns` 형태로 불러왔습니다.",
+        "solution": "seaborn"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터를 여러 구간으로 나누어, 각 구간에 속하는 데이터의 개수(빈도)를 막대그래프로 표현하는 시각화 방법은 무엇입니까?",
+        "options": [
+            "히스토그램 (histogram)",
+            "커널 밀도 추정 (KDE)",
+            "상자-수염 그림 (Box Plot)",
+            "ECDF"
+        ],
+        "hint": "seaborn에서는 `histplot()` 함수를 사용하여 그릴 수 있습니다.",
+        "solution": "히스토그램 (histogram)"
+    },
+    {
+        "item_type": "radio",
+        "question": "seaborn의 `histplot()` 함수를 사용하여 히스토그램과 함께 데이터의 분포를 부드러운 곡선으로 나타내는 커널 밀도 추정(KDE)을 함께 표시하려면 어떤 인자를 추가해야 합니까?",
+        "options": [
+            "density=True",
+            "smooth=True",
+            "kde=True",
+            "line=True"
+        ],
+        "hint": "Kernel Density Estimation의 약자를 인자 이름으로 사용합니다.",
+        "solution": "kde=True"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터의 누적 분포를 보여주어 특정 값보다 작거나 같은 데이터의 비율을 쉽게 파악할 수 있게 하는 '경험적 누적 분포 함수' 그래프는 무엇입니까?",
+        "options": [
+            "histplot",
+            "kdeplot",
+            "boxplot",
+            "ecdfplot"
+        ],
+        "hint": "Empirical Cumulative Distribution Function의 약어를 함수 이름으로 사용합니다.",
+        "solution": "ecdfplot"
+    },
+    {
+        "item_type": "short",
+        "question": "seaborn 그래프에서 'model'과 같은 범주형 변수에 따라 색상을 다르게 지정하여 여러 그룹의 분포를 하나의 그래프에서 비교하고 싶을 때 사용하는 인자(parameter)의 이름은 무엇입니까?",
+        "hint": "'색조'를 의미하는 영어 단어입니다.",
+        "solution": "hue"
+    },
+    {
+        "item_type": "radio",
+        "question": "데이터의 사분위수(25%, 50%(중앙값), 75%)와 이상치(outlier)를 시각적으로 표현하여, 데이터의 분포와 대칭성, 이상치 유무를 파악하는 데 유용한 그래프는 무엇입니까?",
+        "options": [
+            "히스토그램",
+            "산점도",
+            "상자-수염 그림",
+            "파이 차트"
+        ],
+        "hint": "이름처럼 상자와 수염 모양으로 데이터 분포를 나타냅니다.",
+        "solution": "상자-수염 그림"
+    },
+    {
+        "item_type": "radio",
+        "question": "seaborn을 사용하여 `df` 데이터프레임의 'model'별 'price' 분포를 상자-수염 그림으로 나타내기 위한 가장 적절한 코드는 무엇입니까?",
+        "options": [
+            "sns.boxplot(data=df, x='price', y='model')",
+            "sns.boxplot(data=df, x='model', y='price')",
+            "sns.histplot(data=df, x='model', y='price')",
+            "sns.kdeplot(data=df, x='model', y='price')"
+        ],
+        "hint": "일반적으로 비교하려는 범주(model)를 x축에, 값(price)을 y축에 둡니다.",
+        "solution": "sns.boxplot(data=df, x='model', y='price')"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

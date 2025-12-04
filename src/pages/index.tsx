@@ -19,9 +19,9 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/sql">
+            to="/docs/python">
             {/* 히어로 */}
-            SQL
+            Python
           </Link>
         </div>
       </div>

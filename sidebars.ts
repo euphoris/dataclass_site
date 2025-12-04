@@ -209,6 +209,11 @@ const sidebars: SidebarsConfig = {
           id: 'sql/sargable',
           label: '인덱스를 이용한 최적화'
         },
+        {
+          type: 'doc',
+          id: 'sql/join-2',
+          label: 'JOIN 추가 자료'
+        }
   ],
   dataAnalysisSidebar: [
     {
@@ -1617,14 +1622,14 @@ const sidebars: SidebarsConfig = {
       id: 'python/index',
       label: 'Python 실습'
     },
-    {
-      type: 'doc',
-      id: 'python/miniforge',
-      label: 'Miniforge 설치'
-    },
+    
     { type: 'doc',
       id: 'python/intro',
       label: 'Python 소개와 기초'
+    },
+    { type: 'doc',
+      id: 'python/basic',
+      label: 'Python 기본 문법'
     },
     { type: 'doc',
       id: 'python/python-sql',
@@ -1634,13 +1639,24 @@ const sidebars: SidebarsConfig = {
       id: 'python/eda',
       label: '탐색적 데이터 분석'
     },
-    { type: 'doc',
-      id: 'python/visualization',
-      label: '데이터 시각화'
+    {
+      type: 'doc',
+      id: 'data-analysis/univariate-visualization',
+      label: '한 변수의 분포 시각화'
+    },
+    {
+      type: 'doc',
+      id: 'data-analysis/bivariate-visualization',
+      label: '두 변수의 관계 시각화'
     },
     { type: 'doc',
       id: 'python/regression',
       label: '회귀 분석'
+    },
+    {
+      type: 'doc',
+      id: 'python/miniforge',
+      label: 'Miniforge 설치'
     },
     // { type: 'doc',
     //   id: 'python/vibe-coding',

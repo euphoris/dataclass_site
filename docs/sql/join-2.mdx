@@ -1,0 +1,108 @@
+# JOIN 추가 자료
+
+## CROSS JOIN
+
+- 두 테이블의 모든 행을 각각 결합하여 가능한 모든 조합을 생성.
+- 결과 행의 수 = (테이블 A의 행 수) × (테이블 B의 행 수)
+- 카테시안 곱(Cartesian Product)이라고도 함.
+
+예시: 모든 회사와 특정 연도의 조합을 생성하고, 해당 연도의 재무제표 정보를 결합하는 경우
+
+```sql
+SELECT
+    C.COMPANY_NM,
+    P.TARGET_YM,
+    F.AUDITOR
+FROM TB_COMPANY_MASTER C
+CROSS JOIN ( -- 모든 회사와 모든 연도를 결합
+    SELECT '202212' AS TARGET_YM FROM DUAL 
+    UNION ALL
+    SELECT '202312' AS TARGET_YM FROM DUAL
+) P
+LEFT JOIN TB_FINANCIAL_STATEMENT F -- 재무제표 정보 결합
+ON C.BIZ_REG_NO = F.BIZ_REG_NO
+    AND P.TARGET_YM = F.FS_YM
+ORDER BY C.COMPANY_NM, P.TARGET_YM;
+```
+
+- `DUAL` 테이블은 Oracle에서 제공하는 가상 테이블로, 계산이나 상수 값을 반환할 때 사용
+    - 비표준, DBMS에 따라 다름
+- CROSS JOIN을 하지 않으면 특정 연도의 재무제표가 없는 경우는 결과가 누락됨
+
+## SEMI JOIN
+
+- 왼쪽 테이블의 행 중에서 오른쪽 테이블과 일치하는 행이 있는 경우에만 결과에 포함.
+- 오른쪽 테이블의 열은 결과에 포함되지 않음.
+- 특정 조건을 만족하는 왼쪽 테이블의 행을 필터링하는 데 사용.
+- INNER JOIN과 유사하지만, 결과에 오른쪽 테이블의 열이 포함되지 않음.
+
+여신 계좌가 **있는** 회사 목록을 조회하는 예시:
+
+```sql
+SELECT C.* 
+FROM TB_COMPANY_MASTER C
+WHERE EXISTS (
+    SELECT 1 
+    FROM TB_LOAN_ACCOUNT L
+    WHERE C.BIZ_REG_NO = L.BIZ_REG_NO
+);
+```
+
+INNER JOIN을 사용할 경우:
+
+```sql
+SELECT C.*
+FROM TB_COMPANY_MASTER C
+INNER JOIN (
+    SELECT DISTINCT BIZ_REG_NO 
+    FROM TB_LOAN_ACCOUNT
+) L 
+ON C.BIZ_REG_NO = L.BIZ_REG_NO;
+```
+
+Impala에는 `LEFT SEMI JOIN` 구문이 존재:
+
+```sql
+SELECT C.*
+FROM TB_COMPANY_MASTER C
+LEFT SEMI JOIN TB_LOAN_ACCOUNT L
+ON C.BIZ_REG_NO = L.BIZ_REG_NO;
+```
+
+## ANTI JOIN
+
+- 왼쪽 테이블의 행 중에서 오른쪽 테이블과 일치하는 행이 없는 경우에만 결과에 포함.
+- 오른쪽 테이블의 열은 결과에 포함되지 않음.
+- 특정 조건을 만족하지 않는 왼쪽 테이블의 행을 필터링하는 데 사용.
+- SEMI JOIN과 반대 개념.
+
+여신 계좌가 **없는** 회사 목록을 조회하는 예시:
+
+```sql
+SELECT C.* 
+FROM TB_COMPANY_MASTER C
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM TB_LOAN_ACCOUNT L
+    WHERE C.BIZ_REG_NO = L.BIZ_REG_NO
+);
+```
+
+OUTER JOIN을 사용할 경우:
+
+```sql
+SELECT C.*
+FROM TB_COMPANY_MASTER C
+LEFT JOIN TB_LOAN_ACCOUNT L
+ON C.BIZ_REG_NO = L.BIZ_REG_NO
+WHERE L.BIZ_REG_NO IS NULL;
+```
+
+Impala에는 `LEFT ANTI JOIN` 구문이 존재:
+
+```sql
+SELECT C.*
+FROM TB_COMPANY_MASTER C
+LEFT ANTI JOIN TB_LOAN_ACCOUNT L
+ON C.BIZ_REG_NO = L.BIZ_REG_NO;
+```

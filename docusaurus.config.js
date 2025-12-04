@@ -84,6 +84,12 @@ const config = {
           position: 'left',
           label: 'SQL', // 상단 메뉴
         },
+        {
+          type: 'docSidebar',
+          sidebarId: 'pythonSidebar', // 사이드바 ID
+          position: 'left',
+          label: 'Python', // 상단 메뉴
+        },
         // {to: '/blog', label: 'Blog', position: 'left'},
         // {
         //   href: 'https://github.com/facebook/docusaurus',
