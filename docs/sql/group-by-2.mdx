@@ -169,18 +169,6 @@ import { QuizComponent } from "@/components/QuizComponent";
 [
   {
     "item_type": "radio",
-    "question": "다음 중 `GROUP BY` 절에 대한 설명으로 가장 올바르지 않은 것은?",
-    "options": [
-      "특정 열의 값이 같은 행들을 하나의 그룹으로 묶기 위해 사용한다.",
-      "WHERE 절은 그룹화가 실행되기 전에 개별 행을 필터링한다.",
-      "GROUP BY를 사용하면 SELECT 절에는 어떤 컬럼이든 자유롭게 표시할 수 있다.",
-      "SUM(), AVG()와 같은 집계 함수와 함께 사용하여 그룹별 통계를 계산한다."
-    ],
-    "hint": "SELECT 절에 올 수 있는 컬럼은 GROUP BY 절에 명시되거나 집계 함수로 처리되어야 합니다.",
-    "solution": "GROUP BY를 사용하면 SELECT 절에는 어떤 컬럼이든 자유롭게 표시할 수 있다."
-  },
-  {
-    "item_type": "radio",
     "question": "WHERE 절과 HAVING 절의 핵심적인 차이점은 무엇인가요?",
     "options": [
       "WHERE 절은 숫자 데이터에, HAVING 절은 문자 데이터에 조건을 적용한다.",
@@ -190,18 +178,6 @@ import { QuizComponent } from "@/components/QuizComponent";
     ],
     "hint": "두 절 모두 데이터를 필터링하지만, 어느 시점에서 필터링하는지 생각해보세요.",
     "solution": "HAVING 절은 GROUP BY로 그룹화된 결과(집계 값)를 필터링하고, WHERE 절은 그룹화 전의 개별 행을 필터링한다."
-  },
-  {
-    "item_type": "radio",
-    "question": "다음 COUNT 함수 사용법 중, TB_COMPANY_MASTER 테이블에서 중복을 제외한 COMPANY_TYPE_CAT의 순수한 종류 개수를 세는 쿼리는 무엇인가요?",
-    "options": [
-      "SELECT COUNT(COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;",
-      "SELECT COUNT(*) FROM TB_COMPANY_MASTER;",
-      "SELECT COUNT(DISTINCT COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;",
-      "SELECT COUNT('COMPANY_TYPE_CAT') FROM TB_COMPANY_MASTER;"
-    ],
-    "hint": "중복을 제거하는 SQL 키워드를 생각해보세요.",
-    "solution": "SELECT COUNT(DISTINCT COMPANY_TYPE_CAT) FROM TB_COMPANY_MASTER;"
   },
   {
     "item_type": "long",
