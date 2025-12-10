@@ -19,25 +19,39 @@
 ## PyAutoGUI
 - PyAutoGUI란: 마우스와 키보드를 제어하여 다른 프로그램과 상호작용하게 해주는 라이브러리
     - 주요 기능: 마우스 커서 이동, 클릭, 드래그, 키보드 입력, 단축키 입력, 화면 스크린샷 및 이미지 위치 찾기.
-- 문제:
-    - PyAutoGUI의 키보드 입력 기능은 영문과 숫자는 잘 입력하지만, 한글 입력 시 글자가 깨지거나 입력되지 않음
-    - pyperclip으로 한글을 클립보드에 복사한 뒤, pyautogui로 '붙여넣기(Ctrl+V)' 단축키를 실행하는 방식을 사용
 
 - 설치
 ```sh
 pip install pyautogui pyperclip pillow
 ```
 
-## 마우스 움직이기
+- 임포트
 ```python
 import pyautogui
+```
+
+
+## 화면 정보 확인
+- `pyautogui.size()`: 현재 메인 모니터의 해상도(가로, 세로)
+- `pyautogui.position()`: 현재 마우스 커서의 (x, y) 좌표
+
+스크린샷 찍어서 파일로 저장
+```python
+pyautogui.screenshot('screen.png')
+```
+
+```python
+img = pyautogui.screenshot() # 스크린샷을 저장하지 않고 이미지 객체로 가져오기
+img.getpixel((0, 0)). # (예: (0, 0) 좌표의 RGB 색상 확인)
+```
+
+이미지 인식 알고리즘을 사용하면 화면 상의 특정 버튼이나 아이콘을 인식하여 클릭하게 할 수 있음
+
+## 마우스 움직이기
+```python
 import time
-
-# 3초 대기
-time.sleep(3)
-
-# 마우스 커서를  이동 (현재 위치에서 x 100, y 200만큼 1초 동안 이동)
-pyautogui.moveTo(100, 200, duration=1) 
+time.sleep(3) # 3초 대기
+pyautogui.moveTo(100, 200, duration=1) # 마우스 커서를  이동
 ```
 
 - `moveTo`: 절대 좌표(왼쪽 최상단이 0, 0)
@@ -52,7 +66,28 @@ pyautogui.moveTo(100, 200, duration=1)
 ## 키보드 입력
 - `pyautogui.write('text', interval=초)`: text를 초 간격으로 입력(한글의 경우에는 잘 안됨)
 
-- pyperclip을 사용한 한글 입력
+- 문제:
+    - PyAutoGUI의 키보드 입력 기능은 영문과 숫자는 잘 입력하지만, 한글 입력 시 글자가 깨지거나 입력되지 않음
+    - pyperclip으로 한글을 클립보드에 복사한 뒤, pyautogui로 '붙여넣기(Ctrl+V)' 단축키를 실행하는 방식을 사용
+
+
+엔터키 입력
+
+```python
+pyautogui.press('enter')
+```
+
+탭 키 3번 입력
+```python
+pyautogui.press(['tab', 'tab', 'tab'])
+```
+
+복사하기 단축키 (Ctrl + C)
+```python
+pyautogui.hotkey('ctrl', 'c')
+```
+
+### pyperclip을 사용한 한글 입력
 ```python
 import pyperclip
 def type_korean(text):  # 한글 입력 함수를 정의
@@ -62,40 +97,15 @@ def type_korean(text):  # 한글 입력 함수를 정의
 type_korean("안녕하세요, 업무 자동화입니다.")
 ```
 
-# 엔터키 입력
+## Meta SAM
+- 좌표를 일일이 지정하지 않고, 임의의 물체를 추적(tracking)할 수 있음
+- https://ai.meta.com/sam2 
 
-```python
-pyautogui.press('enter')
-```
+## AI를 이용한 컴퓨터 제어
 
-# 탭 키 3번 입력
-```python
-pyautogui.press(['tab', 'tab', 'tab'])
-```
-
-# 복사하기 단축키 (Ctrl + C)
-```python
-pyautogui.hotkey('ctrl', 'c')
-```
-
-- `pyautogui.size()`: 현재 메인 모니터의 해상도(가로, 세로)
-- `pyautogui.position()`: 현재 마우스 커서의 (x, y) 좌표
-
-## 화면 정보 확인
-스크린샷 찍어서 파일로 저장
-```python
-pyautogui.screenshot('screen.png')
-```
-
-# 스크린샷을 저장하지 않고 이미지 객체로 가져오기
-```python
-img = pyautogui.screenshot()
-img.getpixel((0, 0)). # (예: (0, 0) 좌표의 RGB 색상 확인)
-```
-
-이미지 인식 알고리즘을 사용하면 화면 상의 특정 버튼이나 아이콘을 인식하여 클릭하게 할 수 있음
-
-
+- Python으로 스크릿샷을 찍어 LLM에 입력, 다음 행동을 추론 후, 다시 Python으로 행동을 실행
+- OpenAI Atlas와 같은 에이전틱 브라우저는 위의 기능을 내장하여 웹사이트와 상호작용을 자동으로 실행
+- 원치 않는 개인 정보 유출, 돌이킬 수 없는 파일 삭제 등 위험 요소
 
 ## Q&A
 <iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

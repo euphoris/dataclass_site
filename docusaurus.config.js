@@ -80,12 +80,6 @@ const config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'sqlSidebar', // 사이드바 ID
-          position: 'left',
-          label: 'SQL', // 상단 메뉴
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'pythonSidebar', // 사이드바 ID
           position: 'left',
           label: 'Python', // 상단 메뉴
@@ -104,10 +98,6 @@ const config = {
         {
           title: 'Docs',
           items: [ // 하단 메뉴
-            {
-              label: 'Python 활용 데이터 시각화',
-              to: '/docs/data-analysis',
-            },
             {
               label: 'Python',
               to: '/docs/python',

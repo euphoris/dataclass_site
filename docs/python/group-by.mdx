@@ -54,8 +54,8 @@ pp.groupby('도시')['나이'].agg(['mean', 'max'])
 * 도시별로 '나이'는 평균(mean)을 '점수'는 합계(sum)를 계산
 ```python
 st = pp.groupby('도시').agg({
- '나이': 'mean',
- '점수': 'sum'
+    '나이': ['mean', 'max'],
+    '점수': 'sum'
 })
 ```
 * 전체 결과 보기

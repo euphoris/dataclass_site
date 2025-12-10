@@ -1,0 +1,52 @@
+# 인덱싱
+
+
+## 이름 기반 인덱싱 및 슬라이싱
+* `.loc[]`: 레이블(이름) 기반 인덱싱/슬라이싱
+* 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
+```python
+df.loc[3] # 3번 행
+df.loc[3:5] # 3번에서 5번 행까지
+df.loc[270:] # 270번행에서 끝까지
+df.loc[:3] # 처음부터 3번행까지
+df.loc[:, 'model'] # 모든 행의 model 열
+df.loc[:, 'model':'year'] # 모든 행의 model 열에서 year 열까지
+```
+
+## 정수 위치 기반 인덱싱 및 슬라이싱
+* `.iloc[]`: 정수 위치 기반 인덱싱/슬라이싱
+* 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
+* 슬라이싱에서 마지막은 포함하지 않음
+    * 3:5의 경우 5는 미포함
+```python
+df.iloc[3] # 3번 행
+df.iloc[3:5] # 3번에서 4번 행까지
+df.iloc[270:] # 270번행에서 끝까지
+df.iloc[:3] # 처음부터 2번행까지
+df.iloc[:, 1] # 모든 행의 1번열
+df.iloc[:, 1:4] # 모든 행의 1번열에서 3번열까지
+```
+
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="pandas-indexing" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "DataFrame에서 이름(레이블)을 기반으로 데이터를 선택하는 인덱서는 무엇입니까?",
+        "options": [
+            ".loc[]",
+            ".iloc[]",
+            ".ix[]",
+            ".at[]"
+        ],
+        "hint": "이름(레이블) 기반 인덱싱을 의미하는 'location'에서 유래했습니다.",
+        "solution": ".loc[]"
+    },
+]
+} />
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>

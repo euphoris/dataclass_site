@@ -3,41 +3,15 @@
 
 ## 실습 데이터
 
-복사해서 붙여 쓰세요
+- 엑셀에서 특정 시트만 불러올 수 있음(`sheet_name`)
+- 특정 열을 인덱스로 설정할 수 있음(`index_col=0`: 0번째 열을 인덱스로 설정)
 
 ```python
-import pandas as pd
-import numpy as np
+df_user = pd.read_excel('merge.xlsx', sheet_name='user')
+df_purchase = pd.read_excel('merge.xlsx', sheet_name='purchase')
+df_2023 = pd.read_excel('merge.xlsx', sheet_name='data_2023', index_col=0)
+df_2024 = pd.read_excel('merge.xlsx', sheet_name='data_2024', index_col=0)
 
-np.random.seed(42)
-
-# 예제 1: 고객 정보 (df_user)
-df_user = pd.DataFrame({
-    'user_id': [101, 102, 103, 104],
-    'name': ['Alice', 'Bob', 'Charlie', 'David'],
-    'age': np.random.randint(20, 50, 4)
-})
-
-# 예제 2: 구매 내역 (df_purchase)
-df_purchase = pd.DataFrame({
-    'purchase_id': [1001, 1002, 1003, 1004, 1005],
-    'user_id': [101, 103, 101, 104, 103],
-    'item': ['A', 'B', 'C', 'A', 'D']
-})
-
-# 예제 3: 2023년 데이터 (df_2023)
-df_2023 = pd.DataFrame(
-    np.random.randint(0, 100, (3, 4)),
-    columns=['A', 'B', 'C', 'D'],
-    index=[202301, 202302, 202303]
-)
-
-# 예제 4: 2024년 데이터 (df_2024)
-df_2024 = pd.DataFrame(
-    np.random.randint(0, 100, (3, 4)),
-    columns=['A', 'B', 'C', 'D'],
-    index=[202401, 202402, 202403]
-)
 ```
 
 ## 행(Row) 기준 합치기

@@ -227,31 +227,6 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
-          id: 'data-analysis/python-intro',
-          label: 'Python 소개'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/python-basic',
-          label: 'Python 기초 문법'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/pandas',
-          label: 'Pandas'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/query',
-          label: '필터링'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/eda',
-          label: '탐색적 데이터 분석'
-        },
-        {
-          type: 'doc',
           id: 'data-analysis/missing',
           label: '결측치'
         },
@@ -260,16 +235,7 @@ const sidebars: SidebarsConfig = {
           id: 'data-analysis/imputation',
           label: '결측치 대체'
         },
-        {
-          type: 'doc',
-          id: 'data-analysis/group-by',
-          label: '그룹화'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/merge',
-          label: '데이터 합치기'
-        }
+
       ]
     },
     {
@@ -286,36 +252,7 @@ const sidebars: SidebarsConfig = {
           id: 'data-analysis/bivariate-visualization',
           label: '두 변수의 관계 시각화'
         },
-        {
-          type: 'doc',
-          id: 'data-analysis/plot-customization',
-          label: '플롯 커스터마이제이션'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/data-visualization-best-practices',
-          label: '데이터 시각화 잘하기'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/machine-learning',
-          label: '머신러닝 소개'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/automation',
-          label: 'Python 자동화'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/dashboard',
-          label: '대시보드'
-        },
-        {
-          type: 'doc',
-          id: 'data-analysis/complex-dashboard',
-          label: '복잡한 대시보드'
-        },
+
       ]
     },
     // {
@@ -1618,6 +1555,16 @@ const sidebars: SidebarsConfig = {
     }
   ],
   pythonSidebar: [
+    // {
+    //   type: 'category',
+    //   label: '1일차',
+    //   items: []
+    // },
+    {
+      type: 'doc',
+      id: 'python/miniforge',
+      label: 'Miniforge 설치'
+    },
     { type: 'doc',
       id: 'python/index',
       label: 'Python 실습'
@@ -1631,9 +1578,24 @@ const sidebars: SidebarsConfig = {
       id: 'python/basic',
       label: 'Python 기본 문법'
     },
-    { type: 'doc',
-      id: 'python/python-sql',
-      label: 'Python과 SQL'
+    //{ type: 'doc',
+    //  id: 'python/python-sql',
+    //  label: 'Python과 SQL'
+    //},
+    {
+      type: 'doc',
+      id: 'python/pandas',
+      label: 'pandas'
+    },
+    //{
+    //  type: 'doc',
+    //  id: 'python/pandas-indexing',
+    //  label: '인덱싱'
+    //},
+    {
+      type: 'doc',
+      id: 'python/query',
+      label: '필터링'
     },
     { type: 'doc',
       id: 'python/eda',
@@ -1641,23 +1603,59 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'doc',
-      id: 'data-analysis/univariate-visualization',
-      label: '한 변수의 분포 시각화'
+      id: 'python/group-by',
+      label: '그룹화'
     },
     {
       type: 'doc',
-      id: 'data-analysis/bivariate-visualization',
-      label: '두 변수의 관계 시각화'
+      id: 'python/merge',
+      label: '데이터 합치기'
     },
-    { type: 'doc',
-      id: 'python/regression',
-      label: '회귀 분석'
-    },
-    {
-      type: 'doc',
-      id: 'python/miniforge',
-      label: 'Miniforge 설치'
-    },
+    // {
+    //   type: 'category',
+    //   label: '2일차',
+    //   items: [
+    // {
+    //   type: 'doc',
+    //   id: 'python/visualization',
+    //   label: '데이터 시각화'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/plot-customization',
+    //   label: '플롯 커스터마이제이션'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/data-visualization-best-practices',
+    //   label: '데이터 시각화 잘하기'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/machine-learning',
+    //   label: '머신러닝 소개'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/automation',
+    //   label: 'Python 자동화'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/dashboard',
+    //   label: '대시보드'
+    // },
+    // {
+    //   type: 'doc',
+    //   id: 'python/complex-dashboard',
+    //   label: '복잡한 대시보드'
+    // },
+    // { type: 'doc',
+    //   id: 'python/regression',
+    //   label: '회귀 분석'
+    // },
+    // ]
+    // },
     // { type: 'doc',
     //   id: 'python/vibe-coding',
     //   label: '바이브 코딩'

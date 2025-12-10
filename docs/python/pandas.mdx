@@ -1,178 +1,176 @@
-
-# pandas로 데이터 분석 첫걸음
-
-
-
+# PANDAS로 데이터 다루기
 
 ## pandas 라이브러리 소개
+* Python에서 데이터 분석 및 조작을 위한 핵심적이고 강력한 라이브러리
+* Panel Data System의 약자
+* 데이터 처리 및 분석을 위한 강력하고 효율적인 도구
+* 쉽고 빠른 데이터 처리: Excel, CSV, DB 등 다양한 파일 읽기/쓰기
+* 강력한 데이터 조작: 필터링, 정렬, 그룹화
+* 결측치 처리 용이
 
-* **pandas**: Python에서 데이터 분석 및 조작을 위한 핵심적이고 강력한 라이브러리
-* **주요 자료구조**: Series (1차원), DataFrame (2차원 테이블 형태)
+## 파일 열기
+* 불러오기
+    - 대체로 pandas를 pd로 줄여 부름
+    - 같은 방식을 따르면 다른 사람이나 AI가 작성한 코드와 섞어서 사용할 때 유용
+
 ```python
-import pandas as pd
+import pandas as pd # pandas를 불러온다(약칭은 pd)
 ```
 
-
-
-## 외부 데이터 파일 불러오기
-
-* **Excel 파일 읽기**: `pd.read_excel('파일명.xlsx', sheet_name='시트명 또는 인덱스')`
+* Excel 파일 읽기: `pd.read_excel('파일명.xlsx', sheet_name='시트명 또는 인덱스')`
     * `sheet_name` 생략 시 첫 번째 시트 불러옴
     * 다양한 옵션 제공 (예: 특정 행을 헤더로 지정, 특정 열만 선택 등)
-    * **결과**: DataFrame 객체로 데이터 반환
-
+    * 결과: DataFrame 객체(2차원 표)로 데이터 반환
+```python
 df = pd.read_excel('car.xlsx')
-df.head()
+```
 
+## FileNotFound 에러
 
+- Python이 열려고 하는 파일을 찾지 못함
+- 원인: ipynb 파일과 xlsx 파일이 다른 폴더에 있음
+- 해결책:
+    - 새로운 ipynb 파일을 xlsx 파일과 같은 폴더에 만들거나
+    - xlsx 파일을 현재 ipynb 파일이 있는 폴더로 옮기거나
+    - xlsx 파일의 정확한 위치를 코드에 입력해줌(예: `"C:/Users/user/Desktop/data/car.xlsx"`)
 
-## 데이터프레임 기본 정보 탐색
+## 데이터 보기
+* 전체 보기(표가 길면 중간은 생략)
+```python
+df
+```
+* 첫 n행만 보기(n을 생략하면 5행만)
+```python
+df.head(10)
+```
+* 마지막 n행만 보기(n을 생략하면 5행만)
+```python
+df.tail(10)
+```
 
-* `df.head(n=5)`: 처음 n개 행 확인 (기본값 5)
-* `df.tail(n=5)`: 마지막 n개 행 확인 (기본값 5)
+## DataFrame의 기본 구조
+* Index (인덱스) : 행(row)을 식별하는 이름 (기본값: 0부터 시작)
+```python
+df.index
+```
+* Columns (컬럼) : 열(column)을 식별하는 이름
+```python
+df.columns
+```
+
+## 데이터프레임 기본 정보
 * `df.shape`: (행 개수, 열 개수) 튜플 반환
 * `df.info()`: 데이터 타입, 각 열의 non-null 값 개수, 메모리 사용량 등 요약 정보 출력
 * `df.dtypes`: 각 열의 데이터 타입 확인
 
-
-
 ## 열 선택
-
-* 특정 열 선택 (Series 반환): df['열이름'] 또는 df.열이름 ()
+* 특정 열 선택 (Series 반환): `df['열이름']` 또는 `df.열이름` ()
 ```python
 df['price']
-df.price  # 열 이름에 공백/특수문자 없을 시
 ```
+```python
+df.price # 열 이름에 공백/특수문자 없을 시
+```
+* 여러 열 선택 (DataFrame 반환): `df[['열이름1', '열이름2']]` (리스트 형태로 전달)
+    - 안쪽 각괄호 `[]`는 열 이름들을 묶는 리스트
+    - 바깥쪽 각괄호는 특정 열을 표시하는 기호
 
-* **여러 열 선택 (DataFrame 반환)**: `df[['열이름1', '열이름2']]` (리스트 형태로 전달)
 ```python
 df[['price', 'mileage']]
 ```
 
-## 이름 기반 인덱싱 및 슬라이싱
-
-- `.loc[]`: 레이블(이름) 기반 인덱싱/슬라이싱 
-- 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
-
+## 파일 저장하기
+* Excel로 저장:
 ```python
-df.loc[3] # 3번 행
-df.loc[3:5] # 3번에서 5번 행까지
-df.loc[270:]  # 270번행에서 끝까지
-df.loc[:3]  # 처음부터 3번행까지
-df.loc[:, 'model']  # 모든 행의 model 열
-df.loc[:, 'model':'year'] # 모든 행의 model 열에서 year 열까지
+df.to_excel('저장할_이름.xlsx')
 ```
-
-
-## 정수 위치 기반 인덱싱 및 슬라이싱    
-
-- `.iloc[]`: 정수 위치 기반 인덱싱/슬라이싱 
-- 둥근 괄호 `()`가 아닌 각 괄호 `[]`를 사용하는 점에 주의
-- 슬라이싱에서 마지막은 포함하지 않음
-- `3:5`의 경우 `5`는 미포함
-
+* 인덱스(행 번호)를 제외하고 저장
 ```python
-df.iloc[3] # 3번 행
-df.iloc[3:5] # 3번에서 4번 행까지
-df.iloc[270:]  # 270번행에서 끝까지
-df.iloc[:3]  # 처음부터 2번행까지
-df.iloc[:, 1]  # 모든 행의 1번열
-df.iloc[:, 1:4] # 모든 행의 1번열에서 3번열까지
+df.to_excel('저장할_이름.xlsx', index=False)
 ```
-
-
-
-## 조건으로 데이터 필터링
-
-- Boolean 인덱싱: 조건을 만족하는 행만 선택
+* CSV로 저장:
 ```python
-cond = df['my_car_damage'] > 0  # 자차 처리 내역이 있는 경우
-df[cond] # 해당 조건에 맞는 사례
-```
-
-- 한 줄로
-```python
-df[df['my_car_damage'] > 0]
-```
-
-## 여러 조건 결합
-
-연산자 우선순위 때문에 각 조건은 ()로 묶어야 함
-
-`&` (AND)
-```python
-df[(df['model'] == 'Avante') & (df['my_car_damage'] > 0)]
-# 차종이 Avante이고 그리고(AND) my_car_damage가 0보다 큰 경우
-```
-
-`|` (OR):
-```python
-df[(df['my_car_damage'] == 0) | (df['other_car_damage'] == 0)]
-# my_car_damage가 0이거나 또는(OR) other_car_damage가 0인 경우
-```
-
-`~` (NOT):
-```python
-df[~(df['my_car_damage'] == 0)]
-# my_car_damage가 0이 아닌(NOT) 경우
-```
-
-
-
-
-
-## `query()` 메소드
-
-* **`df.query('조건 문자열')`**: 문자열 형태로 조건식을 작성하여 데이터 필터링
-* **장점**: SQL과 유사한 간결한 문법
-```python
-df.query('my_car_damage > 0')  # my_car_damage가 0보다 큰 경우
-df.query('model == "Avante" and my_car_damage > 0')  # 차종이 Avante이고 my_car_damage가 0보다 큰 경우
-df.query('my_car_damage == 0 or other_car_damage == 0')  # my_car_damage가 0이거나 other_car_damage가 0인 경우
-df.query('not (my_car_damage == 0)')  # my_car_damage가 0이 아닌 경우
-```
-
-## 변수 사용
-`@변수명`을 사용하여 외부 변수를 쿼리 내에서 참조
-
-```python
-last_year = df.year.max()
-df.query('year == @last_year')  # last_year 변수에 저장된 값과 year 열이 같은 행을 선택
-```
-
-
-
-## 기본 기술 통계량 계산
-
-* **`df.describe()`**: 숫자형 열에 대한 주요 기술 통계량 요약 (개수, 평균, 표준편차, 최소값, 사분위수, 최대값)
-    * `include='all'` 옵션 시 모든 열(문자열 포함)에 대한 통계량 포함 (최빈값, 고유값 개수 등)
-* **개별 통계 함수 (주로 숫자형 열에 적용)**:
-    * `.sum()`: 합계
-    * `.mean()`: 평균
-    * `.median()`: 중앙값
-    * `.std()`: 표준편차
-    * `.min()`: 최소값
-    * `.max()`: 최대값
-    * `.count()`: 결측치 제외한 데이터 개수
-    * `.unique`: 고유값 종류
-    * `.nunique()`: 고유값 개수
-    * `.value_counts()`: 고유값별 개수
-
-
-
-## 데이터 그룹화(Grouping) 및 그룹별 통계 계산
-
-* **`.groupby('그룹화 기준 열')` 또는 `.groupby(['기준열1', '기준열2'])`**:
-    * 지정된 열(들)의 값에 따라 데이터를 그룹으로 묶음
-    * 결과는 GroupBy 객체 반환
-* **그룹별 통계 계산 (집계)**: GroupBy 객체에 집계 함수 적용
-```python
-df.groupby('model').agg({  # 모델별
-    'price': 'mean',  # 가격의 평균 
-    'mileage': ['mean', 'std'] # 주행거리의 평균 및 표준편차
-})  
+df.to_csv('저장할_이름.csv')
 ```
 
 ## 퀴즈
 
-<iframe src="https://tally.so/embed/nG48QQ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="1757" frameborder="0" marginheight="0" marginwidth="0" title="[Python] pandas"></iframe>
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="pandas" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "Python에서 데이터 분석 및 조작을 위해 사용하는 핵심 라이브러리로, 'Panel Data System'의 약자인 것은 무엇입니까?",
+        "options": [
+            "NumPy",
+            "Matplotlib",
+            "Scikit-learn",
+            "Pandas"
+        ],
+        "hint": "교안의 제목에 나와있는 라이브러리입니다.",
+        "solution": "Pandas"
+    },
+    {
+        "item_type": "short",
+        "question": "pandas 라이브러리를 불러올 때, 관용적으로 사용하는 약칭(alias)은 무엇입니까?",
+        "hint": "`import pandas as ??` 에서 `??`에 해당하는 부분입니다.",
+        "solution": "pd"
+    },
+    {
+        "item_type": "radio",
+        "question": "'car.xlsx'라는 엑셀 파일을 읽어서 DataFrame 객체로 만들기 위한 올바른 코드는 무엇입니까?",
+        "options": [
+            "pd.read_excel('car.xlsx')",
+            "pd.open_excel('car.xlsx')",
+            "pd.excel('car.xlsx')",
+            "pd.read_csv('car.xlsx')"
+        ],
+        "hint": "'읽다'와 '엑셀'을 의미하는 영어 단어를 조합한 함수 이름입니다.",
+        "solution": "pd.read_excel('car.xlsx')"
+    },
+    {
+        "item_type": "checkbox",
+        "question": "DataFrame `df`의 처음과 마지막 일부 데이터를 확인하기 위해 사용하는 함수(메서드)를 모두 고르세요.",
+        "options": [
+            "df.head()",
+            "df.first()",
+            "df.tail()",
+            "df.last()"
+        ],
+        "hint": "'머리'와 '꼬리'를 의미하는 영어 단어를 사용합니다.",
+        "solution": [
+            "df.head()",
+            "df.tail()"
+        ]
+    },
+    {
+        "item_type": "short",
+        "question": "DataFrame의 (행 개수, 열 개수) 정보를 튜플 형태로 반환하는 속성(attribute)은 무엇입니까?",
+        "hint": "df.____ 형태로 사용하며, '모양'이라는 의미의 영어 단어입니다.",
+        "solution": "shape"
+    },
+    {
+        "item_type": "radio",
+        "question": "DataFrame `df`에서 'price'와 'mileage' 두 개의 열을 동시에 선택하는 올바른 방법은 무엇입니까?",
+        "options": [
+            "df['price', 'mileage']",
+            "df('price', 'mileage')",
+            "df[['price', 'mileage']]",
+            "df.get('price', 'mileage')"
+        ],
+        "hint": "여러 열을 선택할 때는 열 이름들을 리스트(대괄호 `[]`)로 묶어 다시 대괄호 안에 넣어줍니다.",
+        "solution": "df[['price', 'mileage']]"
+    },
+    {
+        "item_type": "short",
+        "question": "DataFrame `df`를 'my_car.xlsx'라는 이름의 엑셀 파일로 저장할 때, 인덱스(행 번호)를 제외하고 저장하려면 `df.to_excel('my_car.xlsx', index=...)`에서 ... 부분에 어떤 값을 추가해야 합니까?",
+        "hint": "인덱스를 저장하지 않도록 `False` 값을 설정하는 옵션입니다.",
+        "solution": "False"
+    }
+]
+} />
+
+
+## Q&A
+<iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
