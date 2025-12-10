@@ -1,6 +1,11 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import dotenv from 'dotenv';
+
+// Load base .env then environment-specific overrides (e.g., .env.development)
+dotenv.config();
+dotenv.config({path: `.env.${process.env.NODE_ENV || 'development'}`});
 const path = require('path');
 
 const config = {
@@ -166,6 +171,9 @@ const config = {
     },
 
   ],
+  customFields: {
+    quizDebug: process.env.QUIZ_DEBUG === 'true',
+  },
 };
 
 export default config;

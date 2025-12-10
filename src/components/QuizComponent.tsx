@@ -31,6 +31,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { cn } from "@/lib/utils";
 import { createClient } from '@supabase/supabase-js'
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 // Create a single supabase client for interacting with your database
 const supabaseUrl = 'https://xcwnivbdpliylnbmiust.supabase.co';
@@ -182,7 +183,8 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
   );
   const [hintsUsed, setHintsUsed] = useState<Set<number>>(new Set());
   const [showHint, setShowHint] = useState(false);
-
+  const { siteConfig } = useDocusaurusContext();
+  const { quizDebug } = siteConfig.customFields;
   const totalQuestions = quizItems.length;
   const currentItem = quizItems[currentIndex];
   const currentAnswer = userAnswers.get(currentIndex);
@@ -413,6 +415,7 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
           <div className="flex justify-between items-center text-sm text-muted-foreground">
             <span>문제 {currentIndex + 1} / {totalQuestions}</span>
             <div className="flex space-x-2 text-xs">
+              {quizDebug && (<span className="text-red-600 font-bold">디버그 모드</span>)}
               <span>맞음: {stats.correct}</span>
               <span>힌트: {stats.hintCorrect}</span>
               <span>틀림: {stats.incorrect}</span>
@@ -551,18 +554,18 @@ export function QuizComponent({ quizId, quizItems }: QuizProps) {
           {/* 다음 버튼 */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <div tabIndex={0} className={cn(!isAnswered && "cursor-not-allowed")}>
+              <div tabIndex={0} className={cn(!quizDebug && !isAnswered && "cursor-not-allowed")}>
                 <Button
                     onClick={handleNext}
-                    disabled={!isAnswered || currentIndex === totalQuestions - 1}
-                    className={cn(isAnswered && currentIndex !== totalQuestions - 1 && "animate-pulse")}
+                    disabled={(!quizDebug && !isAnswered) || currentIndex === totalQuestions - 1}
+                    className={cn((quizDebug || isAnswered) && currentIndex !== totalQuestions - 1 && "animate-pulse")}
                 >
                     다음
                     <ChevronsRight className="h-4 w-4 ml-2" />
                 </Button>
               </div>
             </TooltipTrigger>
-            {!isAnswered && <TooltipContent><p>현재 문제를 풀어야 다음으로 이동할 수 있습니다.</p></TooltipContent>}
+            {!quizDebug && !isAnswered && <TooltipContent><p>현재 문제를 풀어야 다음으로 이동할 수 있습니다.</p></TooltipContent>}
             {isAnswered && currentIndex === totalQuestions - 1 && <TooltipContent><p>마지막 문제입니다.</p></TooltipContent>}
           </Tooltip>
         </CardFooter>
