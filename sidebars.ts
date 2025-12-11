@@ -1555,11 +1555,10 @@ const sidebars: SidebarsConfig = {
     }
   ],
   pythonSidebar: [
-    // {
-    //   type: 'category',
-    //   label: '1일차',
-    //   items: []
-    // },
+    {
+      type: 'category',
+      label: '1일차',
+      items: [
     {
       type: 'doc',
       id: 'python/miniforge',
@@ -1611,51 +1610,53 @@ const sidebars: SidebarsConfig = {
       id: 'python/merge',
       label: '데이터 합치기'
     },
-    // {
-    //   type: 'category',
-    //   label: '2일차',
-    //   items: [
-    // {
-    //   type: 'doc',
-    //   id: 'python/visualization',
-    //   label: '데이터 시각화'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/plot-customization',
-    //   label: '플롯 커스터마이제이션'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/data-visualization-best-practices',
-    //   label: '데이터 시각화 잘하기'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/machine-learning',
-    //   label: '머신러닝 소개'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/automation',
-    //   label: 'Python 자동화'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/dashboard',
-    //   label: '대시보드'
-    // },
-    // {
-    //   type: 'doc',
-    //   id: 'python/complex-dashboard',
-    //   label: '복잡한 대시보드'
-    // },
+    ]
+    },
+    {
+      type: 'category',
+      label: '2일차',
+      items: [
+    {
+      type: 'doc',
+      id: 'python/visualization',
+      label: '데이터 시각화'
+    },
+    {
+      type: 'doc',
+      id: 'python/plot-customization',
+      label: '플롯 커스터마이제이션'
+    },
+    {
+      type: 'doc',
+      id: 'python/data-visualization-best-practices',
+      label: '데이터 시각화 잘하기'
+    },
+    {
+      type: 'doc',
+      id: 'python/machine-learning',
+      label: '머신러닝 소개'
+    },
+    {
+      type: 'doc',
+      id: 'python/automation',
+      label: 'Python 자동화'
+    },
+    {
+      type: 'doc',
+      id: 'python/dashboard',
+      label: '대시보드'
+    },
+    {
+      type: 'doc',
+      id: 'python/complex-dashboard',
+      label: '복잡한 대시보드'
+    },
     // { type: 'doc',
     //   id: 'python/regression',
     //   label: '회귀 분석'
     // },
-    // ]
-    // },
+    ]
+    },
     // { type: 'doc',
     //   id: 'python/vibe-coding',
     //   label: '바이브 코딩'

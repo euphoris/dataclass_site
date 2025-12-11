@@ -107,5 +107,74 @@ type_korean("안녕하세요, 업무 자동화입니다.")
 - OpenAI Atlas와 같은 에이전틱 브라우저는 위의 기능을 내장하여 웹사이트와 상호작용을 자동으로 실행
 - 원치 않는 개인 정보 유출, 돌이킬 수 없는 파일 삭제 등 위험 요소
 
+## 퀴즈
+
+import { QuizComponent } from "@/components/QuizComponent";
+
+<QuizComponent quizId="automation" quizItems={
+[
+    {
+        "item_type": "radio",
+        "question": "Python에서 파워포인트(.pptx) 파일을 다루기 위해 주로 사용되는 라이브러리는 무엇입니까?",
+        "options": [
+            "python-pptx",
+            "openpyxl",
+            "python-docx",
+            "shutil"
+        ],
+        "hint": "MS 오피스 문서 중 프레젠테이션 파일을 다루는 라이브러리입니다.",
+        "solution": "python-pptx"
+    },
+    {
+        "item_type": "radio",
+        "question": "PyAutoGUI에서 마우스 커서의 현재 위치(x, y 좌표)를 확인하는 함수는 무엇입니까?",
+        "options": [
+            "pyautogui.size()",
+            "pyautogui.position()",
+            "pyautogui.moveTo()",
+            "pyautogui.screenshot()"
+        ],
+        "hint": "position이라는 영단어가 포함된 함수입니다.",
+        "solution": "pyautogui.position()"
+    },
+    {
+        "item_type": "radio",
+        "question": "PyAutoGUI의 마우스 이동 함수 중, 절대 좌표(0, 0 기준) 기준으로 이동하는 함수는 무엇입니까?",
+        "options": [
+            "moveTo",
+            "move",
+            "dragTo",
+            "click"
+        ],
+        "hint": "이동한다는 뜻의 함수 이름을 찾아보세요.",
+        "solution": "moveTo"
+    },
+    {
+        "item_type": "radio",
+        "question": "PyAutoGUI의 `write` 함수 사용 시 발생하는 한글 입력 문제와 그 해결책으로 올바른 것은 무엇입니까?",
+        "options": [
+            "한글은 지원하지 않으므로 영문만 사용해야 한다.",
+            "pyperclip 모듈을 이용해 한글을 복사한 후 붙여넣기(Ctrl+V) 방식을 사용한다.",
+            "pyautogui.type_korean() 함수를 사용하면 된다.",
+            "time.sleep()을 길게 주면 한글이 정상 입력된다."
+        ],
+        "hint": "클립보드(복사/붙여넣기) 기능을 활용하여 우회하는 방법이 주로 사용됩니다.",
+        "solution": "pyperclip 모듈을 이용해 한글을 복사한 후 붙여넣기(Ctrl+V) 방식을 사용한다."
+    },
+    {
+        "item_type": "radio",
+        "question": "PyAutoGUI의 키보드 입력 함수 중, 단축키를 입력하는 함수는 무엇입니까?",
+        "options": [
+            "write",
+            "press",
+            "hotkey",
+            "type_korean"
+        ],
+        "hint": "단축키는 여러 키를 동시에 누르는 것을 의미합니다.",
+        "solution": "hotkey"
+    }
+]
+} />
+
 ## Q&A
 <iframe src="https://tally.so/embed/wbOOKg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=0" loading="lazy" width="100%" height="274" frameborder="0" marginheight="0" marginwidth="0" title="Q&A"></iframe>
